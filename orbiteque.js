@@ -1,4 +1,3 @@
-// www.kfract.com
 function orbital (svgContainer, data) {
     "use strict";
 
@@ -13,7 +12,7 @@ function orbital (svgContainer, data) {
     var minRadius = 0.5*8;
     var pixelPrecision = 1 / Math.pow (2, 20);
     var dragPrecision = Math.pow (2, 10);
-    var fill1 = "rgb(255, 255, 150)";//"lightgray";
+    var fill1 = "rgb(255, 255, 150)";
     var stroke1 = "gray";
     var fill2 = stroke1;
     var stroke2 = fill1;
@@ -413,7 +412,6 @@ function orbital (svgContainer, data) {
         circleIndex = 0;
         var ret = n.render (minRadius, x1, y1, r1, 0, 1, m, data);
         wasteCircles();
-        //svg.appendChild(hover);
         
         return ret;
     }
@@ -765,40 +763,11 @@ function orbital (svgContainer, data) {
     }
     
 
-//var crc1 = insertCircle (0, 0, 10, "#000000", stroke1);
-
     var mouse = {};
     var tt, ll, ww, hh, rr, squashX, squashY;
     var r1, x1, y1;
     var path = [], select, selectDown, selectUp, range, animating;
     
-/*    
-    var ww = window.innerWidth;
-    var hh = window.innerHeight;
-    var rr, squashX, squashY;
-    
-    if (ww > hh) {
-        rr = hh / 2;
-        squashX = ww / hh;
-        squashY = 1;
-        
-    } else {
-        rr = ww / 2;
-        squashX = 1;
-        squashY = hh / ww;
-        
-    }
-
-    var r1 = rr;
-    var x1 = ww / squashX - rr;
-    var y1 = hh / squashY - rr;
-*/    
-/*    
-    squashX = 1;
-    squashY = 1;
-    x1 = ww / 2;
-    y1 = hh / 2;
-*/
     var mouseDown = false;
     var dragX, dragY, dragging = false;
     var inert, inertIdx = 0;
@@ -816,34 +785,12 @@ function orbital (svgContainer, data) {
     var clip = document.createElementNS(svgns, 'ellipse');
     clipPath.appendChild(clip);
 
-    //var hover = insertRect (0, 0, 0, 0, "#000000", stroke2);
-    //hover.setAttribute('fill-opacity', "0");
-    //svg.appendChild(hover);
-
-window.addEventListener('mousemove', mousemove, false);
-window.addEventListener('mousedown', mousedown, false);
-window.addEventListener('mouseup', mouseup, false);
-//    hover.onmousemove = mousemove;
-//    hover.onmousedown = mousedown;
-//    hover.onmouseup = mouseup;
+    window.addEventListener('mousemove', mousemove, false);
+    window.addEventListener('mousedown', mousedown, false);
+    window.addEventListener('mouseup', mouseup, false);
     
     resize(svgContainer.clientWidth, svgContainer.clientHeight);
 
-   /*
-    var i = 8;
-    var repeat = function () {
-        if (i >= minRadius) {
-            var s = svg.cloneNode(false);
-            svg.parentNode.replaceChild(s, svg);
-            svg = s;
-            svg.appendChild(insertRect (0, 0, ww, hh, fill2, stroke2));
-            n.render (i, x1, y1, r1, 0, 1);
-            setTimeout (repeat, 0);
-        }
-        i/=2;
-    };
-    repeat();
-    */
     return {
         resize: resize
     }

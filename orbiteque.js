@@ -636,6 +636,8 @@ function orbital (svgContainer, data) {
                         while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
                         
                         //drawCircle (ac.smallX, ac.smallY, ac.smallR, "green", "blue", "yxz");
+
+                        animateAng1Start = select.parent.parent.angle1;
                     }
                     
                     cpr1 = select.parent;
@@ -784,7 +786,7 @@ function orbital (svgContainer, data) {
                             } while (cp);
                             
                             function aEnlarge () {
-                                angles[1] = animateAng1;
+                                angles[1] = animateAng1Start * (1 - i) + animateAng1 * i;
                                 cc = c.cursor;
                                 cp = c;
                                 var ap = 0;
@@ -1017,7 +1019,7 @@ function orbital (svgContainer, data) {
     var path = [], cursor, select, selectDown, selectUp, range, animating;
     cursor = {parent: null, index: 0, angle: Math.PI, children: []}
     cursor.parent = {parent: null, index: 0, angle: Math.PI, children: []}
-    var level, gettingLevel, animateAng, animateAng1;
+    var level, gettingLevel, animateAng, animateAng1, animateAng1Start;
     var lastMouse, lastEvent;
 
     var mouseDown = false;

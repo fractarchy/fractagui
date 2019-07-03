@@ -469,42 +469,45 @@ function orbital (svgContainer, data) {
             if (c.smallR < Math.sqrt ((c.smallX - mouse.x / squashX) * (c.smallX - mouse.x / squashX) + (c.smallY - mouse.y / squashY) * (c.smallY - mouse.y / squashY))) {
                 var ac, phi;
                 if (select.parent) {
-                    ac = select.parent;
-                    phi = ac.getAbsoluteAngle() + ac.angle1 + Math.PI;
-                    var tmpc = ac.getCircle(ac.angle1);
-                    
-                    if (tmpc.r * squashX * squashY > minRadius) {
-                        var tmpr0 = tmpc.r * ratio;
-                        var tmpx0 = tmpc.x + (tmpc.r - tmpr0) * Math.cos (phi - Math.PI / 2);
-                        var tmpy0 = tmpc.y + (tmpc.r - tmpr0) * Math.sin (phi - Math.PI / 2);
-                        
-                        var ang =
-                            - phi + 
-                            3 * Math.PI / 2 +
-                            Math.atan2 (
-                                ((ac.smallY + tmpy0) * squashY - mouse.y) / squashY,
-                                ((ac.smallX + tmpx0) * squashX - mouse.x) / squashX
-                            );
+                    cpr1 = select.parent;
+                    while (cpr1) {
+                        if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
+                            break;
                             
-                        //drawCircle (ac.smallX + tmpx0, ac.smallY + tmpy0, tmpr0, "red", "blue", "yxz"); 
-
-                        while (ang > 2 * Math.PI) ang = ang - 2 * Math.PI;
-                        while (ang < 0) ang = ang + 2 * Math.PI;
-                        
-                        animateAng = ang;
+                        cpr1 = cpr1.parent
                     }
                     
-                    if (select.parent.parent) {
-                        animateAng1 = select.parent.parent.angle1;
-                        cpr1 = select.parent;
-                        while (cpr1) {
-                            if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
-                                break;
+                    if (cpr1) {
+                        animateAng = select.parent.angle1;;
+                        if (select.parent.parent) animateAng1 = select.parent.parent.angle1;
+
+                    } else {
+                        ac = select.parent;
+                        phi = ac.getAbsoluteAngle() + ac.angle1 + Math.PI;
+                        var tmpc = ac.getCircle(ac.angle1);
+                        
+                        if (tmpc.r * squashX * squashY > minRadius) {
+                            var tmpr0 = tmpc.r * ratio;
+                            var tmpx0 = tmpc.x + (tmpc.r - tmpr0) * Math.cos (phi - Math.PI / 2);
+                            var tmpy0 = tmpc.y + (tmpc.r - tmpr0) * Math.sin (phi - Math.PI / 2);
+                            
+                            var ang =
+                                - phi + 
+                                3 * Math.PI / 2 +
+                                Math.atan2 (
+                                    ((ac.smallY + tmpy0) * squashY - mouse.y) / squashY,
+                                    ((ac.smallX + tmpx0) * squashX - mouse.x) / squashX
+                                );
                                 
-                            cpr1 = cpr1.parent
+                            //drawCircle (ac.smallX + tmpx0, ac.smallY + tmpy0, tmpr0, "red", "blue", "yxz"); 
+
+                            while (ang > 2 * Math.PI) ang = ang - 2 * Math.PI;
+                            while (ang < 0) ang = ang + 2 * Math.PI;
+                            
+                            animateAng = ang;
                         }
                         
-                        if (!cpr1) {
+                        if (select.parent.parent) {
                             ac = select.parent.parent;
                             phi = ac.angle;
                             
@@ -594,6 +597,7 @@ function orbital (svgContainer, data) {
                     
                 } else {
                     gettingLevel = select;
+                    c = select.parent;
                     var ac = select.parent;
                     var phi = ac.angle;
                     var ang =
@@ -617,37 +621,35 @@ function orbital (svgContainer, data) {
                     var rr1 = Math.sqrt (xx1 * xx1 + yy1 * yy1);
                     dr = 1 - rr1 / rr0;
                     
-                    c = ac;
-                    
-                    ///////////////
                     if (select.parent.parent) {
-                        cpr1 = select;
-                        while (cpr1) {
-                            if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
-                                break;
-                                
-                            cpr1 = cpr1.parent
-                        }
-                        if (!cpr1) {
-                            ang1 = select.parent.parent.angle1;
-                        } else {
-                            ac = select.parent.parent;
-                            phi = ac.angle;
-                            var ang1 =
-                                - phi +
-                                3 * Math.PI / 2 +
-                                Math.atan2 (
-                                    (ac.smallY * squashY - mouse.y) / squashY,
-                                    (ac.smallX * squashX - mouse.x) / squashX
-                                );
+                        ac = select.parent.parent;
+                        phi = ac.angle;
+                        var ang1 =
+                            - phi +
+                            3 * Math.PI / 2 +
+                            Math.atan2 (
+                                (ac.smallY * squashY - mouse.y) / squashY,
+                                (ac.smallX * squashX - mouse.x) / squashX
+                            );
 
-                            while (ang1 > 2 * Math.PI) ang1 = ang1 - 2 * Math.PI;
-                            while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
-                            
-                            //drawCircle (ac.smallX, ac.smallY, ac.smallR, "green", "blue", "yxz");
-                        }
+                        while (ang1 > 2 * Math.PI) ang1 = ang1 - 2 * Math.PI;
+                        while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
+                        
+                        //drawCircle (ac.smallX, ac.smallY, ac.smallR, "green", "blue", "yxz");
                     }
-                    ///////////////
+                    
+                    cpr1 = select.parent;
+                    while (cpr1) {
+                        if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
+                            break;
+                            
+                        cpr1 = cpr1.parent
+                    }
+                    
+                    if (cpr1) {
+                        ang = select.parent.angle1;
+                        if (select.parent.parent) ang1 = select.parent.parent.angle1;
+                    }
                 }
                 
                 var topc = c;

@@ -469,7 +469,7 @@ function orbital (svgContainer, data) {
             if (c.smallR < Math.sqrt ((c.smallX - mouse.x / squashX) * (c.smallX - mouse.x / squashX) + (c.smallY - mouse.y / squashY) * (c.smallY - mouse.y / squashY))) {
                 var ac, phi;
                 if (select.parent) {
-                    cpr1 = select.parent;
+                    cpr1 = select.parent.parent;
                     while (cpr1) {
                         if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
                             break;

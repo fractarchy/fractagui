@@ -478,8 +478,8 @@ function orbital (svgContainer, data) {
                     }
                     
                     if (cpr1) {
-                        animateAng = select.parent.angle1;;
-                        if (select.parent.parent) animateAng1 = select.parent.parent.angle1;
+                        //animateAng = select.parent.angle1;;
+                        //if (select.parent.parent) animateAng1 = select.parent.parent.angle1;
 
                     } else {
                         ac = select.parent;
@@ -621,6 +621,8 @@ function orbital (svgContainer, data) {
                     var rr1 = Math.sqrt (xx1 * xx1 + yy1 * yy1);
                     dr = 1 - rr1 / rr0;
                     
+                    animateAng = ang;
+                    
                     if (select.parent.parent) {
                         ac = select.parent.parent;
                         phi = ac.angle;
@@ -636,7 +638,8 @@ function orbital (svgContainer, data) {
                         while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
                         
                         //drawCircle (ac.smallX, ac.smallY, ac.smallR, "green", "blue", "yxz");
-
+                        
+                        animateAng1 = ang1;
                         animateAng1Start = select.parent.parent.angle1;
                     }
                     
@@ -651,6 +654,8 @@ function orbital (svgContainer, data) {
                     if (cpr1) {
                         ang = select.parent.angle1;
                         if (select.parent.parent) ang1 = select.parent.parent.angle1;
+                        animateAng = ang;
+                        animateAng1 = ang1;
                     }
                 }
                 
@@ -674,7 +679,7 @@ function orbital (svgContainer, data) {
                         if (path.length > 0) {
                             selectUp = c;
                             if (level !== gettingLevel) {
-                                animateAng = ang;
+                                //animateAng = ang;
 
                                 i = 0;
                                 t0 = (new Date()).getTime();
@@ -763,6 +768,7 @@ function orbital (svgContainer, data) {
                                 }
                                 
                                 animating = "level";
+                                mousemove (e);
                                 aEnsmall();
                             }
                         }
@@ -770,7 +776,7 @@ function orbital (svgContainer, data) {
                     } else {
                         //alert ("level down");
                         selectDown = c;
-                        animateAng1 = ang1;
+                        //animateAng1 = ang1;
                         if (level !== gettingLevel) {
                             t0 = (new Date()).getTime();
                             i = 0;
@@ -855,6 +861,7 @@ function orbital (svgContainer, data) {
                             }
                             
                             animating = "level";
+                            mousemove (e);
                             aEnlarge ();
                         }    
                     }

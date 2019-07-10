@@ -1,8 +1,8 @@
 # Orbiteque blueprints
 
-Orbiteque is meant to be a visual editor and expression evaluator for Logos. Because Logos represents a formal language for manipulating knowledge, Orbiteque in effect could be used as a spreadsheet, logic database, or general knowledge base manager. Ultimate goal of Logos is to be used by scientists to help them in their researches. The whole science is wrapped around the notion of knowledge, and Logos handles exactly that notion, knowledge. We will try to offer a usable material to a broader group of spreadsheets and database users in a hope to reach scientists as much smaller group of people. As science, in its essence can be used to do wonderful things, we hope that in its final version, Orbiteque could make a positive footprint in the civilization.
+Orbiteque is meant to be a visual editor and expression evaluator for Logos. Because Logos represents a formal language for manipulating knowledge, Orbiteque in effect could be used as a spreadsheet, logic database, or general knowledge base manager. Ultimate goal of Logos is to be used by scientists to help them in their researches. The whole science is wrapped around the notion of knowledge, and Logos handles exactly that notion, knowledge. We will try to offer a usable material to a broader group of spreadsheets and database users in a hope to reach the scientists as much smaller group of people. As science in its essence can be used to do wonderful things, we hope that Orbiteque in its final version could make a positive footprint in the civilization.
 
-Building Orbiteque can be divided into several phases, and each phase individually could have a usability value on a certain range of users of the first final version.
+Programming Orbiteque can be divided into several phases, and each phase individually could have a usability value on a certain range of users of the final version.
 
 # Phase 1 - creating visual interface
 

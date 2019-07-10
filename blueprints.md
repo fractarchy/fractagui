@@ -156,6 +156,6 @@ This phase includes finishing the Logos parser and evaluator and integrating it 
 
 This would turn Orbiteque into a spreadsheet, but it would be more than that. In Logos, it is possible to do a lot of stuff, including describing [relational algebra](https://en.wikipedia.org/wiki/Relational_algebra) used in database science, which means that Orbiteque could become a full blown relational database. Other uses like content translation, theorem proving, or math equation solving are also possible, and some of them would need to reveal a history of gradual transformations during the evaluation.
 
-# Next phases
+# The following phases
 
-Next phases would include SVG renderers and things we would think of in the process of raching here. Things like building a scientific content sharing site where people could read about and solve math, physics, or chemistry problems, or porting Orbiteque and Logos to [Tiny Core Linux](https://en.wikipedia.org/wiki/Tiny_Core_Linux) to use Orbiteque as a window manager and Logos as a compiler are just some of possible ideas. Anything can happen from this point onwards.
+The following phases would include SVG renderers and things we would think of in the process of reaching here. Things like building a scientific content sharing site where people could read about and solve math, physics, or chemistry problems, or porting Orbiteque and Logos to [Tiny Core Linux](https://en.wikipedia.org/wiki/Tiny_Core_Linux) to use Orbiteque as a window manager and Logos as a compiler are just some of possible ideas. Anything can happen from this point onwards.

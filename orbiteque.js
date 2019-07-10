@@ -18,6 +18,8 @@ function orbital (svgContainer, data) {
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
     //ctx.imageSmoothingEnabled = false;
+    //const opts = { desynchronized: true };
+    //const ctx = canvas.getContext('2d', opts);
 
     var ratio = 1 / 1.61803398875; //0.7;//575;
     //var minRadius = Length.toPx(svg, "1mm");
@@ -52,8 +54,13 @@ function orbital (svgContainer, data) {
             ctx.fillStyle = fill;
             ctx.fill ();
             
-            //ctx.strokeStyle = stroke;
-            //ctx.stroke ();
+            /*
+            ctx.strokeStyle = "white";
+            ctx.beginPath();
+            ctx.moveTo(ac.smallX, ac.smallY);
+            ctx.lineTo(ac.smallX + 100 * Math.cos(ang[i]), ac.smallY + 100 * Math.sin(ang[i]));
+            ctx.stroke();
+            */
             
             if (r > 5) {
                 var correct
@@ -71,7 +78,7 @@ function orbital (svgContainer, data) {
     }
 
     function node() {
-        var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor) {
+        var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor) {
             function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
                 var beta = angle + alpha - Math.PI / 2;
                 
@@ -152,7 +159,7 @@ function orbital (svgContainer, data) {
                 if ((r1 * squashY * squashX) >= minRadius) {
                     var colorFill = fill1;
                     
-                    if (mouse && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
+                    if (selectedCursor?cursor === selectedCursor: mouse && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
                         colorFill = "white";
                     } else {
                         colorFill = fill1;
@@ -170,7 +177,7 @@ function orbital (svgContainer, data) {
                     c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
                     ci = (cursor?cursor.index:0);
                     if (c0.r * squashX * squashY >= minRadius) {
-                        got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null));
+                        got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
                         if (got) {
                             idx = ci;
                             alp = alpha;
@@ -187,7 +194,7 @@ function orbital (svgContainer, data) {
                         ci++;
                         
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null));
+                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -212,7 +219,7 @@ function orbital (svgContainer, data) {
                         ci--;
 
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null));
+                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -227,7 +234,9 @@ function orbital (svgContainer, data) {
                         alpha = c1.alpha;
                     }
                     
-                    if (ret || (mouse && cursor && mouse === cursor) || (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
+                    var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
+                    
+                    if (ret || cond) {
                         var pass = {
                             data: data,
                             index: index,
@@ -266,19 +275,7 @@ function orbital (svgContainer, data) {
                                 return {x: x0 + c.x, y: y0 + c.y, r: c.r};
                             },
                             getAbsoluteAngle: function () {
-                                var phi = 0;
-                                var c = pass.parent;
-                                if (c) {
-                                    while (c) {
-                                        phi += c.angle + c.angle1 - Math.PI;
-                                        c = c.parent;
-                                    }
-                                }
-                                
-                                while (phi > 2 * Math.PI) phi = phi - 2 * Math.PI;
-                                while (phi < 0) phi = phi + 2 * Math.PI;
-                                
-                                return phi;
+                                return angle;
                             },
                             getAngMin: function () {
                                 var m0, m1;
@@ -305,10 +302,14 @@ function orbital (svgContainer, data) {
                             getCircle: function (ang) {
                                 return getCircle (ang, x0, y0, r0, x1, y1, r1);
                             },
-                            setAngle: (function () {                                
-                                var alp1 = - angle + 3 * Math.PI / 2 + Math.atan2((y0 * squashY - mouse.y) / squashY, (x0 * squashX - mouse.x) / squashX);
-                                while (alp1 > 2 * Math.PI) alp1 = alp1 - 2 * Math.PI;
-                                while (alp1 < 0) alp1 = alp1 + 2 * Math.PI;
+                            setAngle: (function () {
+                                if (mouse) {
+                                    var alp1 = - angle + 3 * Math.PI / 2 + Math.atan2((y0 * squashY - mouse.y) / squashY, (x0 * squashX - mouse.x) / squashX);
+                                    while (alp1 > 2 * Math.PI) alp1 = alp1 - 2 * Math.PI;
+                                    while (alp1 < 0) alp1 = alp1 + 2 * Math.PI;
+                                } else {
+                                    var alp1 = alp;
+                                }
                                 
                                 var dalp = alp1 - alp;
                                 
@@ -323,7 +324,7 @@ function orbital (svgContainer, data) {
                                 }
                             }) (),
                             revertAngle: function () {
-                                pass.calcCursor (revertAng);
+                                pass.calcCursor (pass.revertAng);
                             },
                             calcCursor: function (ang) {
                                 var mi, m1, m2;
@@ -350,6 +351,7 @@ function orbital (svgContainer, data) {
                                     pass.cursor.index = mi + 1;
                                     pass.cursor.angle = m1.alpha;
                                 }
+                                
                                 pass.angle1 = ang;
                             }
                         };
@@ -423,6 +425,24 @@ function orbital (svgContainer, data) {
         redraw (null);
     }
     
+    function setupSelect (range) {
+        select = range;
+        if (range) {
+            var sc = cursor;
+            select.parent = null;
+            select.cursor = sc;
+            while (select.child) {
+                select = select.child;
+                
+                if (!sc.children[select.index])
+                    sc.children[select.index] = {parent: sc, index: 0, angle: Math.PI, children: []};
+                
+                sc = sc.children[select.index];
+                select.cursor = sc;
+            }
+        }
+    }
+    
     function getMouse(mouseEvent)
     {
       var obj = svgContainer;
@@ -458,268 +478,156 @@ function orbital (svgContainer, data) {
     function mousemove (e) {
         "use strict";
         
-        var original_c;
         mouse = getMouse (e);
-        
-
-        if (animating === "level" && dragging) {
-            var c = select;
-            var cpr1
-            
-            if (c.smallR < Math.sqrt ((c.smallX - mouse.x / squashX) * (c.smallX - mouse.x / squashX) + (c.smallY - mouse.y / squashY) * (c.smallY - mouse.y / squashY))) {
-                var ac, phi;
-                if (select.parent) {
-                    cpr1 = select.parent.parent;
-                    while (cpr1) {
-                        if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
-                            break;
-                            
-                        cpr1 = cpr1.parent
-                    }
-                    
-                    if (cpr1) {
-                        //animateAng = select.parent.angle1;;
-                        //if (select.parent.parent) animateAng1 = select.parent.parent.angle1;
-
-                    } else {
-                        ac = select.parent;
-                        phi = ac.getAbsoluteAngle() + ac.angle1 + Math.PI;
-                        var tmpc = ac.getCircle(ac.angle1);
-                        
-                        if (tmpc.r * squashX * squashY > minRadius) {
-                            var tmpr0 = tmpc.r * ratio;
-                            var tmpx0 = tmpc.x + (tmpc.r - tmpr0) * Math.cos (phi - Math.PI / 2);
-                            var tmpy0 = tmpc.y + (tmpc.r - tmpr0) * Math.sin (phi - Math.PI / 2);
-                            
-                            var ang =
-                                - phi + 
-                                3 * Math.PI / 2 +
-                                Math.atan2 (
-                                    ((ac.smallY + tmpy0) * squashY - mouse.y) / squashY,
-                                    ((ac.smallX + tmpx0) * squashX - mouse.x) / squashX
-                                );
-                                
-                            //drawCircle (ac.smallX + tmpx0, ac.smallY + tmpy0, tmpr0, "red", "blue", "yxz"); 
-
-                            while (ang > 2 * Math.PI) ang = ang - 2 * Math.PI;
-                            while (ang < 0) ang = ang + 2 * Math.PI;
-                            
-                            animateAng = ang;
-                        }
-                        
-                        if (select.parent.parent) {
-                            ac = select.parent.parent;
-                            phi = ac.angle;
-                            
-                            var ang1 =
-                                - phi + 
-                                3 * Math.PI / 2 +
-                                Math.atan2 (
-                                    ((ac.smallY) * squashY - mouse.y) / squashY,
-                                    ((ac.smallX) * squashX - mouse.x) / squashX
-                                );
-                            
-                            //drawCircle (ac.smallX, ac.smallY, ac.smallR, "blue", "blue", "yxz");
-
-                            while (ang1 > 2 * Math.PI) ang1 = ang1 - 2 * Math.PI;
-                            while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
-                            
-                            animateAng1 = ang1;
-                        }
-                    }
-
-                } else {
-                    ac = select;
-                    phi = 0;
-                    var tmpr0 = rr * ratio;
-                    var tmpx0 = xx + (rr - tmpr0) * Math.cos (phi - Math.PI / 2);
-                    var tmpy0 = yy + (rr - tmpr0) * Math.sin (phi - Math.PI / 2);
-                    
-                    if (ac.getCircle(ac.angle1).r * squashX * squashY > minRadius) {
-                        var ang =
-                            - phi + 
-                            3 * Math.PI / 2 +
-                            Math.atan2 (
-                                ((tmpy0) * squashY - mouse.y) / squashY,
-                                ((tmpx0) * squashX - mouse.x) / squashX
-                            );
-                            
-                        //drawCircle (tmpx0, tmpy0, tmpr0, "red", "blue", "yxz"); //ovaj je pravi
-                        
-                        while (ang > 2 * Math.PI) ang = ang - 2 * Math.PI;
-                        while (ang < 0) ang = ang + 2 * Math.PI;
-                        
-                        animateAng = ang;
-                    }
-                }
-            }
-            lastEvent = e;
-            
-        } else if (!animating) {
-            lastMouse = e;
-            lastEvent = e;
-            original_c = select;
+        {
+            lastMouseEvent = e;
             
             if (!dragging && mouseDown === 1) {
                 if (5 < Math.sqrt(Math.pow(mouse.x - dragX, 2) + Math.pow(mouse.y - dragY, 2))) {
                     dragging = true;
-                    selectDown = null;
-                    selectUp = null;
                     inert = [];
                     inertIdx = 0;
+                    setupSelect(preSelect);
                 }
             }
             
-            if (dragging) {
-                var c = select;
-                var dr;
-                var noUpdate;
-                if (!c.parent) {
-                    gettingLevel = select;
-
-                    var ang =
-                        3 * Math.PI / 2 +
-                        Math.atan2 (
-                            (c.smallY * squashY - mouse.y) / squashY,
-                            (c.smallX * squashX - mouse.x) / squashX
-                        );
+            if (dragging && select) {
+                gettingLevel = select;
+                
+                var ip = 0;
+                var ang = [];
+                var ac = select;
+                while (ac && ip < 3) {
+                    var phi =  ac.angle;
                         
-                    while (ang > 2 * Math.PI) ang = ang - 2 * Math.PI;
-                    while (ang < 0) ang = ang + 2 * Math.PI;
-
-                    var rr0 = c.smallR;
-                    var xx0 = c.smallX;
-                    var yy0 = c.smallY;
-                    var xx1 = xx0 - mouse.x / squashX;
-                    var yy1 = yy0 - mouse.y / squashY;
-                    var rr1 = Math.sqrt (xx1 * xx1 + yy1 * yy1);
-                    dr = 1 - rr1 / rr0;
-                    
-                } else {
-                    gettingLevel = select;
-                    c = select.parent;
-                    var ac = select.parent;
-                    var phi = ac.angle;
-                    var ang =
+                    ang[ip] =
                         - phi +
                         3 * Math.PI / 2 +
                         Math.atan2 (
                             (ac.smallY * squashY - mouse.y) / squashY,
                             (ac.smallX * squashX - mouse.x) / squashX
                         );
-
-                    while (ang > 2 * Math.PI) ang = ang - 2 * Math.PI;
-                    while (ang < 0) ang = ang + 2 * Math.PI;
-                    
-                    var crc = ac.getCircle (ang);
-
-                    var rr0 = crc.r * ratio;
-                    var xx0 = ac.smallX + crc.x + (crc.r * (1 - ratio)) * Math.cos (ang + phi + Math.PI / 2);
-                    var yy0 = ac.smallY + crc.y + (crc.r * (1 - ratio)) * Math.sin (ang + phi + Math.PI / 2);
-                    var xx1 = xx0 - mouse.x / squashX;
-                    var yy1 = yy0 - mouse.y / squashY;
-                    var rr1 = Math.sqrt (xx1 * xx1 + yy1 * yy1);
-                    dr = 1 - rr1 / rr0;
-                    
-                    animateAng = ang;
-                    
-                    if (select.parent.parent) {
-                        ac = select.parent.parent;
-                        phi = ac.angle;
-                        var ang1 =
-                            - phi +
-                            3 * Math.PI / 2 +
-                            Math.atan2 (
-                                (ac.smallY * squashY - mouse.y) / squashY,
-                                (ac.smallX * squashX - mouse.x) / squashX
-                            );
-
-                        while (ang1 > 2 * Math.PI) ang1 = ang1 - 2 * Math.PI;
-                        while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
                         
-                        //drawCircle (ac.smallX, ac.smallY, ac.smallR, "green", "blue", "yxz");
-                        
-                        animateAng1 = ang1;
-                        animateAng1Start = select.parent.parent.angle1;
-                    }
+                    while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
+                    while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
                     
-                    cpr1 = select.parent;
-                    while (cpr1) {
-                        if (cpr1.smallR > Math.sqrt ((cpr1.smallX - mouse.x / squashX) * (cpr1.smallX - mouse.x / squashX) + (cpr1.smallY - mouse.y / squashY) * (cpr1.smallY - mouse.y / squashY)))
-                            break;
-                            
-                        cpr1 = cpr1.parent
-                    }
+                    //drawCircle (ac.smallX, ac.smallY, ac.smallR, "red", "white", "yxz"); 
                     
-                    if (cpr1) {
-                        ang = select.parent.angle1;
-                        if (select.parent.parent) ang1 = select.parent.parent.angle1;
-                        animateAng = ang;
-                        animateAng1 = ang1;
-                    }
+                    ac = ac.parent;
+                    ip++;
                 }
                 
-                var topc = c;
-                while (topc.parent)
-                    topc = topc.parent;
+                var isOnParent = select.parent;
+                while (isOnParent) {
+                    if (isOnParent.smallR > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
+                        break;
+                        
+                    isOnParent = isOnParent.parent
+                }
                 
-                if (dr <= 0) {
-                    dr = 0;
-                    var i, t0;
-                    var cparent = c;
-                    while (cparent) {
-                        if (cparent.smallR > Math.sqrt ((cparent.smallX - mouse.x / squashX) * (cparent.smallX - mouse.x / squashX) + (cparent.smallY - mouse.y / squashY) * (cparent.smallY - mouse.y / squashY)))
-                            break;
-                            
-                        cparent = cparent.parent
-                    }
-                    
-                    if (!cparent && c.smallR < Math.sqrt ((c.smallX - mouse.x / squashX) * (c.smallX - mouse.x / squashX) + (c.smallY - mouse.y / squashY) * (c.smallY - mouse.y / squashY))) {
-                        //alert ("level up");
-                        if (path.length > 0) {
-                            selectUp = c;
-                            if (level !== gettingLevel) {
-                                //animateAng = ang;
+                var minR, maxR, mouseDistance;
+                if (!isOnParent) {
+                    if (select.parent) {
+                        minR = select.parent.smallR;
+                        maxR = select.parent.smallR + 2 * select.parent.getCircle(ang[1]).r * ratio;//select.smallR;
+                        mouseDistance = Math.sqrt (Math.pow (select.parent.smallX - mouse.x / squashX, 2) + Math.pow(select.parent.smallY - mouse.y / squashY, 2));
 
-                                i = 0;
+                    } else {
+                        minR = 0;
+                        maxR = select.smallR;
+                        mouseDistance = Math.sqrt (Math.pow (select.smallX - mouse.x / squashX, 2) + Math.pow(select.smallY - mouse.y / squashY, 2))
+                    }
+                }
+
+                if (!animating && select.parent && !isOnParent && mouseDistance < maxR) {
+                    //select.parent.setAngle (ang[1], dr);
+                    select.parent.setAngle (ang[1], 0);
+                    //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {
+                        //inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: dr, time: (new Date()).getTime()};
+                        inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: 0, time: (new Date()).getTime()};
+                        inertIdx++;
+                        if (inertIdx === 100) inertIdx = 0;
+
+                        clear ();                                
+                        setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, select.cursor));
+
+                    //} else {
+                    //    select.parent.revertAngle ();
+                    //}
+                }
+                
+                if (!select) {
+                    mouseup (lastMouseEvent);
+                    
+                } else {
+                    if (!isOnParent) {
+                        if (mouseDistance > maxR)
+                            animateAng0 = ang[0];
+                        
+                        if (select.parent && select.parent.parent)
+                            animateAng2 = ang[2];
+
+                    } else {
+                        if (isOnParent !== select.parent) {
+                            if (select.parent.parent) {
+                                if (animating) {
+                                    animateAng2 = curAnimateAng2;
+                                    animateAng2Start = curAnimateAng2;
+                                } else {
+                                    animateAng2 = select.parent.parent.angle1;
+                                    animateAng2Start = select.parent.parent.angle1;
+                                }
+                            }
+                            
+                        } else {
+                            animateAng2 = ang[2];
+                            if (!animating && select.parent.parent)
+                                animateAng2Start = select.parent.parent.angle1;
+                        }
+                    }
+
+                    if (!animating) {
+                        var topc = select;
+                        while (topc.parent)
+                            topc = topc.parent;
+
+                        var i, t0;
+                    
+                        if (isOnParent) {
+                            //alert ("level down");
+                            if (level !== gettingLevel) {
                                 t0 = (new Date()).getTime();
+                                i = 0;
                                 
                                 var angles = [];
-                                
-                                var cc = original_c.cursor.parent;
-                                var cp = original_c.parent;
-
-                                while (cp) {
+                                var cc = select.parent.cursor;
+                                var cp = select.parent;
+                                do {
                                     angles.push (cp.angle1);
                                     cc.index = cp.index1;
                                     cc = cc.parent;
                                     cp = cp.parent;
-                                }
-                                angles.push (Math.PI);
-
-                                function aEnsmall () {
-                                    cc = original_c.cursor.parent;
-                                    cp = original_c.parent;
+                                } while (cp);
+                                
+                                function aEnlarge () {
+                                    angles[1] = animateAng2Start * (1 - i) + animateAng2 * i;
+                                    curAnimateAng2 = angles[1]
+                                    cc = select.parent.cursor;
+                                    cp = select.parent;
                                     var ap = 0;
-                                    
-                                    var lastAngle = Math.PI;
-                                    while (ap < angles.length) {
-                                        if (ap > 0) {
-                                            cc.angle = angles[ap] * (1 - i) + angles[ap - 1] * (i);
-                                        } else {
-                                            cc.angle = angles[ap] * (1 - i) + animateAng * (i);//Math.PI + (animateAng - Math.PI) * (i);
-                                        }
-                                        lastAngle = cc.angle;
+                                    while (cp.parent) {
+                                        cc.angle = angles[ap] * (1 - i) + angles[ap + 1] * i;
                                         cc = cc.parent;
+                                        cp = cp.parent;
                                         ap++
                                     };
-
-                                    var m = topc.getCircle (lastAngle);
+                                    cc.angle = angles[ap] * (1 - i) + Math.PI * i;
+                                    var m = topc.getCircle (topc.cursor.angle);
                                     
                                     var x0 = topc.smallX + m.x;
                                     var y0 = topc.smallY + m.y;
                                     var r0 = m.r;
-
+                                    
                                     var ang = Math.atan2(y0 - y1, x0 - x1);
                                     var mang = Math.atan2(y1 - y0, x1 - x0);
                                     
@@ -730,12 +638,12 @@ function orbital (svgContainer, data) {
                                     var x2 = xo + r2 * Math.cos(mang);
                                     var y2 = yo + r2 * Math.sin(mang);
 
-                                    var x = x1 + (x2 - x1) * (1 - i);
-                                    var y = y1 + (y2 - y1) * (1 - i);
-                                    var r = r1 + (r2 - r1) * (1 - i);
+                                    var x = x1 + (x2 - x1) * i;
+                                    var y = y1 + (y2 - y1) * i;
+                                    var r = r1 + (r2 - r1) * i;
 
                                     clear ();
-                                    var atCur = n.render (minRadius, x, y, r, 0, 1, original_c.cursor, data, cursor.parent.parent.index, cursor.parent);
+                                    var atCur = n.render (minRadius, x, y, r, 0, 1, null, data, topc.index, cursor, select.cursor);
 
                                     if (i < 1) {
                                         var t1 = (new Date()).getTime();
@@ -743,182 +651,144 @@ function orbital (svgContainer, data) {
                                         if (i > 1) i = 1
                                         t0 = t1;
                                         
-                                        setTimeout(aEnsmall, 0);
+                                        setTimeout(aEnlarge, 0);
                                     } else {
                                         level = gettingLevel;
-
-                                        cursor = cursor.parent;
-                                        data = path.pop();
-                                        animating = false;
-                                        
-                                        if (atCur) {
-                                            while (atCur.child) atCur = atCur.child;
-                                            if (dragging) {
-                                                setupSelect ({x: squashX * atCur.smallX, y: squashY * atCur.smallY})
-                                                mousemove (lastEvent);
-                                            }
-                                            //drawCircle (atCur.smallX,  atCur.smallY, atCur.smallR, "red", "blue", "yxz");
-                                        } else {
-                                            mouseup (lastEvent);
-                                        }
-                                        
                                         inertIdx = 0;
                                         inert = [];
+
+                                        if (!cursor.children[cursor.index])
+                                            cursor.children[cursor.index] = {parent: cursor, index: 0, angle: Math.PI, children: []};
+                                        cursor = cursor.children[cursor.index];
+                                        
+                                        path.push (data);
+                                        data = topc.child.data;
+                                        
+                                        animating = false;
+
+                                        if (atCur) {
+                                            if (dragging) {
+                                                setupSelect (atCur.child)
+                                                mousemove (lastMouseEvent);
+                                            } else {
+                                                mouseup (lastMouseEvent);
+                                            }
+                                            //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
+
+                                        } else {
+                                            mouseup (lastMouseEvent);
+                                        }
                                     }
                                 }
                                 
                                 animating = "level";
-                                mousemove (e);
-                                aEnsmall();
-                            }
-                        }
-
-                    } else {
-                        //alert ("level down");
-                        selectDown = c;
-                        //animateAng1 = ang1;
-                        if (level !== gettingLevel) {
-                            t0 = (new Date()).getTime();
-                            i = 0;
-                            
-                            var angles = [];
-                            var cc = c.cursor;
-                            var cp = c;
-                            do {
-                                angles.push (cp.angle1);
-                                cc.index = cp.index1;
-                                cc = cc.parent;
-                                cp = cp.parent;
-                            } while (cp);
-                            
-                            function aEnlarge () {
-                                angles[1] = animateAng1Start * (1 - i) + animateAng1 * i;
-                                cc = c.cursor;
-                                cp = c;
-                                var ap = 0;
-                                while (cp.parent) {
-                                    cc.angle = angles[ap] * (1 - i) + angles[ap + 1] * i;
-                                    cc = cc.parent;
-                                    cp = cp.parent;
-                                    ap++
-                                };
-                                cc.angle = angles[ap] * (1 - i) + Math.PI * i;
-                                var m = topc.getCircle (topc.cursor.angle);
-                                
-                                var x0 = topc.smallX + m.x;
-                                var y0 = topc.smallY + m.y;
-                                var r0 = m.r;
-                                
-                                var ang = Math.atan2(y0 - y1, x0 - x1);
-                                var mang = Math.atan2(y1 - y0, x1 - x0);
-                                
-                                var xo = x1 + r1 * Math.cos(ang);
-                                var yo = y1 + r1 * Math.sin(ang);
-                                
-                                var r2 = r1 * r1 / r0;
-                                var x2 = xo + r2 * Math.cos(mang);
-                                var y2 = yo + r2 * Math.sin(mang);
-
-                                var x = x1 + (x2 - x1) * i;
-                                var y = y1 + (y2 - y1) * i;
-                                var r = r1 + (r2 - r1) * i;
-
-                                clear ();
-                                var atCur = n.render (minRadius, x, y, r, 0, 1, original_c.cursor, data, topc.index, cursor);
-
-                                if (i < 1) {
-                                    var t1 = (new Date()).getTime();
-                                    i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
-                                    if (i > 1) i = 1
-                                    t0 = t1;
+                                aEnlarge ();
+                            }    
+                        } else if (mouseDistance > maxR) {
+                            //alert ("level up");
+                            if (path.length > 0) {
+                                if (level !== gettingLevel) {
+                                    i = 0;
+                                    t0 = (new Date()).getTime();
                                     
-                                    setTimeout(aEnlarge, 0);
-                                } else {
-                                    level = gettingLevel;
-                                    inertIdx = 0;
-                                    inert = [];
-
-                                    if (!cursor.children[cursor.index])
-                                        cursor.children[cursor.index] = {parent: cursor, index: 0, angle: Math.PI, children: []};
-                                    cursor = cursor.children[cursor.index];
+                                    var angles = [];
                                     
-                                    path.push (data);
-                                    data = selectDown.child.data;
-                                    
-                                    animating = false;
+                                    var cc = select.cursor.parent;
+                                    var cp = select.parent;
 
-                                    if (atCur) {
-                                        while (atCur.child) atCur = atCur.child;
-                                        if (dragging) {
-                                            setupSelect ({x: squashX * atCur.smallX, y: squashY * atCur.smallY})
-                                            mousemove (lastEvent);
-                                        }
-                                        //drawCircle (atCur.smallX,  atCur.smallY, atCur.smallR, "red", "blue", "yxz");
-                                    } else {
-                                        mouseup (lastEvent);
+                                    while (cp) {
+                                        angles.push (cp.angle1);
+                                        cc.index = cp.index1;
+                                        cc = cc.parent;
+                                        cp = cp.parent;
                                     }
+                                    angles.push (Math.PI);
+
+                                    function aEnsmall () {
+                                        cc = select.cursor.parent;
+                                        cp = select.parent;
+                                        var ap = 0;
+                                        
+                                        var lastAngle = Math.PI;
+                                        while (ap < angles.length) {
+                                            if (ap > 0) {
+                                                cc.angle = angles[ap] * (1 - i) + angles[ap - 1] * (i);
+                                            } else {
+                                                cc.angle = angles[ap] * (1 - i) + animateAng0 * (i);//Math.PI + (animateAng0 - Math.PI) * (i);
+                                            }
+                                            lastAngle = cc.angle;
+                                            cc = cc.parent;
+                                            ap++
+                                        };
+
+                                        var m = topc.getCircle (lastAngle);
+                                        
+                                        var x0 = topc.smallX + m.x;
+                                        var y0 = topc.smallY + m.y;
+                                        var r0 = m.r;
+
+                                        var ang = Math.atan2(y0 - y1, x0 - x1);
+                                        var mang = Math.atan2(y1 - y0, x1 - x0);
+                                        
+                                        var xo = x1 + r1 * Math.cos(ang);
+                                        var yo = y1 + r1 * Math.sin(ang);
+                                        
+                                        var r2 = r1 * r1 / r0;
+                                        var x2 = xo + r2 * Math.cos(mang);
+                                        var y2 = yo + r2 * Math.sin(mang);
+
+                                        var x = x1 + (x2 - x1) * (1 - i);
+                                        var y = y1 + (y2 - y1) * (1 - i);
+                                        var r = r1 + (r2 - r1) * (1 - i);
+
+                                        clear ();
+                                        var atCur = n.render (minRadius, x, y, r, 0, 1, null, data, cursor.parent.parent.index, cursor.parent, select.cursor);
+
+                                        if (i < 1) {
+                                            var t1 = (new Date()).getTime();
+                                            i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
+                                            if (i > 1) i = 1
+                                            t0 = t1;
+                                            
+                                            setTimeout(aEnsmall, 0);
+                                        } else {
+                                            level = gettingLevel;
+
+                                            cursor = cursor.parent;
+                                            data = path.pop();
+                                            animating = false;
+                                            
+                                            if (atCur) {
+                                                if (dragging) {
+                                                    setupSelect (atCur)
+                                                    mousemove (lastMouseEvent);
+                                                } else {
+                                                    mouseup (lastMouseEvent);
+                                                }
+                                                //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
+
+                                            } else {
+                                                mouseup (lastMouseEvent);
+                                            }
+                                            
+                                            inertIdx = 0;
+                                            inert = [];
+                                        }
+                                    }
+                                    
+                                    animating = "level";
+                                    aEnsmall();
                                 }
                             }
-                            
-                            animating = "level";
-                            mousemove (e);
-                            aEnlarge ();
-                        }    
-                    }
-                    
-                } else if (c !== select) {
-                    c.setAngle (ang, dr);
-                    if (c.getCircle(c.angle1).r * squashX * squashY > minRadius) {
-                        inert[inertIdx] = {angle: c.angle1, rawAngle: ang, percentRawAngle: dr, time: (new Date()).getTime()};
-                        inertIdx++;
-                        if (inertIdx === 100) inertIdx = 0;
-
-                    } else {
-                        c.revertAngle ();
-                    }
+                        }
+                    }                    
                 }
             }
             
-            if (mouseDown === 1) {
-                redraw (null);
-                
-            } else {
+            if (!select && !animating && !dragging) {
                 redraw ({x: mouse.x, y: mouse.y});
             }
-        }
-    }
-    
-    function setupSelect (e) {
-        mouse = e;//getMouse (e);
-
-        range = redraw ({x: mouse.x, y: mouse.y, button: e.which});
-
-        if (range) {
-            select = range;
-            var sc = cursor;
-            select.cursor = sc;
-            while (select.child) {
-                select = select.child;
-                
-                if (!sc.children[select.index])
-                    sc.children[select.index] = {parent: sc, index: 0, angle: Math.PI, children: []};
-                
-                sc = sc.children[select.index];
-                select.cursor = sc;
-            }
             
-            if (select.parent) {
-                selectDown = range;
-                selectUp = null;
-                
-            } else {
-                selectUp = range;
-                selectDown = null;
-            }
-        } else {
-            select = null;
-            selectDown = null;
-            selectUp = null;
         }
     }
     
@@ -931,7 +801,7 @@ function orbital (svgContainer, data) {
                 dragX = mouse.x;
                 dragY = mouse.y;
                 
-                setupSelect(getMouse (e));
+                preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
             }
         }
     }
@@ -1023,11 +893,11 @@ function orbital (svgContainer, data) {
     var mouse = {};
     var tt, ll, ww, hh, rr, xx, yy, squashX, squashY;
     var r1, x1, y1;
-    var path = [], cursor, select, selectDown, selectUp, range, animating;
+    var path = [], cursor, select, preSelect, animating;
     cursor = {parent: null, index: 0, angle: Math.PI, children: []}
     cursor.parent = {parent: null, index: 0, angle: Math.PI, children: []}
-    var level, gettingLevel, animateAng, animateAng1, animateAng1Start;
-    var lastMouse, lastEvent;
+    var level, gettingLevel, animateAng0, animateAng2, animateAng2Start, curAnimateAng2;
+    var lastMouseEvent;
 
     var mouseDown = false;
     var dragX, dragY, dragging = false;

@@ -22,21 +22,21 @@ Let's see how these s-expressions would span over the fractal. Each s-expresion 
 
 This expressions would span in fractal ovals in a following way:
 
-- ((2 / 3) + 4) * 5 / (6 - 7)
-    - (2 / 3) + 4
-        - 2 / 3
-            - 2
-            - /
-            - 3
-        - +
-        - 4
-    - *
-    - 5
-    - /
-    - 6 - 7
-        - 6
-        - -
-        - 7
+- `((2 / 3) + 4) * 5 / (6 - 7)`
+    - `(2 / 3) + 4`
+        - `2 / 3`
+            - `2`
+            - `/`
+            - `3`
+        - `+`
+        - `4`
+    - `*`
+    - `5`
+    - `/`
+    - `6 - 7`
+        - `6`
+        - `-`
+        - `7`
 
 Each tree node represents a content of one fractal oval. As we can see, parent nodes hold up the entire content of all child nodes to partially compensate ivisibility of text in child nodes due to a magnification decay. That means that ovals could contain a large amounts of formatted s-expressions. In spite of that, there would be no scroll bars. Instead, each oval would integrate something like magnifier lens with a variable magnification depending on distance of the center of the oval. For example, until the radius of a half of an oval the magnification would be 1 times, everything between half and full radius would be magnified by the following formula: `m = 1 - (r / 2) / (r - r / 2)`, while the magnification on the full radius would be 0. This way, an oval could render an infinite pane of text, making the outer regions smaller and smaller. To set the outer regions to a magnification of 1, It would be possible to drag them towards the center of ovals.
 
@@ -134,19 +134,19 @@ This is a simple part. Databases are expressed by `implies`, `and` and `or` oper
 
 Table records are connected by `\/` operator (or). Record fields are connected by `/\` operator (and). `->` operator is not exactly a logic operator because it preserves order in a sequence of implications it is a part of. It would be possible to sort records, and to group records by a same content of some field featuring something like factorization in math. This table would be spanned over fractal ovals just like a plain s-expression. Example of a record:
 
-- car -> ((color -> white) /\ (type -> electric))
-    - car
-    - ->
-    - ((color -> white) /\ (type -> electric))
-        - color -> white
-            - color
-            - ->
-            - white
-        - /\
-        - type -> electric
-            - type
-            - ->
-            - electric
+- `car -> ((color -> white) /\ (type -> electric))`
+    - `car`
+    - `->`
+    - `((color -> white) /\ (type -> electric))`
+        - `color -> white`
+            - `color`
+            - `->`
+            - `white`
+        - `/\`
+        - `type -> electric`
+            - `type`
+            - `->`
+            - `electric`
 
 Sets of records (tables) would be represented in a similar manner. In this phase, no logic inference funtionality except browsing expressions would be implemented.
 

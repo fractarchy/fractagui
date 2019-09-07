@@ -1343,13 +1343,13 @@ window.addEventListener('mousedown', mousedown, false);
 window.addEventListener('mouseup', mouseup, false);
 
 window.addEventListener("touchmove", function (evt) {
-    mousemove (.changedTouches[0]);
+    mousemove (evt.changedTouches[0]);
 }, false);
 window.addEventListener("touchstart", function (evt) {
-    mousedown (.changedTouches[0]);
+    mousedown (evt.changedTouches[0]);
 }, false);
 window.addEventListener("touchend", function (evt) {
-    mouseup (.changedTouches[0]);
+    mouseup (evt.changedTouches[0]);
 }, false);
   
     function generateGrid (width, height, nlines, lineWidth) {

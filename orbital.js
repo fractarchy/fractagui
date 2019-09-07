@@ -1341,8 +1341,10 @@ function orbital (svgContainer, data) {
 window.addEventListener('mousemove', mousemove, false);
 window.addEventListener('mousedown', mousedown, false);
 window.addEventListener('mouseup', mouseup, false);
-window.addEventListener("touchmove", mousemove);
-
+window.addEventListener("touchmove", mousemove, false);
+window.addEventListener("touchstart", mousedown, false);
+window.addEventListener("touchend", mouseup, false);
+  
     function generateGrid (width, height, nlines, lineWidth) {
         var cnvim = document.createElement ("canvas");
         cnvim.width = width;

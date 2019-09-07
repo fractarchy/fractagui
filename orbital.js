@@ -1343,13 +1343,20 @@ window.addEventListener('mousedown', mousedown, false);
 window.addEventListener('mouseup', mouseup, false);
 
 window.addEventListener("touchmove", function (evt) {
-    mousemove (evt.changedTouches[0]);
+    if (evt.changedTouches.length == 1) {
+        mousemove (evt.changedTouches[0]);
+    }
 }, false);
 window.addEventListener("touchstart", function (evt) {
-    mousedown (evt.changedTouches[0]);
+    if (evt.changedTouches.length == 1) {
+        evt.changedTouches[0].which = 1;
+        mousedown (evt.changedTouches[0]);
+    }
 }, false);
 window.addEventListener("touchend", function (evt) {
-    mouseup (evt.changedTouches[0]);
+    if (evt.changedTouches.length == 1) {
+        mouseup (evt.changedTouches[0]);
+    }
 }, false);
   
     function generateGrid (width, height, nlines, lineWidth) {

@@ -38,6 +38,21 @@ function orbital (svgContainer, data) {
     var fill2 = stroke1;
     var stroke2 = fill1;
 
+    var MAX_INT32 = 4294967296 / 2 - 1;
+
+    var cnvCache;// = document.createElement ("canvas");
+    //var ctxCache, imgCache;
+    var cache, isCache;
+    
+    function invalidateCache () {
+        isCache = false;
+    }
+    
+    var log2 = [0];
+    for (var i = 1; i < 65535; i++) {
+        log2.push (Math.floor (Math.log2(i)));
+    }
+    
     function ellipse(ctx, x, y, xDis, yDis) {
         var kappa = 0.5522848, // 4 * ((√(2) - 1) / 3)
             ox = xDis * kappa,  // control point offset horizontal
@@ -111,1254 +126,6 @@ function orbital (svgContainer, data) {
 	}
 */
 
-    var cnvCache;// = document.createElement ("canvas");
-    //var ctxCache, imgCache;
-    var cache, isCache;
-    
-    function invalidateCache () {
-        isCache = false;
-    }
-    
-    var log2 = [0];
-    for (var i = 1; i < 65535; i++) {
-        log2.push (Math.floor (Math.log2(i)));
-    }
-    
-    function renderFishEye (data, width, height, magn) {
-        var mdx = Math.floor((fishEye.width - width / 2) / magn);
-        var mdy = Math.floor((fishEye.height - height / 2) / magn);
-        var ddx = Math.floor(cnvScaled.images[0][0].width / 2 - fishEye.width);
-        var ddy = Math.floor(cnvScaled.images[0][0].height / 2 - fishEye.height);
-        
-        var x1 = 0, y1 = 0;
-
-        var DX = 0; //xim
-        var DbmpscaleX = 1; //miX
-        var DbmpscalefactorX = 2; //mmX
-        var DfinalX = 3; //ximm
-        
-        var DY = 4; //xim
-        var DbmpscaleY = 5; //miX
-        var DbmpscalefactorY = 6; //mmX
-        var DfinalY = 7; //ximm
-        
-        var renderMap = new Int32Array (width * height * 8);
-        
-        for (y1 = 0; y1 < height; y1++) {
-            for (x1 = 0; x1 < width; x1++) {
-                var fe = (
-                    Math.floor(fishEye.height - (fishEye.height - y1) / magn + mdy) * fishEye.width * 2 + 
-                    Math.floor(fishEye.width - (fishEye.width - x1) / magn + mdx)
-                ) * 4;
-                var X = fishEye.array[fe] + ddx;
-                var Y = fishEye.array[fe + 1] + ddy;
-                var mX = fishEye.array[fe + 2] / MAX_INT32;
-                var mY = fishEye.array[fe + 3] / MAX_INT32;
-
-                if (mX > 0 && mY > 0) {
-                    var delta = (y1 * width + x1) * 8
-                    
-                    // X
-                    var tmpX = Math.floor (1 / mX / magn);
-                    if (tmpX >= log2.length) {
-                        var bmpscaleX = log2[log2.length - 1];
-                    } else {
-                        var bmpscaleX = log2[tmpX] + 1;
-                    }
-                    
-                    if (bmpscaleX > cnvScaled.images.length - 1)
-                        bmpscaleX = cnvScaled.images.length - 1;
-                        
-                    var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
-                    var finalX = Math.floor (X / bmpscalefactorX);
-                    
-                    renderMap[delta + DX] = X;
-                    renderMap[delta + DbmpscaleX] = bmpscaleX;
-                    renderMap[delta + DbmpscalefactorX] = bmpscalefactorX; //mmX
-                    renderMap[delta + DfinalX] = finalX; //ximm
-
-                    // Y
-                    var tmpY = Math.floor (1 / mY / magn);
-                    if (tmpY >= log2.length) {
-                        var bmpscaleY = log2[log2.length - 1];
-                    } else {
-                        var bmpscaleY = log2[tmpY] + 1;
-                    }
-                    
-                    if (bmpscaleY > cnvScaled.images.length - 1)
-                        bmpscaleY = cnvScaled.images.length - 1;
-                        
-                    var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
-                    var finalY = Math.floor (Y / bmpscalefactorY);
-
-                    renderMap[delta + DY] = Y;
-                    renderMap[delta + DbmpscaleY] = bmpscaleY;
-                    renderMap[delta + DbmpscalefactorY] = bmpscalefactorY;
-                    renderMap[delta + DfinalY] = finalY;
-                }
-            }
-        }
-
-        var x1 = 0, y1 = 0;
-        for (var i = 0; i < data.length; i += 4) {
-            var delta = (y1 * width + x1) * 8;
-            
-            var finalX = renderMap[delta + DfinalX];
-            var finalY = renderMap[delta + DfinalY];
-            
-            if (finalX === renderMap[delta - 8 + DfinalX] || finalX === renderMap[delta + 8 + DfinalX]) {
-                finalX = Math.floor (renderMap[delta + DX] / (renderMap[delta + DbmpscalefactorX] >> 1));
-                var bmpscaleX = renderMap[delta + DbmpscaleX] - 1;
-                
-                if (bmpscaleX > cnvScaled.images.length - 1)
-                    bmpscaleX = cnvScaled.images.length - 1;
-                    
-                if (bmpscaleX < 0)
-                    bmpscaleX = 0;
-                    
-            } else {
-                var bmpscaleX = renderMap[delta + DbmpscaleX];
-            }
-
-            if (finalY === renderMap[delta - width * 8 + DfinalY] || finalY === renderMap[delta + width * 8 + DfinalY]) {
-                finalY = Math.floor (renderMap[delta + DY] / (renderMap[delta + DbmpscalefactorY] >> 1));
-                var bmpscaleY = renderMap[delta + DbmpscaleY] - 1;
-                
-                if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
-                    bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
-                    
-                if (bmpscaleY < 0)
-                    bmpscaleY = 0;
-                    
-            } else {
-                var bmpscaleY = renderMap[delta + DbmpscaleY];
-            }
-
-            var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-            var scaledData = scaled.data;
-
-            if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
-                var iim = (finalY * scaled.width + finalX) * 4
-                data[i]     = scaledData[iim];                // red
-                data[i + 1] = scaledData[iim + 1];            // green
-                data[i + 2] = scaledData[iim + 2];            // blue
-                data[i + 3] = 255;                            // alpha
-            }
-            
-            x1++;
-            if (x1 === width) {
-                x1 = 0;
-                y1++;
-            }
-        }
-    }
-    
-    function renderScaledCnv (data, dataim, width, height, magn) {
-        var renderMap = new Int32Array (width * height * 2);
-        var DX = 0;
-        var DY = 1;
-
-        var tmp = Math.floor (1 / magn);
-        if (tmp >= log2.length) {
-            var bmpscale = log2[log2.length - 1];
-        } else {
-            var bmpscale = log2[tmp] + 1;
-        }
-        
-        if (bmpscale > cache.images.length - 1) 
-            bmpscale = cache.images.length - 1
-        
-        var bmpscalefactor = cnvScaled.step << (bmpscale - 1);
-        
-        var tmpmagn = 1 / magn / bmpscalefactor;
-
-                    
-        for (var y = 0; y < height; y++) {
-            for (var x = 0; x < width; x++) {
-                var delta =  (y * width + x) * 2;
-                renderMap[delta + DX] = Math.floor(x * tmpmagn);
-                renderMap[delta + DY] = Math.floor(y * tmpmagn);
-            }
-        }
-        
-        dataim = cache.images[bmpscale][bmpscale].data;
-        var x = 0, y = 0;
-        for (var i = 0; i < data.length; i += 4) {
-            var delta =  (y * width + x) * 2;
-            var dx = renderMap[delta + DX];
-            var dy = renderMap[delta + DY];
-            
-            var tmx = tmpmagn;
-            var bmx = bmpscale;
-            var tmy = tmpmagn;
-            var bmy = bmpscale;
-            
-            if ((dx === renderMap[delta + DX - 2] || dx === renderMap[delta + DX + 2])) {
-                var tmx = tmpmagn * 2;
-                var bmx = bmpscale - 1;
-            }
-
-            if ((dy === renderMap[delta + DY - 2 * width] || dy === renderMap[delta + DY + 2 * width])) {
-                var tmy = tmpmagn * 2;
-                var bmy = bmpscale - 1;
-            }
-
-            var iim = (Math.floor(y * tmy) * cache.images[bmx][bmy].width + Math.floor(x * tmx)) * 4;
-            dataim = cache.images[bmx][bmy].data;
-            
-            if (dataim[iim + 3] === 255) {
-                data[i]     = dataim[iim];                // red
-                data[i + 1] = dataim[iim + 1];            // green
-                data[i + 2] = dataim[iim + 2];            // blue
-                data[i + 3] = 255;//dataim[iim + 3];      // alpha
-            }
-            
-            x++;
-            if (x === width) {
-                x = 0;
-                y++;
-            }
-        }
-    }
-    
-    function drawCircle (x, y, r, fill, stroke, text, renderHint) {
-        if (r * squashX > 0.5 && r * squashY > 0.5) {
-        
-            ctx.beginPath();
-            ctx.ellipse (
-                x * squashX,
-                y * squashY,
-                r * squashX - 0.5,
-                r * squashY - 0.5,
-                0,
-                0,
-                2 * Math.PI,
-                false
-            );
-
-            ctx.lineWidth = 0;
-
-            ctx.fillStyle = fill;
-            ctx.fill ();
-            
-            
-            /*
-            ctx.strokeStyle = "white";
-            ctx.beginPath();
-            ctx.moveTo(ac.smallX, ac.smallY);
-            ctx.lineTo(ac.smallX + 100 * Math.cos(ang[i]), ac.smallY + 100 * Math.sin(ang[i]));
-            ctx.stroke();
-            */
-            
-            if (r > 5) {
-                var magn = r / (rr * ratio);
-                var xo = Math.floor (x * squashX - r * squashX);
-                var yo = Math.floor (y * squashY - r * squashY);
-                var xi = Math.floor (x * squashX + r * squashX);
-                var yi = Math.floor (y * squashY + r * squashY);
-                var w = xi - xo;
-                var h = yi - yo;
-
-                if (!isCache) {
-                    cnvCache = document.createElement ("canvas");
-                    var cacheW = Math.floor (2 * rr * ratio * squashX);
-                    var cacheH = Math.floor (2 * rr * ratio * squashY);
-                    cnvCache.width = cacheW;
-                    cnvCache.height = cacheH;
-                    var ctxCache = cnvCache.getContext('2d');
-                    var imgCache = ctxCache.getImageData(0, 0, cacheW, cacheH);
-                    renderFishEye (imgCache.data, cacheW, cacheH, 1);
-                    ctxCache.putImageData(imgCache, 0, 0);
-                    
-                    //cache = crispBitmap (cnvCache);
-                    cache = crispBitmapXY (cnvCache);
-                    
-                    isCache = true;
-                }
-
-                if (renderHint || animating || dragging) {
-                    ctx.drawImage(cnvCache, xo, yo, w, h);
-                } else {
-                    var cnvIm = document.createElement ("canvas");
-                    cnvIm.width = w;
-                    cnvIm.height = h;
-                    var ctxIm = cnvIm.getContext('2d');
-                    var imData = ctxIm.getImageData(0, 0, w, h);
-                    //var caData = ctxCache.getImageData(0, 0, cnvCache.width, cnvCache.height); // usporava
-                    renderScaledCnv (imData.data, cache.images[0].data, w, h, magn);
-                    //ctx.putImageData(imData, xo, yo); // nema alfe
-                    ctxIm.putImageData(imData, 0, 0);
-                    ctx.drawImage(cnvIm, xo, yo, w, h);
-                }
-                
-
-//                ctx.drawImage(cnvCache, xo, yo, w, h);
-
-/*                
-                if (!renderHint || !isCache) {
-                    if (renderHint === "1+") {
-                        isCache = true;
-                        cnvCache.width = w;
-                        cnvCache.height = h;
-                        ctxCache = cnvCache.getContext('2d');
-
-                        var imageData = ctxCache.getImageData(0, 0, w, h);
-
-                    } else {
-                        var imageData = ctx.getImageData(xo, yo, w, h);
-                    }
-                    
-                    var data = imageData.data;//.buffer;  // ArrayBuffer
-                    renderFishEye (data, w, h, magn);
-
-                    ctx.save ();
-                    ctx.beginPath();
-                    ctx.ellipse (
-                        x * squashX,
-                        y * squashY,
-                        r * squashX - 0.5,
-                        r * squashY - 0.5,
-                        0,
-                        0,
-                        2 * Math.PI,
-                        false
-                    );
-                    ctx.clip ();
-                    
-                    if (renderHint === "1+" && isCache) {
-                        ctxCache.putImageData(imageData, 0, 0);
-                        ctx.drawImage(cnvCache, xo, yo);
-                        
-                    } else {
-                        ctx.putImageData(imageData, xo, yo)
-                    }
-
-                    ctx.restore ();
-
-                } else if (renderHint === "1+") {
-                    ctx.save ();
-                    ctx.beginPath();
-                    ctx.ellipse (
-                        x * squashX,
-                        y * squashY,
-                        r * squashX - 0.5,
-                        r * squashY - 0.5,
-                        0,
-                        0,
-                        2 * Math.PI,
-                        false
-                    );
-                    ctx.clip ();
-                    
-                    ctx.drawImage(cnvCache, xo, yo, w, h);
-                    
-                    ctx.restore ();
-                    
-                }
-*/
-            }
-            
-        }
-    }
-
-    function node() {
-        var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint) {
-            function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
-                var beta = angle + alpha - Math.PI / 2;
-                
-                var ra = 0;
-                var xa = x0 + r0 * Math.cos (beta);
-                var ya = y0 + r0 * Math.sin (beta);
-                
-                var rb = 2 * r1;
-                var xb = x0 + (r0 + rb) * Math.cos (beta);
-                var yb = y0 + (r0 + rb) * Math.sin (beta);
-
-                var dr = (rb - ra) / 2;
-                var dx = (xb - xa) / 2;
-                var dy = (yb - ya) / 2;
-                
-                ra += dr;
-                xa += dx;
-                ya += dy;
-
-                var j;
-                do {
-                    dx /= 2;
-                    dy /= 2;
-                    dr /= 2;
-                    var d = Math.sqrt (Math.pow ((xa - x1), 2) + Math.pow ((ya - y1), 2));
-                    if (Math.abs (ra - r1) <= d) {
-                        xa -= dx;
-                        ya -= dy;
-                        ra -= dr;
-                    } else {
-                        xa += dx;
-                        ya += dy;
-                        ra += dr;
-                    }
-                } while (dr > pixelPrecision);
-
-                return {
-                    x: (r0 + ra) * Math.cos (beta),
-                    y: (r0 + ra) * Math.sin (beta),
-                    r: ra,
-                    alpha: alpha
-                };
-            }
-            
-            function getNeighbor (c1, direction, x0, y0, r0, x1, y1, r1) {
-                if (direction == "+") {
-                    var alpha = c1.alpha / 2;
-                    var dalpha = alpha;
-                } else {
-                    var alpha = (2 * Math.PI + c1.alpha) / 2;
-                    var dalpha = -(2 * Math.PI - alpha);
-                }
-                
-                var da = Math.acos ((2 * r1 - pixelPrecision) / (2 * r1));
-                do {
-                    var c2 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
-                    dalpha /= 2;
-                    var d = Math.sqrt (Math.pow ((c1.x - c2.x), 2) + Math.pow ((c1.y - c2.y), 2));
-                    if ((c1.r + c2.r) >= d) {
-                        alpha -= dalpha;
-                    } else {
-                        alpha += dalpha;
-                    }
-                } while (Math.abs(dalpha) > da);
-
-                return c2;
-            }
-            
-            var i;
-            
-            var r0 = r1 * ratio;
-            var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
-            var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
-            
-            if (rec === 1) {
-                if (renderHint === "1+") {                   
-                    ctx.save ();
-                    ctx.beginPath();
-                    
-                    ctx.moveTo ((x1     ) * squashX, y1 - r1);
-                    ctx.lineTo ((x1 - r1) * squashX, y1 - r1);
-                    ctx.lineTo ((x1 - r1) * squashX, y1 + r1);
-                    ctx.lineTo ((x1 + r1) * squashX, y1 + r1);
-                    ctx.lineTo ((x1 + r1) * squashX, y1 - r1);
-                    ctx.lineTo ((x1     ) * squashX, y1 - r1);
-                    
-                    ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
-                    ctx.clip (); //"evenodd"
-                }
-                
-                clear ();
-                
-                if (renderHint === "1+")
-                    ctx.restore ();
-            }
-                
-            if (
-                Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr
-            ) {
-                if ((r1 * squashY * squashX) >= minRadius) {
-                    var colorFill = fill1;
-                    
-                    if (selectedCursor?cursor === selectedCursor: mouse && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
-                        colorFill = "white";
-                    } else {
-                        colorFill = fill1;
-                    }
-                    
-                    if (!renderHint || (rec > 1 && renderHint === "1+")) 
-                        drawCircle(x0, y0, r0, colorFill, stroke1, (index).toString(), renderHint);
-                    
-                    if (renderHint !== "1") {                   
-                        var ret, idx, alp;
-                        var got;
-                        var c0, c1;
-                        var alpha = (cursor?cursor.angle:Math.PI);
-                        var ci;
-                        var oldr, delta;
-            
-                        c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
-                        ci = (cursor?cursor.index:0);
-                        if (c0.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
-                            if (got) {
-                                idx = ci;
-                                alp = alpha;
-                                ret = got;
-                            }
-                        }
-                        
-                        oldr = c0.r;
-                        c1 = getNeighbor (c0, "+", x0, y0, r0, x1, y1, r1);
-                        alpha = c1.alpha;
-                        ci = (cursor?cursor.index:0);
-                        while (true){
-                            delta = c1.r > oldr;
-                            ci++;
-                            
-                            if (c1.r * squashX * squashY >= minRadius) {
-                                got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
-                                if (!ret && got) {
-                                    idx = ci;
-                                    alp = alpha;
-                                    ret = got;
-                                }
-                            } else
-                                if (!delta)
-                                    break;
-                            
-                            oldr = c1.r;
-                            c1 = getNeighbor (c1, "+", x0, y0, r0, x1, y1, r1);
-                            alpha = c1.alpha;
-                        }
-                        
-
-                        oldr = c0.r;
-                        c1 = getNeighbor (c0, "-", x0, y0, r0, x1, y1, r1);
-                        alpha = c1.alpha;
-                        ci = (cursor?cursor.index:0);
-                        while (true){
-                            delta = c1.r > oldr;
-                            ci--;
-
-                            if (c1.r * squashX * squashY >= minRadius) {
-                                got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
-                                if (!ret && got) {
-                                    idx = ci;
-                                    alp = alpha;
-                                    ret = got;
-                                }
-                            } else
-                                if (!delta)
-                                    break;
-                            
-                            oldr = c1.r;
-                            c1 = getNeighbor (c1, "-", x0, y0, r0, x1, y1, r1);
-                            alpha = c1.alpha;
-                        }
-                    }
-                    
-                    var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
-                    
-                    if (ret || cond) {
-                        var pass = {
-                            data: data,
-                            index: index,
-                            angle: angle,
-                            index1: idx,
-                            angle1: alp,
-                            revertAng: alp,
-                            cursor: null,
-                            child: ret,
-                            smallX: x0,
-                            smallY: y0,
-                            smallR: r0,
-                            largeX: x1,
-                            largeY: y1,
-                            largeR: r1,
-                            getMetrics: function () {
-                                var c, x;
-                                var a = pass.getAbsoluteAngle();
-                                if (pass.parent) {
-                                    x = pass.parent.getMetrics ();
-                                    
-                                    var rr1 = x.r;
-                                    var xx1 = x.x;
-                                    var yy1 = x.y;
-                                } else {
-                                    var rr1 = r1;
-                                    var xx1 = x1;
-                                    var yy1 = y1;
-                                }
-                                
-                                var r0 = rr1 * ratio;
-                                var x0 = xx1 + (rr1 - r0) * Math.cos (a - Math.PI / 2);
-                                var y0 = yy1 + (rr1 - r0) * Math.sin (a - Math.PI / 2);
-                                c = getCircle (pass.cursor.angle, x0, y0, r0, xx1, yy1, rr1);
-                                
-                                return {x: x0 + c.x, y: y0 + c.y, r: c.r};
-                            },
-                            getAbsoluteAngle: function () {
-                                return angle;
-                            },
-                            getAngMin: function () {
-                                var m0, m1;
-                                
-                                m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
-
-                                m1 = m0;
-                                for (i = 0; i < data.index; i++)
-                                    m1 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
-                                
-                                return m1.alpha;
-                            },
-                            getAngMax: function () {
-                                var m0, m1;
-                                
-                                m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
-
-                                m1 = m0;
-                                for (i = data.index; i < data.children.length - 1; i++)
-                                    m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
-                                
-                                return m1.alpha;
-                            },
-                            getCircle: function (ang) {
-                                return getCircle (ang, x0, y0, r0, x1, y1, r1);
-                            },
-                            setAngle: (function () {
-                                if (mouse) {
-                                    var alp1 = - angle + 3 * Math.PI / 2 + Math.atan2((y0 * squashY - mouse.y) / squashY, (x0 * squashX - mouse.x) / squashX);
-                                    while (alp1 > 2 * Math.PI) alp1 = alp1 - 2 * Math.PI;
-                                    while (alp1 < 0) alp1 = alp1 + 2 * Math.PI;
-                                } else {
-                                    var alp1 = alp;
-                                }
-                                
-                                var dalp = alp1 - alp;
-                                
-                                var c = getCircle (alp, x0, y0, r0, x1, y1, r1);
-                                
-                                return function (ang, percent) {
-                                    if (percent === undefined) percent = 1;
-                                    var nc = getCircle (ang, x0, y0, r0, x1, y1, r1);
-                                    var sang = ang - dalp * (nc.r / c.r) * percent;
-                                    pass.calcCursor (sang);
-                                    pass.revertAng = alp;
-                                }
-                            }) (),
-                            revertAngle: function () {
-                                pass.calcCursor (pass.revertAng);
-                            },
-                            calcCursor: function (ang) {
-                                var mi, m1, m2;
-                                mi = idx;
-                                m2 = getCircle (ang, x0, y0, r0, x1, y1, r1);
-                                
-                                if (ang > Math.PI) {
-                                    do {
-                                        m1 = m2;
-                                        m2 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
-                                        mi++;
-                                    } while (m1.r <= m2.r);
-                                    
-                                    pass.cursor.index = mi - 1;
-                                    pass.cursor.angle = m1.alpha;
-                                   
-                                } else {
-                                    do {
-                                        m1 = m2;
-                                        m2 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
-                                        mi--;
-                                    } while (m1.r <= m2.r);
-                                    
-                                    pass.cursor.index = mi + 1;
-                                    pass.cursor.angle = m1.alpha;
-                                }
-                                
-                                pass.angle1 = ang;
-                            }
-                        };
-                        
-                        if (ret) ret.parent = pass;
-                        
-                        return pass;
-                    }
-                }
-            }
-        };
-        
-        return {
-            render: render
-        };
-    }
-    
-    function wasteCircles () {
-    }
-    
-    function clear () {
-        ctx.fillStyle = fill2;
-        ctx.fillRect(0, 0, ww, hh);
-    }
-
-    function redraw (m, renderHint, selectedCursor) {
-        //clear ();
-        return n.render (minRadius, x1, y1, r1, 0, 1, m, data, cursor.parent.index, cursor, selectedCursor, renderHint);
-    }
-    
-    function setDimensions(width, height) {
-        ww = width;
-        hh = height;
-        
-        if (ww > hh / ratio) {
-            rr = hh / 2;
-            squashX = 1 / ratio;
-            squashY = 1;
-            
-        } else {
-            rr = ww / 2 * ratio;
-            squashX = 1 / ratio;
-            squashY = 1;
-            /*
-            rr = ww / 2;
-            squashX = 1;
-            squashY = ratio;
-            */
-        }
-
-        r1 = rr;
-        x1 = ww / squashX / 2;
-        y1 = hh / squashY / 2;
-        
-        xx = x1;
-        yy = y1;
-        
-        
-    }
-
-    function resize(width, height) {
-        setDimensions (width, height);
-    
-        fishEye = initFishEye ();
-        
-        minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio;
-
-        clip.setAttribute('cx', x1 * squashX);
-        clip.setAttribute('cy', y1 * squashY);
-        clip.setAttribute('rx', r1 * squashX);
-        clip.setAttribute('ry', r1 * squashY);
-        clip.setAttribute('stroke-width',  1);
-
-        cnv.setAttribute ("width", ww);
-        cnv.setAttribute ("height", hh);
-        cnv.style.clipPath = "url(#clip128)";
-        
-        invalidateCache ();
-        redraw (null);
-    }
-    
-    function setupSelect (range) {
-        select = range;
-        if (range) {
-            var sc = cursor;
-            select.parent = null;
-            select.cursor = sc;
-            while (select.child) {
-                select = select.child;
-                
-                if (!sc.children[select.index])
-                    sc.children[select.index] = {parent: sc, index: 0, angle: Math.PI, children: []};
-                
-                sc = sc.children[select.index];
-                select.cursor = sc;
-            }
-        }
-    }
-    
-    function getMouse(mouseEvent)
-    {
-      var obj = svgContainer;
-      var obj_left = 0;
-      var obj_top = 0;
-      var xpos;
-      var ypos;
-      while (obj.offsetParent)
-      {
-        obj_left += obj.offsetLeft;
-        obj_top += obj.offsetTop;
-        obj = obj.offsetParent;
-      }
-      if (mouseEvent)
-      {
-        //FireFox
-        xpos = mouseEvent.pageX;
-        ypos = mouseEvent.pageY;
-      }
-      else
-      {
-        //IE
-        xpos = window.event.x + document.body.scrollLeft - 2;
-        ypos = window.event.y + document.body.scrollTop - 2;
-      }
-      
-      xpos -= obj_left;
-      ypos -= obj_top;
-      
-      return {x: xpos, y: ypos};
-    }
-
-    function mousemove (e) {
-        "use strict";
-        
-        mouse = getMouse (e);
-        {
-            lastMouseEvent = e;
-            
-            if (!dragging && mouseDown === 1) {
-                if (5 < Math.sqrt(Math.pow(mouse.x - dragX, 2) + Math.pow(mouse.y - dragY, 2))) {
-                    dragging = true;
-                    inert = [];
-                    inertIdx = 0;
-                    setupSelect(preSelect);
-                }
-            }
-            
-            if (dragging && select) {
-                gettingLevel = select;
-                
-                var ip = 0;
-                var ang = [];
-                var ac = select;
-                while (ac && ip < 3) {
-                    var phi =  ac.angle;
-                        
-                    ang[ip] =
-                        - phi +
-                        3 * Math.PI / 2 +
-                        Math.atan2 (
-                            (ac.smallY * squashY - mouse.y) / squashY,
-                            (ac.smallX * squashX - mouse.x) / squashX
-                        );
-                        
-                    while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
-                    while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
-                    
-                    //drawCircle (ac.smallX, ac.smallY, ac.smallR, "red", "white", "yxz"); 
-                    
-                    ac = ac.parent;
-                    ip++;
-                }
-                
-                var isOnParent = select.parent;
-                while (isOnParent) {
-                    if (isOnParent.smallR > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
-                        break;
-                        
-                    isOnParent = isOnParent.parent
-                }
-                
-                var minR, maxR, mouseDistance;
-                if (!isOnParent) {
-                    if (select.parent) {
-                        minR = select.parent.smallR;
-                        maxR = select.parent.smallR + 2 * select.parent.getCircle(ang[1]).r * ratio;//select.smallR;
-                        mouseDistance = Math.sqrt (Math.pow (select.parent.smallX - mouse.x / squashX, 2) + Math.pow(select.parent.smallY - mouse.y / squashY, 2));
-
-                    } else {
-                        minR = 0;
-                        maxR = select.smallR;
-                        mouseDistance = Math.sqrt (Math.pow (select.smallX - mouse.x / squashX, 2) + Math.pow(select.smallY - mouse.y / squashY, 2))
-                    }
-                }
-
-                if (!animating && select.parent && !isOnParent && mouseDistance < maxR) {
-                    //select.parent.setAngle (ang[1], dr);
-                    select.parent.setAngle (ang[1], 0);
-                    //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {
-                        //inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: dr, time: (new Date()).getTime()};
-                        inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: 0, time: (new Date()).getTime()};
-                        inertIdx++;
-                        if (inertIdx === 100) inertIdx = 0;
-
-                        //clear ();                                
-                        setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, select.cursor, "1+"));
-
-                    //} else {
-                    //    select.parent.revertAngle ();
-                    //}
-                }
-                
-                if (!select) {
-                    mouseup (lastMouseEvent);
-                    
-                } else {
-                    if (!isOnParent) {
-                        if (mouseDistance > maxR)
-                            animateAng0 = ang[0];
-                        
-                        if (select.parent && select.parent.parent)
-                            animateAng2 = ang[2];
-
-                    } else {
-                        if (isOnParent !== select.parent) {
-                            if (select.parent.parent) {
-                                if (animating) {
-                                    animateAng2 = curAnimateAng2;
-                                    animateAng2Start = curAnimateAng2;
-                                } else {
-                                    animateAng2 = select.parent.parent.angle1;
-                                    animateAng2Start = select.parent.parent.angle1;
-                                }
-                            }
-                            
-                        } else {
-                            animateAng2 = ang[2];
-                            if (!animating && select.parent.parent)
-                                animateAng2Start = select.parent.parent.angle1;
-                        }
-                    }
-
-                    if (!animating) {
-                        var topc = select;
-                        while (topc.parent)
-                            topc = topc.parent;
-
-                        var i, t0;
-                    
-                        if (isOnParent) {
-                            //alert ("level down");
-                            if (level !== gettingLevel) {
-                                t0 = (new Date()).getTime();
-                                i = 0;
-                                
-                                var angles = [];
-                                var cc = select.parent.cursor;
-                                var cp = select.parent;
-                                do {
-                                    angles.push (cp.angle1);
-                                    cc.index = cp.index1;
-                                    cc = cc.parent;
-                                    cp = cp.parent;
-                                } while (cp);
-                                
-                                function aEnlarge () {
-                                    angles[1] = animateAng2Start * (1 - i) + animateAng2 * i;
-                                    curAnimateAng2 = angles[1]
-                                    cc = select.parent.cursor;
-                                    cp = select.parent;
-                                    var ap = 0;
-                                    while (cp.parent) {
-                                        cc.angle = angles[ap] * (1 - i) + angles[ap + 1] * i;
-                                        cc = cc.parent;
-                                        cp = cp.parent;
-                                        ap++
-                                    };
-                                    cc.angle = angles[ap] * (1 - i) + Math.PI * i;
-                                    var m = topc.getCircle (topc.cursor.angle);
-                                    
-                                    var x0 = topc.smallX + m.x;
-                                    var y0 = topc.smallY + m.y;
-                                    var r0 = m.r;
-                                    
-                                    var ang = Math.atan2(y0 - y1, x0 - x1);
-                                    var mang = Math.atan2(y1 - y0, x1 - x0);
-                                    
-                                    var xo = x1 + r1 * Math.cos(ang);
-                                    var yo = y1 + r1 * Math.sin(ang);
-                                    
-                                    var r2 = r1 * r1 / r0;
-                                    var x2 = xo + r2 * Math.cos(mang);
-                                    var y2 = yo + r2 * Math.sin(mang);
-
-                                    var x = x1 + (x2 - x1) * i;
-                                    var y = y1 + (y2 - y1) * i;
-                                    var r = r1 + (r2 - r1) * i;
-
-                                    //clear ();
-                                    var atCur = n.render (minRadius, x, y, r, 0, 1, null, data, topc.index, cursor, select.cursor);
-
-                                    if (i < 1) {
-                                        var t1 = (new Date()).getTime();
-                                        i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
-                                        if (i > 1) i = 1
-                                        t0 = t1;
-                                        
-                                        setTimeout(aEnlarge, 0);
-                                    } else {
-                                        level = gettingLevel;
-                                        inertIdx = 0;
-                                        inert = [];
-
-                                        if (!cursor.children[cursor.index])
-                                            cursor.children[cursor.index] = {parent: cursor, index: 0, angle: Math.PI, children: []};
-                                        cursor = cursor.children[cursor.index];
-                                        
-                                        path.push (data);
-                                        data = topc.child.data;
-                                        
-                                        animating = false;
-                                        //invalidateCache ();
-
-                                        if (atCur) {
-                                            if (dragging) {
-                                                setupSelect (atCur.child)
-                                                redraw (null, null, select.cursor);
-                                                setTimeout(function () {mousemove (lastMouseEvent)}, 0); //mousemove (lastMouseEvent);
-                                            } else {
-                                                mouseup (lastMouseEvent);
-                                            }
-                                            //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
-
-                                        } else {
-                                            mouseup (lastMouseEvent);
-                                        }
-                                    }
-                                }
-                                
-                                animating = "level";
-                                //invalidateCache ();
-                                //drawCircle(x0, y0, r0, colorFill, stroke1, (index).toString(), "1+");
-                                aEnlarge ();
-                            }    
-                        } else if (mouseDistance > maxR) {
-                            //alert ("level up");
-                            if (path.length > 0) {
-                                if (level !== gettingLevel) {
-                                    i = 0;
-                                    t0 = (new Date()).getTime();
-                                    
-                                    var angles = [];
-                                    var cc = select.cursor.parent;
-                                    var cp = select.parent;
-                                    while (cp) {
-                                        angles.push (cp.angle1);
-                                        cc.index = cp.index1;
-                                        cc = cc.parent;
-                                        cp = cp.parent;
-                                    }
-                                    angles.push (Math.PI);
-
-                                    function aEnsmall () {
-                                        cc = select.cursor.parent;
-                                        cp = select.parent;
-                                        var ap = 0;
-                                        
-                                        var lastAngle = Math.PI;
-                                        while (ap < angles.length) {
-                                            if (ap > 0) {
-                                                cc.angle = angles[ap] * (1 - i) + angles[ap - 1] * (i);
-                                            } else {
-                                                cc.angle = angles[ap] * (1 - i) + animateAng0 * (i);//Math.PI + (animateAng0 - Math.PI) * (i);
-                                            }
-                                            lastAngle = cc.angle;
-                                            cc = cc.parent;
-                                            ap++
-                                        };
-
-                                        var m = topc.getCircle (lastAngle);
-                                        
-                                        var x0 = topc.smallX + m.x;
-                                        var y0 = topc.smallY + m.y;
-                                        var r0 = m.r;
-
-                                        var ang = Math.atan2(y0 - y1, x0 - x1);
-                                        var mang = Math.atan2(y1 - y0, x1 - x0);
-                                        
-                                        var xo = x1 + r1 * Math.cos(ang);
-                                        var yo = y1 + r1 * Math.sin(ang);
-                                        
-                                        var r2 = r1 * r1 / r0;
-                                        var x2 = xo + r2 * Math.cos(mang);
-                                        var y2 = yo + r2 * Math.sin(mang);
-
-                                        var x = x1 + (x2 - x1) * (1 - i);
-                                        var y = y1 + (y2 - y1) * (1 - i);
-                                        var r = r1 + (r2 - r1) * (1 - i);
-
-                                        //clear ();
-                                        var atCur = n.render (minRadius, x, y, r, 0, 1, null, data, cursor.parent.parent.index, cursor.parent, select.cursor);
-
-                                        if (i < 1) {
-                                            var t1 = (new Date()).getTime();
-                                            i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
-                                            if (i > 1) i = 1
-                                            t0 = t1;
-                                            
-                                            setTimeout(aEnsmall, 0);
-                                        } else {
-                                            level = gettingLevel;
-                                            inertIdx = 0;
-                                            inert = [];
-
-                                            cursor = cursor.parent;
-                                            
-                                            data = path.pop();
-                                            
-                                            animating = false;
-                                            //invalidateCache ();
-                                            
-                                            if (atCur) {
-                                                if (dragging) {
-                                                    setupSelect (atCur);
-                                                    redraw (null, null, select.cursor);
-                                                    setTimeout(function () {mousemove (lastMouseEvent)}, 0); //mousemove (lastMouseEvent);
-                                                } else {
-                                                    mouseup (lastMouseEvent);
-                                                }
-                                                //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
-
-                                            } else {
-                                                mouseup (lastMouseEvent);
-                                            }                                            
-                                        }
-                                    }
-                                    
-                                    animating = "level";
-                                    //invalidateCache ();
-                                    //just update the cache
-                                    //n.render (minRadius, topc.largeX, topc.largeY, topc.largeR, 0, 1, null, data, cursor.parent.parent.index, cursor.parent, select.cursor, "1");
-                                    aEnsmall();
-                                }
-                            }
-                        }
-                    }                    
-                }
-            }
-            
-            if (!select && !animating && !dragging) {
-                redraw ({x: mouse.x, y: mouse.y});
-            }
-            
-        }
-    }
-    
-    function mousedown (e) {
-        mouse = getMouse (e);
-        
-        if (!animating) {
-            if (e.which == 1) {
-                mouseDown = 1;
-                dragX = mouse.x;
-                dragY = mouse.y;
-                
-                preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
-            }
-        }
-    }
-
-    function mouseup (e) {
-        mouse = getMouse (e);
-        mouseDown = 0;
-        if (animating === "level") dragging = false;
-
-        if (!animating) {
-            if (dragging) {
-                dragging = false;
-                if (inert.length > 1) {
-                    var sum = 0;
-                    var avgAng = 0;
-                    var i = inertIdx - 1
-                    var j = i - 1;
-                    var k = 100;
-                    if ((new Date()).getTime() - inert[i].time < 100) {
-                        while (i !== inertIdx && k > 0) {
-                            if (i === 0)
-                                j = inert.length - 1;
-                            else
-                                j = i - 1
-
-                            if (!inert[i] || !inert[j])
-                                break;
-                                
-                            if (inert[i].time - inert[j].time > 100)
-                                break;
-
-                            var dang = (inert[i].angle - inert[j].angle) / (inert[i].time - inert[j].time)
-                            
-                            if (!avgAng)
-                                avgAng = dang;
-                            else
-                                avgAng = (avgAng + dang) / 2
-                            
-                            i -= 1; j -= 1; k -= 1;
-                        }
-                    }
-                    
-                    if (Math.abs(avgAng) > 0.0001) {
-                        var c = select.parent;
-                        var ang0 = inert[inertIdx - 1].angle;
-                        var dang0 = inert[inertIdx - 1].angle - inert[inertIdx - 1].rawAngle;
-                        var t0 = (new Date()).getTime();
-                        var i = 1;
-                        function aInert () {
-                            var dt = (new Date()).getTime() - t0;
-                            t0 = (new Date()).getTime();
-                            if (dt === 0) dt = 1;
-
-                            i = i - dt / 750;
-                            if (i > 0){
-                                ang0 += avgAng * i * dt;
-                                if (ang0 > 0 && ang0 < 2 * Math.PI && c.getCircle(ang0).r * squashX * squashY > minRadius) {
-                                    c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
-
-                                    redraw (null, "1+");
-                                    
-                                    setTimeout(aInert, 0);
-                                    
-                                } else {
-                                    animating = false;
-                                    redraw ({x: mouse.x, y: mouse.y});
-                                }
-                            } else {
-                                animating = false;
-                                redraw ({x: mouse.x, y: mouse.y});
-                            }
-                        }
-
-                        animating = true;
-                        aInert ();
-                    }
-                }
-
-            }
-
-            if (!animating) redraw ({x: mouse.x, y: mouse.y});
-            select = null;
-            mouseDown = 0;
-
-        }
-    }
-    
-
-    var mouse = {};
-    var tt, ll, ww, hh, rr, xx, yy, squashX, squashY;
-    var r1, x1, y1;
-    var path = [], cursor, select, preSelect, animating;
-    cursor = {parent: null, index: 0, angle: Math.PI, children: []}
-    cursor.parent = {parent: null, index: 0, angle: Math.PI, children: []}
-    var level, gettingLevel, animateAng0, animateAng2, animateAng2Start, curAnimateAng2;
-    var lastMouseEvent;
-
-    var mouseDown = false;
-    var dragX, dragY, dragging = false;
-    var inert, inertIdx = 0;
-
-    var n = node();
-    var movingNode = null;
-
-    var clipPath = document.createElementNS(svgns, 'clipPath');
-    clipPath.setAttributeNS(null, 'id', 'clip128');
-    svg.appendChild(clipPath);
-
-    var clip = document.createElementNS(svgns, 'ellipse');
-    clipPath.appendChild(clip);
-
-window.addEventListener('mousemove', mousemove, false);
-window.addEventListener('mousedown', mousedown, false);
-window.addEventListener('mouseup', mouseup, false);
-
-window.addEventListener("touchmove", function (evt) {
-    if (evt.changedTouches.length == 1) {
-        mousemove (evt.changedTouches[0]);
-    }
-}, false);
-window.addEventListener("touchstart", function (evt) {
-    if (evt.changedTouches.length == 1) {
-        evt.changedTouches[0].which = 1;
-        mousedown (evt.changedTouches[0]);
-    }
-}, false);
-window.addEventListener("touchend", function (evt) {
-    if (evt.changedTouches.length == 1) {
-        mouseup (evt.changedTouches[0]);
-    }
-}, false);
-  
     function generateGrid (width, height, nlines, lineWidth) {
         var cnvim = document.createElement ("canvas");
         cnvim.width = width;
@@ -1575,7 +342,7 @@ alert(0);
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
         var dataim = imageDataim.data;
         
-        var cnvScaled = {step: 2, images: []};
+        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: 2, images: []};
         
         var iWidth = cnvim.width;
         var iHeight = cnvim.height;
@@ -1604,13 +371,9 @@ alert(0);
         return cnvScaled;
     }
 
-    var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
-    //var cnvScaled = crispBitmap ();
-
-    var MAX_INT32 = 4294967296 / 2 - 1;
-    function initFishEye() {
-        var feWidth = Math.round(rr);
-        var feHeight = Math.round(rr);
+    function initFishEye(magn) {
+        var feWidth = Math.round(rr * magn);
+        var feHeight = Math.round(rr * magn);
         
 	    var feArray = new Int32Array (feWidth * feHeight * 4 * 4);
 	    
@@ -1618,7 +381,7 @@ alert(0);
 
         for (var y = -feHeight; y < feHeight; y++) {
             for (var x = -feWidth; x < feWidth; x++) {
-                var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY);
+                var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
                 var rm0 = maxR / (maxR - r0);// / 4;
 
                 var r1 = r0 - 0.5;
@@ -1663,8 +426,8 @@ alert(0);
                     if (dx < 1) dy = 1;
                     */
                     
-                    var dx = (Math.abs (Math.sin(a) * rm0) + Math.abs (x1 - x2) / squashX);
-                    var dy = (Math.abs (Math.cos(a) * rm0) + Math.abs (y1 - y2) / squashY);
+                    var dx = (Math.abs (Math.sin(a) * rm0) + Math.abs (x1 - x2) / squashX) / magn;
+                    var dy = (Math.abs (Math.cos(a) * rm0) + Math.abs (y1 - y2) / squashY) / magn;
                     
                     if (dx < squashX) dx = squashX;
                     if (dy < squashY) dy = squashY;
@@ -1678,8 +441,1461 @@ alert(0);
         
         return {width: feWidth, height: feHeight, array: feArray};
     }
+
+    function renderFishEye (fishEye, data, width, height, magn, centerX, centerY) {
+        var mdx = Math.floor((fishEye.width - width / 2) / magn);
+        var mdy = Math.floor((fishEye.height - height / 2) / magn);
+        var ddx = Math.floor(cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
+        var ddy = Math.floor(cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
+        
+        var x1 = 0, y1 = 0;
+
+        var DX = 0; //xim
+        var DbmpscaleX = 1; //miX
+        var DbmpscalefactorX = 2; //mmX
+        var DfinalX = 3; //ximm
+        
+        var DY = 4; //xim
+        var DbmpscaleY = 5; //miX
+        var DbmpscalefactorY = 6; //mmX
+        var DfinalY = 7; //ximm
+        
+        var renderMap = new Int32Array (width * height * 8);
+        
+        for (y1 = 0; y1 < height; y1++) {
+            for (x1 = 0; x1 < width; x1++) {
+                var fe = (
+                    Math.floor(fishEye.height - (fishEye.height - y1) / magn + mdy) * fishEye.width * 2 + 
+                    Math.floor(fishEye.width - (fishEye.width - x1) / magn + mdx)
+                ) * 4;
+                var X = fishEye.array[fe] + ddx;
+                var Y = fishEye.array[fe + 1] + ddy;
+                var mX = fishEye.array[fe + 2] / MAX_INT32;
+                var mY = fishEye.array[fe + 3] / MAX_INT32;
+
+                if (mX > 0 && mY > 0) {
+                    var delta = (y1 * width + x1) * 8
+                    
+                    // X
+                    var tmpX = Math.floor (1 / mX / magn);
+                    if (tmpX >= log2.length) {
+                        var bmpscaleX = log2[log2.length - 1];
+                    } else {
+                        var bmpscaleX = log2[tmpX] + 1;
+                    }
+                    
+                    if (bmpscaleX > cnvScaled.images.length - 1)
+                        bmpscaleX = cnvScaled.images.length - 1;
+                        
+                    var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
+                    var finalX = Math.floor (X / bmpscalefactorX);
+                    
+                    renderMap[delta + DX] = X;
+                    renderMap[delta + DbmpscaleX] = bmpscaleX;
+                    renderMap[delta + DbmpscalefactorX] = bmpscalefactorX;
+                    renderMap[delta + DfinalX] = finalX;
+
+                    // Y
+                    var tmpY = Math.floor (1 / mY / magn);
+                    if (tmpY >= log2.length) {
+                        var bmpscaleY = log2[log2.length - 1];
+                    } else {
+                        var bmpscaleY = log2[tmpY] + 1;
+                    }
+                    
+                    if (bmpscaleY > cnvScaled.images.length - 1)
+                        bmpscaleY = cnvScaled.images.length - 1;
+                        
+                    var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
+                    var finalY = Math.floor (Y / bmpscalefactorY);
+
+                    renderMap[delta + DY] = Y;
+                    renderMap[delta + DbmpscaleY] = bmpscaleY;
+                    renderMap[delta + DbmpscalefactorY] = bmpscalefactorY;
+                    renderMap[delta + DfinalY] = finalY;
+                }
+            }
+        }
+
+        var x1 = 0, y1 = 0;
+        for (var i = 0; i < data.length; i += 4) {
+            var delta = (y1 * width + x1) * 8;
+            
+            var finalX = renderMap[delta + DfinalX];
+            var finalY = renderMap[delta + DfinalY];
+            
+            if (finalX === renderMap[delta - 8 + DfinalX] || finalX === renderMap[delta + 8 + DfinalX]) {
+                finalX = Math.floor (renderMap[delta + DX] / (renderMap[delta + DbmpscalefactorX] >> 1));
+                var bmpscaleX = renderMap[delta + DbmpscaleX] - 1;
+                
+                if (bmpscaleX > cnvScaled.images.length - 1)
+                    bmpscaleX = cnvScaled.images.length - 1;
+                    
+                if (bmpscaleX < 0)
+                    bmpscaleX = 0;
+                    
+            } else {
+                var bmpscaleX = renderMap[delta + DbmpscaleX];
+            }
+
+            if (finalY === renderMap[delta - width * 8 + DfinalY] || finalY === renderMap[delta + width * 8 + DfinalY]) {
+                finalY = Math.floor (renderMap[delta + DY] / (renderMap[delta + DbmpscalefactorY] >> 1));
+                var bmpscaleY = renderMap[delta + DbmpscaleY] - 1;
+                
+                if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
+                    bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
+                    
+                if (bmpscaleY < 0)
+                    bmpscaleY = 0;
+                    
+            } else {
+                var bmpscaleY = renderMap[delta + DbmpscaleY];
+            }
+
+            var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
+            var scaledData = scaled.data;
+
+            if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
+                var iim = (finalY * scaled.width + finalX) * 4
+                data[i]     = scaledData[iim];                // red
+                data[i + 1] = scaledData[iim + 1];            // green
+                data[i + 2] = scaledData[iim + 2];            // blue
+                data[i + 3] = 255;                            // alpha
+            }
+            
+            x1++;
+            if (x1 === width) {
+                x1 = 0;
+                y1++;
+            }
+        }
+    }
     
-    var fishEye; //init in resize ... = initFishEye ();
+    function renderScaledCnv (data, crisped, width, height, magn) {
+        var renderMap = new Int32Array (width * height * 2);
+        var DX = 0;
+        var DY = 1;
+
+        var tmp = Math.floor (1 / magn);
+        if (tmp >= log2.length) {
+            var bmpscale = log2[log2.length - 1];
+        } else {
+            var bmpscale = log2[tmp] + 1;
+        }
+        
+        if (bmpscale > cache.images.length - 1) 
+            bmpscale = cache.images.length - 1
+        
+        var bmpscalefactor = cnvScaled.step << (bmpscale - 1);
+        
+        var tmpmagn = 1 / magn / bmpscalefactor;
+
+                    
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                var delta =  (y * width + x) * 2;
+                renderMap[delta + DX] = Math.floor(x * tmpmagn);
+                renderMap[delta + DY] = Math.floor(y * tmpmagn);
+            }
+        }
+        
+        //dataim = cache.images[bmpscale][bmpscale].data;
+        var x = 0, y = 0;
+        for (var i = 0; i < data.length; i += 4) {
+            var delta =  (y * width + x) * 2;
+            var dx = renderMap[delta + DX];
+            var dy = renderMap[delta + DY];
+            
+            var tmx = tmpmagn;
+            var bmx = bmpscale;
+            var tmy = tmpmagn;
+            var bmy = bmpscale;
+            
+            if ((dx === renderMap[delta + DX - 2] || dx === renderMap[delta + DX + 2])) {
+                var tmx = tmpmagn * 2;
+                var bmx = bmpscale - 1;
+            }
+
+            if ((dy === renderMap[delta + DY - 2 * width] || dy === renderMap[delta + DY + 2 * width])) {
+                var tmy = tmpmagn * 2;
+                var bmy = bmpscale - 1;
+            }
+
+            var iim = (Math.floor(y * tmy) * crisped.images[bmx][bmy].width + Math.floor(x * tmx)) * 4;
+            //dataim = cache.images[bmx][bmy].data;
+            var dataim = crisped.images[bmx][bmy].data;
+            
+            if (dataim[iim + 3] === 255) {
+                data[i]     = dataim[iim];                // red
+                data[i + 1] = dataim[iim + 1];            // green
+                data[i + 2] = dataim[iim + 2];            // blue
+                data[i + 3] = 255;//dataim[iim + 3];      // alpha
+            }
+            
+            x++;
+            if (x === width) {
+                x = 0;
+                y++;
+            }
+        }
+    }
+    
+    function drawCircle (x, y, r, fill, stroke, cursor, renderHint) {
+        if (r * squashX > 0.5 && r * squashY > 0.5) {
+        
+            ctx.beginPath();
+            ctx.ellipse (
+                x * squashX,
+                y * squashY,
+                r * squashX - 0.5,
+                r * squashY - 0.5,
+                0,
+                0,
+                2 * Math.PI,
+                false
+            );
+
+            ctx.lineWidth = 0;
+
+            ctx.fillStyle = fill;
+            ctx.fill ();
+            
+            
+            /*
+            ctx.strokeStyle = "white";
+            ctx.beginPath();
+            ctx.moveTo(ac.smallX, ac.smallY);
+            ctx.lineTo(ac.smallX + 100 * Math.cos(ang[i]), ac.smallY + 100 * Math.sin(ang[i]));
+            ctx.stroke();
+            */
+            
+            if (r > 5) {
+                var magn = r / (rr * ratio);
+                var xo = Math.floor (x * squashX - r * squashX);
+                var yo = Math.floor (y * squashY - r * squashY);
+                var xi = Math.floor (x * squashX + r * squashX);
+                var yi = Math.floor (y * squashY + r * squashY);
+                var w = xi - xo;
+                var h = yi - yo;
+
+                if (!isCache) {
+                    cnvCache = document.createElement ("canvas");
+                    var cacheW = Math.floor (2 * rr * ratio * squashX);
+                    var cacheH = Math.floor (2 * rr * ratio * squashY);
+                    cnvCache.width = cacheW;
+                    cnvCache.height = cacheH;
+                    var ctxCache = cnvCache.getContext('2d');
+                    var imgCache = ctxCache.getImageData(0, 0, cacheW, cacheH);
+                    renderFishEye (fishEye, imgCache.data, cacheW, cacheH, 1, 0, 0);
+                    ctxCache.putImageData(imgCache, 0, 0);
+                    
+                    //cache = crispBitmap (cnvCache);
+                    cache = crispBitmapXY (cnvCache);
+                    
+                    isCache = true;
+                }
+                
+                if (!cursor || cursor.cachedCnv === true) {
+                    var cachedCnv = cnvCache;
+                    var cachedData = cache;
+                    
+                } else if (renderHint === "1" && panning) {
+                    var cnvCache1 = document.createElement ("canvas");
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX / 2);
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY / 2);
+                    cnvCache1.width = cacheW1;
+                    cnvCache1.height = cacheH1;
+                    var ctxCache1 = cnvCache1.getContext('2d');
+                    var imgCache1 = ctxCache1.getImageData(0, 0, cacheW1, cacheH1);
+                    renderFishEye (fishEye, imgCache1.data, cacheW1, cacheH1, 0.5, cursor.centerX, cursor.centerY);
+                    ctxCache1.putImageData(imgCache1, 0, 0);
+                    
+                    cursor.cachedCnv = cnvCache1;
+                    //cursor.cachedData = crispBitmapXY (cnvCache1);
+
+                    var cachedCnv = cursor.cachedCnv;
+                    //var cachedData = cursor.cachedData;
+
+                } else if (cursor.cachedCnv === false) {
+                    var cnvCache1 = document.createElement ("canvas");
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX);
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY);
+                    cnvCache1.width = cacheW1;
+                    cnvCache1.height = cacheH1;
+                    var ctxCache1 = cnvCache1.getContext('2d');
+                    var imgCache1 = ctxCache1.getImageData(0, 0, cacheW1, cacheH1);
+                    renderFishEye (fishEye, imgCache1.data, cacheW1, cacheH1, 1, cursor.centerX, cursor.centerY);
+                    ctxCache1.putImageData(imgCache1, 0, 0);
+                    
+                    cursor.cachedCnv = cnvCache1;
+                    cursor.cachedData = crispBitmapXY (cnvCache1);
+
+                    var cachedCnv = cursor.cachedCnv;
+                    var cachedData = cursor.cachedData;
+
+                } else {
+                    var cachedCnv = cursor.cachedCnv;
+                    var cachedData = cursor.cachedData;
+                }
+                
+                if (panning || renderHint === "0" || (cachedCnv.width === w && cachedCnv.height === h)) {
+                    ctx.drawImage(cachedCnv, xo, yo, w, h);
+                } else if (renderHint || animating || dragging) {
+                    var cnvIm = document.createElement ("canvas");
+                    cnvIm.width = Math.floor (w / 2);
+                    cnvIm.height = Math.floor (h / 2);
+                    var ctxIm = cnvIm.getContext('2d');
+                    var imData = ctxIm.getImageData(0, 0, cnvIm.width, cnvIm.height);
+                    renderScaledCnv (imData.data, cachedData, cnvIm.width, cnvIm.height, magn * 0.5);
+                    ctxIm.putImageData(imData, 0, 0);
+                    ctx.drawImage(cnvIm, xo, yo, w, h);
+                } else {
+                    var cnvIm = document.createElement ("canvas");
+                    cnvIm.width = w;
+                    cnvIm.height = h;
+                    var ctxIm = cnvIm.getContext('2d');
+                    var imData = ctxIm.getImageData(0, 0, w, h);
+                    //var caData = ctxCache.getImageData(0, 0, cnvCache.width, cnvCache.height); // usporava
+                    renderScaledCnv (imData.data, cachedData, w, h, magn);
+                    //ctx.putImageData(imData, xo, yo); // nema alfe
+                    ctxIm.putImageData(imData, 0, 0);
+                    ctx.drawImage(cnvIm, xo, yo, w, h);
+                }
+            }
+        }
+    }
+
+    function node() {
+        var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint) {
+            function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
+                var beta = angle + alpha - Math.PI / 2;
+                
+                var ra = 0;
+                var xa = x0 + r0 * Math.cos (beta);
+                var ya = y0 + r0 * Math.sin (beta);
+                
+                var rb = 2 * r1;
+                var xb = x0 + (r0 + rb) * Math.cos (beta);
+                var yb = y0 + (r0 + rb) * Math.sin (beta);
+
+                var dr = (rb - ra) / 2;
+                var dx = (xb - xa) / 2;
+                var dy = (yb - ya) / 2;
+                
+                ra += dr;
+                xa += dx;
+                ya += dy;
+
+                var j;
+                do {
+                    dx /= 2;
+                    dy /= 2;
+                    dr /= 2;
+                    var d = Math.sqrt (Math.pow ((xa - x1), 2) + Math.pow ((ya - y1), 2));
+                    if (Math.abs (ra - r1) <= d) {
+                        xa -= dx;
+                        ya -= dy;
+                        ra -= dr;
+                    } else {
+                        xa += dx;
+                        ya += dy;
+                        ra += dr;
+                    }
+                } while (dr > pixelPrecision);
+
+                return {
+                    x: (r0 + ra) * Math.cos (beta),
+                    y: (r0 + ra) * Math.sin (beta),
+                    r: ra,
+                    alpha: alpha
+                };
+            }
+            
+            function getNeighbor (c1, direction, x0, y0, r0, x1, y1, r1) {
+                if (direction == "+") {
+                    var alpha = c1.alpha / 2;
+                    var dalpha = alpha;
+                } else {
+                    var alpha = (2 * Math.PI + c1.alpha) / 2;
+                    var dalpha = -(2 * Math.PI - alpha);
+                }
+                
+                var da = Math.acos ((2 * r1 - pixelPrecision) / (2 * r1));
+                do {
+                    var c2 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
+                    dalpha /= 2;
+                    var d = Math.sqrt (Math.pow ((c1.x - c2.x), 2) + Math.pow ((c1.y - c2.y), 2));
+                    if ((c1.r + c2.r) >= d) {
+                        alpha -= dalpha;
+                    } else {
+                        alpha += dalpha;
+                    }
+                } while (Math.abs(dalpha) > da);
+
+                return c2;
+            }
+            
+            var i;
+            
+            var r0 = r1 * ratio;
+            var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
+            var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
+            
+            if (rec === 1) {
+                if (renderHint === "1") {
+                    ctx.save ();
+                    ctx.beginPath();
+                    ctx.ellipse (
+                        x0 * squashX,
+                        y0 * squashY,
+                        r0 * squashX - 0.5,
+                        r0 * squashY - 0.5,
+                        0,
+                        0,
+                        2 * Math.PI,
+                        false
+                    );
+                    ctx.clip ();
+                    
+                } else if (renderHint === "1+") {                   
+                    ctx.save ();
+                    ctx.beginPath();
+                    
+                    ctx.moveTo ((x1     ) * squashX, (y1 - r1) * squashY);
+                    ctx.lineTo ((x1 - r1) * squashX, (y1 - r1) * squashY);
+                    ctx.lineTo ((x1 - r1) * squashX, (y1 + r1) * squashY);
+                    ctx.lineTo ((x1 + r1) * squashX, (y1 + r1) * squashY);
+                    ctx.lineTo ((x1 + r1) * squashX, (y1 - r1) * squashY);
+                    ctx.lineTo ((x1     ) * squashX, (y1 - r1) * squashY);
+                    
+                    ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
+                    ctx.clip (); //"evenodd"
+                }
+                
+                clear ();
+                
+                if (renderHint === "1" || renderHint === "1+")
+                    ctx.restore ();
+            }
+                
+            if (
+                Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr
+            ) {
+                if ((r1 * squashY * squashX) >= minRadius) {
+                    var colorFill = fill1;
+                    
+                    if (selectedCursor?cursor === selectedCursor: mouse && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
+                        colorFill = "white";
+                    } else {
+                        colorFill = fill1;
+                    }
+                    
+                    if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") 
+                        drawCircle(x0, y0, r0, colorFill, stroke1, cursor, renderHint);
+                    
+                    if (renderHint !== "1") {                   
+                        var ret, idx, alp;
+                        var got;
+                        var c0, c1;
+                        var alpha = (cursor?cursor.angle:Math.PI);
+                        var ci;
+                        var oldr, delta;
+            
+                        c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
+                        ci = (cursor?cursor.index:0);
+                        if (c0.r * squashX * squashY >= minRadius) {
+                            got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                            if (got) {
+                                idx = ci;
+                                alp = alpha;
+                                ret = got;
+                            }
+                        }
+                        
+                        oldr = c0.r;
+                        c1 = getNeighbor (c0, "+", x0, y0, r0, x1, y1, r1);
+                        alpha = c1.alpha;
+                        ci = (cursor?cursor.index:0);
+                        while (true){
+                            delta = c1.r > oldr;
+                            ci++;
+                            
+                            if (c1.r * squashX * squashY >= minRadius) {
+                                got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                                if (!ret && got) {
+                                    idx = ci;
+                                    alp = alpha;
+                                    ret = got;
+                                }
+                            } else
+                                if (!delta)
+                                    break;
+                            
+                            oldr = c1.r;
+                            c1 = getNeighbor (c1, "+", x0, y0, r0, x1, y1, r1);
+                            alpha = c1.alpha;
+                        }
+                        
+
+                        oldr = c0.r;
+                        c1 = getNeighbor (c0, "-", x0, y0, r0, x1, y1, r1);
+                        alpha = c1.alpha;
+                        ci = (cursor?cursor.index:0);
+                        while (true){
+                            delta = c1.r > oldr;
+                            ci--;
+
+                            if (c1.r * squashX * squashY >= minRadius) {
+                                got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                                if (!ret && got) {
+                                    idx = ci;
+                                    alp = alpha;
+                                    ret = got;
+                                }
+                            } else
+                                if (!delta)
+                                    break;
+                            
+                            oldr = c1.r;
+                            c1 = getNeighbor (c1, "-", x0, y0, r0, x1, y1, r1);
+                            alpha = c1.alpha;
+                        }
+                    }
+                    
+                    var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
+                    
+                    if (ret || cond) {
+                        var pass = {
+                            data: data,
+                            index: index,
+                            angle: angle,
+                            index1: idx,
+                            angle1: alp,
+                            revertAng: alp,
+                            cursor: null,
+                            child: ret,
+                            smallX: x0,
+                            smallY: y0,
+                            smallR: r0,
+                            largeX: x1,
+                            largeY: y1,
+                            largeR: r1,
+                            getMetrics: function () {
+                                var c, x;
+                                var a = pass.getAbsoluteAngle();
+                                if (pass.parent) {
+                                    x = pass.parent.getMetrics ();
+                                    
+                                    var rr1 = x.r;
+                                    var xx1 = x.x;
+                                    var yy1 = x.y;
+                                } else {
+                                    var rr1 = r1;
+                                    var xx1 = x1;
+                                    var yy1 = y1;
+                                }
+                                
+                                var r0 = rr1 * ratio;
+                                var x0 = xx1 + (rr1 - r0) * Math.cos (a - Math.PI / 2);
+                                var y0 = yy1 + (rr1 - r0) * Math.sin (a - Math.PI / 2);
+                                c = getCircle (pass.cursor.angle, x0, y0, r0, xx1, yy1, rr1);
+                                
+                                return {x: x0 + c.x, y: y0 + c.y, r: c.r};
+                            },
+                            getAbsoluteAngle: function () {
+                                return angle;
+                            },
+                            getAngMin: function () {
+                                var m0, m1;
+                                
+                                m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
+
+                                m1 = m0;
+                                for (i = 0; i < data.index; i++)
+                                    m1 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
+                                
+                                return m1.alpha;
+                            },
+                            getAngMax: function () {
+                                var m0, m1;
+                                
+                                m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
+
+                                m1 = m0;
+                                for (i = data.index; i < data.children.length - 1; i++)
+                                    m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
+                                
+                                return m1.alpha;
+                            },
+                            getCircle: function (ang) {
+                                return getCircle (ang, x0, y0, r0, x1, y1, r1);
+                            },
+                            setAngle: (function () {
+                                if (mouse) {
+                                    var alp1 = - angle + 3 * Math.PI / 2 + Math.atan2((y0 * squashY - mouse.y) / squashY, (x0 * squashX - mouse.x) / squashX);
+                                    while (alp1 > 2 * Math.PI) alp1 = alp1 - 2 * Math.PI;
+                                    while (alp1 < 0) alp1 = alp1 + 2 * Math.PI;
+                                } else {
+                                    var alp1 = alp;
+                                }
+                                
+                                var dalp = alp1 - alp;
+                                
+                                var c = getCircle (alp, x0, y0, r0, x1, y1, r1);
+                                
+                                return function (ang, percent) {
+                                    if (percent === undefined) percent = 1;
+                                    var nc = getCircle (ang, x0, y0, r0, x1, y1, r1);
+                                    var sang = ang - dalp * (nc.r / c.r) * percent;
+                                    pass.calcCursor (sang);
+                                    pass.revertAng = alp;
+                                }
+                            }) (),
+                            revertAngle: function () {
+                                pass.calcCursor (pass.revertAng);
+                            },
+                            calcCursor: function (ang) {
+                                var mi, m1, m2;
+                                mi = idx;
+                                m2 = getCircle (ang, x0, y0, r0, x1, y1, r1);
+                                
+                                if (ang > Math.PI) {
+                                    do {
+                                        m1 = m2;
+                                        m2 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
+                                        mi++;
+                                    } while (m1.r <= m2.r);
+                                    
+                                    pass.cursor.index = mi - 1;
+                                    pass.cursor.angle = m1.alpha;
+                                   
+                                } else {
+                                    do {
+                                        m1 = m2;
+                                        m2 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
+                                        mi--;
+                                    } while (m1.r <= m2.r);
+                                    
+                                    pass.cursor.index = mi + 1;
+                                    pass.cursor.angle = m1.alpha;
+                                }
+                                
+                                pass.angle1 = ang;
+                            }
+                        };
+                        
+                        if (ret) ret.parent = pass;
+                        
+                        return pass;
+                    }
+                }
+            }
+        };
+        
+        return {
+            render: render
+        };
+    }
+    
+    function clear () {
+        ctx.fillStyle = fill2;
+        ctx.fillRect(0, 0, ww, hh);
+    }
+
+    function redraw (m, renderHint, selectedCursor) {
+        //clear ();
+        return n.render (minRadius, x1, y1, r1, 0, 1, m, data, cursor.parent.index, cursor, selectedCursor, renderHint);
+    }
+    
+    function setupSelect (range) {
+        select = range;
+        if (range) {
+            var sc = cursor;
+            select.parent = null;
+            select.cursor = sc;
+            while (select.child) {
+                select = select.child;
+                
+                if (!sc.children[select.index])
+                    sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: 0, cachedCnv:true, cachedData: null, angle: Math.PI, children: []};
+                
+                sc = sc.children[select.index];
+                select.cursor = sc;
+            }
+        }
+    }
+    
+    function getMouse(mouseEvent)
+    {
+      var obj = svgContainer;
+      var obj_left = 0;
+      var obj_top = 0;
+      var xpos;
+      var ypos;
+      while (obj.offsetParent)
+      {
+        obj_left += obj.offsetLeft;
+        obj_top += obj.offsetTop;
+        obj = obj.offsetParent;
+      }
+      if (mouseEvent)
+      {
+        //FireFox
+        xpos = mouseEvent.pageX;
+        ypos = mouseEvent.pageY;
+      }
+      else
+      {
+        //IE
+        xpos = window.event.x + document.body.scrollLeft - 2;
+        ypos = window.event.y + document.body.scrollTop - 2;
+      }
+      
+      xpos -= obj_left;
+      ypos -= obj_top;
+      
+      return {x: xpos, y: ypos};
+    }
+    
+    function setCenter (select, x, y) {
+        select.cursor.centerX = x;
+        var minmaxW = Math.floor (cnvScaled.width / 2);
+        if (select.cursor.centerX > minmaxW)
+            select.cursor.centerX = minmaxW;
+        if (select.cursor.centerX < -minmaxW)
+            select.cursor.centerX = -minmaxW;
+
+        select.cursor.centerY = y;
+        var minmaxH = Math.floor (cnvScaled.height / 2);
+        if (select.cursor.centerY > minmaxH)
+            select.cursor.centerY = minmaxH;
+        if (select.cursor.centerY < -minmaxH)
+            select.cursor.centerY = -minmaxH;
+    }
+    
+    function mousemovePan(x, y) {
+        if (select && !animating) {
+            var r0 = r1 * ratio;
+            var x0 = Math.floor (x1 * squashX);
+            var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+            
+            if (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
+                //select.cursor.centerX = oldCenterX + (dragX - x);
+                //select.cursor.centerY = oldCenterY + (dragY - y);
+                var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0)) + fishEye.width + (dragX - x0)) * 4;
+                var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0)) + fishEye.width + (x - x0)) * 4;
+                
+                setCenter (select, oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1], oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1]);
+                /*
+                select.cursor.centerX = oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1];
+                var minmaxW = Math.floor (cnvScaled.width / 2);
+                if (select.cursor.centerX > minmaxW)
+                    select.cursor.centerX = minmaxW;
+                if (select.cursor.centerX < -minmaxW)
+                    select.cursor.centerX = -minmaxW;
+                    
+                select.cursor.centerY = oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1];
+                var minmaxH = Math.floor (cnvScaled.height / 2);
+                if (select.cursor.centerY > minmaxH)
+                    select.cursor.centerY = minmaxH;
+                if (select.cursor.centerY < -minmaxH)
+                    select.cursor.centerY = -minmaxH;
+                */
+
+                select.cursor.cachedCnv = false;
+                select.cursor.cachedData = null;
+            } else {
+                select.cursor.centerX = 0;
+                select.cursor.centerY = 0;
+                select.cursor.cachedCnv = true;
+                select.cursor.cachedData = null;
+            }
+            
+            redraw (null, "1", select.cursor);
+        }
+    }
+    
+    function mousemove (e) {
+        "use strict";
+        
+        var r0 = r1 * ratio;
+        var x0 = Math.floor (x1 * squashX);
+        var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+
+        mouse = getMouse (e);
+        lastMouseEvent = e;
+        
+        if (!dragging && mouseDown === 1) {
+            if (3 < Math.sqrt(Math.pow(mouse.x - dragX, 2) + Math.pow(mouse.y - dragY, 2))) {
+                dragging = true;
+                inert = [];
+                inertIdx = 0;
+                inertPan = [];
+                inertIdxPan = 0;
+                setupSelect(preSelect);
+                
+                if (!animating && select && Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
+                    panning = true;
+                    oldCenterX = select.cursor.centerX;
+                    oldCenterY = select.cursor.centerY;
+                }
+            }
+        }
+        
+        if (dragging && select) {
+            gettingLevel = select;
+            
+            var ip = 0;
+            var ang = [];
+            var ac = select;
+            while (ac && ip < 3) {
+                var phi =  ac.angle;
+                    
+                ang[ip] =
+                    - phi +
+                    3 * Math.PI / 2 +
+                    Math.atan2 (
+                        (ac.smallY * squashY - mouse.y) / squashY,
+                        (ac.smallX * squashX - mouse.x) / squashX
+                    );
+                    
+                while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
+                while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
+                
+                //drawCircle (ac.smallX, ac.smallY, ac.smallR, "red", "white", "yxz"); 
+                
+                ac = ac.parent;
+                ip++;
+            }
+            
+            var isOnParent = select.parent;
+            while (isOnParent) {
+                if (isOnParent.smallR > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
+                    break;
+                    
+                isOnParent = isOnParent.parent
+            }
+            
+            var minR, maxR, mouseDistance;
+            if (!isOnParent) {
+                if (select.parent) {
+                    minR = select.parent.smallR;
+                    maxR = select.parent.smallR + 2 * select.parent.getCircle(ang[1]).r * ratio;//select.smallR;
+                    mouseDistance = Math.sqrt (Math.pow (select.parent.smallX - mouse.x / squashX, 2) + Math.pow(select.parent.smallY - mouse.y / squashY, 2));
+
+                } else {
+                    minR = 0;
+                    maxR = select.smallR;
+                    mouseDistance = Math.sqrt (Math.pow (select.smallX - mouse.x / squashX, 2) + Math.pow(select.smallY - mouse.y / squashY, 2))
+                }
+            }
+
+            if (!animating && select.parent && !isOnParent && mouseDistance < maxR) {
+                //select.parent.setAngle (ang[1], dr);
+                select.parent.setAngle (ang[1], 0);
+                //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {
+                    //inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: dr, time: (new Date()).getTime()};
+                    inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: 0, centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
+                    inertIdx++;
+                    if (inertIdx === 20) inertIdx = 0;
+
+                    //clear ();                                
+                    setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, select.cursor, "1+"));
+
+                //} else {
+                //    select.parent.revertAngle ();
+                //}
+            }
+            
+            if (!select) {
+                mouseup (lastMouseEvent);
+                
+            } else {
+                if (!isOnParent) {
+                    if (mouseDistance > maxR)
+                        animateAng0 = ang[0];
+                    
+                    if (select.parent && select.parent.parent)
+                        animateAng2 = ang[2];
+
+                } else {
+                    if (isOnParent !== select.parent) {
+                        if (select.parent.parent) {
+                            if (animating) {
+                                animateAng2 = curAnimateAng2;
+                                animateAng2Start = curAnimateAng2;
+                            } else {
+                                animateAng2 = select.parent.parent.angle1;
+                                animateAng2Start = select.parent.parent.angle1;
+                            }
+                        }
+                        
+                    } else {
+                        animateAng2 = ang[2];
+                        if (!animating && select.parent.parent)
+                            animateAng2Start = select.parent.parent.angle1;
+                    }
+                }
+
+                if (!animating) {
+                    var topc = select;
+                    while (topc.parent)
+                        topc = topc.parent;
+
+                    var i, t0;
+                
+                    if (isOnParent) {
+                        //alert ("level down");
+                        if (level !== gettingLevel) {
+                            t0 = (new Date()).getTime();
+                            i = 0;
+                            
+                            var angles = [];
+                            var cc = select.parent.cursor;
+                            var cp = select.parent;
+                            do {
+                                angles.push (cp.angle1);
+                                cc.index = cp.index1;
+                                cc = cc.parent;
+                                cp = cp.parent;
+                            } while (cp);
+                            
+                            function aEnlarge () {
+                                angles[1] = animateAng2Start * (1 - i) + animateAng2 * i;
+                                curAnimateAng2 = angles[1]
+                                cc = select.parent.cursor;
+                                cp = select.parent;
+                                var ap = 0;
+                                while (cp.parent) {
+                                    cc.angle = angles[ap] * (1 - i) + angles[ap + 1] * i;
+                                    cc = cc.parent;
+                                    cp = cp.parent;
+                                    ap++
+                                };
+                                cc.angle = angles[ap] * (1 - i) + Math.PI * i;
+                                var m = topc.getCircle (topc.cursor.angle);
+                                
+                                var x0 = topc.smallX + m.x;
+                                var y0 = topc.smallY + m.y;
+                                var r0 = m.r;
+                                
+                                var ang = Math.atan2(y0 - y1, x0 - x1);
+                                var mang = Math.atan2(y1 - y0, x1 - x0);
+                                
+                                var xo = x1 + r1 * Math.cos(ang);
+                                var yo = y1 + r1 * Math.sin(ang);
+                                
+                                var r2 = r1 * r1 / r0;
+                                var x2 = xo + r2 * Math.cos(mang);
+                                var y2 = yo + r2 * Math.sin(mang);
+
+                                var x = x1 + (x2 - x1) * i;
+                                var y = y1 + (y2 - y1) * i;
+                                var r = r1 + (r2 - r1) * i;
+
+                                //clear ();
+                                var atCur = n.render (minRadius, x, y, r, 0, 1, null, data, topc.index, cursor, select.cursor, "0");
+
+                                if (i < 1) {
+                                    var t1 = (new Date()).getTime();
+                                    i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
+                                    if (i > 1) i = 1
+                                    t0 = t1;
+                                    
+                                    //setTimeout(aEnlarge, 0);
+                                    window.requestAnimationFrame(aEnlarge);
+                                } else {
+                                    level = gettingLevel;
+                                    inertIdx = 0;
+                                    inert = [];
+
+                                    if (!cursor.children[cursor.index])
+                                        cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: 0, index: 0, cachedCnv: true, cachedData: null, angle: Math.PI, children: []};
+                                    cursor = cursor.children[cursor.index];
+
+                                    /*
+                                    cursor.centerX = 0;
+                                    cursor.centerY = 0;
+                                    cursor.cachedCnv = false;
+                                    */
+                                    
+                                    path.push (data);
+                                    data = topc.child.data;
+                                    
+                                    animating = false;
+                                    //invalidateCache ();
+
+                                    if (atCur) {
+                                        if (dragging) {
+                                            setupSelect (atCur.child)
+                                            redraw (null, null, select.cursor);
+                                            //setTimeout(function () {
+                                            //    mousemove (lastMouseEvent)
+                                            //}, 0); //mousemove (lastMouseEvent);
+                                            window.requestAnimationFrame(function () {
+                                                mousemove (lastMouseEvent);
+                                            });
+                                        } else {
+                                            mouseup (lastMouseEvent);
+                                        }
+                                        //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
+
+                                    } else {
+                                        mouseup (lastMouseEvent);
+                                    }
+                                }
+                            }
+                            
+                            animating = "level";
+                            //invalidateCache ();
+                            //drawCircle(x0, y0, r0, colorFill, stroke1, (index).toString(), "1+");
+                            aEnlarge();
+                        }    
+                    } else if (mouseDistance > maxR) {
+                        //alert ("level up");
+                        if (path.length > 0) {
+                            if (level !== gettingLevel) {
+                                i = 0;
+                                t0 = (new Date()).getTime();
+                                
+                                var angles = [];
+                                var cc = select.cursor.parent;
+                                var cp = select.parent;
+                                while (cp) {
+                                    angles.push (cp.angle1);
+                                    cc.index = cp.index1;
+                                    cc = cc.parent;
+                                    cp = cp.parent;
+                                }
+                                angles.push (Math.PI);
+
+                                function aEnsmall () {
+                                    cc = select.cursor.parent;
+                                    cp = select.parent;
+                                    var ap = 0;
+                                    
+                                    var lastAngle = Math.PI;
+                                    while (ap < angles.length) {
+                                        if (ap > 0) {
+                                            cc.angle = angles[ap] * (1 - i) + angles[ap - 1] * (i);
+                                        } else {
+                                            cc.angle = angles[ap] * (1 - i) + animateAng0 * (i);//Math.PI + (animateAng0 - Math.PI) * (i);
+                                        }
+                                        lastAngle = cc.angle;
+                                        cc = cc.parent;
+                                        ap++
+                                    };
+
+                                    var m = topc.getCircle (lastAngle);
+                                    
+                                    var x0 = topc.smallX + m.x;
+                                    var y0 = topc.smallY + m.y;
+                                    var r0 = m.r;
+
+                                    var ang = Math.atan2(y0 - y1, x0 - x1);
+                                    var mang = Math.atan2(y1 - y0, x1 - x0);
+                                    
+                                    var xo = x1 + r1 * Math.cos(ang);
+                                    var yo = y1 + r1 * Math.sin(ang);
+                                    
+                                    var r2 = r1 * r1 / r0;
+                                    var x2 = xo + r2 * Math.cos(mang);
+                                    var y2 = yo + r2 * Math.sin(mang);
+
+                                    var x = x1 + (x2 - x1) * (1 - i);
+                                    var y = y1 + (y2 - y1) * (1 - i);
+                                    var r = r1 + (r2 - r1) * (1 - i);
+
+                                    //clear ();
+                                    var atCur = n.render (minRadius, x, y, r, 0, 1, null, data, cursor.parent.parent.index, cursor.parent, select.cursor, "0");
+
+                                    if (i < 1) {
+                                        var t1 = (new Date()).getTime();
+                                        i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
+                                        if (i > 1) i = 1
+                                        t0 = t1;
+                                        
+                                        //setTimeout(aEnsmall, 0);
+                                        window.requestAnimationFrame(aEnsmall);
+                                    } else {
+                                        level = gettingLevel;
+                                        inertIdx = 0;
+                                        inert = [];
+
+                                        cursor = cursor.parent;
+                                        /*
+                                        cursor.centerX = 0;
+                                        cursor.centerY = 0;
+                                        cursor.cachedCnv = false;
+                                        */
+                                        data = path.pop();
+                                        
+                                        animating = false;
+                                        panning = false;
+                                        //invalidateCache ();
+                                        
+                                        if (atCur) {
+                                            if (dragging) {
+                                                setupSelect (atCur);
+                                                redraw (null, null, select.cursor);
+                                                //setTimeout(function () {
+                                                //    mousemove (lastMouseEvent)
+                                                //}, 0); //mousemove (lastMouseEvent);
+                                                window.requestAnimationFrame(function () {
+                                                    mousemove (lastMouseEvent);
+                                                });
+                                            } else {
+                                                mouseup (lastMouseEvent);
+                                            }
+                                            //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
+
+                                        } else {
+                                            mouseup (lastMouseEvent);
+                                        }                                            
+                                    }
+                                }
+                                
+                                animating = "level";
+                                //invalidateCache ();
+                                //just update the cache
+                                //n.render (minRadius, topc.largeX, topc.largeY, topc.largeR, 0, 1, null, data, cursor.parent.parent.index, cursor.parent, select.cursor, "1");
+                                cursor.cachedCnv = true;
+                                cursor.cachedData = null;
+                                cursor.centerX = 0;
+                                cursor.centerY = 0;
+                                aEnsmall();
+                            }
+                        }
+                    }
+                }                    
+            }
+        }
+        
+        if (!animating && panning && select) {
+            mousemovePan(mouse.x, mouse.y);
+            inertPan[inertIdxPan] = {centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
+            inertIdxPan++;
+            if (inertIdxPan === 20) inertIdxPan = 0;
+        }
+
+        if (!select && !animating && !dragging && !panning) {
+            redraw ({x: mouse.x, y: mouse.y});
+        }
+    }
+    
+    function mousedown (e) {
+        mouse = getMouse (e);
+        
+        if (!animating) {
+            if (e.which === 1) {
+                mouseDown = 1;
+                dragX = mouse.x;
+                dragY = mouse.y;
+                
+                preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
+            }
+        }
+    }
+
+    function mouseup (e) {
+        mouse = getMouse (e);
+        mouseDown = 0;
+
+        if (animating === "level") dragging = false;
+
+        if (!animating) {
+            if (dragging) {
+                dragging = false;
+                if (!panning && inert.length > 1) {
+                    var sum = 0;
+                    var avgAng = 0;
+                    var i = inertIdx - 1
+                    var j = i - 1;
+                    var k = 20;
+                    if ((new Date()).getTime() - inert[i].time < 100) {
+                        while (i !== inertIdx && k > 0) {
+                            if (i === 0)
+                                j = inert.length - 1;
+                            else
+                                j = i - 1
+
+                            if (!inert[i] || !inert[j])
+                                break;
+                                
+                            if (inert[i].time - inert[j].time > 100)
+                                break;
+
+                            var dang = (inert[i].angle - inert[j].angle) / (inert[i].time - inert[j].time)
+                            
+                            if (!avgAng)
+                                avgAng = dang;
+                            else
+                                avgAng = (avgAng + dang) / 2
+                            
+                            i -= 1; j -= 1; k -= 1;
+                        }
+                    }
+                    
+                    if (Math.abs(avgAng) > 0.0001) {
+                        var c = select.parent;
+                        var ang0 = inert[inertIdx - 1].angle;
+                        var dang0 = inert[inertIdx - 1].angle - inert[inertIdx - 1].rawAngle;
+                        var t0 = (new Date()).getTime();
+                        var i = 1;
+                        var di = 1;
+                        function aInert () {
+                            var dt = (new Date()).getTime() - t0;
+                            t0 = (new Date()).getTime();
+                            if (dt === 0) dt = 1;
+
+                            di = di - dt / 1000;
+                            //var sindi = Math.sin (di * Math.PI / 2);
+                            if (di > 0){
+                                ang0 += avgAng * di * 40;
+                                if (ang0 > 0 && ang0 < 2 * Math.PI && c.getCircle(ang0).r * squashX * squashY > minRadius) {
+                                    c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
+
+                                    redraw (null, "1+");
+                                    
+                                    //setTimeout(aInert, 0);
+                                    window.requestAnimationFrame(aInert);
+                                    
+                                } else {
+                                    animating = false;
+                                    redraw ({x: mouse.x, y: mouse.y});
+                                }
+                            } else {
+                                animating = false;
+                                redraw ({x: mouse.x, y: mouse.y});
+                            }
+                        }
+
+                        animating = true;
+                        aInert();
+                    }
+                }
+
+            }
+            
+            if (panning && inertPan.length > 1) {
+                var avgX = 0;
+                var avgY = 0;
+                var i = inertIdxPan - 1
+                var j = i - 1;
+                var k = 20;
+                if ((new Date()).getTime() - inertPan[inertIdxPan - 1].time < 50) {
+                    while (i !== inertIdxPan && k > 0) {
+                        if (i === 0)
+                            j = inertPan.length - 1;
+                        else
+                            j = i - 1
+
+                        if (!inertPan[i] || !inertPan[j])
+                            break;
+                            
+                        if (inertPan[i].time - inertPan[j].time > 100) {
+                            break;
+                        }
+
+                        var dx = (inertPan[i].centerX - inertPan[j].centerX) / (inertPan[i].time - inertPan[j].time);
+                        if (!avgX) {
+                            avgX = dx;
+                        } else {
+                            avgX = (avgX + dx) / 2
+                        }
+
+                        var dy = (inertPan[i].centerY - inertPan[j].centerY) / (inertPan[i].time - inertPan[j].time);
+                        if (!avgY) {
+                            avgY = dy;
+                        } else {
+                            avgY = (avgY + dy) / 2
+                        }
+
+                        i -= 1; j -= 1; k -= 1;
+                    }
+                    
+                    if (Math.abs(avgX) > 0.0001 || Math.abs(avgY) > 0.0001) {
+                        var t0 = (new Date()).getTime();
+                        var di = 1;
+                        function dInert (select) {
+                            var dt = (new Date()).getTime() - t0;
+                            t0 = (new Date()).getTime();
+                            if (dt === 0) dt = 1;
+
+                            di = di - dt / 500;
+                            //var sindi = Math.sin (di * Math.PI / 2);
+                            if (di > 0){
+                                var oldx = cursor.centerX;
+                                var oldy = cursor.centerY;
+                                setCenter (select, cursor.centerX + avgX * di * 24, cursor.centerY + avgY * di * 24);
+                                if (oldx != cursor.centerX || oldy != cursor.centerY) {
+                                    redraw (null, "1");
+                                    window.requestAnimationFrame(function () {
+                                        dInert (select)
+                                    });
+                                } else {
+                                    panning = false;
+                                    animating = false;
+                                    cursor.cachedCnv = false;
+                                    window.requestAnimationFrame(function () {
+                                        redraw ({x: mouse.x, y: mouse.y}, "1");
+                                    });
+                                }
+
+                            } else {
+                                panning = false;
+                                animating = false;
+                                cursor.cachedCnv = false;
+                                window.requestAnimationFrame(function () {
+                                    redraw ({x: mouse.x, y: mouse.y}, "1");
+                                });
+                            }
+                        }
+                        animating = true;
+                        dInert(select);
+                    }
+                }
+
+                if (!animating){
+                    panning = false;
+                    select.cursor.cachedCnv = false;
+                    window.requestAnimationFrame(function () {
+                        redraw ({x: mouse.x, y: mouse.y}, "1");
+                    });
+                }
+            } else {
+                window.requestAnimationFrame(function () {
+                    redraw ({x: mouse.x, y: mouse.y});
+                });
+            }
+            
+            select = null;
+        }
+    }
+    
+    function setDimensions(width, height) {
+        ww = width;
+        hh = height;
+        
+        if (ww > hh / ratio) {
+            rr = hh / 2;
+            squashX = 1 / ratio;
+            squashY = 1;
+            
+        } else {
+            rr = ww / 2 * ratio;
+            squashX = 1 / ratio;
+            squashY = 1;
+            /*
+            rr = ww / 2;
+            squashX = 1;
+            squashY = ratio;
+            */
+        }
+
+        r1 = rr;
+        x1 = ww / squashX / 2;
+        y1 = hh / squashY / 2;
+        
+        xx = x1;
+        yy = y1;
+        
+        
+    }
+
+    function resize(width, height) {
+        setDimensions (width, height);
+    
+        fishEye = initFishEye (1);
+        
+        function rec1 (c) {
+            if (c.cachedCnv) {
+                c.cachedCnv = false;
+                c.cachedData = null;
+            }
+                
+            for (var tmp in c.children)
+                rec1 (tmp);
+                
+        }
+        
+        var c = cursor;
+        while (c.parent)
+            c = c.parent;
+        rec1 (c.children[0]);
+        
+        
+        minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio;
+
+        clip.setAttribute('cx', x1 * squashX);
+        clip.setAttribute('cy', y1 * squashY);
+        clip.setAttribute('rx', r1 * squashX);
+        clip.setAttribute('ry', r1 * squashY);
+        clip.setAttribute('stroke-width',  1);
+        
+        cnv.width = ww;
+        cnv.height = hh;
+        cnv.setAttribute ("width", ww);
+        cnv.setAttribute ("height", hh);
+        cnv.style.clipPath = "url(#clip128)";
+        
+        invalidateCache ();
+        redraw ();
+    }
+    
+    
+    var mouse = {};
+    var tt, ll, ww, hh, rr, xx, yy, squashX, squashY;
+    var r1, x1, y1;
+    var path = [], cursor, select, preSelect, animating, panning;
+    cursor = {parent: null, index: 0, centerX: 0, centerY: 0, cachedCnv:true, cachedData: null, angle: Math.PI, children: []}
+    //cursor.parent = {parent: null, index: 0, centerX: 0, centerY: 0, cachedCnv:false, cachedData: null, angle: Math.PI, children: []}
+    cursor.parent = {index: 0, children: [cursor]};
+    //var topCursor = cursor;
+    var level, gettingLevel, animateAng0, animateAng2, animateAng2Start, curAnimateAng2;
+    var lastMouseEvent;
+
+    var mouseDown = false;
+    var dragX, dragY, dragging = false, oldCenterX, oldCenterY;
+    var inert, inertIdx = 0;
+    var inertPan, inertIdxPan = 0;
+
+    var n = node();
+    var movingNode = null;
+
+    var fishEye, fishEyeHalf; //init in resize ... = initFishEye ();
+
+    var clipPath = document.createElementNS(svgns, 'clipPath');
+    clipPath.setAttributeNS(null, 'id', 'clip128');
+    svg.appendChild(clipPath);
+
+    var clip = document.createElementNS(svgns, 'ellipse');
+    clipPath.appendChild(clip);
+
+window.addEventListener('mousemove', mousemove, false);
+window.addEventListener('mousedown', mousedown, false);
+window.addEventListener('mouseup', mouseup, false);
+
+window.addEventListener("touchmove", function (evt) {
+    if (evt.changedTouches.length == 1) {
+        mousemove (evt.changedTouches[0]);
+    }
+}, false);
+window.addEventListener("touchstart", function (evt) {
+    if (evt.changedTouches.length == 1) {
+        evt.changedTouches[0].which = 1;
+        mousedown (evt.changedTouches[0]);
+    }
+}, false);
+window.addEventListener("touchend", function (evt) {
+    if (evt.changedTouches.length == 1) {
+        mouseup (evt.changedTouches[0]);
+    }
+}, false);
+  
+    var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
+    //var cnvScaled = crispBitmap ();
+    
 
     //var cnvim = generateGrid (3000, 3000, 50, 1);
     

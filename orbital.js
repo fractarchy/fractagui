@@ -654,6 +654,7 @@ alert(0);
                 2 * Math.PI,
                 false
             );
+            ctx.closePath ();
 
             ctx.lineWidth = 0;
 
@@ -740,7 +741,7 @@ alert(0);
                 
                 if (panning || renderHint === "0" || (cachedCnv.width === w && cachedCnv.height === h)) {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
-                } else if (renderHint || animating || dragging) {
+                } else if (animating || dragging || panning) {
                     var cnvIm = document.createElement ("canvas");
                     cnvIm.width = Math.floor (w / 2);
                     cnvIm.height = Math.floor (h / 2);
@@ -855,11 +856,12 @@ alert(0);
                         2 * Math.PI,
                         false
                     );
+                    ctx.closePath ();
                     ctx.clip ();
                     
                 } else if (renderHint === "1+") {                   
                     ctx.save ();
-                    ctx.beginPath();
+                    ctx.beginPath ();
                     
                     ctx.moveTo ((x1     ) * squashX, (y1 - r1) * squashY);
                     ctx.lineTo ((x1 - r1) * squashX, (y1 - r1) * squashY);
@@ -869,6 +871,7 @@ alert(0);
                     ctx.lineTo ((x1     ) * squashX, (y1 - r1) * squashY);
                     
                     ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
+                    ctx.closePath();
                     ctx.clip (); //"evenodd"
                 }
                 
@@ -1612,7 +1615,7 @@ alert(0);
                     var i = inertIdx - 1
                     var j = i - 1;
                     var k = 20;
-                    if ((new Date()).getTime() - inert[i].time < 100) {
+                    if ((new Date()).getTime() - (inertIdx === 0? inert[inert.length - 1].time: inert[inertIdx - 1].time) < 50) {
                         while (i !== inertIdx && k > 0) {
                             if (i === 0)
                                 j = inert.length - 1;
@@ -1683,7 +1686,7 @@ alert(0);
                 var i = inertIdxPan - 1
                 var j = i - 1;
                 var k = 20;
-                if ((new Date()).getTime() - inertPan[inertIdxPan - 1].time < 50) {
+                if ((new Date()).getTime() - (inertIdxPan === 0? inertPan[inertPan.length - 1].time: inertPan[inertIdxPan - 1].time) < 50) {
                     while (i !== inertIdxPan && k > 0) {
                         if (i === 0)
                             j = inertPan.length - 1;
@@ -1737,18 +1740,18 @@ alert(0);
                                     panning = false;
                                     animating = false;
                                     cursor.cachedCnv = false;
-                                    window.requestAnimationFrame(function () {
+                                    //window.requestAnimationFrame(function () {
                                         redraw ({x: mouse.x, y: mouse.y}, "1");
-                                    });
+                                    //});
                                 }
 
                             } else {
                                 panning = false;
                                 animating = false;
                                 cursor.cachedCnv = false;
-                                window.requestAnimationFrame(function () {
+                                //window.requestAnimationFrame(function () {
                                     redraw ({x: mouse.x, y: mouse.y}, "1");
-                                });
+                                //});
                             }
                         }
                         animating = true;
@@ -1759,14 +1762,15 @@ alert(0);
                 if (!animating){
                     panning = false;
                     select.cursor.cachedCnv = false;
-                    window.requestAnimationFrame(function () {
+                    //window.requestAnimationFrame(function () {
                         redraw ({x: mouse.x, y: mouse.y}, "1");
-                    });
+                    //});
                 }
-            } else {
-                window.requestAnimationFrame(function () {
+            }
+            if (!animating) {
+                //window.requestAnimationFrame(function () {
                     redraw ({x: mouse.x, y: mouse.y});
-                });
+                //});
             }
             
             select = null;

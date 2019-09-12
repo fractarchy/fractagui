@@ -226,14 +226,15 @@ alert(iWidth);
         return cnvScaled;
     }
 
-    function crispX (data1, width1, height1, step) {
+    function crispX (imageData1, width1, height1, step) {
+        var data1 = imageData1.data;
         var cnv1 = document.createElement ("canvas")
         cnv1.width = Math.ceil (width1 / step);
         cnv1.height = height1;
 
         var ctx1 = cnv1.getContext('2d');
         
-        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
         var data = imData.data;
         
         for (var cy = 0; cy < height1; cy += 1) {
@@ -278,17 +279,18 @@ ctx.drawImage (cnv1, 0, 0);
 
 alert(0);
 */
-        return data;
+        return imData;
     }
     
-    function crispY (data1, width1, height1, step) {
+    function crispY (imageData1, width1, height1, step) {
+        var data1 = imageData1.data;
         var cnv1 = document.createElement ("canvas")
         cnv1.width = width1;
         cnv1.height = Math.ceil (height1 / step);
 
         var ctx1 = cnv1.getContext('2d');
         
-        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
         var data = imData.data;
         
         for (var cy = 0; cy < height1; cy += step) {
@@ -333,22 +335,21 @@ ctx.drawImage (cnv1, 0, 0);
 
 alert(0);
 */
-        return data;
+        return imData;
     }
 
     function crispBitmapXY (cnvim) {
         //var cnvim = generateGrid (3000, 3000, 50, 1);
         var ctxim = cnvim.getContext('2d');
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
-        var dataim = imageDataim.data;
         
         var cnvScaled = {width: cnvim.width, height: cnvim.height, step: 2, images: []};
         
         var iWidth = cnvim.width;
         var iHeight = cnvim.height;
 
-        var dataW = dataim;
-        cnvScaled.images.push ([{width: iWidth, height: iHeight, data: dataW}]);
+        var dataW = imageDataim;
+        cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW}]);
         var x = cnvScaled.images.length - 1;
         
         while (true) {
@@ -356,18 +357,19 @@ alert(0);
             while (iHeight / cnvScaled.step > 1) {
                 dataH = crispY (dataH, iWidth, iHeight, 2);
                 iHeight = Math.ceil (iHeight / 2);
-                cnvScaled.images[x].push ({width: iWidth, height: iHeight, data: dataH});
+                cnvScaled.images[x].push ({width: iWidth, height: iHeight, imageData: dataH});
             }
             
             iHeight = cnvim.height;
             if (iWidth / cnvScaled.step > 1) {
                 dataW = crispX (dataW, iWidth, iHeight, 2);
                 iWidth = Math.ceil (iWidth / 2);
-                cnvScaled.images.push ([{width: iWidth, height: iHeight, data: dataW}]);
+                cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW}]);
                 x = cnvScaled.images.length - 1;
             } else
                 break;
         }
+        
         return cnvScaled;
     }
 
@@ -552,7 +554,7 @@ alert(0);
                 bmpscaleY = 0;
 
             var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-            var scaledData = scaled.data;
+            var scaledData = scaled.imageData.data;
 
             if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
                 var iim = (finalY * scaled.width + finalX) * 4
@@ -583,7 +585,7 @@ alert(0);
         }
         
         if (bmpscale > cache.images.length - 1) 
-            bmpscale = cache.images.length - 1
+            bmpscale = cache.images.length - 1;
         
         var bmpscalefactor = cnvScaled.step << (bmpscale - 1);
         
@@ -622,7 +624,7 @@ alert(0);
 
             var iim = (Math.floor(y * tmy) * crisped.images[bmx][bmy].width + Math.floor(x * tmx)) * 4;
             //dataim = cache.images[bmx][bmy].data;
-            var dataim = crisped.images[bmx][bmy].data;
+            var dataim = crisped.images[bmx][bmy].imageData.data;
             
             if (dataim[iim + 3] === 255) {
                 data[i]     = dataim[iim];                // red
@@ -639,7 +641,7 @@ alert(0);
         }
     }
     
-    function drawCircle (x, y, r, fill, stroke, cursor, renderHint) {
+    function drawCircle (x, y, r, fill, stroke, cursor, renderHint, level) {
         if (r * squashX > 0.5 && r * squashY > 0.5) {
         
             ctx.beginPath();
@@ -685,7 +687,7 @@ alert(0);
                     cnvCache.width = cacheW;
                     cnvCache.height = cacheH;
                     var ctxCache = cnvCache.getContext('2d');
-                    var imgCache = ctxCache.getImageData(0, 0, cacheW, cacheH);
+                    var imgCache = ctxCache.createImageData(cacheW, cacheH);
                     renderFishEye (fishEye, imgCache.data, cacheW, cacheH, 1, 0, 0);
                     ctxCache.putImageData(imgCache, 0, 0);
                     
@@ -699,14 +701,15 @@ alert(0);
                     var cachedCnv = cnvCache;
                     var cachedData = cache;
                     
-                } else if (renderHint === "1" && panning) {
+                } else if (level === 1 && panning) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX / 2);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY / 2);
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
-                    var imgCache1 = ctxCache1.getImageData(0, 0, cacheW1, cacheH1);
+                    //var imgCache1 = ctxCache1.getImageData(0, 0, cacheW1, cacheH1);
+                    var imgCache1 = ctxCache1.createImageData(cacheW1, cacheH1);
                     renderFishEye (fishEye, imgCache1.data, cacheW1, cacheH1, 0.5, cursor.centerX, cursor.centerY);
                     ctxCache1.putImageData(imgCache1, 0, 0);
                     
@@ -723,7 +726,8 @@ alert(0);
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
-                    var imgCache1 = ctxCache1.getImageData(0, 0, cacheW1, cacheH1);
+                    //var imgCache1 = ctxCache1.getImageData(0, 0, cacheW1, cacheH1);
+                    var imgCache1 = ctxCache1.createImageData(cacheW1, cacheH1);
                     renderFishEye (fishEye, imgCache1.data, cacheW1, cacheH1, 1, cursor.centerX, cursor.centerY);
                     ctxCache1.putImageData(imgCache1, 0, 0);
                     
@@ -738,23 +742,72 @@ alert(0);
                     var cachedData = cursor.cachedData;
                 }
                 
-                if (panning || renderHint === "0" || (cachedCnv.width === w && cachedCnv.height === h)) {
+                if ((level === 1 && panning) || renderHint === "0" || (cachedCnv.width === w && cachedCnv.height === h)) {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
-                } else if (animating || dragging || panning) {
+                } else if (animating || dragging) {
+                    /*
+                    brzo, smudged
                     var cnvIm = document.createElement ("canvas");
                     cnvIm.width = Math.floor (w / 2);
                     cnvIm.height = Math.floor (h / 2);
                     var ctxIm = cnvIm.getContext('2d');
-                    var imData = ctxIm.getImageData(0, 0, cnvIm.width, cnvIm.height);
+                    //var imData = ctxIm.getImageData(0, 0, cnvIm.width, cnvIm.height);
+                    var imData = ctxIm.createImageData(cnvIm.width, cnvIm.height);
                     renderScaledCnv (imData.data, cachedData, cnvIm.width, cnvIm.height, magn * 0.5);
                     ctxIm.putImageData(imData, 0, 0);
                     ctx.drawImage(cnvIm, xo, yo, w, h);
+                    */
+                    
+                    var tmp = Math.floor (1 / magn);
+                    if (tmp >= log2.length) {
+                        var bmpscale = log2[log2.length - 1];
+                    } else {
+                        var bmpscale = log2[tmp] + 1;
+                    }
+                    
+                    if (bmpscale > cache.images.length - 1) 
+                        bmpscale = cache.images.length - 1;
+
+                    var cnvIm = document.createElement ("canvas");
+                    cnvIm.width = cachedData.images[bmpscale][bmpscale].width;
+                    cnvIm.height = cachedData.images[bmpscale][bmpscale].height;
+                    var ctxIm = cnvIm.getContext('2d');
+                    var imData = ctxIm.createImageData(cachedData.images[bmpscale][bmpscale].width, cachedData.images[bmpscale][bmpscale].height);
+                    /*
+                    function copyData (im1, im2) {
+                        var d1 = im1.data;
+                        var d2 = im2.data;
+                        for (var i = 0; i < d1.length; i+=4) {
+                            if (d1[i + 3] === 255) {
+                                d2[i] = d1[i];
+                                d2[i + 1] = d1[i + 1];
+                                d2[i + 2] = d1[i + 2];
+                                d2[i + 3] = 255;
+                            }
+                        }
+                    }
+                    copyData (cachedData.images[bmpscale][bmpscale].imageData, imData);
+                    */
+                    imData.data.set (cachedData.images[bmpscale][bmpscale].imageData.data);
+                    function copyTransparency (im1, im2) {
+                        var d1 = im1.data;
+                        var d2 = im2.data;
+                        for (var i = 0; i < d1.length; i+=4)
+                            if (d1[i + 3] < 255)
+                                d2[i + 3] = 0;
+                    }
+                    copyTransparency (cachedData.images[bmpscale][bmpscale].imageData, imData);
+
+                    ctxIm.putImageData(imData, 0, 0)
+                    ctx.drawImage(cnvIm, xo, yo, w, h);
+                    
                 } else {
                     var cnvIm = document.createElement ("canvas");
                     cnvIm.width = w;
                     cnvIm.height = h;
                     var ctxIm = cnvIm.getContext('2d');
-                    var imData = ctxIm.getImageData(0, 0, w, h);
+                    //var imData = ctxIm.getImageData(0, 0, w, h);
+                    var imData = ctxIm.createImageData(w, h);
                     //var caData = ctxCache.getImageData(0, 0, cnvCache.width, cnvCache.height); // usporava
                     renderScaledCnv (imData.data, cachedData, w, h, magn);
                     //ctx.putImageData(imData, xo, yo); // nema alfe
@@ -859,6 +912,7 @@ alert(0);
                     ctx.clip ();
                     
                 } else if (renderHint === "1+") {                   
+                    
                     ctx.save ();
                     ctx.beginPath ();
                     
@@ -893,7 +947,7 @@ alert(0);
                     }
                     
                     if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") 
-                        drawCircle(x0, y0, r0, colorFill, stroke1, cursor, renderHint);
+                        drawCircle(x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec);
                     
                     if (renderHint !== "1") {                   
                         var ret, idx, alp;
@@ -1188,22 +1242,6 @@ alert(0);
                 var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0)) + fishEye.width + (x - x0)) * 4;
                 
                 setCenter (select, oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1], oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1]);
-                /*
-                select.cursor.centerX = oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1];
-                var minmaxW = Math.floor (cnvScaled.width / 2);
-                if (select.cursor.centerX > minmaxW)
-                    select.cursor.centerX = minmaxW;
-                if (select.cursor.centerX < -minmaxW)
-                    select.cursor.centerX = -minmaxW;
-                    
-                select.cursor.centerY = oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1];
-                var minmaxH = Math.floor (cnvScaled.height / 2);
-                if (select.cursor.centerY > minmaxH)
-                    select.cursor.centerY = minmaxH;
-                if (select.cursor.centerY < -minmaxH)
-                    select.cursor.centerY = -minmaxH;
-                */
-
                 select.cursor.cachedCnv = false;
                 select.cursor.cachedData = null;
             } else {
@@ -1213,9 +1251,8 @@ alert(0);
                 select.cursor.cachedData = null;
             }
             
-            var sel = select;
             window.requestAnimationFrame(function () {
-                redraw (null, "1", sel.cursor);
+                redraw ({x: mouse.x, y: mouse.y}, "1");
             });
         }
     }
@@ -1230,7 +1267,7 @@ alert(0);
         mouse = getMouse (e);
         lastMouseEvent = e;
         
-        if (!dragging && mouseDown === 1) {
+        if (!panning && !dragging && mouseDown === 1) {
             if (3 < Math.sqrt(Math.pow(mouse.x - dragX, 2) + Math.pow(mouse.y - dragY, 2))) {
                 dragging = true;
                 inert = [];
@@ -1304,9 +1341,11 @@ alert(0);
                     inertIdx++;
                     if (inertIdx === 20) inertIdx = 0;
 
-                    //clear ();                                
+                    //clear ();
+                    var sel = select;                                
                     window.requestAnimationFrame(function () {
-                        setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, select.cursor, "1+"));
+                        if (!panning)
+                            setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+"));
                     });
 
                 //} else {
@@ -1578,18 +1617,17 @@ alert(0);
             }
         }
         
-        if (!animating && panning && select) {
+        if (!animating && panning) {
             mousemovePan(mouse.x, mouse.y);
-            inertPan[inertIdxPan] = {centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
+            inertPan[inertIdxPan] = {centerX: cursor.centerX, centerY: cursor.centerY, time: (new Date()).getTime()};
             inertIdxPan++;
             if (inertIdxPan === 20) inertIdxPan = 0;
         }
 
-        if (!select && !animating && !dragging && !panning) {
-            window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {                
+            if (!animating && !dragging && !panning)
                 redraw ({x: mouse.x, y: mouse.y});
-            });
-        }
+        });
     }
     
     function mousedown (e) {
@@ -1768,13 +1806,15 @@ alert(0);
 
                 if (!animating){
                     panning = false;
-                    select.cursor.cachedCnv = false;
+                    cursor.cachedCnv = false;
                     //window.requestAnimationFrame(function () {
                         redraw ({x: mouse.x, y: mouse.y});
                     //});
                 }
             }
             if (!animating) {
+                panning = false;
+                cursor.cachedCnv = false;
                 //window.requestAnimationFrame(function () {
                     redraw ({x: mouse.x, y: mouse.y});
                 //});
@@ -1874,8 +1914,6 @@ alert(0);
     var n = node();
     var movingNode = null;
 
-    var fishEye, fishEyeHalf; //init in resize ... = initFishEye ();
-
     var clipPath = document.createElementNS(svgns, 'clipPath');
     clipPath.setAttributeNS(null, 'id', 'clip128');
     svg.appendChild(clipPath);
@@ -1916,13 +1954,10 @@ window.addEventListener("touchend", function (evt) {
     */    
     
     var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
-    
     //var cnvScaled = crispBitmap ();
-    
-
     //var cnvim = generateGrid (3000, 3000, 50, 1);
-    
-    //initFishEye();
+
+   //initFishEye();
     //var img = new Image();
     //img.crossOrigin = "Anonymous";
     //img.src = "https://e-teoria.github.io/Orbiteque/grid_20_20_md.gif";//"lorem.png";
@@ -1933,6 +1968,16 @@ window.addEventListener("touchend", function (evt) {
         resize(svgContainer.clientWidth, svgContainer.clientHeight);
     //}
 
+    
+    var fishEye, fishEyeHalf; //init in resize ... = initFishEye ();
+    /*
+    // offscreen
+    var cnvos = document.createElement ("canvas");
+    cnvos.width = rr * squashX;
+    cnvos.height = rr * squashY;
+    var ctxos = cnvos.getContext('2d');
+    var imgos = ctxos.getImageData(0, 0, cnvos.width, cnvos.height);
+    */
     return {
         resize: resize
     }

@@ -527,30 +527,29 @@ alert(0);
             if (finalX === renderMap[delta - 8 + DfinalX] || finalX === renderMap[delta + 8 + DfinalX]) {
                 finalX = Math.floor (renderMap[delta + DX] / (renderMap[delta + DbmpscalefactorX] >> 1));
                 var bmpscaleX = renderMap[delta + DbmpscaleX] - 1;
-                
-                if (bmpscaleX > cnvScaled.images.length - 1)
-                    bmpscaleX = cnvScaled.images.length - 1;
-                    
-                if (bmpscaleX < 0)
-                    bmpscaleX = 0;
-                    
             } else {
                 var bmpscaleX = renderMap[delta + DbmpscaleX];
             }
-
+                
+            if (bmpscaleX > cnvScaled.images.length - 1)
+                bmpscaleX = cnvScaled.images.length - 1;
+                
+            if (bmpscaleX < 0)
+                bmpscaleX = 0;
+                
             if (finalY === renderMap[delta - width * 8 + DfinalY] || finalY === renderMap[delta + width * 8 + DfinalY]) {
                 finalY = Math.floor (renderMap[delta + DY] / (renderMap[delta + DbmpscalefactorY] >> 1));
                 var bmpscaleY = renderMap[delta + DbmpscaleY] - 1;
-                
-                if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
-                    bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
-                    
-                if (bmpscaleY < 0)
-                    bmpscaleY = 0;
                     
             } else {
                 var bmpscaleY = renderMap[delta + DbmpscaleY];
             }
+                
+            if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
+                bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
+                
+            if (bmpscaleY < 0)
+                bmpscaleY = 0;
 
             var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
             var scaledData = scaled.data;
@@ -1214,7 +1213,10 @@ alert(0);
                 select.cursor.cachedData = null;
             }
             
-            redraw (null, "1", select.cursor);
+            var sel = select;
+            window.requestAnimationFrame(function () {
+                redraw (null, "1", sel.cursor);
+            });
         }
     }
     
@@ -1582,7 +1584,9 @@ alert(0);
         }
 
         if (!select && !animating && !dragging && !panning) {
-            redraw ({x: mouse.x, y: mouse.y});
+            window.requestAnimationFrame(function () {
+                redraw ({x: mouse.x, y: mouse.y});
+            });
         }
     }
     
@@ -1741,7 +1745,7 @@ alert(0);
                                     animating = false;
                                     cursor.cachedCnv = false;
                                     //window.requestAnimationFrame(function () {
-                                        redraw ({x: mouse.x, y: mouse.y}, "1");
+                                        redraw ({x: mouse.x, y: mouse.y});
                                     //});
                                 }
 
@@ -1750,7 +1754,7 @@ alert(0);
                                 animating = false;
                                 cursor.cachedCnv = false;
                                 //window.requestAnimationFrame(function () {
-                                    redraw ({x: mouse.x, y: mouse.y}, "1");
+                                    redraw ({x: mouse.x, y: mouse.y});
                                 //});
                             }
                         }
@@ -1763,7 +1767,7 @@ alert(0);
                     panning = false;
                     select.cursor.cachedCnv = false;
                     //window.requestAnimationFrame(function () {
-                        redraw ({x: mouse.x, y: mouse.y}, "1");
+                        redraw ({x: mouse.x, y: mouse.y});
                     //});
                 }
             }
@@ -1896,8 +1900,20 @@ window.addEventListener("touchend", function (evt) {
         mouseup (evt.changedTouches[0]);
     }
 }, false);
-  
+
+    
+    /*
+    var tmpim2 = document.getElementById("im");  
+    var cnvim2 = document.createElement ("canvas");
+    cnvim2.width = tmpim2.width;
+    cnvim2.height = tmpim2.height;
+    var ctxim2 = cnvim2.getContext('2d');
+    ctxim2.drawImage(tmpim2, 0, 0);
+    var cnvScaled = crispBitmapXY(cnvim2);
+    */    
+    
     var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
+    
     //var cnvScaled = crispBitmap ();
     
 

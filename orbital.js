@@ -1305,7 +1305,9 @@ alert(0);
                     if (inertIdx === 20) inertIdx = 0;
 
                     //clear ();                                
-                    setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, select.cursor, "1+"));
+                    window.requestAnimationFrame(function () {
+                        setupSelect (n.render (minRadius, x1, y1, r1, 0, 1, mouse, data, cursor.parent.index, cursor, select.cursor, "1+"));
+                    });
 
                 //} else {
                 //    select.parent.revertAngle ();
@@ -1737,8 +1739,9 @@ alert(0);
                                 setCenter (select, cursor.centerX + avgX * di * 24, cursor.centerY + avgY * di * 24);
                                 if (oldx != cursor.centerX || oldy != cursor.centerY) {
                                     redraw (null, "1");
+                                    var sel = select;
                                     window.requestAnimationFrame(function () {
-                                        dInert (select)
+                                        dInert (sel)
                                     });
                                 } else {
                                     panning = false;

@@ -1478,12 +1478,18 @@ alert(0);
                                                 mousemove (lastMouseEvent);
                                             });
                                         } else {
-                                            mouseup (lastMouseEvent);
+                                            redraw ({x: mouse.x, y: mouse.y}, "0");
+                                            window.requestAnimationFrame(function () {
+                                                mouseup (lastMouseEvent);
+                                            });
                                         }
                                         //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                     } else {
-                                        mouseup (lastMouseEvent);
+                                        redraw ({x: mouse.x, y: mouse.y}, "0");
+                                        window.requestAnimationFrame(function () {
+                                            mouseup (lastMouseEvent);
+                                        });
                                     }
                                 }
                             }
@@ -1587,12 +1593,18 @@ alert(0);
                                                     mousemove (lastMouseEvent);
                                                 });
                                             } else {
-                                                mouseup (lastMouseEvent);
+                                                redraw ({x: mouse.x, y: mouse.y}, "0");
+                                                window.requestAnimationFrame(function () {
+                                                    mouseup (lastMouseEvent);
+                                                });
                                             }
                                             //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                         } else {
-                                            mouseup (lastMouseEvent);
+                                            redraw ({x: mouse.x, y: mouse.y}, "0");
+                                            window.requestAnimationFrame(function () {
+                                                mouseup (lastMouseEvent);
+                                            });
                                         }                                            
                                     }
                                 }

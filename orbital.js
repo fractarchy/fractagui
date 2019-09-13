@@ -261,13 +261,17 @@ alert(iWidth);
                     data[ci + 3] = (data1[ci1 + 3] + data1[ci2 + 3]) / 2;
                     */
                 }
-                
-                data[ci + 0] = (data1[ci1 + 0] + data1[ci2 + 0]) / 2;
-                data[ci + 1] = (data1[ci1 + 1] + data1[ci2 + 1]) / 2;
-                data[ci + 2] = (data1[ci1 + 2] + data1[ci2 + 2]) / 2;
-                data[ci + 3] = (data1[ci1 + 3] + data1[ci2 + 3]) / 2;
+                if (data1[ci1 + 3] === 255 && data1[ci2 + 3] === 255) {
+                    data[ci + 0] = (data1[ci1 + 0] + data1[ci2 + 0]) / 2;
+                    data[ci + 1] = (data1[ci1 + 1] + data1[ci2 + 1]) / 2;
+                    data[ci + 2] = (data1[ci1 + 2] + data1[ci2 + 2]) / 2;
+                    data[ci + 3] = (data1[ci1 + 3] + data1[ci2 + 3]) / 2;
+                }
             }
         }
+
+        ctx1.putImageData(imData, 0, 0);
+
 /*        
 cnv.width = 1000;
 cnv.height = 1000;
@@ -279,7 +283,7 @@ ctx.drawImage (cnv1, 0, 0);
 
 alert(0);
 */
-        return imData;
+        return {cnv: cnv1, im: imData};
     }
     
     function crispY (imageData1, width1, height1, step) {
@@ -318,12 +322,16 @@ alert(0);
                     */
                 }
                 
-                data[ci + 0] = (data1[ci1 + 0] + data1[ci2 + 0]) / 2;
-                data[ci + 1] = (data1[ci1 + 1] + data1[ci2 + 1]) / 2;
-                data[ci + 2] = (data1[ci1 + 2] + data1[ci2 + 2]) / 2;
-                data[ci + 3] = (data1[ci1 + 3] + data1[ci2 + 3]) / 2;
+                if (data1[ci1 + 3] === 255 && data1[ci2 + 3] === 255) {
+                    data[ci + 0] = (data1[ci1 + 0] + data1[ci2 + 0]) / 2;
+                    data[ci + 1] = (data1[ci1 + 1] + data1[ci2 + 1]) / 2;
+                    data[ci + 2] = (data1[ci1 + 2] + data1[ci2 + 2]) / 2;
+                    data[ci + 3] = (data1[ci1 + 3] + data1[ci2 + 3]) / 2;
+                }
             }
         }
+        
+        ctx1.putImageData(imData, 0, 0);
 /*
 cnv.width = 1000;
 cnv.height = 1000;
@@ -335,7 +343,7 @@ ctx.drawImage (cnv1, 0, 0);
 
 alert(0);
 */
-        return imData;
+        return {cnv: cnv1, im: imData};
     }
 
     function crispBitmapXY (cnvim) {
@@ -348,23 +356,23 @@ alert(0);
         var iWidth = cnvim.width;
         var iHeight = cnvim.height;
 
-        var dataW = imageDataim;
-        cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW}]);
+        var dataW = {im: imageDataim, cnv: cnvim};
+        cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
         var x = cnvScaled.images.length - 1;
         
         while (true) {
             var dataH = dataW;
             while (iHeight / cnvScaled.step > 1) {
-                dataH = crispY (dataH, iWidth, iHeight, 2);
+                dataH = crispY (dataH.im, iWidth, iHeight, 2);
                 iHeight = Math.ceil (iHeight / 2);
-                cnvScaled.images[x].push ({width: iWidth, height: iHeight, imageData: dataH});
+                cnvScaled.images[x].push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
             }
             
             iHeight = cnvim.height;
             if (iWidth / cnvScaled.step > 1) {
-                dataW = crispX (dataW, iWidth, iHeight, 2);
+                dataW = crispX (dataW.im, iWidth, iHeight, 2);
                 iWidth = Math.ceil (iWidth / 2);
-                cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW}]);
+                cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
                 x = cnvScaled.images.length - 1;
             } else
                 break;
@@ -607,19 +615,20 @@ alert(0);
             var dx = renderMap[delta + DX];
             var dy = renderMap[delta + DY];
             
-            var tmx = tmpmagn;
-            var bmx = bmpscale;
-            var tmy = tmpmagn;
-            var bmy = bmpscale;
-            
             if ((dx === renderMap[delta + DX - 2] || dx === renderMap[delta + DX + 2])) {
                 var tmx = tmpmagn * 2;
                 var bmx = bmpscale - 1;
+            } else {
+                var tmx = tmpmagn;
+                var bmx = bmpscale;
             }
 
             if ((dy === renderMap[delta + DY - 2 * width] || dy === renderMap[delta + DY + 2 * width])) {
                 var tmy = tmpmagn * 2;
                 var bmy = bmpscale - 1;
+            } else {
+                var tmy = tmpmagn;
+                var bmy = bmpscale;
             }
 
             var iim = (Math.floor(y * tmy) * crisped.images[bmx][bmy].width + Math.floor(x * tmx)) * 4;
@@ -768,26 +777,12 @@ alert(0);
                     if (bmpscale > cache.images.length - 1) 
                         bmpscale = cache.images.length - 1;
 
+                    /*
                     var cnvIm = document.createElement ("canvas");
                     cnvIm.width = cachedData.images[bmpscale][bmpscale].width;
                     cnvIm.height = cachedData.images[bmpscale][bmpscale].height;
                     var ctxIm = cnvIm.getContext('2d');
                     var imData = ctxIm.createImageData(cachedData.images[bmpscale][bmpscale].width, cachedData.images[bmpscale][bmpscale].height);
-                    /*
-                    function copyData (im1, im2) {
-                        var d1 = im1.data;
-                        var d2 = im2.data;
-                        for (var i = 0; i < d1.length; i+=4) {
-                            if (d1[i + 3] === 255) {
-                                d2[i] = d1[i];
-                                d2[i + 1] = d1[i + 1];
-                                d2[i + 2] = d1[i + 2];
-                                d2[i + 3] = 255;
-                            }
-                        }
-                    }
-                    copyData (cachedData.images[bmpscale][bmpscale].imageData, imData);
-                    */
                     imData.data.set (cachedData.images[bmpscale][bmpscale].imageData.data);
                     function copyTransparency (im1, im2) {
                         var d1 = im1.data;
@@ -797,9 +792,10 @@ alert(0);
                                 d2[i + 3] = 0;
                     }
                     copyTransparency (cachedData.images[bmpscale][bmpscale].imageData, imData);
-
-                    ctxIm.putImageData(imData, 0, 0)
+                    ctxIm.putImageData(imData, 0, 0);
                     ctx.drawImage(cnvIm, xo, yo, w, h);
+                    */
+                    ctx.drawImage(cachedData.images[bmpscale][bmpscale].canvas, xo, yo, w, h);
                     
                 } else {
                     var cnvIm = document.createElement ("canvas");

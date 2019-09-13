@@ -710,7 +710,7 @@ alert(0);
                     var cachedCnv = cnvCache;
                     var cachedData = cache;
                     
-                } else if (level === 1 && panning) {
+                } else if (renderHint !== "0" && level === 1 && panning) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX / 2);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY / 2);
@@ -728,7 +728,7 @@ alert(0);
                     var cachedCnv = cursor.cachedCnv;
                     //var cachedData = cursor.cachedData;
 
-                } else if (cursor.cachedCnv === false) {
+                } else if (renderHint !== "0" && cursor.cachedCnv === false) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY);
@@ -751,7 +751,7 @@ alert(0);
                     var cachedData = cursor.cachedData;
                 }
                 
-                if ((level === 1 && panning) || renderHint === "0" || (cachedCnv.width === w && cachedCnv.height === h)) {
+                if ((level === 1 && panning) || (renderHint === "0") || (cachedCnv.width === w && cachedCnv.height === h)) {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
                 } else if (animating || dragging) {
                     /*
@@ -1601,9 +1601,9 @@ alert(0);
                                             //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                         } else {
-                                            redraw ({x: mouse.x, y: mouse.y});
+                                            redraw ({x: mouse.x, y: mouse.y}, "0");
                                             window.requestAnimationFrame(function () {
-                                                mouseup (lastMouseEvent), "0";
+                                                mouseup (lastMouseEvent);
                                             });
                                         }                                            
                                     }

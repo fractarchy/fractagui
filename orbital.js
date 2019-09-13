@@ -1864,7 +1864,7 @@ alert(0);
             }
                 
             for (var tmp in c.children)
-                rec1 (tmp);
+                rec1 (c.children[tmp]);
                 
         }
         

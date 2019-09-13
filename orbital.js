@@ -1621,7 +1621,7 @@ alert(0);
         }
 
         window.requestAnimationFrame(function () {                
-            if (!animating && !dragging && !panning)
+            if (!mouseDown && !animating && !dragging && !panning)
                 redraw ({x: mouse.x, y: mouse.y});
         });
     }

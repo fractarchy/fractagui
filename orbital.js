@@ -1682,6 +1682,7 @@ alert(0);
                     if (Math.abs(avgAng) > 0.0001) {
                         var c = select.parent;
                         var ang0 = inert[inertIdx - 1].angle;
+                        var c1 = c.getCircle(ang0).r;
                         var dang0 = inert[inertIdx - 1].angle - inert[inertIdx - 1].rawAngle;
                         var t0 = (new Date()).getTime();
                         var i = 1;
@@ -1692,10 +1693,11 @@ alert(0);
                             if (dt === 0) dt = 1;
 
                             di = di - dt / 1000;
-                            //var sindi = Math.sin (di * Math.PI / 2);
+                            var sindi = Math.sin (di * Math.PI / 2);
                             if (di > 0){
-                                ang0 += avgAng * di * 40;
-                                if (ang0 > 0 && ang0 < 2 * Math.PI && c.getCircle(ang0).r * squashX * squashY > minRadius) {
+                                //ang0 += avgAng * di * 20;
+                                ang0 += avgAng * sindi * 15 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
+                                //if (ang0 > 0 && ang0 < 2 * Math.PI && c.getCircle(ang0).r * squashX * squashY > minRadius) {
                                     c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
 
                                     redraw (null, "1+");
@@ -1703,10 +1705,10 @@ alert(0);
                                     //setTimeout(aInert, 0);
                                     window.requestAnimationFrame(aInert);
                                     
-                                } else {
-                                    animating = false;
-                                    redraw ({x: mouse.x, y: mouse.y});
-                                }
+                                //} else {
+                                //    animating = false;
+                                //    redraw ({x: mouse.x, y: mouse.y});
+                                //}
                             } else {
                                 animating = false;
                                 redraw ({x: mouse.x, y: mouse.y});

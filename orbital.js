@@ -1470,7 +1470,7 @@ alert(0);
                                     if (atCur) {
                                         if (dragging) {
                                             setupSelect (atCur.child)
-                                            redraw (null, null, select.cursor);
+                                            redraw (null, "0", select.cursor);
                                             //setTimeout(function () {
                                             //    mousemove (lastMouseEvent)
                                             //}, 0); //mousemove (lastMouseEvent);
@@ -1585,7 +1585,7 @@ alert(0);
                                         if (atCur) {
                                             if (dragging) {
                                                 setupSelect (atCur);
-                                                redraw (null, null, select.cursor);
+                                                redraw (null, "0", select.cursor);
                                                 //setTimeout(function () {
                                                 //    mousemove (lastMouseEvent)
                                                 //}, 0); //mousemove (lastMouseEvent);
@@ -1601,9 +1601,9 @@ alert(0);
                                             //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                         } else {
-                                            redraw ({x: mouse.x, y: mouse.y}, "0");
+                                            redraw ({x: mouse.x, y: mouse.y});
                                             window.requestAnimationFrame(function () {
-                                                mouseup (lastMouseEvent);
+                                                mouseup (lastMouseEvent), "0";
                                             });
                                         }                                            
                                     }

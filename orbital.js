@@ -1844,10 +1844,20 @@ alert(0);
             squashX = 1 / ratio;
             squashY = 1;
             
+        } else if (hh > ww / ratio){
+            rr = ww / 2;
+            squashX = 1;
+            squashY = 1 / ratio;
         } else {
-            rr = ww / 2 * ratio;
-            squashX = 1 / ratio;
-            squashY = 1;
+            if (ww > hh) {
+                rr = ww / 2 * ratio;
+                squashX = 1 / ratio;
+                squashY = 1;
+            } else {
+                rr = hh / 2 * ratio;
+                squashX = 1;
+                squashY = 1 / ratio;
+            }
             /*
             rr = ww / 2;
             squashX = 1;

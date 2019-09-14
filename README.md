@@ -29,13 +29,15 @@ Personally, I put a lot of hopes in mentioned metatheory formal language as an i
 
 There are several checkpoints in developing *Orbiteque*:
 
-1. [x] Animated visual interface composed of ovals that orbit around each other, forming an interactive data fractal
-2. [ ] Turing complete content template language implementation and integration
-3. [ ] Text editor nested inside ovals for modifying the content sited on local machine
-4. [ ] Metatheory formal language implementation and integration
-5. [ ] Mothersite web application and interface to it for exchanging gathered knowledge with public
+- first release
+    - [x] Animated visual interface composed of ovals that orbit around each other, forming an interactive data fractal
+    - [ ] Turing complete content template language implementation and integration
+    - [ ] Text editor nested inside ovals for modifying the content sited on local machine
+- further releases
+    - [ ] Metatheory formal language implementation and integration
+    - [ ] Mothersite web application and interface to it for exchanging gathered knowledge with public
 
-The current status of implementation is that the first item of the list is already functional. I predict the second and third list items to be fully functional within a period of less then a year. The fourth and fifth list items are predicted to be finished within another two years, if the first three items (minimum viable product) would be shown to attract enough potential users. Also, if enough users apply to the final release, the whole system may advance to be updated by new ideas and extensions that users may find useful.
+The current status of implementation is that the first list item from the first release is already functional. I predict the second and third list items to be fully functional within a period of less then a year. List items from further relases are predicted to be finished within another two years, if the first release (minimum viable product) would be shown to attract enough potential users. Also, if enough users apply to the final release, the whole system may advance to be updated by new ideas and extensions that users may find useful.
 
 I have a personal interest in finishing this project because it is consisted of my nearly lifetime efforts in computing research field, and I'm determined to make myself useful to the public. Without potential users, all of my work means nothing to me.
 

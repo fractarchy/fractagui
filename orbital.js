@@ -1464,6 +1464,7 @@ alert(0);
                                     path.push (data);
                                     data = topc.child.data;
                                     
+                                    panning = false;
                                     animating = false;
                                     //invalidateCache ();
 
@@ -1704,11 +1705,11 @@ alert(0);
                             t0 = (new Date()).getTime();
                             if (dt === 0) dt = 1;
 
-                            di = di - dt / 1000;
+                            di = di - dt / 500;
                             var sindi = Math.sin (di * Math.PI / 2);
                             if (di > 0){
                                 //ang0 += avgAng * di * 20;
-                                ang0 += avgAng * sindi * 15 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
+                                ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
                                 //if (ang0 > 0 && ang0 < 2 * Math.PI && c.getCircle(ang0).r * squashX * squashY > minRadius) {
                                     c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
 

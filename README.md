@@ -1,10 +1,10 @@
 # Orbiteque
 
 ## content
-- [about the project](about-the-project)  
-- [first release](first-release)  
-- [further releases](further-releases)  
-- [current status](current-status)  
+- [about the project](#about-the-project)  
+- [first release](#first-release)  
+- [further releases](#further-releases)  
+- [current status](#current-status)  
 
 ## about the project
 

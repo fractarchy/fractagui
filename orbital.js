@@ -710,7 +710,7 @@ alert(0);
                     var cachedCnv = cnvCache;
                     var cachedData = cache;
                     
-                } else if (renderHint !== "0" && level === 1 && panning) {
+                } else if (level === 1 && panning) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX / 2);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY / 2);
@@ -728,7 +728,7 @@ alert(0);
                     var cachedCnv = cursor.cachedCnv;
                     //var cachedData = cursor.cachedData;
 
-                } else if (renderHint !== "0" && cursor.cachedCnv === false) {
+                } else if (cursor.cachedCnv === false) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY);
@@ -1579,7 +1579,6 @@ alert(0);
                                         data = path.pop();
                                         
                                         animating = false;
-                                        panning = false;
                                         //invalidateCache ();
                                         
                                         if (atCur) {
@@ -1609,6 +1608,7 @@ alert(0);
                                     }
                                 }
                                 
+                                panning = false;
                                 animating = "level";
                                 //invalidateCache ();
                                 //just update the cache

@@ -4,7 +4,7 @@
 
 Hello all. I'm a software researcher and developer. In my job I get wonderful ideas for constructing software. However, I recently ran out of my resources, and I'm seeking for another way to finance my researches. To do this, I picked up some of my exciting ideas and decided to make a piece of useful business software out of it. Hence, I started to program *Orbiteque* *personal knowledge base*. If you are interested in the current status of the programming progress, you can visit a [live *Orbiteque* demo](https://e-teoria.github.io/Orbiteque/).
 
-To describe the project, first, let's see what Wikipedia says about personal knowledge bases:
+To describe the project, first, let's see what Wikipedia says about [personal knowledge bases](https://en.wikipedia.org/wiki/Personal_knowledge_base):
 > A personal knowledge base (PKB) is an electronic tool used to express, capture, and later retrieve the personal knowledge of an individual. It differs from a traditional database in that it contains subjective material particular to the owner, that others may not agree with nor care about. Importantly, a PKB consists primarily of knowledge, rather than information; in other words, it is not a collection of documents or other sources an individual has encountered, but rather an expression of the distilled knowledge the owner has extracted from those sources.
 
 ## the first release

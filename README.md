@@ -1,5 +1,11 @@
 # Orbiteque
 
+## content
+- [about the project](about-the-project)  
+- [first release](first-release)  
+- [further releases](further-releases)  
+- [current status](current-status)  
+
 ## about the project
 
 Hello all. I'm a software researcher and developer. In my job I get wonderful ideas for constructing software. However, I recently ran out of my resources, and I'm seeking for another way to finance my researches. To do this, I picked up some of my exciting ideas and decided to make a piece of useful business software out of it. Hence, I started to program *Orbiteque* *personal knowledge base*. If you are interested in the current status of the programming progress, you can visit a [live *Orbiteque* demo](https://e-teoria.github.io/Orbiteque/).
@@ -7,7 +13,7 @@ Hello all. I'm a software researcher and developer. In my job I get wonderful id
 To describe the project, first, let's see what Wikipedia says about [personal knowledge bases](https://en.wikipedia.org/wiki/Personal_knowledge_base):
 > A personal knowledge base (PKB) is an electronic tool used to express, capture, and later retrieve the personal knowledge of an individual. It differs from a traditional database in that it contains subjective material particular to the owner, that others may not agree with nor care about. Importantly, a PKB consists primarily of knowledge, rather than information; in other words, it is not a collection of documents or other sources an individual has encountered, but rather an expression of the distilled knowledge the owner has extracted from those sources.
 
-## the first release
+## first release
 
 In the first release version, *Orbiteque* will be a tree branching personal knowledge base that could be used as a medium for storing data about personal, scholar, or business notes, web links, cooking recipes, data about home videoteque, programming language snippets, drawings, photos... In short, *Orbiteque* could be used to keep notes about, catalogize and structurize knowledge related to any kinds of materia, as long as that materia can be described by text and images. The structure of materia is visualized in a very special way in *Orbiteque*, resembling a form of a fractal in which child ovals orbit around a parent oval recursively. Ovals would store textual and image information that fit into parent-children tree structure. These ovals could be dragged around their parents to walk horizontally through the tree. Also, ovals could be dragged in or out to their parents or children places to walk vertically through the tree of data. The first release version would represent a fully functional personal knowledge base system with template documenting abilities.
 

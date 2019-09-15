@@ -37,7 +37,7 @@ There are several checkpoints in developing *Orbiteque*:
     - [ ] Metatheory formal language implementation and integration
     - [ ] Mothersite web application and interface to it for exchanging gathered knowledge with public
 
-The current status of implementation is that the first list item from the first release is already functional. I predict the second and third list items to be fully functional within a period of less then a year. List items from further relases are predicted to be finished within another two years, if the first release (minimum viable product) would be shown to attract enough potential users. Also, if enough users apply to the final release, the whole system may advance to be updated by new ideas and extensions that users may find useful.
+I predict the first release to be fully functional within a period of less then a year. List items from further relases are predicted to be finished within another two years, if the first release (minimum viable product) would be shown to attract enough potential users. Also, if enough users apply to the final release, the whole system may advance to be updated by new ideas and extensions that users may find useful.
 
 I have a personal interest in finishing this project because it is consisted of my nearly lifetime efforts in computing research field, and I'm determined to make myself useful to the public. Without potential users, all of my work means nothing to me.
 

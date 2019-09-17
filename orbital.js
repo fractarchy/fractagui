@@ -1206,18 +1206,18 @@ alert(0);
       xpos -= obj_left;
       ypos -= obj_top;
       
-      return {x: xpos, y: ypos};
+      return {x: Math.floor (xpos), y: Math.floor (ypos)};
     }
     
     function setCenter (select, x, y) {
-        select.cursor.centerX = Math.floor (x);
+        select.cursor.centerX = x;
         var minmaxW = Math.floor (cnvScaled.width / 2);
         if (select.cursor.centerX > minmaxW)
             select.cursor.centerX = minmaxW;
         if (select.cursor.centerX < -minmaxW)
             select.cursor.centerX = -minmaxW;
 
-        select.cursor.centerY = Math.floor (y);
+        select.cursor.centerY = y;
         var minmaxH = Math.floor (cnvScaled.height / 2);
         if (select.cursor.centerY > minmaxH)
             select.cursor.centerY = minmaxH;
@@ -1227,9 +1227,6 @@ alert(0);
     
     function mousemovePan(x, y) {
         if (select && !animating) {
-            x = Math.floor (x);
-            y = Math.floor (x);
-            
             var r0 = r1 * ratio;
             var x0 = Math.floor (x1 * squashX);
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);

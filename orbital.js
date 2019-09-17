@@ -1966,7 +1966,10 @@ window.addEventListener("touchend", function (evt) {
     }
 }, false);
 
-    
+document.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+});
+
     /*
     var tmpim2 = document.getElementById("im");  
     var cnvim2 = document.createElement ("canvas");

@@ -1227,6 +1227,9 @@ alert(0);
     
     function mousemovePan(x, y) {
         if (select && !animating) {
+            x = Math.floor (x);
+            y = Math.floor (x);
+            
             var r0 = r1 * ratio;
             var x0 = Math.floor (x1 * squashX);
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);

@@ -1210,14 +1210,14 @@ alert(0);
     }
     
     function setCenter (select, x, y) {
-        select.cursor.centerX = x;
+        select.cursor.centerX = Math.floor (x);
         var minmaxW = Math.floor (cnvScaled.width / 2);
         if (select.cursor.centerX > minmaxW)
             select.cursor.centerX = minmaxW;
         if (select.cursor.centerX < -minmaxW)
             select.cursor.centerX = -minmaxW;
 
-        select.cursor.centerY = y;
+        select.cursor.centerY = Math.floor (y);
         var minmaxH = Math.floor (cnvScaled.height / 2);
         if (select.cursor.centerY > minmaxH)
             select.cursor.centerY = minmaxH;

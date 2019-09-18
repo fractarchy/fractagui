@@ -1994,11 +1994,10 @@ alert(0);
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
-                    //alert ("before: " + ongoingTouches[idx].pageX);
+                    ongoingTouches[idx].pageX = touches[i].pageX;
+                    ongoingTouches[idx].pageY = touches[i].pageY;
                     mousemove (ongoingTouches[idx]);
-                    //alert ("after: " + ongoingTouches[idx].pageX);
                 }
-                alert ("mousemove after: " + idx);
             }
             /*
             if (evt.changedTouches.length == 1) {
@@ -2006,7 +2005,7 @@ alert(0);
             }
             */
         }, false);
-/*
+
         window.addEventListener("touchcancel", function (evt) {
             var touches = evt.changedTouches;
 
@@ -2014,13 +2013,16 @@ alert(0);
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
-                    ongoingTouches.splice(idx, 1);
+                    ongoingTouches[idx].pageX = touches[i].pageX;
+                    ongoingTouches[idx].pageY = touches[i].pageY;
 
                     mouseup (ongoingTouches[idx]);
+
+                    ongoingTouches.splice(idx, 1);
                 }
             }
         }, false);
-*/
+
         window.addEventListener("touchend", function (evt) {
             evt.preventDefault ();
             var touches = evt.changedTouches;
@@ -2029,11 +2031,13 @@ alert(0);
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
-                    ongoingTouches.splice(idx, 1);
+                    ongoingTouches[idx].pageX = touches[i].pageX;
+                    ongoingTouches[idx].pageY = touches[i].pageY;
                     
                     mouseup (ongoingTouches[idx]);
+
+                    ongoingTouches.splice(idx, 1);
                 }
-                alert ("mouseend after: " + idx);
             }
             /*
             if (evt.changedTouches.length == 1) {

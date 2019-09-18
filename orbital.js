@@ -1972,8 +1972,8 @@ alert(0);
                 if (ongoingTouches.length === 0) {
                     ongoingTouches.push(copyTouch(touches[i]));
                     
-                    touches[i].which = 1;
-                    mousedown (touches[i]);
+                    ongoingTouches[0].which = 1;
+                    mousedown (ongoingTouches[0]);
                 }
             }
             /*

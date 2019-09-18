@@ -1973,7 +1973,9 @@ alert(0);
                     ongoingTouches.push(copyTouch(touches[i]));
                     var idx = ongoingTouchIndexById(touches[i].identifier);
                     
-                    mousedown (ongoingTouches[idx]);
+                    if (idx >= 0) {
+                        mousedown (ongoingTouches[idx]);
+                    }
                 }
             }
             /*
@@ -2003,7 +2005,7 @@ alert(0);
             }
             */
         }, false);
-
+/*
         window.addEventListener("touchcancel", function (evt) {
             var touches = evt.changedTouches;
 
@@ -2017,7 +2019,7 @@ alert(0);
                 }
             }
         }, false);
-
+*/
         window.addEventListener("touchend", function (evt) {
             evt.preventDefault ();
             var touches = evt.changedTouches;

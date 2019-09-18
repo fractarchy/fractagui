@@ -1971,8 +1971,9 @@ alert(0);
             for (var i = 0; i < touches.length; i++) {
                 if (ongoingTouches.length === 0) {
                     ongoingTouches.push(copyTouch(touches[i]));
+                    var idx = ongoingTouchIndexById(touches[i].identifier);
                     
-                    mousedown (ongoingTouches[0]);
+                    mousedown (ongoingTouches[idx]);
                 }
             }
             /*
@@ -2028,6 +2029,7 @@ alert(0);
                     ongoingTouches.splice(idx, 1);
                     
                     mouseup (ongoingTouches[idx]);
+                    alert ("after: " + ongoingTouches[idx].pageX);
                 }
             }
             /*

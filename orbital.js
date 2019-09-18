@@ -1942,29 +1942,102 @@ alert(0);
     var clip = document.createElementNS(svgns, 'ellipse');
     clipPath.appendChild(clip);
 
-window.addEventListener('mousemove', mousemove, false);
-window.addEventListener('mousedown', mousedown, false);
-window.addEventListener('mouseup', mouseup, false);
+    window.addEventListener('mousemove', mousemove, false);
+    window.addEventListener('mousedown', mousedown, false);
+    window.addEventListener('mouseup', mouseup, false);
 
-window.addEventListener("touchmove", function (evt) {
-    evt.preventDefault ();
-    if (evt.changedTouches.length == 1) {
-        mousemove (evt.changedTouches[0]);
+    function setupTouchEvents () {
+        var ongoingTouches = [];
+
+        function copyTouch(touch) {
+          return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+        }
+
+        function ongoingTouchIndexById(idToFind) {
+          for (var i = 0; i < ongoingTouches.length; i++) {
+            var id = ongoingTouches[i].identifier;
+            
+            if (id == idToFind) {
+              return i;
+            }
+          }
+          return -1;    // not found
+        }
+
+        window.addEventListener("touchstart", function (evt) {
+            evt.preventDefault ();
+            var touches = evt.changedTouches;
+            
+            for (var i = 0; i < touches.length; i++) {
+                if (ongoingTouches.length === 0) {
+                    ongoingTouches.push(copyTouch(touches[i]));
+                    
+                    touches[i].which = 1;
+                    mousedown (touches[i]);
+                }
+            }
+            /*
+            if (evt.changedTouches.length == 1) {
+                evt.changedTouches[0].which = 1;
+                mousedown (evt.changedTouches[0]);
+            }
+            */
+        }, false);
+
+        window.addEventListener("touchmove", function (evt) {
+            evt.preventDefault ();
+            var touches = evt.changedTouches;
+
+            for (var i = 0; i < touches.length; i++) {
+                var idx = ongoingTouchIndexById(touches[i].identifier);
+
+                if (idx >= 0) {
+                    mousemove (ongoingTouches[idx]);
+                }
+            }
+            /*
+            if (evt.changedTouches.length == 1) {
+                mousemove (evt.changedTouches[0]);
+            }
+            */
+        }, false);
+
+        window.addEventListener("touchcancel", function (evt) {
+            var touches = evt.changedTouches;
+
+            for (var i = 0; i < touches.length; i++) {
+                var idx = ongoingTouchIndexById(touches[i].identifier);
+
+                if (idx >= 0) {
+                    ongoingTouches.splice(idx, 1);
+
+                    mouseup (ongoingTouches[idx]);
+                }
+            }
+        }, false);
+
+        window.addEventListener("touchend", function (evt) {
+            evt.preventDefault ();
+            var touches = evt.changedTouches;
+
+            for (var i = 0; i < touches.length; i++) {
+                var color = colorForTouch(touches[i]);
+                var idx = ongoingTouchIndexById(touches[i].identifier);
+
+                if (idx >= 0) {
+                    ongoingTouches.splice(idx, 1);
+                    
+                    mouseup (ongoingTouches[idx]);
+                }
+            }
+            /*
+            if (evt.changedTouches.length == 1) {
+                mouseup (evt.changedTouches[0]);
+            }
+            */
+        }, false);
     }
-}, false);
-window.addEventListener("touchstart", function (evt) {
-    evt.preventDefault ();
-    if (evt.changedTouches.length == 1) {
-        evt.changedTouches[0].which = 1;
-        mousedown (evt.changedTouches[0]);
-    }
-}, false);
-window.addEventListener("touchend", function (evt) {
-    evt.preventDefault ();
-    if (evt.changedTouches.length == 1) {
-        mouseup (evt.changedTouches[0]);
-    }
-}, false);
+    setupTouchEvents ();
 
     /*
     var tmpim2 = document.getElementById("im");  

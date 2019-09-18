@@ -1976,6 +1976,7 @@ alert(0);
                     if (idx >= 0) {
                         mousedown (ongoingTouches[idx]);
                     }
+                    alert ("after: " + idx);
                 }
             }
             /*
@@ -2031,7 +2032,6 @@ alert(0);
                     ongoingTouches.splice(idx, 1);
                     
                     mouseup (ongoingTouches[idx]);
-                    alert ("after: " + ongoingTouches[idx].pageX);
                 }
             }
             /*

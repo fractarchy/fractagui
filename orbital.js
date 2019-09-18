@@ -1992,7 +1992,9 @@ alert(0);
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
+                    alert ("before: " + ongoingTouches[idx].pageX);
                     mousemove (ongoingTouches[idx]);
+                    alert ("after: " + ongoingTouches[idx].pageX);
                 }
             }
             /*
@@ -2021,7 +2023,6 @@ alert(0);
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
-                var color = colorForTouch(touches[i]);
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {

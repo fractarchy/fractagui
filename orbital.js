@@ -1907,7 +1907,10 @@ function orbital (svgContainer, data) {
     
     var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
 
-   //initFishEye();
+document
+    .querySelector("meta[name=viewport]")
+    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+    //initFishEye();
     //var img = new Image();
     //img.crossOrigin = "Anonymous";
     //img.src = "https://e-teoria.github.io/Orbiteque/grid_20_20_md.gif";//"lorem.png";
@@ -1915,6 +1918,7 @@ function orbital (svgContainer, data) {
     //    cnvim.width = img.width;
     //    cnvim.height = img.height;
     //    ctxim.drawImage(img, 0, 0);
+    
         resize(svgContainer.clientWidth, svgContainer.clientHeight);
     //}
 

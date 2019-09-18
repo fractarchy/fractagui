@@ -1950,7 +1950,7 @@ alert(0);
         var ongoingTouches = [];
 
         function copyTouch(touch) {
-          return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+          return {identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY, which: 1};
         }
 
         function ongoingTouchIndexById(idToFind) {
@@ -1970,9 +1970,8 @@ alert(0);
             
             for (var i = 0; i < touches.length; i++) {
                 if (ongoingTouches.length === 0) {
-                    ongoingTouches.push (touches[i]);
+                    ongoingTouches.push(copyTouch(touches[i]));
                     
-                    ongoingTouches[0].which = 1;
                     mousedown (ongoingTouches[0]);
                 }
             }
@@ -1989,10 +1988,12 @@ alert(0);
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById (touches[i].identifier);
+                var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
+                    //alert ("before: " + ongoingTouches[idx].pageX);
                     mousemove (ongoingTouches[idx]);
+                    //alert ("after: " + ongoingTouches[idx].pageX);
                 }
             }
             /*
@@ -2006,7 +2007,7 @@ alert(0);
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById (touches[i].identifier);
+                var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
                     ongoingTouches.splice(idx, 1);
@@ -2021,7 +2022,7 @@ alert(0);
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById (touches[i].identifier);
+                var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
                     ongoingTouches.splice(idx, 1);

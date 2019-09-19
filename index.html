@@ -74,9 +74,9 @@
                 i3.style.visibility = "visible";
                 
                 if (w >= h) {
-                    var m = document.body.clientHeight / 1080;
+                    var m = document.body.clientHeight / 950;
                 } else {
-                    var m = document.body.clientWidth / 1080;
+                    var m = document.body.clientWidth / 950;
                 }
                 
                 i1.style.height = m * 215 + "px";
@@ -110,12 +110,16 @@
                 }
                 
                 o.resize (svgContainer.clientWidth, svgContainer.clientHeight);
+                window.scrollTo(0,1);
             }
             
             var svgContainer = document.getElementById ("svgContainer")
             var o = orbital(svgContainer, populate (5));
             window.addEventListener('resize', function () {setSize ();}, false);
-            window.addEventListener("load", function () {setSize ();});
+            window.addEventListener("load", function () {
+                setSize ();
+                document.getElementById("splash").style.display = "none";
+            });
         </script>
     </body>
     <a class="exHover" href="https://github.com/e-teoria/Orbiteque" style="position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>

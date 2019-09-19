@@ -1930,8 +1930,6 @@ function orbital (svgContainer, data) {
     var imgos = ctxos.getImageData(0, 0, cnvos.width, cnvos.height);
     */
     
-    document.getElementById("splash").style.display = "none";
-    
     return {
         resize: resize
     }

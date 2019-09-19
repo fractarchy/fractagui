@@ -22,9 +22,13 @@
             text-align: center;
         }
         
-        a.exHover:visited, a.exHover:link {cursor: pointer; background-color: rgb(255, 255, 150); color: gray; text-decoration:none; border-radius: 15px; border:0px solid #4466DD;}
-        a.exHover:hover {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 15px; border:0px solid #6699FF;}
-        a.exHover:active {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 15px; border:0px solid #DDDDFF;}
+        a.exHover:visited, a.exHover:link {cursor: pointer; background-color: rgb(255, 255, 150); color: gray; text-decoration:none; border-radius: 55px; border:0px solid #4466DD;}
+        a.exHover:hover {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 55px; border:0px solid #6699FF;}
+        a.exHover:active {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 55px; border:0px solid #DDDDFF;}
+
+        a.fsHover:visited, a.fsHover:link {cursor:pointer; color:rgb(255, 255, 150); text-decoration:none;}
+        a.fsHover:hover {cursor:pointer; color:white; text-decoration:none;}
+        a.fsHover:active {cursor:pointer; color:rgb(255, 255, 150); text-decoration:none;}
 
     </style>
     <body>
@@ -59,6 +63,21 @@
                     }
                 
                 return data;
+            }
+            
+            function toggleFullScreen() {
+              var doc = window.document;
+              var docEl = doc.documentElement;
+
+              var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+              var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+              if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl);
+              }
+              else {
+                cancelFullScreen.call(doc);
+              }
             }
             
             function setSize () {
@@ -110,7 +129,6 @@
                 }
                 
                 o.resize (svgContainer.clientWidth, svgContainer.clientHeight);
-                window.scrollTo(0,1);
             }
             
             var svgContainer = document.getElementById ("svgContainer")
@@ -119,8 +137,69 @@
             window.addEventListener("load", function () {
                 setSize ();
                 document.getElementById("splash").style.display = "none";
+                var fs = document.getElementById("fs");
+                fs.style.visibility = "visible";
+                fs.addEventListener("mouseout", function () {
+                    document.getElementById("path833").style.stroke = "rgb(255, 255, 150)";
+                    document.getElementById("path835").style.stroke = "rgb(255, 255, 150)";
+                    document.getElementById("path837").style.stroke = "rgb(255, 255, 150)";
+                    document.getElementById("path839").style.stroke = "rgb(255, 255, 150)";
+                }, false);
+                fs.addEventListener("mouseover",  function () {
+                    document.getElementById("path833").style.stroke = "white";
+                    document.getElementById("path835").style.stroke = "white";
+                    document.getElementById("path837").style.stroke = "white";
+                    document.getElementById("path839").style.stroke = "white";
+                }, false);
             });
         </script>
+        <svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0; visibility: hidden;"
+           xmlns:dc="http://purl.org/dc/elements/1.1/"
+           xmlns:cc="http://creativecommons.org/ns#"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:svg="http://www.w3.org/2000/svg"
+           xmlns="http://www.w3.org/2000/svg"
+           id="svg8"
+           version="1.1"
+           viewBox="0 0 14.552083 14.552084"
+           height="55"
+           width="55">
+          <defs
+             id="defs2" />
+          <metadata
+             id="metadata5">
+            <rdf:RDF>
+              <cc:Work
+                 rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                <dc:title></dc:title>
+              </cc:Work>
+            </rdf:RDF>
+          </metadata>
+          <g
+             transform="translate(0,-282.4479)"
+             id="layer1">
+            <path
+               id="path833"
+               d="m 3.2248744,288.37355 v -2.70078 h 2.7007782"
+               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               id="path835"
+               d="m 8.6381733,285.67277 h 2.6890357 v 2.70078"
+               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               id="path837"
+               d="m 11.327209,291.07433 v 2.70078 H 8.6381733"
+               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               id="path839"
+               d="M 5.9256526,293.77511 H 3.2248744 v -2.70078"
+               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          </g>
+        </svg>
     </body>
     <a class="exHover" href="https://github.com/e-teoria/Orbiteque" style="position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
+    </a>
 </html>

@@ -136,25 +136,9 @@
             
             var svgContainer = document.getElementById ("svgContainer")
             var o = orbital(svgContainer, populate (5));
-            window.addEventListener('resize', function () {
-                //document.getElementById("splash").style.visibility = "visible";
-                document.getElementById("vis").style.visibility = "hidden";
-                i1.style.visibility = "hidden";
-                i2.style.visibility = "hidden";
-                i3.style.visibility = "hidden";
-                svgContainer.style.visibility = "hidden";
-                
-                setTimeout(function () {
-                    //document.getElementById("splash").style.visibility = "hidden";
-                    document.getElementById("vis").style.visibility = "visible";
-                    i1.style.visibility = "visible";
-                    i2.style.visibility = "visible";
-                    i3.style.visibility = "visible";
-                    svgContainer.style.visibility = "visible";
+            
+            var loaded = false;
 
-                    setSize ();
-                }, 0);
-            }, false);
             window.addEventListener("load", function () {
                 document.getElementById("splash").style.visibility = "hidden";
                 i1.style.visibility = "visible";
@@ -162,6 +146,7 @@
                 i3.style.visibility = "visible";
 
                 setSize ();
+                loaded = true;
 
                 /*
                 var fs = document.getElementById("fs");
@@ -180,6 +165,28 @@
                 }, false);
                 */
             });
+
+            window.addEventListener('resize', function () {
+                if (loaded) {
+                    //document.getElementById("splash").style.visibility = "visible";
+                    document.getElementById("vis").style.visibility = "hidden";
+                    i1.style.visibility = "hidden";
+                    i2.style.visibility = "hidden";
+                    i3.style.visibility = "hidden";
+                    svgContainer.style.visibility = "hidden";
+                    
+                    setTimeout(function () {
+                        //document.getElementById("splash").style.visibility = "hidden";
+                        document.getElementById("vis").style.visibility = "visible";
+                        i1.style.visibility = "visible";
+                        i2.style.visibility = "visible";
+                        i3.style.visibility = "visible";
+                        svgContainer.style.visibility = "visible";
+
+                        setSize ();
+                    }, 0);
+                }
+            }, false);
         </script>
         <!--svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0; visibility: hidden;"
            xmlns:dc="http://purl.org/dc/elements/1.1/"

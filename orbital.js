@@ -1692,10 +1692,10 @@ function orbital (svgContainer, data) {
                                 mouse = getMouse (lastMouseEvent);
                                 if (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
                                     panning = false;
-                                    //dragX = mouse.x;
-                                    //dragY = mouse.y;
-                                    oldCenterX = select.cursor.centerX;
-                                    oldCenterY = select.cursor.centerY;
+                                    dragX = mouse.x;
+                                    dragY = mouse.y;
+                                    oldCenterX = cursor.centerX;
+                                    oldCenterY = cursor.centerY;
                                     
                                 } else {
                                     panning = false;

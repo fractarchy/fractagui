@@ -1506,17 +1506,32 @@ function orbital (svgContainer, data) {
         });
     }
     
+    function click (e) {
+        mouse = getMouse (e);
+
+        dragX = mouse.x;
+        dragY = mouse.y;
+        
+        preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
+    }
+
     function mousedown (e) {
         mouse = getMouse (e);
         
         if (!animating) {
             if (e.which === 1) {
                 mouseDown = 1;
+                click (e);
+                /*
                 dragX = mouse.x;
                 dragY = mouse.y;
                 
                 preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
+                */
             }
+        } else if (e.which === 1 && animating === true) {
+            mouseDown = 1;
+            animating = false;
         }
     }
 
@@ -1568,22 +1583,26 @@ function orbital (svgContainer, data) {
                         var i = 1;
                         var di = 1;
                         function aInert () {
-                            var dt = (new Date()).getTime() - t0;
-                            t0 = (new Date()).getTime();
-                            if (dt === 0) dt = 1;
+                            if (animating) {
+                                var dt = (new Date()).getTime() - t0;
+                                t0 = (new Date()).getTime();
+                                if (dt === 0) dt = 1;
 
-                            di = di - dt / 500;
-                            var sindi = Math.sin (di * Math.PI / 2);
-                            if (di > 0){
-                                ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
-                                c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
+                                di = di - dt / 500;
+                                var sindi = Math.sin (di * Math.PI / 2);
+                                if (di > 0){
+                                    ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
+                                    c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
 
-                                redraw (null, "1+");
-                                
-                                window.requestAnimationFrame(aInert);
-                            } else {
-                                animating = false;
-                                redraw ({x: mouse.x, y: mouse.y});
+                                    redraw (null, "1+");
+                                    
+                                    window.requestAnimationFrame(aInert);
+                                } else {
+                                    animating = false;
+                                    redraw ({x: mouse.x, y: mouse.y});
+                                }
+                            } else if (mouseDown === 1) {
+                                click (lastMouseEvent);
                             }
                         }
 
@@ -1635,34 +1654,52 @@ function orbital (svgContainer, data) {
                         var t0 = (new Date()).getTime();
                         var di = 1;
                         function dInert (select) {
-                            var dt = (new Date()).getTime() - t0;
-                            t0 = (new Date()).getTime();
-                            if (dt === 0) dt = 1;
+                            if (animating) {
+                                var dt = (new Date()).getTime() - t0;
+                                t0 = (new Date()).getTime();
+                                if (dt === 0) dt = 1;
 
-                            di = di - dt / 500;
-                            //var sindi = Math.sin (di * Math.PI / 2);
-                            if (di > 0){
-                                var oldx = cursor.centerX;
-                                var oldy = cursor.centerY;
-                                setCenter (select, cursor.centerX + avgX * di * 24, cursor.centerY + avgY * di * 24);
-                                if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                    redraw (null, "1");
-                                    var sel = select;
-                                    window.requestAnimationFrame(function () {
-                                        dInert (sel)
-                                    });
+                                di = di - dt / 500;
+                                //var sindi = Math.sin (di * Math.PI / 2);
+                                if (di > 0){
+                                    var oldx = cursor.centerX;
+                                    var oldy = cursor.centerY;
+                                    setCenter (select, cursor.centerX + avgX * di * 24, cursor.centerY + avgY * di * 24);
+                                    if (oldx != cursor.centerX || oldy != cursor.centerY) {
+                                        redraw (null, "1");
+                                        var sel = select;
+                                        window.requestAnimationFrame(function () {
+                                            dInert (sel)
+                                        });
+                                    } else {
+                                        panning = false;
+                                        animating = false;
+                                        cursor.cachedCnv = false;
+                                        redraw ({x: mouse.x, y: mouse.y});
+                                    }
+
                                 } else {
                                     panning = false;
                                     animating = false;
                                     cursor.cachedCnv = false;
                                     redraw ({x: mouse.x, y: mouse.y});
                                 }
-
-                            } else {
-                                panning = false;
-                                animating = false;
-                                cursor.cachedCnv = false;
-                                redraw ({x: mouse.x, y: mouse.y});
+                            } else if (mouseDown === 1) {
+                                var r0 = r1 * ratio;
+                                var x0 = Math.floor (x1 * squashX);
+                                var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+                                
+                                mouse = getMouse (lastMouseEvent);
+                                if (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
+                                    panning = false;
+                                    dragX = mouse.x;
+                                    dragY = mouse.y;
+                                    
+                                } else {
+                                    panning = false;
+                                    cursor.cachedCnv = false;
+                                    click (lastMouseEvent);
+                                }
                             }
                         }
                         animating = true;

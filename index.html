@@ -151,16 +151,18 @@
                     i2.style.visibility = "visible";
                     i3.style.visibility = "visible";
                     svgContainer.style.visibility = "visible";
+
                     setSize ();
                 }, 0);
             }, false);
             window.addEventListener("load", function () {
-                setSize ();
-
                 document.getElementById("splash").style.visibility = "hidden";
                 i1.style.visibility = "visible";
                 i2.style.visibility = "visible";
                 i3.style.visibility = "visible";
+
+                setSize ();
+
                 /*
                 var fs = document.getElementById("fs");
                 fs.style.visibility = "visible";

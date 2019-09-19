@@ -26,9 +26,12 @@
         a.exHover:hover {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 55px; border:0px solid #6699FF;}
         a.exHover:active {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 55px; border:0px solid #DDDDFF;}
 
-        a.fsHover:visited, a.fsHover:link {cursor:pointer; color:rgb(255, 255, 150); text-decoration:none;}
-        a.fsHover:hover {cursor:pointer; color:white; text-decoration:none;}
-        a.fsHover:active {cursor:pointer; color:rgb(255, 255, 150); text-decoration:none;}
+        a, img {
+          -webkit-user-select: none; /* Safari 3.1+ */
+          -moz-user-select: none; /* Firefox 2+ */
+          -ms-user-select: none; /* IE 10+ */
+          user-select: none; /* Standard syntax */
+        }
 
     </style>
     <body>

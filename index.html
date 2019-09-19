@@ -87,10 +87,6 @@
                 var w = document.body.clientWidth;
                 var h = document.body.clientHeight;
                 
-                i1.style.visibility = "visible";
-                i2.style.visibility = "visible";
-                i3.style.visibility = "visible";
-                
                 if (w >= h) {
                     var m = document.body.clientHeight / 950;
                 } else {
@@ -132,7 +128,7 @@
                 o.resize (svgContainer.clientWidth, svgContainer.clientHeight);
             }
             
-            var visit = document.getElementById("visit");
+            var vis1 = document.getElementById("vis");
 
             var i1 = document.getElementById("i1");
             var i2 = document.getElementById("i2");
@@ -142,7 +138,7 @@
             var o = orbital(svgContainer, populate (5));
             window.addEventListener('resize', function () {
                 //document.getElementById("splash").style.visibility = "visible";
-                visit.style.visibility = "hidden";
+                document.getElementById("vis").style.visibility = "hidden";
                 i1.style.visibility = "hidden";
                 i2.style.visibility = "hidden";
                 i3.style.visibility = "hidden";
@@ -150,7 +146,7 @@
                 
                 setTimeout(function () {
                     //document.getElementById("splash").style.visibility = "hidden";
-                    visit.style.visibility = "visible";
+                    document.getElementById("vis").style.visibility = "visible";
                     i1.style.visibility = "visible";
                     i2.style.visibility = "visible";
                     i3.style.visibility = "visible";
@@ -160,7 +156,11 @@
             }, false);
             window.addEventListener("load", function () {
                 setSize ();
+
                 document.getElementById("splash").style.visibility = "hidden";
+                i1.style.visibility = "visible";
+                i2.style.visibility = "visible";
+                i3.style.visibility = "visible";
                 /*
                 var fs = document.getElementById("fs");
                 fs.style.visibility = "visible";
@@ -225,7 +225,7 @@
                style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           </g>
         </svg-->
-        <a id="visit" class="exHover" href="https://github.com/e-teoria/Orbiteque" style="position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
+        <a id="vis" class="exHover" href="https://github.com/e-teoria/Orbiteque" style="position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
         </a>
     </body>
 </html>

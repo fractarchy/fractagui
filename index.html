@@ -64,7 +64,7 @@
                 
                 return data;
             }
-            
+            /*
             function toggleFullScreen() {
               var doc = window.document;
               var docEl = doc.documentElement;
@@ -79,7 +79,7 @@
                 cancelFullScreen.call(doc);
               }
             }
-            
+            */
             function setSize () {
                 var w = document.body.clientWidth;
                 var h = document.body.clientHeight;
@@ -119,11 +119,11 @@
                 } else {
                     var fs = document.getElementById("fs")
                     
-                    i1.style.left = (w - fs.clientWidth) / 6 * 1 - i1.clientWidth / 2 + "px";
+                    i1.style.left = (w /*- fs.clientWidth*/) / 6 * 1 - i1.clientWidth / 2 + "px";
                     i1.style.top = 10 + "px";
-                    i2.style.left = (w - fs.clientWidth) / 6 * 3 - i2.clientWidth / 2 + "px";
+                    i2.style.left = (w /*- fs.clientWidth*/) / 6 * 3 - i2.clientWidth / 2 + "px";
                     i2.style.top = 10 + "px";
-                    i3.style.left = (w - fs.clientWidth) / 6 * 5 - i3.clientWidth / 2 + "px";
+                    i3.style.left = (w /*- fs.clientWidth*/) / 6 * 5 - i3.clientWidth / 2 + "px";
                     i3.style.top = 10 + "px";
                     
                     svgContainer.style.left = "10px";
@@ -139,6 +139,7 @@
             window.addEventListener("load", function () {
                 setSize ();
                 document.getElementById("splash").style.display = "none";
+                /*
                 var fs = document.getElementById("fs");
                 fs.style.visibility = "visible";
                 fs.addEventListener("mouseout", function () {
@@ -153,9 +154,10 @@
                     document.getElementById("path837").style.stroke = "white";
                     document.getElementById("path839").style.stroke = "white";
                 }, false);
+                */
             });
         </script>
-        <svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0; visibility: hidden;"
+        <!--svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0; visibility: hidden;"
            xmlns:dc="http://purl.org/dc/elements/1.1/"
            xmlns:cc="http://creativecommons.org/ns#"
            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -200,7 +202,7 @@
                d="M 5.9256526,293.77511 H 3.2248744 v -2.70078"
                style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           </g>
-        </svg>
+        </svg-->
     </body>
     <a class="exHover" href="https://github.com/e-teoria/Orbiteque" style="position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
     </a>

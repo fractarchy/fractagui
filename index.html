@@ -117,11 +117,13 @@
                     svgContainer.style.left = 20 + i1.clientWidth + "px";
                     svgContainer.style.top = "10px";
                 } else {
-                    i1.style.left = w / 6 * 1 - i1.clientWidth / 2 + "px";
+                    var fs = document.getElementById("fs")
+                    
+                    i1.style.left = (w - fs.clientWidth) / 6 * 1 - i1.clientWidth / 2 + "px";
                     i1.style.top = 10 + "px";
-                    i2.style.left = w / 6 * 3 - i2.clientWidth / 2 + "px";
+                    i2.style.left = (w - fs.clientWidth) / 6 * 3 - i2.clientWidth / 2 + "px";
                     i2.style.top = 10 + "px";
-                    i3.style.left = w / 6 * 5 - i3.clientWidth / 2 + "px";
+                    i3.style.left = (w - fs.clientWidth) / 6 * 5 - i3.clientWidth / 2 + "px";
                     i3.style.top = 10 + "px";
                     
                     svgContainer.style.left = "10px";

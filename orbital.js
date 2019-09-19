@@ -17,6 +17,9 @@ function orbital (svgContainer, data) {
     cnv.draggable = false;
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
+
+    document.documentElement.draggable = false;
+    document.documentElement.ondragstart = function () {return false};
     //ctx.imageSmoothingQuality = "medium"
     //ctx.imageSmoothingEnabled = false;
     //const opts = { desynchronized: true };

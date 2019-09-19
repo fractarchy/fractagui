@@ -1128,6 +1128,32 @@ function orbital (svgContainer, data) {
             var x0 = Math.floor (x1 * squashX);
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
             
+            if (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY) < r0) {
+                var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0)) + fishEye.width + (dragX - x0)) * 4;
+                var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0)) + fishEye.width + (x - x0)) * 4;
+                
+                setCenter (select, oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1], oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1]);
+                select.cursor.cachedCnv = false;
+                select.cursor.cachedData = null;
+            } else {
+                select.cursor.centerX = 0;
+                select.cursor.centerY = 0;
+                select.cursor.cachedCnv = true;
+                select.cursor.cachedData = null;
+            }
+            
+            window.requestAnimationFrame(function () {
+                redraw ({x: mouse.x, y: mouse.y}, "1");
+            });
+        }
+    }
+    /*
+    function mousemovePan(x, y) {
+        if (select && !animating) {
+            var r0 = r1 * ratio;
+            var x0 = Math.floor (x1 * squashX);
+            var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+            
             if (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
                 var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0)) + fishEye.width + (dragX - x0)) * 4;
                 var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0)) + fishEye.width + (x - x0)) * 4;
@@ -1147,7 +1173,7 @@ function orbital (svgContainer, data) {
             });
         }
     }
-    
+    */
     function mousemove (e) {
         "use strict";
         
@@ -1506,32 +1532,24 @@ function orbital (svgContainer, data) {
         });
     }
     
-    function click (e) {
-        mouse = getMouse (e);
-
-        dragX = mouse.x;
-        dragY = mouse.y;
-        
-        preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
-    }
 
     function mousedown (e) {
         mouse = getMouse (e);
         
-        if (!animating) {
-            if (e.which === 1) {
-                mouseDown = 1;
-                click (e);
-                /*
-                dragX = mouse.x;
-                dragY = mouse.y;
-                
+        if (e.which === 1) {
+            if (!animating) {
                 preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
-                */
+            } else if (animating === true) {
+                animating = false;
             }
-        } else if (e.which === 1 && animating === true) {
+            
             mouseDown = 1;
-            animating = false;
+            
+            dragX = mouse.x;
+            dragY = mouse.y;
+            
+            oldCenterX = cursor.centerX;
+            oldCenterY = cursor.centerY;
         }
     }
 
@@ -1602,7 +1620,8 @@ function orbital (svgContainer, data) {
                                     redraw ({x: mouse.x, y: mouse.y});
                                 }
                             } else if (mouseDown === 1) {
-                                click (lastMouseEvent);
+                                animating = false;
+                                preSelect = redraw ({x: mouse.x, y: mouse.y});
                             }
                         }
 
@@ -1669,7 +1688,8 @@ function orbital (svgContainer, data) {
                                         redraw (null, "1");
                                         var sel = select;
                                         window.requestAnimationFrame(function () {
-                                            dInert (sel)
+                                            //select = sel;
+                                            dInert (sel);
                                         });
                                     } else {
                                         panning = false;
@@ -1689,14 +1709,12 @@ function orbital (svgContainer, data) {
                                 var x0 = Math.floor (x1 * squashX);
                                 var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
                                 
-                                mouse = getMouse (lastMouseEvent);
-                                if (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
-                                    panning = false;
-                                    dragX = mouse.x;
-                                    dragY = mouse.y;
-                                    oldCenterX = cursor.centerX;
-                                    oldCenterY = cursor.centerY;
-                                    
+                                if (Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) < r0) {
+                                    //panning = false;
+                                    //cursor.cachedCnv = false;
+
+                                    //dragX = mouse.x;
+                                    //dragY = mouse.y;
                                 } else {
                                     panning = false;
                                     cursor.cachedCnv = false;
@@ -1725,7 +1743,7 @@ function orbital (svgContainer, data) {
                 //});
             }
             
-            select = null;
+            //select = null;
         }
     }
     

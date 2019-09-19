@@ -36,7 +36,7 @@
     </style>
     <body>
         <div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 150); height: 50%;">
-            please wait...
+            computing bitmaps...
         </div>
         <img id="i1" src="i1.svg" style="visibility: hidden; position: absolute;">
         <img id="i2" src="i2.svg" style="visibility: hidden; position: absolute;">
@@ -129,46 +129,24 @@
             }
             
             var vis1 = document.getElementById("vis");
+            
+            var iz = 0;
 
             var i1 = document.getElementById("i1");
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
             
-            var svgContainer = document.getElementById ("svgContainer")
-            var o = orbital(svgContainer, populate (5));
-            
-            var loaded = false;
-
             window.addEventListener("load", function () {
                 document.getElementById("splash").style.visibility = "hidden";
                 i1.style.visibility = "visible";
                 i2.style.visibility = "visible";
                 i3.style.visibility = "visible";
+                svgContainer.style.visibility = "visible";
 
                 setSize ();
-                loaded = true;
 
-                /*
-                var fs = document.getElementById("fs");
-                fs.style.visibility = "visible";
-                fs.addEventListener("mouseout", function () {
-                    document.getElementById("path833").style.stroke = "rgb(255, 255, 150)";
-                    document.getElementById("path835").style.stroke = "rgb(255, 255, 150)";
-                    document.getElementById("path837").style.stroke = "rgb(255, 255, 150)";
-                    document.getElementById("path839").style.stroke = "rgb(255, 255, 150)";
-                }, false);
-                fs.addEventListener("mouseover",  function () {
-                    document.getElementById("path833").style.stroke = "white";
-                    document.getElementById("path835").style.stroke = "white";
-                    document.getElementById("path837").style.stroke = "white";
-                    document.getElementById("path839").style.stroke = "white";
-                }, false);
-                */
-            });
-
-            window.addEventListener('resize', function () {
-                if (loaded) {
-                    //document.getElementById("splash").style.visibility = "visible";
+                window.addEventListener('resize', function () {
+                    document.getElementById("splash").style.visibility = "visible";
                     document.getElementById("vis").style.visibility = "hidden";
                     i1.style.visibility = "hidden";
                     i2.style.visibility = "hidden";
@@ -176,7 +154,7 @@
                     svgContainer.style.visibility = "hidden";
                     
                     setTimeout(function () {
-                        //document.getElementById("splash").style.visibility = "hidden";
+                        document.getElementById("splash").style.visibility = "hidden";
                         document.getElementById("vis").style.visibility = "visible";
                         i1.style.visibility = "visible";
                         i2.style.visibility = "visible";
@@ -185,8 +163,26 @@
 
                         setSize ();
                     }, 0);
-                }
-            }, false);
+                });
+            });
+
+            var svgContainer = document.getElementById ("svgContainer")
+            var o = orbital(svgContainer, populate (5));
+            
+            var loaded = false;
+
+            /*            
+            window.addEventListener("load", function () {
+                document.getElementById("splash").style.visibility = "hidden";
+                i1.style.visibility = "visible";
+                i2.style.visibility = "visible";
+                i3.style.visibility = "visible";
+                svgContainer.style.visibility = "visible";
+
+                setSize ();
+            });
+            */
+            
         </script>
         <!--svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0; visibility: hidden;"
            xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -235,6 +231,5 @@
           </g>
         </svg-->
         <a id="vis" class="exHover" href="https://github.com/e-teoria/Orbiteque" style="position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
-        </a>
     </body>
 </html>

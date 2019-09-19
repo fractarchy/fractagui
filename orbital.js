@@ -1907,9 +1907,6 @@ function orbital (svgContainer, data) {
     
     var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
 
-document
-    .querySelector("meta[name=viewport]")
-    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
     //initFishEye();
     //var img = new Image();
     //img.crossOrigin = "Anonymous";

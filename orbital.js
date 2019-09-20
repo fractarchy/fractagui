@@ -659,7 +659,7 @@ function orbital (svgContainer, data) {
 
                     var cachedCnv = cursor.cachedCnv;
 
-                } else if (cursor.cachedCnv === false) {
+                } else if (!cursor.cachedCnv || !cursor.cachedData) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY);
@@ -1635,7 +1635,9 @@ function orbital (svgContainer, data) {
                                 t0 = (new Date()).getTime();
                                 if (dt === 0) dt = 1;
 
-                                di = di - dt / 500;
+                                //var dd = Math.sqrt (avgX * avgX + avgY * avgY);
+                                di = di - Math.pow (dt / Math.abs (avgAng) / Math.pow(250, 4), 0.25);
+                                //di = di - dt / 500;
                                 var sindi = Math.sin (di * Math.PI / 2);
                                 if (di > 0){
                                     ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
@@ -1710,13 +1712,13 @@ function orbital (svgContainer, data) {
                                 t0 = (new Date()).getTime();
                                 if (dt === 0) dt = 1;
 
-                                di = di - dt / 500;
-                                //var sindi = Math.sin (di * Math.PI / 2);
+                                var dd = Math.sqrt (avgX * avgX + avgY * avgY);
+                                di = di - Math.pow (dt / dd / Math.pow(2000, 2), 0.25);
                                 if (di > 0){
                                     var oldx = cursor.centerX;
                                     var oldy = cursor.centerY;
-                                    setCenter (select, cursor.centerX + avgX * di * 24, cursor.centerY + avgY * di * 24);
-                                    if (oldx != cursor.centerX || oldy != cursor.centerY) {
+                                    setCenter (select, cursor.centerX + avgX * di * 25, cursor.centerY + avgY * di * 25);
+                                    if (oldx != cursor.centerX && oldy != cursor.centerY) {
                                         redraw (null, "1", select.cursor);
                                         var sel = select;
                                         window.requestAnimationFrame(function () {

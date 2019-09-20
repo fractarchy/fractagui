@@ -1,5 +1,4 @@
 # Orbiteque
-![](https://e-teoria.github.io/Orbiteque/i1.svg) ![](https://e-teoria.github.io/Orbiteque/i2.svg) ![](https://e-teoria.github.io/Orbiteque/i3.svg)
 
 ## contents
 - [about the project](#about-the-project)  

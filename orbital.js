@@ -671,6 +671,7 @@ function orbital (svgContainer, data) {
                 
                 if ((level === 1 && panning) || (renderHint === "0") || (cachedCnv.width === w && cachedCnv.height === h)) {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
+                    
                 } else if (animating || dragging) {
                     /*
                     brzo, smudged
@@ -1617,11 +1618,11 @@ function orbital (svgContainer, data) {
                                     window.requestAnimationFrame(aInert);
                                 } else {
                                     animating = false;
-                                    redraw ({x: mouse.x, y: mouse.y});
+                                    redraw ({x: mouse.x, y: mouse.y}, "1+");
                                 }
                             } else if (mouseDown === 1) {
                                 animating = false;
-                                preSelect = redraw ({x: mouse.x, y: mouse.y});
+                                preSelect = redraw ({x: mouse.x, y: mouse.y}, "1+");
                             }
                         }
 
@@ -1695,14 +1696,14 @@ function orbital (svgContainer, data) {
                                         panning = false;
                                         animating = false;
                                         cursor.cachedCnv = false;
-                                        redraw ({x: mouse.x, y: mouse.y});
+                                        redraw ({x: mouse.x, y: mouse.y}, "1");
                                     }
 
                                 } else {
                                     panning = false;
                                     animating = false;
                                     cursor.cachedCnv = false;
-                                    redraw ({x: mouse.x, y: mouse.y});
+                                    redraw ({x: mouse.x, y: mouse.y}, "1");
                                 }
                             } else if (mouseDown === 1) {
                                 var r0 = r1 * ratio;
@@ -1717,8 +1718,9 @@ function orbital (svgContainer, data) {
                                     //dragY = mouse.y;
                                 } else {
                                     panning = false;
+                                    animating = false;
                                     cursor.cachedCnv = false;
-                                    click (lastMouseEvent);
+                                    redraw ({x: mouse.x, y: mouse.y}, "1");
                                 }
                             }
                         }
@@ -1975,7 +1977,7 @@ function orbital (svgContainer, data) {
     //    cnvim.height = img.height;
     //    ctxim.drawImage(img, 0, 0);
     
-        resize(svgContainer.clientWidth, svgContainer.clientHeight);
+//        resize(svgContainer.clientWidth, svgContainer.clientHeight);
     //}
 
     

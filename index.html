@@ -145,6 +145,7 @@
                 svgContainer.style.visibility = "visible";
 
                 setSize ();
+                
 
                 window.addEventListener('resize', function () {
                     document.getElementById("splash").style.visibility = "visible";
@@ -168,7 +169,7 @@
             });
 
             var svgContainer = document.getElementById ("svgContainer")
-            var o = orbital(svgContainer, populate (5));
+            var o = orbital(svgContainer, "infinite");
             
             var loaded = false;
 

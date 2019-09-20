@@ -1191,22 +1191,26 @@ function orbital (svgContainer, data) {
         
         if (!panning && !dragging && mouseDown === 1) {
             if (3 < Math.sqrt(Math.pow(mouse.x - dragX, 2) + Math.pow(mouse.y - dragY, 2))) {
-                dragging = true;
-                inert = [];
-                inertIdx = 0;
-                inertPan = [];
-                inertIdxPan = 0;
                 setupSelect(preSelect);
                 
                 if (!animating && select && Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
                     panning = true;
+                    
                     oldCenterX = select.cursor.centerX;
                     oldCenterY = select.cursor.centerY;
+                    
+                    inertPan = [];
+                    inertIdxPan = 0;
+                } else {
+                    dragging = true;
+                    
+                    inert = [];
+                    inertIdx = 0;
                 }
             }
         }
         
-        if (dragging && select) {
+        if ((dragging || panning) && select) {
             gettingLevel = select;
             
             var ip = 0;
@@ -1565,9 +1569,9 @@ function orbital (svgContainer, data) {
         if (animating === "level") dragging = false;
 
         if (!animating) {
-            if (dragging) {
+            if (dragging && inert.length > 1) {
                 dragging = false;
-                if (!panning && inert.length > 1) {
+                //if (!panning && inert.length > 1) {
                     var sum = 0;
                     var avgAng = 0;
                     var i = inertIdx - 1
@@ -1633,10 +1637,14 @@ function orbital (svgContainer, data) {
                         animating = true;
                         aInert();
                     }
+                //}
+                if (!animating) {
+                    //window.requestAnimationFrame(function () {
+                        redraw ({x: mouse.x, y: mouse.y}, "1+");
+                    //});
                 }
 
-            }// else
-            if (panning && inertPan.length > 1) {
+            } else if (panning && inertPan.length > 1) {
                 var avgX = 0;
                 var avgY = 0;
                 var i = inertIdxPan - 1
@@ -1731,7 +1739,7 @@ function orbital (svgContainer, data) {
                         dInert(select);
                     }
                 }// else {
-                /*
+                
                 if (!animating){
                     panning = false;
                     cursor.cachedCnv = false;
@@ -1739,14 +1747,13 @@ function orbital (svgContainer, data) {
                         redraw ({x: mouse.x, y: mouse.y}, "1");
                     //});
                 }
-                */
-            }// else {
-            if (!animating) {
+                
+            } else {
+                dragging = false;
                 panning = false;
-                cursor.cachedCnv = false;
-                //window.requestAnimationFrame(function () {
+                if (!animating) {
                     redraw ({x: mouse.x, y: mouse.y});
-                //});
+                }
             }
             
             //select = null;

@@ -1145,7 +1145,7 @@ function orbital (svgContainer, data) {
             var x0 = Math.floor (x1 * squashX);
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
             
-            if (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY) < r0) {
+            if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.ceil (r0)) {
                 var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0)) + fishEye.width + (dragX - x0)) * 4;
                 var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0)) + fishEye.width + (x - x0)) * 4;
                 
@@ -1296,7 +1296,7 @@ function orbital (svgContainer, data) {
                 
             } else {
                 if (!isOnParent) {
-                    if (mouseDistance > maxR)
+                    if (Math.floor (mouseDistance) >= Math.floor (maxR))
                         animateAng0 = ang[0];
                     
                     if (select.parent && select.parent.parent)

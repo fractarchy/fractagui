@@ -274,6 +274,13 @@
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
             
+            i1.draggable = false;
+            i1.ondragstart = function () {return false};
+            i2.draggable = false;
+            i2.ondragstart = function () {return false};
+            i3.draggable = false;
+            i3.ondragstart = function () {return false};
+            
             window.addEventListener("load", function () {
                 document.getElementById("splash").style.visibility = "hidden";
                 i1.style.visibility = "visible";

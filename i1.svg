@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="238"
-   height="215"
-   viewBox="0 0 62.970832 56.885418"
+   width="240"
+   height="217"
+   viewBox="0 0 63.499999 57.414585"
    version="1.1"
    id="svg3595"
    inkscape:version="0.92.4 (f8dce91, 2019-08-02)"
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.2840467"
-     inkscape:cx="75.193128"
+     inkscape:cx="76.221513"
      inkscape:cy="101.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,12 +53,21 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-240.11458)">
+     transform="translate(0,-239.58541)">
+    <rect
+       style="fill:#7f7f7f;fill-opacity:1;stroke:#7f7f7f;stroke-width:0.2655288;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect821"
+       width="63.23447"
+       height="57.149055"
+       x="0.1327644"
+       y="239.71817"
+       rx="2.6668329"
+       ry="2.6650703" />
     <rect
        ry="2.640502"
        rx="2.6446142"
-       y="240.24619"
-       x="0.13159937"
+       y="239.9816"
+       x="0.39618272"
        height="56.622219"
        width="62.707634"
        id="rect3496"
@@ -66,26 +75,26 @@
     <path
        inkscape:connector-curvature="0"
        id="path3498"
-       d="m 3.360853e-4,282.19821 v 2.64583 6.89881 2.38125 c 0,1.46579 1.1794996147,2.64583 2.6446180147,2.64583 H 60.326552 c 1.465119,0 2.644617,-1.18004 2.644617,-2.64583 v -2.38125 -6.89881 -2.64583 H 60.326552 2.6449541 Z"
+       d="m 0.26491942,281.93362 v 2.64583 6.89881 2.38125 c 0,1.46579 1.17949958,2.64583 2.64461798,2.64583 H 60.591135 c 1.465119,0 2.644617,-1.18004 2.644617,-2.64583 v -2.38125 -6.89881 -2.64583 H 60.591135 2.9095374 Z"
        style="fill:#ffff96;fill-opacity:1;stroke:none;stroke-width:0.24492864;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
        id="text3504"
-       y="288.12579"
-       x="31.445154"
+       y="287.86121"
+       x="31.709738"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.2813673px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:0.10703417"
        xml:space="preserve"><tspan
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke-width:0.10703417"
-         y="288.12579"
-         x="31.445154"
+         y="287.86121"
+         x="31.709738"
          id="tspan3500"
          sodipodi:role="line">drag inside central oval</tspan><tspan
          id="tspan3502"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke-width:0.10703417"
-         y="293.47748"
-         x="31.445154"
+         y="293.21292"
+         x="31.709738"
          sodipodi:role="line">to pan the contents</tspan></text>
     <g
-       transform="translate(-4.4738093,157.66369)"
+       transform="translate(-4.209226,157.3991)"
        id="g3577">
       <path
          style="fill:#ffff96;fill-opacity:1;stroke-width:0.03323485"

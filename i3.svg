@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="238"
-   height="215"
-   viewBox="0 0 62.970832 56.885418"
+   width="240"
+   height="217"
+   viewBox="0 0 63.499999 57.414585"
    version="1.1"
    id="svg3595"
    inkscape:version="0.92.4 (f8dce91, 2019-08-02)"
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.2840467"
-     inkscape:cx="123"
+     inkscape:cx="70.016588"
      inkscape:cy="101.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -53,39 +53,48 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-240.11458)">
+     transform="translate(0,-239.58541)">
+    <rect
+       style="fill:#7f7f7f;fill-opacity:1;stroke:#7f7f7f;stroke-width:0.2655288;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect821"
+       width="63.234467"
+       height="57.149055"
+       x="0.1327644"
+       y="239.71817"
+       rx="2.6668329"
+       ry="2.6650703" />
     <rect
        rx="2.6446171"
        ry="2.640502"
-       y="240.2462"
-       x="0.13193433"
+       y="239.98163"
+       x="0.39651766"
        height="56.622219"
        width="62.707695"
        id="rect3549"
        style="fill:#7f7f7f;fill-opacity:1;stroke:#ffff96;stroke-width:0.26313758;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        id="path3551"
-       d="m 0,282.19823 v 2.64583 6.89881 2.38125 c 0,1.46579 1.179498,2.64583 2.6446147,2.64583 H 60.326219 c 1.465116,0 2.644614,-1.18004 2.644614,-2.64583 v -2.38125 -6.89881 -2.64583 H 60.326219 2.6446147 Z"
+       d="m 0.26458334,281.93365 v 2.64583 6.89881 2.38125 c 0,1.46579 1.17949796,2.64583 2.64461466,2.64583 h 57.681604 c 1.465116,0 2.644614,-1.18004 2.644614,-2.64583 v -2.38125 -6.89881 -2.64583 H 60.590802 2.909198 Z"
        style="fill:#ffff96;fill-opacity:1;stroke:none;stroke-width:0.24492864;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0" />
     <text
        id="text3557"
-       y="288.12579"
-       x="31.357979"
+       y="287.86121"
+       x="31.622562"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.2813673px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:0.10703417"
        xml:space="preserve"><tspan
          id="tspan3553"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke-width:0.10703417"
-         y="288.12579"
-         x="31.357979"
+         y="287.86121"
+         x="31.622562"
          sodipodi:role="line">drag ovals in or out</tspan><tspan
          id="tspan3555"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke-width:0.10703417"
-         y="293.47751"
-         x="31.357979"
+         y="293.21292"
+         x="31.622561"
          sodipodi:role="line">to navigate vertically</tspan></text>
     <g
-       transform="translate(-142.057,157.66371)"
+       transform="translate(-141.79242,157.39913)"
        id="g3587">
       <path
          style="fill:#ffff96;fill-opacity:1;stroke-width:0.03323485"

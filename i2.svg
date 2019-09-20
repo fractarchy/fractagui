@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="238"
-   height="215"
-   viewBox="0 0 62.970832 56.885418"
+   width="240"
+   height="217"
+   viewBox="0 0 63.499999 57.414585"
    version="1.1"
    id="svg3595"
    inkscape:version="0.92.4 (f8dce91, 2019-08-02)"
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.2840467"
-     inkscape:cx="75.193128"
+     inkscape:cx="60.914125"
      inkscape:cy="101.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,7 +53,16 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-240.11458)">
+     transform="translate(0,-239.58541)">
+    <rect
+       style="fill:#7f7f7f;fill-opacity:1;stroke:#7f7f7f;stroke-width:0.2655288;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect821"
+       width="63.234467"
+       height="57.149055"
+       x="0.1327644"
+       y="239.71817"
+       rx="2.6668329"
+       ry="2.6650703" />
     <rect
        rx="2.6446171"
        ry="2.640502"
@@ -61,31 +70,31 @@
        id="rect3515"
        width="62.707695"
        height="56.622219"
-       x="0.13156903"
-       y="240.2462" />
+       x="0.39615214"
+       y="239.98163" />
     <path
        inkscape:connector-curvature="0"
        style="fill:#ffff96;fill-opacity:1;stroke:none;stroke-width:0.24492864;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 3.98e-4,282.19823 v 2.64583 6.89881 2.38125 c 0,1.46579 1.1795,2.64583 2.6446177,2.64583 H 60.326617 c 1.465116,0 2.644614,-1.18004 2.644614,-2.64583 v -2.38125 -6.89881 -2.64583 H 60.326617 2.6450157 Z"
+       d="m 0.2649811,281.93365 v 2.64583 6.89881 2.38125 c 0,1.46579 1.1795,2.64583 2.6446177,2.64583 H 60.5912 c 1.465116,0 2.644614,-1.18004 2.644614,-2.64583 v -2.38125 -6.89881 -2.64583 H 60.5912 2.9095988 Z"
        id="path3517" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.2813673px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke:none;stroke-width:0.10703417"
-       x="31.532318"
-       y="288.12579"
+       x="31.796902"
+       y="287.86121"
        id="text3523"><tspan
          sodipodi:role="line"
-         x="31.532318"
-         y="288.12579"
+         x="31.796902"
+         y="287.86121"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke-width:0.10703417"
          id="tspan3519">drag ovals around</tspan><tspan
          id="tspan3521"
          sodipodi:role="line"
-         x="31.532318"
-         y="293.47751"
+         x="31.796902"
+         y="293.21292"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;fill:#7f7f7f;fill-opacity:1;stroke-width:0.10703417">to navigate horizontally</tspan></text>
     <g
-       transform="translate(-73.265602,157.66371)"
+       transform="translate(-73.001019,157.39913)"
        id="g3582">
       <path
          inkscape:connector-curvature="0"

@@ -834,7 +834,7 @@ function orbital (svgContainer, data) {
                 if ((r1 * squashY * squashX) >= minRadius) {
                     var colorFill = fill1;
                     
-                    if ((animating || device === "mouse") && (selectedCursor?cursor === selectedCursor: mouse) && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
+                    if ((animating || dragging || panning device === "mouse") && (selectedCursor?cursor === selectedCursor: mouse) && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
                         colorFill = "white";
                     } else {
                         colorFill = fill1;

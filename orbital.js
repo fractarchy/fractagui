@@ -834,7 +834,7 @@ function orbital (svgContainer, data) {
                 if ((r1 * squashY * squashX) >= minRadius) {
                     var colorFill = fill1;
                     
-                    if (selectedCursor?cursor === selectedCursor: mouse && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
+                    if ((animating || device === "mouse") && (selectedCursor?cursor === selectedCursor: mouse) && (Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) {
                         colorFill = "white";
                     } else {
                         colorFill = fill1;
@@ -1839,6 +1839,8 @@ function orbital (svgContainer, data) {
     var dragX, dragY, dragging = false, oldCenterX, oldCenterY;
     var inert, inertIdx = 0;
     var inertPan, inertIdxPan = 0;
+    
+    var device = "mouse";
 
     var n = node();
     var movingNode = null;
@@ -1850,9 +1852,20 @@ function orbital (svgContainer, data) {
     var clip = document.createElementNS(svgns, 'ellipse');
     clipPath.appendChild(clip);
 
-    window.addEventListener('mousemove', mousemove, false);
-    window.addEventListener('mousedown', mousedown, false);
-    window.addEventListener('mouseup', mouseup, false);
+    function setupMouseEvents () {
+        window.addEventListener('mousemove', function (evt) {
+            device = "mouse";
+            mousemove (evt)
+        }, false);
+        window.addEventListener('mousedown',  function (evt) {
+            device = "mouse";
+            mousedown (evt)
+        }, false);
+        window.addEventListener('mouseup',  function (evt) {
+            device = "mouse";
+            mouseup (evt)
+        }, false);
+    }
 
     function setupTouchEvents () {
         var ongoingTouches = [];
@@ -1874,6 +1887,7 @@ function orbital (svgContainer, data) {
 
         window.addEventListener("touchstart", function (evt) {
             evt.preventDefault ();
+            device = "touch";
             var touches = evt.changedTouches;
             
             for (var i = 0; i < touches.length; i++) {
@@ -1896,6 +1910,7 @@ function orbital (svgContainer, data) {
 
         window.addEventListener("touchmove", function (evt) {
             evt.preventDefault ();
+            device = "touch";
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
@@ -1915,6 +1930,7 @@ function orbital (svgContainer, data) {
         }, false);
 
         window.addEventListener("touchcancel", function (evt) {
+            device = "touch";
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
@@ -1933,6 +1949,7 @@ function orbital (svgContainer, data) {
 
         window.addEventListener("touchend", function (evt) {
             evt.preventDefault ();
+            device = "touch";
             var touches = evt.changedTouches;
 
             for (var i = 0; i < touches.length; i++) {
@@ -1954,6 +1971,8 @@ function orbital (svgContainer, data) {
             */
         }, false);
     }
+    
+    setupMouseEvents ();
     setupTouchEvents ();
 
     /*

@@ -1613,7 +1613,7 @@ function orbital (svgContainer, data) {
                                     ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
                                     c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
 
-                                    redraw (null, "1+");
+                                    redraw (null, "1+", select.cursor);
                                     
                                     window.requestAnimationFrame(aInert);
                                 } else {
@@ -1686,7 +1686,7 @@ function orbital (svgContainer, data) {
                                     var oldy = cursor.centerY;
                                     setCenter (select, cursor.centerX + avgX * di * 24, cursor.centerY + avgY * di * 24);
                                     if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                        redraw (null, "1");
+                                        redraw (null, "1", select.cursor);
                                         var sel = select;
                                         window.requestAnimationFrame(function () {
                                             //select = sel;

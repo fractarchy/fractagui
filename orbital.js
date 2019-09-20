@@ -1635,8 +1635,7 @@ function orbital (svgContainer, data) {
                     }
                 }
 
-            }
-            
+            }// else
             if (panning && inertPan.length > 1) {
                 var avgX = 0;
                 var avgY = 0;
@@ -1731,16 +1730,17 @@ function orbital (svgContainer, data) {
                         animating = true;
                         dInert(select);
                     }
-                }
-
+                }// else {
+                /*
                 if (!animating){
                     panning = false;
                     cursor.cachedCnv = false;
                     //window.requestAnimationFrame(function () {
-                        redraw ({x: mouse.x, y: mouse.y});
+                        redraw ({x: mouse.x, y: mouse.y}, "1");
                     //});
                 }
-            }
+                */
+            }// else {
             if (!animating) {
                 panning = false;
                 cursor.cachedCnv = false;

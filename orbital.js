@@ -659,7 +659,7 @@ function orbital (svgContainer, data) {
 
                     var cachedCnv = cursor.cachedCnv;
 
-                } else if (!cursor.cachedCnv || !cursor.cachedData) {
+                } else if (!cursor.cachedCnv) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = Math.floor (2 * rr * ratio * squashX);
                     var cacheH1 = Math.floor (2 * rr * ratio * squashY);
@@ -932,6 +932,7 @@ function orbital (svgContainer, data) {
                     
                     if (ret || cond) {
                         var pass = {
+                            rec: rec,
                             data: data,
                             index: index,
                             angle: angle,
@@ -1088,7 +1089,8 @@ function orbital (svgContainer, data) {
 
     function redraw (m, renderHint, selectedCursor) {
         //clear ();
-        return n.render (minRadius, x1, y1, r1, 0, 1, m, data, cursor.parent.index, cursor, selectedCursor, renderHint);
+        var ret = n.render (minRadius, x1, y1, r1, 0, 1, m, data, cursor.parent.index, cursor, selectedCursor, renderHint);
+        return ret;
     }
 
     function getMouse(mouseEvent)
@@ -1577,7 +1579,10 @@ function orbital (svgContainer, data) {
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
             
             if (Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
-                panning = false;
+                if (panning) {
+                    panning = false;
+                    cursor.cachedCnv = false;
+                }
             }
         }
     }
@@ -1662,7 +1667,7 @@ function orbital (svgContainer, data) {
                 //}
                 if (!animating) {
                     //window.requestAnimationFrame(function () {
-                        redraw ({x: mouse.x, y: mouse.y}, "1+");
+                        redraw ({x: mouse.x, y: mouse.y});
                     //});
                 }
 

@@ -1,6 +1,6 @@
 # Orbiteque
 ![](https://e-teoria.github.io/Orbiteque/i1.svg) ![](https://e-teoria.github.io/Orbiteque/i2.svg) ![](https://e-teoria.github.io/Orbiteque/i3.svg)  
-[**test a prototype**](https://e-teoria.github.io/Orbiteque/)  
+test a prototype [**here**](https://e-teoria.github.io/Orbiteque/)  
 
 ## contents
 - [about the project](#about-the-project)  

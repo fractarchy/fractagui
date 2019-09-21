@@ -23,7 +23,7 @@
             text-align: center;
         }
         
-        a.exHover:visited, a.exHover:link {cursor: pointer; background-color: rgb(255, 255, 150); color: gray; text-decoration:none; border-radius: 55px; border:0px solid #4466DD;}
+        a, a.exHover:visited, a.exHover:link {cursor: pointer; background-color: rgb(255, 255, 150); color: gray; text-decoration:none; border-radius: 55px; border:0px solid #4466DD;}
         a.exHover:hover {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 55px; border:0px solid #6699FF;}
         a.exHover:active {cursor: pointer; background-color: white; color:gray; text-decoration:none; border-radius: 55px; border:0px solid #DDDDFF;}
 
@@ -171,9 +171,9 @@
                     i2.onclick = (function () {evth (i2);});
                     i3.onclick = (function () {evth (i3);});
                     
-                    i1.ontouchstart = (function () {evth (i1);});
-                    i2.ontouchstart = (function () {evth (i2);});
-                    i3.ontouchstart = (function () {evth (i3);});
+                    i1.ontouchstart = i1.onclick;
+                    i2.ontouchstart = i2.onclick;
+                    i3.ontouchstart = i3.onclick;
                     
                     i1.style.top = gap + "px";
                     i1.style.left = 10 + "px";
@@ -252,9 +252,9 @@
                     i2.onclick = (function () {evtv (i2);});
                     i3.onclick = (function () {evtv (i3);});
 
-                    i1.ontouchstart = (function () {evtv (i1);});
-                    i2.ontouchstart = (function () {evtv (i2);});
-                    i3.ontouchstart = (function () {evtv (i3);});
+                    i1.ontouchstart = i1.onclick;
+                    i2.ontouchstart = i2.onclick;
+                    i3.ontouchstart = i3.onclick;
                     
                     i1.style.left = gap + "px";
                     i1.style.top = 10 + "px";
@@ -289,6 +289,11 @@
                 // scale on phones
                 document.getElementById("splash").style.visibility = "hidden";
 
+                document.getElementById("vis").onclick = (function () {
+                    window.location.href = 'https://github.com/e-teoria/Orbiteque';
+                })
+                document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
+                
                 document
                 .querySelector("meta[name=viewport]")
                 .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
@@ -384,6 +389,6 @@
                style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           </g>
         </svg-->
-        <a id="vis" class="exHover" onclick="window.location.href = 'https://github.com/e-teoria/Orbiteque'" href="https://github.com/e-teoria/Orbiteque" style="visibility: hidden; position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
+        <a id="vis" class="exHover"  style="visibility: hidden; position: absolute; bottom: 0; right: 0; border: 0; font-family: Arial, Helvetica, sans-serif;"> &nbsp; visit me on Github &nbsp; <!--img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt=""--></a>
     </body>
 </html>

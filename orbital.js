@@ -50,6 +50,7 @@ function orbital (svgContainer, data) {
     
     function invalidateCache () {
         isCache = false;
+        renderMap = null;
     }
     
     var log2 = [1];

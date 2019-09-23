@@ -2039,7 +2039,7 @@ function orbital (svgContainer, data) {
                     var avgAng = 0;
                     var i = inertIdx - 1
                     var j = i - 1;
-                    var k = 20;
+                    var k = 2;
                     if ((new Date()).getTime() - (inertIdx === 0? inert[inert.length - 1].time: inert[inertIdx - 1].time) < 250) {
                         while (i !== inertIdx && k > 0) {
                             if (i === 0)
@@ -2125,7 +2125,7 @@ function orbital (svgContainer, data) {
                 var avgt = 0;
                 var i = inertIdxPan - 1
                 var j = i - 1;
-                var k = 20;
+                var k = 2;
                 if ((new Date()).getTime() - (inertIdxPan === 0? inertPan[inertPan.length - 1].time: inertPan[inertIdxPan - 1].time) < 250) {
                     while (i !== inertIdxPan && k > 0) {
                         if (i === 0)

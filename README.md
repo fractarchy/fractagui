@@ -1,6 +1,6 @@
 # Orbiteque
 ![](https://e-teoria.github.io/Orbiteque/i1.svg) ![](https://e-teoria.github.io/Orbiteque/i2.svg) ![](https://e-teoria.github.io/Orbiteque/i3.svg)  
-test a prototype on [**https://e-teoria.github.io/Orbiteque/**](https://e-teoria.github.io/Orbiteque/)  
+test a prototype here: [**https://e-teoria.github.io/Orbiteque/**](https://e-teoria.github.io/Orbiteque/)  
 
 ## contents
 - [about the project](#about-the-project)  
@@ -40,7 +40,7 @@ There are several checkpoints in developing *Orbiteque*:
     - [ ] Metatheory formal language implementation and integration
     - [ ] Mothersite web application and interface to it for exchanging gathered knowledge with public
 
-I predict the first release to be fully functional within a period of less then a year. List items from further relases are predicted to be finished within another two years, if the first release (minimum viable product) would attract enough potential users. Also, if enough users apply to the final release, the whole system may advance to be updated by new ideas and extensions that users may find useful.
+I predict the first release to be fully functional within a period of less then a year. List items from further relases are predicted to be finished within another two years, if the first release would attract enough potential users. Also, if enough users apply to the final release, the whole system may advance to be updated by new ideas and extensions that users may find useful.
 
 It is in my personal interest to finish this project because it is consisted of my nearly lifetime efforts in computing research field, and I'm determined to make myself useful to the public. Without potential users, all of my work means nothing to me.
 

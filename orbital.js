@@ -1110,7 +1110,7 @@ function orbital (svgContainer, data) {
                     var cachedData = cursor.cachedData;
                 }
                 
-                if (renderHint === "0" || renderHint === "1") {
+                if (renderHint !== "1" && (renderHint === "0" || renderHint === "1")) {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
                     
                 } else if (level === 1) {// || (level === 1 && panning) || (renderHint === "0") || (cachedCnv.width === w && cachedCnv.height === h)) {

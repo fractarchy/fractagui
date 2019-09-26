@@ -1110,7 +1110,7 @@ function orbital (svgContainer, data) {
                     var cachedData = cursor.cachedData;
                 }
                 
-                if (renderHint !== "1" && (renderHint === "0" || renderHint === "1")) {
+                if (renderHint === "0") {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
                     
                 } else if (level === 1) {// || (level === 1 && panning) || (renderHint === "0") || (cachedCnv.width === w && cachedCnv.height === h)) {
@@ -1707,7 +1707,7 @@ function orbital (svgContainer, data) {
                 }
             }
 
-            if (!animating && select.parent && !isOnParent && mouseDistance < maxR) {
+            if (!animating && dragging && select.parent && !isOnParent && mouseDistance < maxR) {
                 //select.parent.setAngle (ang[1], dr);
                 select.parent.setAngle (ang[1], 0);
                 //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {

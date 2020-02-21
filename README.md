@@ -31,12 +31,12 @@ Personally, I put a lot of hopes in mentioned metatheory formal language as an i
 
 There are several checkpoints in developing *Orbiteque*:
 
-- first release
+- first release  
     - [x] Interactive fractal visual interface composed of ovals orbiting around each other
     - [x] Fish eye effect as a replacement for scrollbars
     - [ ] Oval contents renderer
     - [ ] Text editor
-- further releases
+- further releases  
     - [ ] Metatheory formal language implementation and integration
     - [ ] Mothersite web application and interface to it for exchanging gathered knowledge with public
 

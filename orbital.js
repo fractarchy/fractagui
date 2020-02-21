@@ -1,4 +1,4 @@
-// orbiteque UI
+// orbiteque UI Rotos Ovals Creatia
 
 function orbital (svgContainer, data) {
     "use strict";
@@ -35,10 +35,14 @@ function orbital (svgContainer, data) {
 
     var pixelPrecision = 1 / Math.pow (2, 16);
     var dragPrecision = Math.pow (2, 8);
-    var fill1 = "rgb(255, 255, 150)";//"lightgray";
-    var fill1r = 255;
-    var fill1g = 255;
-    var fill1b = 150;
+    var hilight = "lightgray"
+    var fill1 = "rgb(255, 255, 255)";//"lightgray";
+    //var fill1r = 255;
+    //var fill1g = 255;
+    //var fill1b = 150;
+    var fill1r = 225;
+    var fill1g = 225;
+    var fill1b = 225;
     var stroke1 = "gray";
     var fill2 = stroke1;
     var stroke2 = fill1;
@@ -137,9 +141,10 @@ function orbital (svgContainer, data) {
         cnvim.height = height;
         var ctxim = cnvim.getContext('2d');
          
-        ctxim.fillStyle = "rgb(255, 255, 150)";
+        ctxim.fillStyle = fill1;//"rgb(255, 255, 150)";
         ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
         ctxim.lineWidth = lineWidth;
+        ctxim.strokeStyle = "gray";
         var nlines = nlines;
         var lw = cnvim.width / nlines;
         for (var x = 0; x < nlines; x++) {
@@ -163,7 +168,7 @@ function orbital (svgContainer, data) {
             */
         }
         
-        ctxim.strokeStyle = "rgb(255, 0, 0)";
+        ctxim.strokeStyle = "gray";
         ctxim.beginPath();
         ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
         ctxim.lineTo(cnvim.width, Math.floor(cnvim.height / 2) + 0.5);
@@ -180,7 +185,7 @@ function orbital (svgContainer, data) {
 
         var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
         ctxim.font = "48pt sans serif";
-        ctxim.fillStyle = "rgb(0,0,0)";
+        ctxim.fillStyle = "black";
         ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
         
         return cnvim
@@ -328,13 +333,13 @@ function orbital (svgContainer, data) {
         for (var y = -feHeight; y < feHeight; y++) {
             for (var x = -feWidth; x < feWidth; x++) {
                 var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var rm0 = maxR / (maxR - r0);// / 4;
+                var rm0 = maxR / (maxR - r0) / 1;
 
                 var r1 = r0 - 0.5;
-                var rm1 = maxR / (maxR - r1);// / 4;
+                var rm1 = maxR / (maxR - r1) / 1;
 
                 var r2 = r0 + 0.5;
-                var rm2 = maxR / (maxR - r2);// / 4;
+                var rm2 = maxR / (maxR - r2) / 1;
 
                 var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
 
@@ -1304,7 +1309,7 @@ function orbital (svgContainer, data) {
                         (selectedCursor?cursor === selectedCursor: mouse) &&
                         (mouse?(Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) < r0): true)
                     ) {
-                        colorFill = "white";
+                        colorFill = hilight;
                     } else {
                         colorFill = fill1;
                     }

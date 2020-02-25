@@ -22,6 +22,7 @@ function orbital (svgContainer, data) {
     ctx.webkitImageSmoothingEnabled = true
     ctx.msImageSmoothingEnabled     = true
     ctx.imageSmoothingEnabled       = true
+    var superSampling = 1;
 
 
     //const opts = { desynchronized: true };
@@ -35,7 +36,7 @@ function orbital (svgContainer, data) {
 
     var pixelPrecision = 1 / Math.pow (2, 16);
     var dragPrecision = Math.pow (2, 8);
-    var hilight = "lightgray"
+    var hilight = "white"
     var fill1 = "rgb(255, 255, 255)";//"lightgray";
     //var fill1r = 255;
     //var fill1g = 255;
@@ -160,12 +161,16 @@ function orbital (svgContainer, data) {
             ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
             ctxim.stroke(); 
 
-            /*
-            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-            ctxim.font = "48pt sans serif";
-            ctxim.fillStyle = "rgb(0,0,0)";
-            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
-            */
+            
+            if ((y + 1) % 1 == 0 ) {
+                var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
+                var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+                ctxim.font = "32pt sans serif";
+                ctxim.fillStyle = "rgb(0,0,0)";
+                ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
+            }
+            
+            
         }
         
         ctxim.strokeStyle = "gray";
@@ -184,9 +189,10 @@ function orbital (svgContainer, data) {
         //ctxim.strokeStyle = "rgb(255, 0, 0)";
 
         var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-        ctxim.font = "48pt sans serif";
+        
+        ctxim.font = "24pt sans serif";
         ctxim.fillStyle = "black";
-        ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+        //ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
         
         return cnvim
     }
@@ -323,8 +329,8 @@ function orbital (svgContainer, data) {
     }
 
     function initFishEye(magn) {
-        var feWidth = Math.round(rr * magn);
-        var feHeight = Math.round(rr * magn);
+        var feWidth = Math.round(rr * squashX * magn);
+        var feHeight = Math.round(rr * squashY * magn);
         
 	    var feArray = new Int32Array (feWidth * feHeight * 4 * 4);
 	    
@@ -332,14 +338,10 @@ function orbital (svgContainer, data) {
 
         for (var y = -feHeight; y < feHeight; y++) {
             for (var x = -feWidth; x < feWidth; x++) {
+                var a = Math.atan2(y / squashY, x / squashX);
+                
                 var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var rm0 = maxR / (maxR - r0) / 1;
-
-                var r1 = r0 - 0.5;
-                var rm1 = maxR / (maxR - r1) / 1;
-
-                var r2 = r0 + 0.5;
-                var rm2 = maxR / (maxR - r2) / 1;
+                var rm0 = Math.pow (maxR / (maxR - r0), 0.5) / 2;
 
                 var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
 
@@ -349,29 +351,15 @@ function orbital (svgContainer, data) {
                 } else {
                     if (rm0 < 1) {
                         rm0 = 1;
-                        rm1 = 1;
-                        rm2 = 1;
                     }
 
-                    var a = Math.atan2(y / squashY, x / squashX);
-
                     var newr0 = r0 * rm0;
-                    var newr1 = r1 * rm1;
-                    var newr2 = r2 * rm2;
                     
                     feArray [i]     = Math.round(feWidth + newr0 * Math.cos(a) * squashX);
                     feArray [i + 1] = Math.round(feHeight + newr0 * Math.sin(a) * squashY);
 
-                    
-                    var x0 = newr0 * Math.cos(a) * squashX;
-                    var x1 = newr1 * Math.cos(a) * squashX;
-                    var x2 = newr2 * Math.cos(a) * squashX;
-                    var y0 = newr0 * Math.sin(a) * squashY;
-                    var y1 = newr1 * Math.sin(a) * squashY;
-                    var y2 = newr2 * Math.sin(a) * squashY;
-                    
-                    var dx = (Math.abs (Math.sin(a) * rm0) + Math.abs (x1 - x2) / squashX) / magn;
-                    var dy = (Math.abs (Math.cos(a) * rm0) + Math.abs (y1 - y2) / squashY) / magn;
+                    var dx = squashX * (/*Math.abs (Math.cos(a)) * */ Math.pow (rm0, 2)) / magn;
+                    var dy = squashY * (/*Math.abs (Math.sin(a)) * */ Math.pow (rm0, 2)) / magn;
                     
                     if (dx < squashX) dx = squashX;
                     if (dy < squashY) dy = squashY;
@@ -385,6 +373,7 @@ function orbital (svgContainer, data) {
         
         return {width: feWidth, height: feHeight, array: feArray};
     }
+
 /*
     function renderFishEye (fishEye, data, width, height, magn, centerX, centerY) {
         //if (width % 2 === 0) width++;
@@ -733,12 +722,16 @@ function orbital (svgContainer, data) {
                     
                     // X
                     var tmpX = Math.floor (1 / mX / magn);
+                        
                     if (tmpX >= log2.length) {
                         var bmpscaleX = log2[log2.length - 1];
                     } else {
                         var bmpscaleX = log2[tmpX] + 1;
                     }
                     
+                    if (bmpscaleX < 1)
+                        bmpscaleX = 1;
+                        
                     if (bmpscaleX > cnvScaled.images.length - 1)
                         bmpscaleX = cnvScaled.images.length - 1;
                         
@@ -758,6 +751,9 @@ function orbital (svgContainer, data) {
                         var bmpscaleY = log2[tmpY] + 1;
                     }
                     
+                    if (bmpscaleY < 1)
+                        bmpscaleY = 1;
+                        
                     if (bmpscaleY > cnvScaled.images.length - 1)
                         bmpscaleY = cnvScaled.images.length - 1;
                         
@@ -778,6 +774,9 @@ function orbital (svgContainer, data) {
     function renderFishEye (fishEye, data, width, height, magn, centerX, centerY) {
         if (!renderMap)
             renderMap = prepareFishEyeMap (fishEye, width, height, magn, 0, 0);
+
+        var ddx = Math.floor(cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
+        var ddy = Math.floor(cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
         /*
         var mdx = Math.floor((fishEye.width - width / 2) / magn);
         var mdy = Math.floor((fishEye.height - height / 2) / magn);
@@ -803,24 +802,28 @@ function orbital (svgContainer, data) {
             
             var d1x = renderMap[delta + DbmpscalefactorX];
             var finalX = Math.floor ((renderMap[delta + DX] + centerX) / d1x);
+            
             var finalX1 = Math.floor ((renderMap[delta + DX - 8] + centerX) / d1x);
             var finalX2 = Math.floor ((renderMap[delta + DX + 8] + centerX) / d1x);
             
             if (finalX === finalX1 || finalX === finalX2) {
                 finalX = Math.floor ((renderMap[delta + DX] + centerX) / (d1x >> 1));
                 var bmpscaleX = renderMap[delta + DbmpscaleX] - 1;
+
+                if (bmpscaleX > cnvScaled.images.length - 1)
+                    bmpscaleX = cnvScaled.images.length - 1;
+                    
+                if (bmpscaleX < 0)
+                    bmpscaleX = 0;
+                    
             } else {
+            
                 var bmpscaleX = renderMap[delta + DbmpscaleX];
             }
-            
-            if (bmpscaleX > cnvScaled.images.length - 1)
-                bmpscaleX = cnvScaled.images.length - 1;
-                
-            if (bmpscaleX < 0)
-                bmpscaleX = 0;
-                
+
             var d1y = renderMap[delta + DbmpscalefactorY];
             var finalY = Math.floor ((renderMap[delta + DY] + centerY) / d1y);
+            
             var finalY1 = Math.floor ((renderMap[delta + DY - width * 8] + centerY) / d1y);
             var finalY2 = Math.floor ((renderMap[delta + DY + width * 8] + centerY) / d1y);
 
@@ -828,15 +831,16 @@ function orbital (svgContainer, data) {
                 finalY = Math.floor ((renderMap[delta + DY] + centerY) / (d1y >> 1));
                 var bmpscaleY = renderMap[delta + DbmpscaleY] - 1;
                     
+                if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
+                    bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
+                    
+                if (bmpscaleY < 0)
+                    bmpscaleY = 0;
+
             } else {
+            
                 var bmpscaleY = renderMap[delta + DbmpscaleY];
             }
-              
-            if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
-                bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
-                
-            if (bmpscaleY < 0)
-                bmpscaleY = 0;
 
             var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
             var scaledData = scaled.imageData.data;
@@ -1003,6 +1007,7 @@ function orbital (svgContainer, data) {
     }
     
     function drawCircle (x, y, r, fill, stroke, cursor, renderHint, level) {
+
         if (r * squashX > 0.5 && r * squashY > 0.5) {
             
             ctx.beginPath();
@@ -1046,8 +1051,8 @@ function orbital (svgContainer, data) {
 
                 if (!isCache) {
                     cnvCache = document.createElement ("canvas");
-                    var cacheW = Math.floor (2 * rr * ratio * squashX);
-                    var cacheH = Math.floor (2 * rr * ratio * squashY);
+                    var cacheW = Math.floor (2 * rr * ratio * squashX * superSampling);
+                    var cacheH = Math.floor (2 * rr * ratio * squashY * superSampling);
                     cnvCache.width = cacheW;
                     cnvCache.height = cacheH;
                     var ctxCache = cnvCache.getContext('2d');
@@ -1067,8 +1072,8 @@ function orbital (svgContainer, data) {
                     
                 } else if (level === 1 && panning) {
                     var cnvCache1 = document.createElement ("canvas");
-                    var cacheW1 = Math.floor (2 * rr * ratio * squashX);
-                    var cacheH1 = Math.floor (2 * rr * ratio * squashY);
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * superSampling);
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * superSampling);
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
@@ -1094,8 +1099,8 @@ function orbital (svgContainer, data) {
 
                 } else if (!cursor.cachedCnv || !cursor.cachedData) {
                     var cnvCache1 = document.createElement ("canvas");
-                    var cacheW1 = Math.floor (2 * rr * ratio * squashX);
-                    var cacheH1 = Math.floor (2 * rr * ratio * squashY);
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * superSampling);
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * superSampling);
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
@@ -1113,13 +1118,16 @@ function orbital (svgContainer, data) {
                 } else {
                     var cachedCnv = cursor.cachedCnv;
                     var cachedData = cursor.cachedData;
+
                 }
                 
                 if (renderHint === "0") {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
                     
                 } else if (level === 1) {// || (level === 1 && panning) || (renderHint === "0") || (cachedCnv.width === w && cachedCnv.height === h)) {
-                    ctx.drawImage(cachedCnv, xo, yo);
+                    w = cachedCnv.width / superSampling;
+                    h = cachedCnv.height / superSampling;
+                    ctx.drawImage(cachedCnv, xo, yo, w, h);
                     
                 } else if (true || (animating || dragging)) {
                     /*
@@ -1136,11 +1144,11 @@ function orbital (svgContainer, data) {
                     */
                     
                     //brzo                    
-                    var tmp = Math.floor (1 / magn);
+                    var tmp = Math.floor (1 / magn * superSampling);
                     if (tmp >= log2.length) {
                         var bmpscale = log2[log2.length - 1];
                     } else {
-                        var bmpscale = log2[tmp];
+                        var bmpscale = log2[tmp]
                     }
                     
                     //if (level === 1) bmpscale--;
@@ -1176,7 +1184,7 @@ function orbital (svgContainer, data) {
                     downsample(imData, cachedData, w, h, magn);
                     
                     ctxIm.putImageData(imData, 0, 0);
-                    ctx.drawImage(cnvIm, xo, yo);
+                    ctx.drawImage(cnvIm, xo, yo, w, h);
                 }
             }
         }
@@ -1846,12 +1854,12 @@ function orbital (svgContainer, data) {
                                     if (atCur) {
                                         if (dragging) {
                                             setupSelect (atCur.child)
-                                            redraw (null, "0", select.cursor);
+                                            redraw (null, "1", select.cursor);
                                             window.requestAnimationFrame(function () {
                                                 mousemove (lastMouseEvent);
                                             });
                                         } else {
-                                            redraw ({x: mouse.x, y: mouse.y}, "0");
+                                            redraw ({x: mouse.x, y: mouse.y}, "1");
                                             window.requestAnimationFrame(function () {
                                                 mouseup (lastMouseEvent);
                                             });
@@ -1859,7 +1867,7 @@ function orbital (svgContainer, data) {
                                         //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                     } else {
-                                        redraw ({x: mouse.x, y: mouse.y}, "0");
+                                        redraw ({x: mouse.x, y: mouse.y}, "1");
                                         window.requestAnimationFrame(function () {
                                             mouseup (lastMouseEvent);
                                         });
@@ -1947,12 +1955,12 @@ function orbital (svgContainer, data) {
                                         if (atCur) {
                                             if (dragging) {
                                                 setupSelect (atCur);
-                                                redraw (null, "0", select.cursor);
+                                                redraw (null, "1", select.cursor);
                                                 window.requestAnimationFrame(function () {
                                                     mousemove (lastMouseEvent);
                                                 });
                                             } else {
-                                                redraw ({x: mouse.x, y: mouse.y}, "0");
+                                                redraw ({x: mouse.x, y: mouse.y}, "1");
                                                 window.requestAnimationFrame(function () {
                                                     mouseup (lastMouseEvent);
                                                 });
@@ -1960,7 +1968,7 @@ function orbital (svgContainer, data) {
                                             //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                         } else {
-                                            redraw ({x: mouse.x, y: mouse.y}, "0");
+                                            redraw ({x: mouse.x, y: mouse.y}, "1");
                                             window.requestAnimationFrame(function () {
                                                 mouseup (lastMouseEvent);
                                             });
@@ -2289,7 +2297,7 @@ function orbital (svgContainer, data) {
     function resize(width, height) {
         setDimensions (width, height);
     
-        fishEye = initFishEye (1);
+        fishEye = initFishEye (superSampling);
         
         function rec1 (c) {
             if (c.cachedCnv) {

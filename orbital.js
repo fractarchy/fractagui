@@ -138,7 +138,7 @@ function orbital (svgContainer, data) {
 */
 
     function generateGrid (width, height, nlines, lineWidth) {
-        nlines = 72;
+        nlines = 73;
         var cnvim = document.createElement ("canvas");
         cnvim.width = width;
         cnvim.height = height;
@@ -158,12 +158,20 @@ function orbital (svgContainer, data) {
             ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
             ctxim.stroke(); 
         }
-        for (var y = 0; y < nlines; y++) {
+        */
+        /*
+        for (var y = 0; y < nlines; y+=4) {
             ctxim.beginPath();
             ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
             ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
             ctxim.stroke(); 
-
+        }
+        */
+        for (var y = 0; y < nlines; y+=4) {
+            if ((y / 4) % 2 == 0 ) {
+                ctxim.fillStyle = "rgb(230,230,230)";
+                ctxim.fillRect(0.5, Math.floor(y * lh) + 12, cnvim.width - 0.5, lh * 4);
+            }
             /*            
             if ((y + 1) % 1 == 0 ) {
                 var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
@@ -174,17 +182,16 @@ function orbital (svgContainer, data) {
             }
             */
             
-        //}
+        }
         
         for (var y = 1; y < nlines; y++) {
                 var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-                //ctxim.font = "18pt monospace";
                 ctxim.font = "18pt sans";
-                //ctxim.font = "18pt serif";
                 ctxim.fillStyle = "rgb(0,0,0)";
                 ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
         }
 
+        /*
         ctxim.strokeStyle = "black";
         ctxim.beginPath();
         ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
@@ -194,8 +201,9 @@ function orbital (svgContainer, data) {
         ctxim.moveTo(Math.floor(cnvim.width / 2) + 0.5, 0);
         ctxim.lineTo(Math.floor(cnvim.width / 2) + 0.5, cnvim.height);
         ctxim.stroke(); 
-        
-        ctxim.lineWidth = lineWidth * 1;
+        */
+        ctxim.strokeStyle = "rgb(230,230,230)";
+        ctxim.lineWidth = lineWidth * 50;
         ctxim.strokeRect(0.5, 0.5, cnvim.width - 0.5, cnvim.height - 0.5);
         
         //ctxim.strokeStyle = "rgb(255, 0, 0)";
@@ -2585,7 +2593,7 @@ function orbital (svgContainer, data) {
     var cnvScaled = crispBitmapXY(cnvim2);
     */
     
-    var cnvScaled = crispBitmapXY(generateGrid (3000, 3000, 50, 1));
+    var cnvScaled = crispBitmapXY(generateGrid (800, 3000, 50, 1));
 
     //initFishEye();
     //var img = new Image();

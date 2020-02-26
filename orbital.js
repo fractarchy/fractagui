@@ -23,6 +23,7 @@ function orbital (svgContainer, data) {
     ctx.msImageSmoothingEnabled     = true
     ctx.imageSmoothingEnabled       = true
     var superSampling = 1;
+    var flatRatio = 1;
 
 
     //const opts = { desynchronized: true };
@@ -137,43 +138,54 @@ function orbital (svgContainer, data) {
 */
 
     function generateGrid (width, height, nlines, lineWidth) {
+        nlines = 72;
         var cnvim = document.createElement ("canvas");
         cnvim.width = width;
         cnvim.height = height;
         var ctxim = cnvim.getContext('2d');
-         
+        
         ctxim.fillStyle = fill1;//"rgb(255, 255, 150)";
         ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
         ctxim.lineWidth = lineWidth;
         ctxim.strokeStyle = "gray";
         var nlines = nlines;
         var lw = cnvim.width / nlines;
+        var lh = cnvim.height / nlines;
+        /*
         for (var x = 0; x < nlines; x++) {
             ctxim.beginPath();
             ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
             ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
             ctxim.stroke(); 
         }
-        var lh = cnvim.height / nlines;
         for (var y = 0; y < nlines; y++) {
             ctxim.beginPath();
             ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
             ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
             ctxim.stroke(); 
 
-            
+            /*            
             if ((y + 1) % 1 == 0 ) {
                 var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
                 var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-                ctxim.font = "32pt sans serif";
+                ctxim.font = "14pt sans serif";
                 ctxim.fillStyle = "rgb(0,0,0)";
                 ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
             }
+            */
             
-            
-        }
+        //}
         
-        ctxim.strokeStyle = "gray";
+        for (var y = 1; y < nlines; y++) {
+                var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+                //ctxim.font = "18pt monospace";
+                ctxim.font = "18pt sans";
+                //ctxim.font = "18pt serif";
+                ctxim.fillStyle = "rgb(0,0,0)";
+                ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
+        }
+
+        ctxim.strokeStyle = "black";
         ctxim.beginPath();
         ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
         ctxim.lineTo(cnvim.width, Math.floor(cnvim.height / 2) + 0.5);
@@ -327,7 +339,71 @@ function orbital (svgContainer, data) {
         
         return cnvScaled;
     }
+/*
+    function initFishEye(magn) {
+        var feWidth = Math.round(rr * magn);
+        var feHeight = Math.round(rr * magn);
+        
+	    var feArray = new Int32Array (feWidth * feHeight * 4 * 4);
+	    
+	    var maxR = rr * ratio;
 
+        for (var y = -feHeight; y < feHeight; y++) {
+            for (var x = -feWidth; x < feWidth; x++) {
+                var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
+                var rm0 = maxR / (maxR - r0) / 1;
+
+                var r1 = r0 - 0.5;
+                var rm1 = maxR / (maxR - r1) / 1;
+
+                var r2 = r0 + 0.5;
+                var rm2 = maxR / (maxR - r2) / 1;
+
+                var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
+
+                if (r0 >= maxR) {
+                    feArray [i + 2] = 0;
+                    feArray [i + 3] = 0;
+                } else {
+                    if (rm0 < 1) {
+                        rm0 = 1;
+                        rm1 = 1;
+                        rm2 = 1;
+                    }
+
+                    var a = Math.atan2(y / squashY, x / squashX);
+
+                    var newr0 = r0 * rm0;
+                    var newr1 = r1 * rm1;
+                    var newr2 = r2 * rm2;
+                    
+                    feArray [i]     = Math.round(feWidth + newr0 * Math.cos(a) * squashX);
+                    feArray [i + 1] = Math.round(feHeight + newr0 * Math.sin(a) * squashY);
+
+                    
+                    var x0 = newr0 * Math.cos(a) * squashX;
+                    var x1 = newr1 * Math.cos(a) * squashX;
+                    var x2 = newr2 * Math.cos(a) * squashX;
+                    var y0 = newr0 * Math.sin(a) * squashY;
+                    var y1 = newr1 * Math.sin(a) * squashY;
+                    var y2 = newr2 * Math.sin(a) * squashY;
+                    
+                    var dx = (Math.abs (Math.sin(a) * rm0) + Math.abs (x1 - x2) / squashX) / magn;
+                    var dy = (Math.abs (Math.cos(a) * rm0) + Math.abs (y1 - y2) / squashY) / magn;
+                    
+                    if (dx < squashX) dx = squashX;
+                    if (dy < squashY) dy = squashY;
+
+                    feArray [i + 2] = MAX_INT32 / dx;
+                    feArray [i + 3] = MAX_INT32 / dy;
+                    
+                }
+            }
+        }
+        
+        return {width: feWidth, height: feHeight, array: feArray};
+    }
+*/
     function initFishEye(magn) {
         var feWidth = Math.round(rr * squashX * magn);
         var feHeight = Math.round(rr * squashY * magn);
@@ -341,7 +417,13 @@ function orbital (svgContainer, data) {
                 var a = Math.atan2(y / squashY, x / squashX);
                 
                 var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var rm0 = Math.pow (maxR / (maxR - r0), 0.5) / 2;
+                var rm0 = Math.pow (maxR / (maxR - r0) / flatRatio, 0.5);
+
+                var r1 = r0 - Math.sqrt (1) / 2;
+                var rm1 = Math.pow (maxR / (maxR - r1) / flatRatio, 0.5);
+
+                var r2 = r0 + Math.sqrt (1) / 2;
+                var rm2 = Math.pow (maxR / (maxR - r2) / flatRatio, 0.5);
 
                 var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
 
@@ -351,18 +433,26 @@ function orbital (svgContainer, data) {
                 } else {
                     if (rm0 < 1) {
                         rm0 = 1;
+                        rm1 = 1;
+                        rm2 = 1;
                     }
 
                     var newr0 = r0 * rm0;
+                    var newr1 = r1 * rm1;
+                    var newr2 = r2 * rm2;
                     
                     feArray [i]     = Math.round(feWidth + newr0 * Math.cos(a) * squashX);
                     feArray [i + 1] = Math.round(feHeight + newr0 * Math.sin(a) * squashY);
 
-                    var dx = squashX * (/*Math.abs (Math.cos(a)) * */ Math.pow (rm0, 2)) / magn;
-                    var dy = squashY * (/*Math.abs (Math.sin(a)) * */ Math.pow (rm0, 2)) / magn;
+                    //var dx = squashX * (Math.abs (Math.cos(a)) * Math.pow (rm0, 2)) / magn;
+                    //var dy = squashY * (Math.abs (Math.sin(a)) * Math.pow (rm0, 2)) / magn;
+                    var dx = (Math.abs (Math.cos(a)) * (newr2 - newr1)) / magn;
+                    var dy = (Math.abs (Math.sin(a)) * (newr2 - newr1)) / magn;
                     
-                    if (dx < squashX) dx = squashX;
-                    if (dy < squashY) dy = squashY;
+                    //if (dx < squashX) dx = squashX;
+                    //if (dy < squashY) dy = squashY;
+                    if (dx < 1) dx = 1;
+                    if (dy < 1) dy = 1;
 
                     feArray [i + 2] = MAX_INT32 / dx;
                     feArray [i + 3] = MAX_INT32 / dy;
@@ -1620,8 +1710,8 @@ function orbital (svgContainer, data) {
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
             
             if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0)) + fishEye.width + (dragX - x0)) * 4;
-                var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0)) + fishEye.width + (x - x0)) * 4;
+                var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0) * superSampling) + fishEye.width + (dragX - x0) * superSampling) * 4;
+                var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0) * superSampling) + fishEye.width + (x - x0) * superSampling) * 4;
                 
                 setCenter (select, oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1], oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1]);
                 select.cursor.cachedCnv = false;

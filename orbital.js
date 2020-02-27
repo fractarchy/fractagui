@@ -170,7 +170,7 @@ function orbital (svgContainer, data) {
 
             var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
             
-            ctxim.font = "18pt sans serif";
+            ctxim.font = "18pt sans";
             ctxim.fillStyle = "black";
             ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
         

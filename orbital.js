@@ -142,10 +142,10 @@ Crisp = (function () {
     }
 }) ();
 
-function FishEye (squashX, squashY, rr, ratio) {
-    var curvature = -0.25;
+function FishEye (squashX, squashY, rr, ratio, superSampling) {
+    var curvature = 0.25;
     var curvatureFrontier = Math.pow (1, curvature);
-    var superSampling = 1;
+    //var superSampling = 1;
 
     var fishEye;
     //var ratio = 1 / 1.61803398875; //0.7;//575;
@@ -927,15 +927,18 @@ function Orbital (svgContainer, data) {
                     */
                     
                     //brzo                    
-                    var tmp = Math.floor (1 / magn * fishEye.superSampling);
+                    var tmp = Math.ceil (cachedCnv.width / w);
                     if (tmp >= log2.length) {
                         var bmpscale = log2[log2.length - 1];
                     } else {
-                        var bmpscale = log2[tmp];
+                        var bmpscale = log2[tmp] - 1;//(fishEye.superSampling - 1);
                     }
                     
                     //if (level === 1) bmpscale--;
                     
+                    if (bmpscale < 0) 
+                        bmpscale = 0;
+                        
                     if (bmpscale > cache.images.length - 1) 
                         bmpscale = cache.images.length - 1;
 
@@ -2086,7 +2089,7 @@ function Orbital (svgContainer, data) {
     function resize(width, height) {
         setDimensions (width, height);
     
-        fishEye = FishEye (squashX, squashY, rr, ratio);
+        fishEye = FishEye (squashX, squashY, rr, ratio, superSampling);
 
         function rec1 (c) {
             if (c.cachedCnv) {

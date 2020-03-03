@@ -1,219 +1,8 @@
 // orbiteque UI Rotos Ovals Creatia
 
-function orbital (svgContainer, data) {
-    "use strict";
-
-    var svgns = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS (svgns, "svg");
-    svg.style.display = "block";
-    svg.style.height = 0;
-    svgContainer.appendChild (svg);
-    svg.draggable = false;
-    svg.ondragstart = function () {return false};
-
-    var cnv = document.createElement ("canvas");
-    cnv.style.display = "block";
-    svgContainer.appendChild (cnv);
-    cnv.draggable = false;
-    cnv.ondragstart = function () {return false};
-    var ctx = cnv.getContext('2d');
-    ctx.mozImageSmoothingEnabled    = true
-    ctx.imageSmoothingQuality       = "high"
-    ctx.webkitImageSmoothingEnabled = true
-    ctx.msImageSmoothingEnabled     = true
-    ctx.imageSmoothingEnabled       = true
-    var superSampling = 1;
-    var flatRatio = 1;
-
-
-    //const opts = { desynchronized: true };
-    //const ctx = canvas.getContext('2d', opts);
-
-    var ratio = 1 / 1.61803398875; //0.7;//575;
-    //var minRadius = Length.toPx(svg, "1mm");
-
-    var minRadius;
-    var recCount = 4;
-
-    var pixelPrecision = 1 / Math.pow (2, 16);
-    var dragPrecision = Math.pow (2, 8);
-    var hilight = "white"
-    var fill1 = "rgb(255, 255, 255)";//"lightgray";
-    //var fill1r = 255;
-    //var fill1g = 255;
-    //var fill1b = 150;
-    var fill1r = 225;
-    var fill1g = 225;
-    var fill1b = 225;
-    var stroke1 = "gray";
-    var fill2 = stroke1;
-    var stroke2 = fill1;
-
-    var MAX_INT32 = Math.pow (2, 31) - 1;// 4294967296 / 2 - 1;
-
-    var cnvCache;
-    var cache, isCache;
-    
-    function invalidateCache () {
-        isCache = false;
-        renderMap = null;
-    }
-    
-    var log2 = [1];
-    for (var i = 1; i < 65535; i++) {
-        log2.push (Math.floor (Math.log2(i)));
-    }
-    
-    function ellipse(ctx, x, y, xDis, yDis) {
-        var kappa = 0.5522848, // 4 * ((√(2) - 1) / 3)
-            ox = xDis * kappa,  // control point offset horizontal
-            oy = yDis * kappa,  // control point offset vertical
-            xe = x + xDis,      // x-end
-            ye = y + yDis;      // y-end
-
-        ctx.moveTo(x - xDis, y);
-        ctx.bezierCurveTo(x - xDis, y - oy, x - ox, y - yDis, x, y - yDis);
-        ctx.bezierCurveTo(x + ox, y - yDis, xe, y - oy, xe, y);
-        ctx.bezierCurveTo(xe, y + oy, x + ox, ye, x, ye);
-        ctx.bezierCurveTo(x - ox, ye, x - xDis, y + oy, x - xDis, y);
-    }
-
-/*
-	function InitFishEye(stdlib, foreign, heap) {
-	    'use asm';
-
-	    var arr = new stdlib.UInt32Array(heap);
-	    var width = 0;
-	    var height = 0;
-	    var centerX = 0;
-	    var centerY = 0;
-	    var maxR = 250.0;
-
-	    centerX = 250;
-	    centerY = ~~floor((centerX * 1.0 / 1.61803398875));
-	    width = centerX * 2;
-	    height = centerY * 2;
-
-
-	    function init() {
-	        var x = 0;
-	        var y = 0;
-	        
-	        for (y = centerY; (y|0) > 0; y = (y - 1)|0) {
-	            for (x = centerX; (x|0) > 0; x = (x - 1)|0) {
-                    var r = 0.0;
-                    var a = 0.0;
-                    
-                    r = Math.sqrt (+((x * x + y * y)|0));
-                    a = Math.atan2(+((y - centerY)|0), +((x - centeX)|0));
-                    
-	                arr [((y * centerY) + x * 2)|0] = ~~floor( r * (maxR / (maxR - r)) * cos(a) )
-	                arr [((y * centerY) + x * 2 + 1)|0] = ~~floor( r * (maxR / (maxR - r)) * sin(a) )
-	            }
-	        }
-	    }
-
-	    return {
-		    init: init
-	    };
-	}
-	
-	var a32 = new Uint32Array (250 * 250 * 2);
-	var fe = InitFishEye ({Math:Math,Uint32Array:Uint32Array}, {}, a32.buffer)
-	
-	function FishEye(stdlib, foreign, heap) {
-	    'use asm';
-	    
-		var externfunc = foreign.externFunc;
-	    var arr = new stdlib.UInt8Array(heap);
-
-	    function exec() {
-		    arr[0] = 1;
-	    }
-
-	    return {
-		    init: init
-	    };
-	}
-*/
-
-    function generateGrid (mode, width, height, nlines, lineWidth) {
-        nlines = 4 * 16 + 1;
-        var cnvim = document.createElement ("canvas");
-        cnvim.width = width;
-        cnvim.height = height;
-        var ctxim = cnvim.getContext('2d');
-        
-        ctxim.fillStyle = fill1;//"rgb(255, 255, 150)";
-        ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
-        ctxim.lineWidth = lineWidth;
-        ctxim.strokeStyle = "gray";
-        var nlines = nlines;
-        var lw = cnvim.width / nlines;
-        var lh = cnvim.height / nlines;
-
-        if (mode === "grid") {
-            for (var x = 0; x < nlines; x++) {
-                ctxim.beginPath();
-                ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
-                ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
-                ctxim.stroke(); 
-            }
-            
-            
-            for (var y = 0; y < nlines; y++) {
-                ctxim.beginPath();
-                ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
-                ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
-                ctxim.stroke(); 
-            }
-
-            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-            
-            ctxim.font = "18pt sans";
-            ctxim.fillStyle = "black";
-            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
-        
-        } else if (mode !== "grid") {
-            for (var y = 0; y < nlines - 1; y+=4) {
-                if ((y / 4) % 2 == 0 ) {
-                    ctxim.fillStyle = "rgb(230,230,230)";
-                    ctxim.fillRect(0.5, Math.floor(y * lh) + 11, cnvim.width - 0.5, lh * 4);
-                }
-            }
-
-            for (var y = 1; y < nlines; y++) {
-                    //var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
-                    var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-                    ctxim.font = "18pt sans";
-                    ctxim.fillStyle = "rgb(0,0,0)";
-                    ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
-            }
-        }
-
-        /*
-        ctxim.strokeStyle = "black";
-        ctxim.beginPath();
-        ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
-        ctxim.lineTo(cnvim.width, Math.floor(cnvim.height / 2) + 0.5);
-        ctxim.stroke(); 
-        ctxim.beginPath();
-        ctxim.moveTo(Math.floor(cnvim.width / 2) + 0.5, 0);
-        ctxim.lineTo(Math.floor(cnvim.width / 2) + 0.5, cnvim.height);
-        ctxim.stroke(); 
-        */
-        /*
-        ctxim.strokeStyle = "rgb(230,230,230)";
-        ctxim.lineWidth = lineWidth * 50;
-        ctxim.strokeRect(0.5, 0.5, cnvim.width - 0.5, cnvim.height - 0.5);
-        */
-        //ctxim.strokeStyle = "rgb(255, 0, 0)";
-
-        
-        return cnvim
-    }
-
+Crisp = (function () {
     function crispBitmap (cnvim) {
+        "use strict";
         var ctxim = cnvim.getContext('2d');
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
         //var dataim = imgim.data;
@@ -242,6 +31,7 @@ function orbital (svgContainer, data) {
     }
 
     function crispX (imageData1, width1, height1, step) {
+        "use strict";
         var data1 = imageData1.data;
         var cnv1 = document.createElement ("canvas")
         cnv1.width = Math.ceil (width1 / step);
@@ -276,6 +66,7 @@ function orbital (svgContainer, data) {
     }
     
     function crispY (imageData1, width1, height1, step) {
+        "use strict";
         var data1 = imageData1.data;
         var cnv1 = document.createElement ("canvas")
         cnv1.width = width1;
@@ -311,165 +102,65 @@ function orbital (svgContainer, data) {
     }
 
     function crispBitmapXY (cnvim) {
+        "use strict";
         var ctxim = cnvim.getContext('2d');
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
         
-        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: 2, images: []};
+        var cnvScaled1 = {width: cnvim.width, height: cnvim.height, step: 2, images: []};
         
         var iWidth = cnvim.width;
         var iHeight = cnvim.height;
 
         var dataW = {im: imageDataim, cnv: cnvim};
-        cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
-        var x = cnvScaled.images.length - 1;
+        cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
+        var x = cnvScaled1.images.length - 1;
         
         while (true) {
             var dataH = dataW;
-            while (iHeight / cnvScaled.step > 1) {
+            while (iHeight / cnvScaled1.step > 1) {
                 dataH = crispY (dataH.im, iWidth, iHeight, 2);
                 iHeight = Math.ceil (iHeight / 2);
-                cnvScaled.images[x].push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
+                cnvScaled1.images[x].push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
             }
             
             iHeight = cnvim.height;
-            if (iWidth / cnvScaled.step > 1) {
+            if (iWidth / cnvScaled1.step > 1) {
                 dataW = crispX (dataW.im, iWidth, iHeight, 2);
                 iWidth = Math.ceil (iWidth / 2);
-                cnvScaled.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
-                x = cnvScaled.images.length - 1;
+                cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
+                x = cnvScaled1.images.length - 1;
             } else
                 break;
         }
         
-        return cnvScaled;
+        return cnvScaled1;
     }
-/*
-    function initFishEye(magn) {
-        var feWidth = Math.round(rr * magn);
-        var feHeight = Math.round(rr * magn);
-        
-	    var feArray = new Int32Array (feWidth * feHeight * 4 * 4);
-	    
-	    var maxR = rr * ratio;
 
-        for (var y = -feHeight; y < feHeight; y++) {
-            for (var x = -feWidth; x < feWidth; x++) {
-                var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var rm0 = maxR / (maxR - r0) / 1;
-
-                var r1 = r0 - 0.5;
-                var rm1 = maxR / (maxR - r1) / 1;
-
-                var r2 = r0 + 0.5;
-                var rm2 = maxR / (maxR - r2) / 1;
-
-                var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
-
-                if (r0 >= maxR) {
-                    feArray [i + 2] = 0;
-                    feArray [i + 3] = 0;
-                } else {
-                    if (rm0 < 1) {
-                        rm0 = 1;
-                        rm1 = 1;
-                        rm2 = 1;
-                    }
-
-                    var a = Math.atan2(y / squashY, x / squashX);
-
-                    var newr0 = r0 * rm0;
-                    var newr1 = r1 * rm1;
-                    var newr2 = r2 * rm2;
-                    
-                    feArray [i]     = Math.round(feWidth + newr0 * Math.cos(a) * squashX);
-                    feArray [i + 1] = Math.round(feHeight + newr0 * Math.sin(a) * squashY);
-
-                    
-                    var x0 = newr0 * Math.cos(a) * squashX;
-                    var x1 = newr1 * Math.cos(a) * squashX;
-                    var x2 = newr2 * Math.cos(a) * squashX;
-                    var y0 = newr0 * Math.sin(a) * squashY;
-                    var y1 = newr1 * Math.sin(a) * squashY;
-                    var y2 = newr2 * Math.sin(a) * squashY;
-                    
-                    var dx = (Math.abs (Math.sin(a) * rm0) + Math.abs (x1 - x2) / squashX) / magn;
-                    var dy = (Math.abs (Math.cos(a) * rm0) + Math.abs (y1 - y2) / squashY) / magn;
-                    
-                    if (dx < squashX) dx = squashX;
-                    if (dy < squashY) dy = squashY;
-
-                    feArray [i + 2] = MAX_INT32 / dx;
-                    feArray [i + 3] = MAX_INT32 / dy;
-                    
-                }
-            }
-        }
-        
-        return {width: feWidth, height: feHeight, array: feArray};
+    return {
+        crispBitmap: crispBitmap,
+        crispBitmapXY: crispBitmapXY
     }
-*/
-/*
-    function initFishEye(magn) {
-        var feWidth = Math.round(rr * squashX * magn);
-        var feHeight = Math.round(rr * squashY * magn);
-        
-	    var feArray = new Int32Array (feWidth * feHeight * 4 * 4);
-	    
-	    var maxR = rr * ratio;
+}) ();
 
-        for (var y = -feHeight; y < feHeight; y++) {
-            for (var x = -feWidth; x < feWidth; x++) {
-                var a = Math.atan2(y / squashY, x / squashX);
-                
-                var r0 = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var rm0 = Math.pow (maxR / (maxR - r0) / flatRatio, 0.5);
+function FishEye (squashX, squashY, rr, ratio) {
+    var curvature = -0.25;
+    var curvatureFrontier = Math.pow (1, curvature);
+    var superSampling = 1;
 
-                var r1 = r0 - Math.sqrt (1) / 2;
-                var rm1 = Math.pow (maxR / (maxR - r1) / flatRatio, 0.5);
+    var fishEye;
+    //var ratio = 1 / 1.61803398875; //0.7;//575;
 
-                var r2 = r0 + Math.sqrt (1) / 2;
-                var rm2 = Math.pow (maxR / (maxR - r2) / flatRatio, 0.5);
+    //var cnvScaled;
+    var renderMap;
+    var tmpRenderMap;
 
-                var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
-
-                if (r0 >= maxR) {
-                    feArray [i + 2] = 0;
-                    feArray [i + 3] = 0;
-                } else {
-                    if (rm0 < 1) {
-                        rm0 = 1;
-                        rm1 = 1;
-                        rm2 = 1;
-                    }
-
-                    var newr0 = r0 * rm0;
-                    var newr1 = r1 * rm1;
-                    var newr2 = r2 * rm2;
-                    
-                    feArray [i]     = Math.round(feWidth + newr0 * Math.cos(a) * squashX);
-                    feArray [i + 1] = Math.round(feHeight + newr0 * Math.sin(a) * squashY);
-
-                    //var dx = squashX * (Math.abs (Math.cos(a)) * Math.pow (rm0, 2)) / magn;
-                    //var dy = squashY * (Math.abs (Math.sin(a)) * Math.pow (rm0, 2)) / magn;
-                    var dx = (Math.abs (Math.cos(a)) * (newr2 - newr1)) / magn;
-                    var dy = (Math.abs (Math.sin(a)) * (newr2 - newr1)) / magn;
-                    
-                    //if (dx < squashX) dx = squashX;
-                    //if (dy < squashY) dy = squashY;
-                    if (dx < 1) dx = 1;
-                    if (dy < 1) dy = 1;
-
-                    feArray [i + 2] = MAX_INT32 / dx;
-                    feArray [i + 3] = MAX_INT32 / dy;
-                    
-                }
-            }
-        }
-        
-        return {width: feWidth, height: feHeight, array: feArray};
+    var log2 = [1];
+    for (var i = 1; i < 65535; i++) {
+        log2.push (Math.ceil (Math.log2(i)));
     }
-*/
+
     function initFishEye(magn) {
+        "use strict";
         var feWidth = Math.round(rr * squashX * magn);
         var feHeight = Math.round(rr * squashY * magn);
         
@@ -482,45 +173,7 @@ function orbital (svgContainer, data) {
                 var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
 
                 var a = Math.atan2(y / squashY, x / squashX);
-                /*
-                if (x < 0 && y < 0) {
-                    var xh = x + 1;
-                    var yh = y;
-                    var xv = x;
-                    var yv = y + 1;
-                    
-                    var x0 = x + 1;
-                    var y0 = y + 1;
-
-                } else if (x >= 0 && y < 0) {
-                    var xh = x - 1;
-                    var yh = y;
-                    var xv = x;
-                    var yv = y + 1;
-                    
-                    var x0 = x - 1;
-                    var y0 = y + 1;
-
-                } else if (x >= 0 && y >= 0) {
-                    var xh = x - 1;
-                    var yh = y;
-                    var xv = x;
-                    var yv = y - 1;
-                    
-                    var x0 = x - 1;
-                    var y0 = y - 1;
-
-                } else if (x < 0 && y >= 0) {
-                    var xh = x + 1;
-                    var yh = y;
-                    var xv = x;
-                    var yv = y - 1;
-
-                    var x0 = x + 1;
-                    var y0 = y - 1;
-
-                }
-                */
+                
                 var d = 2
                 x -= d / 2;
                 y -= d / 2;
@@ -564,16 +217,16 @@ function orbital (svgContainer, data) {
                 
                 
                 var r = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var rm = Math.pow (maxR / (maxR - r) / flatRatio, 0.25);
+                var rm = Math.pow (maxR / (maxR - r), curvature);
 
                 var rh = Math.sqrt (xh * xh / squashX / squashX + yh * yh / squashY / squashY) / magn;
-                var rmh = Math.pow (maxR / (maxR - rh) / flatRatio, 0.5);
+                var rmh = Math.pow (maxR / (maxR - rh), curvature);
 
                 var rv = Math.sqrt (xv * xv / squashX / squashX + yv * yv / squashY / squashY) / magn;
-                var rmv = Math.pow (maxR / (maxR - rv) / flatRatio, 0.5);
+                var rmv = Math.pow (maxR / (maxR - rv), curvature);
 
                 var r0 = Math.sqrt (x0 * x0 / squashX / squashX + y0 * y0 / squashY / squashY) / magn;
-                var rm0 = Math.pow (maxR / (maxR - r0) / flatRatio, 0.25);
+                var rm0 = Math.pow (maxR / (maxR - r0), curvature);
 
                 x += d / 2;
                 y += d / 2;
@@ -581,394 +234,43 @@ function orbital (svgContainer, data) {
                 if (r >= Math.floor (maxR)) {
                     feArray [i + 2] = 0;
                     feArray [i + 3] = 0;
+
                 } else {
-                    /*
-                    if (rm < 1) {
-                        rm = 1;
-                        rmh = 1;
-                        rmv = 1;
-                        rm0 = 1;
-                    }
-                    */
+                    if (/*rm < curvatureFrontier ||*/ curvature === 0) {
+                        feArray[i]     = (x / superSampling + feWidth);
+                        feArray[i + 1] = (y / superSampling + feHeight);
+                        feArray[i + 2] = superSampling;
+                        feArray[i + 3] = superSampling;
 
-                    var newr = r * rm;
-                    var newrh = rh * rmh;
-                    var newrv = rv * rmv;
-                    var newr0 = r0 * rm0;
-                    
-                    
-                    feArray[i]     = Math.round(feWidth + newr * Math.cos(a) * squashX);
-                    feArray[i + 1] = Math.round(feHeight + newr * Math.sin(a) * squashY);
+                    } else {
+                        var newr = r * rm;
+                        var newrh = rh * rmh;
+                        var newrv = rv * rmv;
+                        var newr0 = r0 * rm0;
+                        
+                        feArray[i]     = Math.round ((feWidth * curvatureFrontier + newr * Math.cos(a) * squashX) / curvatureFrontier);
+                        feArray[i + 1] = Math.round((feHeight * curvatureFrontier + newr * Math.sin(a) * squashY) / curvatureFrontier);
 
-                    //var dx = 0.5+squashX * (Math.abs (Math.cos(a) * Math.pow (newr2 - newr1, 1))) / magn;
-                    //var dy = 0.5+squashY * (Math.abs (Math.sin(a) * Math.pow (newr2 - newr1, 1))) / magn;
-                    var dx = Math.abs (Math.cos (a) * (newr0 - newr)) / magn;
-                    var dy = Math.abs (Math.sin (a) * (newr0 - newr)) / magn;
-                    //dx = Math.pow (dx, 0.5);
-                    //dy = Math.pow (dy, 0.5);
-                    //if (dx < squashX) dx = squashX;
-                    //if (dy < squashY) dy = squashY;
-                    if (dx < 1) dx = 1;
-                    if (dy < 1) dy = 1;
-                    //if (dx < 0) dx = 0;
-                    //if (dy < 0) dy = 0;
+                        if (curvature > 0) {
+                            var dx = Math.abs (Math.cos (a) * (newr0 - newr)) / magn / curvatureFrontier;
+                            var dy = Math.abs (Math.sin (a) * (newr0 - newr)) / magn / curvatureFrontier;
+                        } else {
+                            var dx = Math.abs (Math.cos (a) * (newrh - newr)) / magn / curvatureFrontier;
+                            var dy = Math.abs (Math.sin (a) * (newrv - newr)) / magn / curvatureFrontier;
+                        }
 
-                    feArray[i + 2] = dx;//MAX_INT32 / dx;
-                    feArray[i + 3] = dy;//MAX_INT32 / dy;
-                    
+                        feArray[i + 2] = dx;
+                        feArray[i + 3] = dy;
+                    }                    
                 }
             }
         }
-        /*
-        for (var y = -feHeight; y < feHeight; y++) {
-            for (var x = -feWidth; x < feWidth; x++) {
-                var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
-                var itmp = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
-                
-                var i1 = ((feHeight + y) * feWidth * 2 + feWidth + x - 1) * 4;
-                var i2 = ((feHeight + y) * feWidth * 2 + feWidth + x + 1) * 4;
-                if (feArray[i] === feArray[i1] || feArray[i] === feArray[i2])
-                    feTmp[itmp] = 1;
-                else
-                    feTmp[itmp] = 0;
-                    
-                var i1 = ((feHeight + (y - 1)) * feWidth * 2 + feWidth + x) * 4;
-                var i2 = ((feHeight + (y + 1)) * feWidth * 2 + feWidth + x) * 4;
-                if (feArray[i] === feArray[i1] || feArray[i] === feArray[i2])
-                    feTmp[itmp + 1] = 1;
-                else
-                    feTmp[itmp + 1] = 0;
-                
-            }
-        }
-        
-        for (var y = -feHeight; y < feHeight; y++) {
-            for (var x = -feWidth; x < feWidth; x++) {
-                var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
-                var itmp = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
 
-                if (feTmp[i] === 1)
-                    feArray[i + 2] /= 1;//MAX_INT32 / (feTmp[i + 4] / 2);
-
-                if (feTmp[i + 1] === 1)
-                    feArray[i + 3] *= 1;
-            }
-        }
-        */
         return {width: feWidth, height: feHeight, array: feArray};
     }
 
-/*
-    function renderFishEye (fishEye, data, width, height, magn, centerX, centerY) {
-        //if (width % 2 === 0) width++;
-        //if (height % 2 === 0) height++;
-
-        var mdx = Math.floor((fishEye.width - width / 2) / magn);
-        var mdy = Math.floor((fishEye.height - height / 2) / magn);
-        var ddx = Math.floor(cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
-        var ddy = Math.floor(cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
-        
-        var x1 = 0, y1 = 0;
-
-        var DX = 0;
-        var DbmpscaleX = 1;
-        var DbmpscalefactorX = 2;
-        var DfinalX = 3;
-        
-        var DY = 4;
-        var DbmpscaleY = 5;
-        var DbmpscalefactorY = 6;
-        var DfinalY = 7;
-
-        var w2 = Math.ceil (width / 2);
-        var h2 = Math.ceil (height / 2);
-        
-        var mapel = 8;
-        var renderMap = new Float32Array (w2 * h2 * mapel);
-        
-        for (y1 = 0; y1 < h2; y1++) {
-            for (x1 = 0; x1 < w2; x1++) {
-                var fe = (
-                    Math.floor(fishEye.height - (fishEye.height - y1) / magn + mdy) * fishEye.width * 2 + 
-                    Math.floor(fishEye.width - (fishEye.width - x1) / magn + mdx)
-                ) * 4;
-                var X = fishEye.array[fe] + ddx;
-                var Y = fishEye.array[fe + 1] + ddy;
-                var mX = fishEye.array[fe + 2] / MAX_INT32;
-                var mY = fishEye.array[fe + 3] / MAX_INT32;
-
-                var delta = (y1 * w2 + x1) * mapel
-                if (mX > 0 && mY > 0) {
-                    // X
-                    var tmpX = Math.floor (1 / mX / magn);
-                    if (tmpX >= log2.length) {
-                        var bmpscaleX = log2[log2.length - 1];
-                    } else {
-                        var bmpscaleX = log2[tmpX] + 1;
-                    }
-                    
-                    if (bmpscaleX > cnvScaled.images.length - 1)
-                        bmpscaleX = cnvScaled.images.length - 1;
-                        
-                    var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
-                    var finalX = X / bmpscalefactorX;//Math.floor (X / bmpscalefactorX);
-                    
-                    renderMap[delta + DX] = X;
-                    renderMap[delta + DbmpscaleX] = bmpscaleX;
-                    renderMap[delta + DbmpscalefactorX] = bmpscalefactorX;
-                    renderMap[delta + DfinalX] = finalX;
-
-                    // Y
-                    var tmpY = Math.floor (1 / mY / magn);
-                    if (tmpY >= log2.length) {
-                        var bmpscaleY = log2[log2.length - 1];
-                    } else {
-                        var bmpscaleY = log2[tmpY] + 1;
-                    }
-                    
-                    if (bmpscaleY > cnvScaled.images.length - 1)
-                        bmpscaleY = cnvScaled.images.length - 1;
-                        
-                    var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
-                    var finalY = Y / bmpscalefactorY;//Math.floor (Y / bmpscalefactorY);
-
-                    renderMap[delta + DY] = Y;
-                    renderMap[delta + DbmpscaleY] = bmpscaleY;
-                    renderMap[delta + DbmpscalefactorY] = bmpscalefactorY;
-                    renderMap[delta + DfinalY] = finalY;
-                } else {
-                    renderMap[delta + DfinalX] = -1;
-                    renderMap[delta + DfinalY] = -1;
-                }
-            }
-        }
-        
-        var tmp1x = cnvScaled.width + 2 * centerX;
-        var tmp1y = cnvScaled.height + 2 * centerY;
-        var tmpw8 = mapel * w2;
-
-        var x1 = 0, y1 = 0;
-        for (var i = 0; i < data.length; i += 4) {
-            if (x1 === w2)
-                var tmpx1 = w2 - 1;
-            else if (x1 > w2)
-                var tmpx1 = w2 - (x1 % w2) - 1;
-            else
-                var tmpx1 = x1;
-            
-            if (y1 === h2)
-                var tmpy1 = h2 - 1;
-            else if (y1 > h2)
-                var tmpy1 = h2 - y1 % h2;
-            else
-                var tmpy1 = y1;
-
-            var delta = (tmpy1 * w2 + tmpx1) * mapel;
-            
-            var tmp2x = delta + DbmpscalefactorX;
-            var tmp2y = delta + DbmpscalefactorY;
-            var tmp3x = delta + DfinalX;
-            var tmp3y = delta + DfinalY;
-
-            var finalX  = renderMap[tmp3x];
-            var finalY  = renderMap[tmp3y];
-
-            if (Math.floor (finalX) === Math.floor (renderMap[tmp3x - mapel]) || Math.floor (finalX) === Math.floor (renderMap[tmp3x + mapel])) {
-                var bmpscaleX = renderMap[delta + DbmpscaleX] - 1;
-                var scaleFactorX = renderMap[tmp2x] >> 1;
-                finalX = renderMap[delta + DX] / scaleFactorX;
-                
-            } else {
-                var bmpscaleX = renderMap[delta + DbmpscaleX];
-                var scaleFactorX = renderMap[tmp2x];
-            }
-
-            var centerX = tmp1x / scaleFactorX;
-            if (x1 >= w2)
-                finalX = Math.floor (centerX) - Math.floor (finalX);
-            else
-                finalX = Math.floor (finalX);
-
-            if (Math.floor (finalY) === Math.floor (renderMap[tmp3y - tmpw8]) || Math.floor (finalY) === Math.floor (renderMap[tmp3y + tmpw8])) {
-                var bmpscaleY = renderMap[delta + DbmpscaleY] - 1;
-                var scaleFactorY = renderMap[tmp2y] >> 1;
-                finalY = renderMap[delta + DY] / scaleFactorY;
-                
-            } else {
-                var bmpscaleY = renderMap[delta + DbmpscaleY];
-                var scaleFactorY = renderMap[tmp2y];
-            }
-
-            var centerY = tmp1y / scaleFactorY;
-            if (y1 >= h2)
-                finalY = Math.floor (centerY) - Math.floor (finalY);
-            else
-                finalY = Math.floor (finalY);
-
-            var ilx = cnvScaled.images.length - 1;
-            if (bmpscaleX > ilx)
-                bmpscaleX = ilx;
-                
-            if (bmpscaleX < 0)
-                bmpscaleX = 0;
-               
-
-            var ily = cnvScaled.images[bmpscaleX].length - 1;
-            if (bmpscaleY > ily)
-                bmpscaleY = ily;
-                
-            if (bmpscaleY < 0)
-                bmpscaleY = 0;
-
-            var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-            var scaledData = scaled.imageData.data;
-
-            if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
-                var iim = (finalY * scaled.width + finalX) * 4;
-                data[i]     = scaledData[iim];                // red
-                data[i + 1] = scaledData[iim + 1];            // green
-                data[i + 2] = scaledData[iim + 2];            // blue
-                data[i + 3] = 255;                            // alpha
-            }
-            
-            x1++;
-            if (x1 === width) {
-                x1 = 0;
-                y1++;
-            }
-        }
-    }
-*/
-/* radi 1
-    function renderFishEye (fishEye, data, width, height, magn, centerX, centerY) {
-        var mdx = Math.floor((fishEye.width - width / 2) / magn);
-        var mdy = Math.floor((fishEye.height - height / 2) / magn);
-        var ddx = Math.floor(cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
-        var ddy = Math.floor(cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
-        
-        var x1 = 0, y1 = 0;
-
-        var DX = 0;
-        var DbmpscaleX = 1;
-        var DbmpscalefactorX = 2;
-        var DfinalX = 3;
-        
-        var DY = 4;
-        var DbmpscaleY = 5;
-        var DbmpscalefactorY = 6;
-        var DfinalY = 7;
-        
-        var renderMap = new Int32Array (width * height * 8);
-        
-        for (y1 = 0; y1 < Math.ceil (height); y1++) {
-            for (x1 = 0; x1 < Math.ceil (width); x1++) {
-                var fe = (
-                    Math.floor(fishEye.height - (fishEye.height - y1) / magn + mdy) * fishEye.width * 2 + 
-                    Math.floor(fishEye.width - (fishEye.width - x1) / magn + mdx)
-                ) * 4;
-                var X = fishEye.array[fe] + ddx;
-                var Y = fishEye.array[fe + 1] + ddy;
-                var mX = fishEye.array[fe + 2] / MAX_INT32;
-                var mY = fishEye.array[fe + 3] / MAX_INT32;
-
-                if (mX > 0 && mY > 0) {
-                    var delta = (y1 * width + x1) * 8
-                    
-                    // X
-                    var tmpX = Math.floor (1 / mX / magn);
-                    if (tmpX >= log2.length) {
-                        var bmpscaleX = log2[log2.length - 1];
-                    } else {
-                        var bmpscaleX = log2[tmpX] + 1;
-                    }
-                    
-                    if (bmpscaleX > cnvScaled.images.length - 1)
-                        bmpscaleX = cnvScaled.images.length - 1;
-                        
-                    var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
-                    var finalX = Math.floor (X / bmpscalefactorX);
-                    
-                    renderMap[delta + DX] = X;
-                    renderMap[delta + DbmpscaleX] = bmpscaleX;
-                    renderMap[delta + DbmpscalefactorX] = bmpscalefactorX;
-                    renderMap[delta + DfinalX] = finalX;
-
-                    // Y
-                    var tmpY = Math.floor (1 / mY / magn);
-                    if (tmpY >= log2.length) {
-                        var bmpscaleY = log2[log2.length - 1];
-                    } else {
-                        var bmpscaleY = log2[tmpY] + 1;
-                    }
-                    
-                    if (bmpscaleY > cnvScaled.images.length - 1)
-                        bmpscaleY = cnvScaled.images.length - 1;
-                        
-                    var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
-                    var finalY = Math.floor (Y / bmpscalefactorY);
-
-                    renderMap[delta + DY] = Y;
-                    renderMap[delta + DbmpscaleY] = bmpscaleY;
-                    renderMap[delta + DbmpscalefactorY] = bmpscalefactorY;
-                    renderMap[delta + DfinalY] = finalY;
-                }
-            }
-        }
-
-        var x1 = 0, y1 = 0;
-        for (var i = 0; i < data.length; i += 4) {
-            var delta = (y1 * width + x1) * 8;
-            
-            var finalX = renderMap[delta + DfinalX];
-            var finalY = renderMap[delta + DfinalY];
-            
-            if (finalX === renderMap[delta - 8 + DfinalX] || finalX === renderMap[delta + 8 + DfinalX]) {
-                finalX = Math.floor (renderMap[delta + DX] / (renderMap[delta + DbmpscalefactorX] >> 1));
-                var bmpscaleX = renderMap[delta + DbmpscaleX] - 1;
-            } else {
-                var bmpscaleX = renderMap[delta + DbmpscaleX];
-            }
-                
-            if (bmpscaleX > cnvScaled.images.length - 1)
-                bmpscaleX = cnvScaled.images.length - 1;
-                
-            if (bmpscaleX < 0)
-                bmpscaleX = 0;
-                
-            if (finalY === renderMap[delta - width * 8 + DfinalY] || finalY === renderMap[delta + width * 8 + DfinalY]) {
-                finalY = Math.floor (renderMap[delta + DY] / (renderMap[delta + DbmpscalefactorY] >> 1));
-                var bmpscaleY = renderMap[delta + DbmpscaleY] - 1;
-                    
-            } else {
-                var bmpscaleY = renderMap[delta + DbmpscaleY];
-            }
-                
-            if (bmpscaleY > cnvScaled.images[bmpscaleX].length - 1)
-                bmpscaleY = cnvScaled.images[bmpscaleX].length - 1;
-                
-            if (bmpscaleY < 0)
-                bmpscaleY = 0;
-
-            var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-            var scaledData = scaled.imageData.data;
-
-            if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
-                var iim = (finalY * scaled.width + finalX) * 4
-                data[i]     = scaledData[iim];                // red
-                data[i + 1] = scaledData[iim + 1];            // green
-                data[i + 2] = scaledData[iim + 2];            // blue
-                data[i + 3] = 255;                            // alpha
-            }
-            
-            x1++;
-            if (x1 === width) {
-                x1 = 0;
-                y1++;
-            }
-        }
-    }
-*/
-    function prepareFishEyeMap (fishEye, width, height, magn, centerX, centerY) {
+    function prepareFishEyeMap (width, height, magn, centerX, centerY, cnvScaled) {
+        "use strict";
         var magn = 1;
 
         var mdx = Math.floor((fishEye.width - width / 2) / magn);
@@ -1030,7 +332,7 @@ function orbital (svgContainer, data) {
                         
                     var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
                     //var bmpscalefactorX = tmpX;
-                    var finalX = Math.floor (X / bmpscalefactorX);
+                    var finalX = Math.round (X / bmpscalefactorX);
                     
                     renderMap[delta + DX] = X;
                     renderMap[delta + DbmpscaleX] = bmpscaleX;
@@ -1053,7 +355,7 @@ function orbital (svgContainer, data) {
                         
                     var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
                     //var bmpscalefactorY = tmpY;
-                    var finalY = Math.floor (Y / bmpscalefactorY);
+                    var finalY = Math.round (Y / bmpscalefactorY);
 
                     renderMap[delta + DY] = Y;
                     renderMap[delta + DbmpscaleY] = bmpscaleY;
@@ -1064,33 +366,15 @@ function orbital (svgContainer, data) {
         }
 
         tmpRenderMap = new Int32Array (width * height * 2);
-        /*
-        for (var y1 = 0; y1 < Math.ceil (height); y1++) {
-            for (var x1 = 0; x1 < Math.ceil (width); x1++) {
-                var delta = (y1 * width + x1) * 10
-                
-                var delta1 = (y1 * width + x1 - 1) * 10
-                var delta2 = (y1 * width + x1 + 1) * 10                
-                if (renderMap[delta + DfinalX] === renderMap[delta1 + DfinalX] || renderMap[delta + DfinalX] === renderMap[delta2 + DfinalX])
-                    renderMap[delta + DbmpscaleX] -= 1;
-                
-                var delta1 = ((y1 - 1) * width + x1) * 10
-                var delta2 = ((y1 + 1) * width + x1) * 10                
-                if (renderMap[delta + DfinalY] === renderMap[delta1 + DfinalY] || renderMap[delta + DfinalY] === renderMap[delta2 + DfinalY])
-                    renderMap[delta + DbmpscaleY] -= 1;
-                
-            }
-        }
-        */
+
         return renderMap;
     }
     
-    var renderMap;
-    var tmpRenderMap;
+    function renderFishEye (data, width, height, magn, centerX, centerY, cnvScaled) {
+        "use strict";
 
-    function renderFishEye (fishEye, data, width, height, magn, centerX, centerY) {
         if (!renderMap)
-            renderMap = prepareFishEyeMap (fishEye, width, height, magn, 0, 0);
+            renderMap = prepareFishEyeMap (width, height, magn, 0, 0, cnvScaled);
 
         var x1 = 0, y1 = 0;
 
@@ -1110,13 +394,13 @@ function orbital (svgContainer, data) {
         var TDfinalY = 1;
 
         var i = 0;
-        for (var y1 = 2; y1 < height; y1++) {
-            i += 8;
-            for (var x1 = 2; x1 < width; x1++) {
+        for (var y1 = 1; y1 < height; y1++) {
+            i += 4;
+            for (var x1 = 1; x1 < width; x1++) {
                 var delta1 = (y1 * width + x1) * 2;
                 var delta2 = delta1 * 5;
 
-                if (renderMap[delta2 + Dout] == 0 || renderMap[delta2 + Dout - 10] == 0 || renderMap[delta2 + Dout - width * 10] == 0) {
+                if (/*renderMap[delta2 + Dout] == 0 ||*/ renderMap[delta2 + Dout - 10] == 0 || renderMap[delta2 + Dout - width * 10] == 0) {
                     data[i + 3] = 0;                            // alpha
 
                 } else {
@@ -1144,7 +428,7 @@ function orbital (svgContainer, data) {
                     
                     var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
                     var scaledData = scaled.imageData.data;
-                    if (finalX > 0 && finalX < scaled.width && finalY > 0 && finalY < scaled.height) {
+                    if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
                         var iim = (finalY * scaled.width + finalX) * 4
                         data[i]     = scaledData[iim];                // red
                         data[i + 1] = scaledData[iim + 1];            // green
@@ -1159,87 +443,207 @@ function orbital (svgContainer, data) {
             }
         }
     }
+    
+    function clearRenderMap () {
+        renderMap = null;
+    }
+    
+    var fishEye = initFishEye (superSampling);
+    
+    return {
+        superSampling: superSampling,
+        data: fishEye,
+        initFishEye: initFishEye,
+        renderFishEye: renderFishEye,
+        clearRenderMap: clearRenderMap
+    }
+}
 
-/*
-    function renderFishEye1 (fishEye, data, width, height, magn, centerX, centerY) {
-        if (!renderMap)
-            renderMap = prepareFishEyeMap (fishEye, width, height, magn, 0, 0);
+function Orbital (svgContainer, data) {
+    "use strict";
 
-        var x1 = 0, y1 = 0;
+    var svgns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS (svgns, "svg");
+    svg.style.display = "block";
+    svg.style.height = 0;
+    svgContainer.appendChild (svg);
+    svg.draggable = false;
+    svg.ondragstart = function () {return false};
 
-        var DX = 0;
-        var DbmpscaleX = 1;
-        var DbmpscalefactorX = 2;
-        var DfinalX = 3;
+    var cnv = document.createElement ("canvas");
+    cnv.style.display = "block";
+    svgContainer.appendChild (cnv);
+    cnv.draggable = false;
+    cnv.ondragstart = function () {return false};
+    var ctx = cnv.getContext('2d');
+    /*
+    ctx.mozImageSmoothingEnabled    = true
+    ctx.imageSmoothingQuality       = "high"
+    ctx.webkitImageSmoothingEnabled = true
+    ctx.msImageSmoothingEnabled     = true
+    ctx.imageSmoothingEnabled       = true
+    */
+    
+    var superSampling = 1;
+
+
+    //const opts = { desynchronized: true };
+    //const ctx = canvas.getContext('2d', opts);
+
+    var ratio = 1 / 1.61803398875; //0.7;//575;
+    //var minRadius = Length.toPx(svg, "1mm");
+
+    var minRadius;
+    var recCount = 4;
+
+    var pixelPrecision = 1 / Math.pow (2, 16);
+    var dragPrecision = Math.pow (2, 8);
+    var hilight = "white"
+    var fill1 = "rgb(255, 255, 255)";//"lightgray";
+    //var fill1r = 255;
+    //var fill1g = 255;
+    //var fill1b = 150;
+    var fill1r = 225;
+    var fill1g = 225;
+    var fill1b = 225;
+    var stroke1 = "gray";
+    var fill2 = stroke1;
+    var stroke2 = fill1;
+
+    var MAX_INT32 = Math.pow (2, 31) - 1;// 4294967296 / 2 - 1;
+
+    var cnvCache;
+    var cache, isCache;
+    
+    var log2 = [1];
+    for (var i = 1; i < 65535; i++) {
+        log2.push (Math.ceil (Math.log2(i)));
+    }
+
+
+    function invalidateCache () {
+        isCache = false;
+        fishEye.clearRenderMap();
+        //renderMap = null;
+    }
+    
+    function ellipse(ctx, x, y, xDis, yDis) {
+        var kappa = 0.5522848, // 4 * ((√(2) - 1) / 3)
+            ox = xDis * kappa,  // control point offset horizontal
+            oy = yDis * kappa,  // control point offset vertical
+            xe = x + xDis,      // x-end
+            ye = y + yDis;      // y-end
+
+        ctx.moveTo(x - xDis, y);
+        ctx.bezierCurveTo(x - xDis, y - oy, x - ox, y - yDis, x, y - yDis);
+        ctx.bezierCurveTo(x + ox, y - yDis, xe, y - oy, xe, y);
+        ctx.bezierCurveTo(xe, y + oy, x + ox, ye, x, ye);
+        ctx.bezierCurveTo(x - ox, ye, x - xDis, y + oy, x - xDis, y);
+    }
+
+/*	
+	var a32 = new Uint32Array (250 * 250 * 2);
+	var fe = InitFishEye ({Math:Math,Uint32Array:Uint32Array}, {}, a32.buffer)
+	
+	function FishEye(stdlib, foreign, heap) {
+	    'use asm';
+	    
+		var externfunc = foreign.externFunc;
+	    var arr = new stdlib.UInt8Array(heap);
+
+        var a = 0;    // a has type int
+        var b = 0.0;  // b has type double
+
+	    function exec() {
+            var x = x|0;   // x has type int
+            var y = +y;    // y has type double
+            return +(x * y);   // function returns a double
+		    arr[0] = 1;
+	    }
+
+	    return {
+		    init: init
+	    };
+	}
+*/
+
+    function generateGrid (mode, width, height, nlines, lineWidth) {
+        nlines = 4 * 16;
+        var cnvim = document.createElement ("canvas");
+        cnvim.width = width;
+        cnvim.height = height;
+        var ctxim = cnvim.getContext('2d');
         
-        var DY = 4;
-        var DbmpscaleY = 5;
-        var DbmpscalefactorY = 6;
-        var DfinalY = 7;
+        ctxim.fillStyle = fill1;//"rgb(255, 255, 150)";
+        ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+        ctxim.lineWidth = lineWidth;
+        ctxim.strokeStyle = "gray";
+        var nlines = nlines;
+        var lw = cnvim.width / nlines;
+        var lh = cnvim.height / nlines;
 
-        var Dout = 8;
-
-        var x1 = 0, y1 = 0;
-
-        for (var i = 0; i < data.length; i += 4) {
-            var delta = (y1 * width + x1) * 10;
-
-            if (renderMap[delta + Dout] > 0) {
-                var d1x = renderMap[delta + DbmpscalefactorX];
-                var d1y = renderMap[delta + DbmpscalefactorY];
-
-                if (d1x > 0 && d1y > 0) {
-                    var dDX = delta + DX;
-                    var bmpscaleX = renderMap[delta + DbmpscaleX];
-                    var finalX = (renderMap[dDX] + centerX) >> bmpscaleX;
-
-                    var dDY = delta + DY;
-                    var bmpscaleY = renderMap[delta + DbmpscaleY];
-                    var finalY = (renderMap[dDY] + centerY) >> bmpscaleY;
-
-                    //var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-
-                    //if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
-                        var finalX1 = (renderMap[dDX - 10] + centerX) >> bmpscaleX;
-                        var finalX2 = (renderMap[dDX + 10] + centerX) >> bmpscaleX;
-                        
-                        if (finalX === finalX1 || finalX === finalX2) {
-                            bmpscaleX = Math.min (bmpscaleX - 1, cnvScaled.images.length - 1);
-                            bmpscaleX = Math.max (bmpscaleX, 0);
-                            finalX = (renderMap[dDX] + centerX) >> bmpscaleX;
-                        }
-                        
-                        var finalY1 = (renderMap[dDY - width * 10] + centerY) >> bmpscaleY;
-                        var finalY2 = (renderMap[dDY + width * 10] + centerY) >> bmpscaleY;
-
-                        if (finalY === finalY1 || finalY === finalY2) {
-                            bmpscaleY = Math.min (bmpscaleY - 1, cnvScaled.images[bmpscaleX].length - 1);
-                            bmpscaleY = Math.max (bmpscaleY, 0);    
-                            finalY = (renderMap[dDY] + centerY) >> bmpscaleY;
-                        }
-
-                        var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-                        var scaledData = scaled.imageData.data;
-
-                        if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
-                            var iim = (finalY * scaled.width + finalX) * 4
-                            data[i]     = scaledData[iim];                // red
-                            data[i + 1] = scaledData[iim + 1];            // green
-                            data[i + 2] = scaledData[iim + 2];            // blue
-                            data[i + 3] = 255;                            // alpha
-                        }
-                    //}
-                }
+        if (mode === "grid") {
+            for (var x = 0; x < nlines; x++) {
+                ctxim.beginPath();
+                ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
+                ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
+                ctxim.stroke(); 
             }
             
-            x1++;
-            if (x1 === width) {
-                x1 = 0;
-                y1++;
+            
+            for (var y = 0; y < nlines; y++) {
+                ctxim.beginPath();
+                ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
+                ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
+                ctxim.stroke(); 
+            }
+
+            //ctxim.strokeStyle = "rgb(0,0,0)";
+            //ctxim.lineWidth = lineWidth * 2;
+            ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
+            
+            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+            
+            ctxim.font = "12pt sans-serif";
+            ctxim.fillStyle = "black";
+            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+        
+        } else if (mode !== "grid") {
+            for (var y = 0; y < nlines - 1; y+=4) {
+                if ((y / 4) % 2 == 0 ) {
+                    ctxim.fillStyle = "rgb(230,230,230)";
+                    ctxim.fillRect(0.5, Math.floor(y * lh) + 11, cnvim.width - 0.5, lh * 4);
+                }
+            }
+
+            for (var y = 1; y < nlines + 1; y++) {
+                    //var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
+                    var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+                    ctxim.font = "18pt sans-serif";
+                    ctxim.fillStyle = "rgb(0,0,0)";
+                    ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh);
             }
         }
+
+        /*
+        ctxim.strokeStyle = "black";
+        ctxim.beginPath();
+        ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
+        ctxim.lineTo(cnvim.width, Math.floor(cnvim.height / 2) + 0.5);
+        ctxim.stroke(); 
+        ctxim.beginPath();
+        ctxim.moveTo(Math.floor(cnvim.width / 2) + 0.5, 0);
+        ctxim.lineTo(Math.floor(cnvim.width / 2) + 0.5, cnvim.height);
+        ctxim.stroke(); 
+        */
+        /*
+        */
+        //ctxim.strokeStyle = "rgb(255, 0, 0)";
+
+        
+        return cnvim
     }
-*/
+
     function downsample(dest, source1, destWidth, destHeight, magn) {
         function round(val) {
           return (val + 0.49) << 0
@@ -1430,17 +834,17 @@ function orbital (svgContainer, data) {
 
                 if (!isCache) {
                     cnvCache = document.createElement ("canvas");
-                    var cacheW = Math.floor (2 * rr * ratio * squashX * superSampling);
-                    var cacheH = Math.floor (2 * rr * ratio * squashY * superSampling);
+                    var cacheW = Math.floor (2 * rr * ratio * squashX * fishEye.superSampling);
+                    var cacheH = Math.floor (2 * rr * ratio * squashY * fishEye.superSampling);
                     cnvCache.width = cacheW;
                     cnvCache.height = cacheH;
                     var ctxCache = cnvCache.getContext('2d');
                     var imgCache = ctxCache.createImageData(cacheW, cacheH);
-                    renderFishEye (fishEye, imgCache.data, cacheW, cacheH, 1, 0, 0);
+                    fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, 0, 0, cnvScaled);
                     ctxCache.putImageData(imgCache, 0, 0);
                     
                     //cache = crispBitmapXY (cnvCache);
-                    cache = crispBitmap (cnvCache);
+                    cache = Crisp.crispBitmap (cnvCache);
                     
                     isCache = true;
                 }
@@ -1451,13 +855,13 @@ function orbital (svgContainer, data) {
                     
                 } else if (level === 1 && panning) {
                     var cnvCache1 = document.createElement ("canvas");
-                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * superSampling);
-                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * superSampling);
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * fishEye.superSampling);
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * fishEye.superSampling);
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
                     var imgCache1 = ctxCache1.createImageData(cacheW1, cacheH1);
-                    renderFishEye (fishEye, imgCache1.data, cacheW1, cacheH1, 1, cursor.centerX, cursor.centerY);
+                    fishEye.renderFishEye (imgCache1.data, cacheW1, cacheH1, 1, cursor.centerX, cursor.centerY, cnvScaled);
                     ctxCache1.putImageData(imgCache1, 0, 0);
 
                     /*
@@ -1478,18 +882,18 @@ function orbital (svgContainer, data) {
 
                 } else if (!cursor.cachedCnv || !cursor.cachedData) {
                     var cnvCache1 = document.createElement ("canvas");
-                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * superSampling);
-                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * superSampling);
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * fishEye.superSampling);
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * fishEye.superSampling);
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
                     var imgCache1 = ctxCache1.createImageData(cacheW1, cacheH1);
-                    renderFishEye (fishEye, imgCache1.data, cacheW1, cacheH1, 1, cursor.centerX, cursor.centerY);
+                    fishEye.renderFishEye (imgCache1.data, cacheW1, cacheH1, 1, cursor.centerX, cursor.centerY, cnvScaled);
                     ctxCache1.putImageData(imgCache1, 0, 0);
                     
                     cursor.cachedCnv = cnvCache1;
                     //cursor.cachedData = crispBitmapXY (cnvCache1);
-                    cursor.cachedData = crispBitmap (cnvCache1);
+                    cursor.cachedData = Crisp.crispBitmap (cnvCache1);
 
                     var cachedCnv = cursor.cachedCnv;
                     var cachedData = cursor.cachedData;
@@ -1504,8 +908,8 @@ function orbital (svgContainer, data) {
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
                     
                 } else if (level === 1) {// || (level === 1 && panning) || (renderHint === "0") || (cachedCnv.width === w && cachedCnv.height === h)) {
-                    w = cachedCnv.width / superSampling;
-                    h = cachedCnv.height / superSampling;
+                    w = cachedCnv.width / fishEye.superSampling;
+                    h = cachedCnv.height / fishEye.superSampling;
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
                     
                 } else if (true || (animating || dragging)) {
@@ -1523,11 +927,11 @@ function orbital (svgContainer, data) {
                     */
                     
                     //brzo                    
-                    var tmp = Math.floor (1 / magn * superSampling);
+                    var tmp = Math.floor (1 / magn * fishEye.superSampling);
                     if (tmp >= log2.length) {
                         var bmpscale = log2[log2.length - 1];
                     } else {
-                        var bmpscale = log2[tmp]
+                        var bmpscale = log2[tmp];
                     }
                     
                     //if (level === 1) bmpscale--;
@@ -1652,8 +1056,8 @@ function orbital (svgContainer, data) {
                     ctx.ellipse (
                         x0 * squashX,
                         y0 * squashY,
-                        r0 * squashX - 0.5,
-                        r0 * squashY - 0.5,
+                        r0 * squashX,
+                        r0 * squashY,
                         0,
                         0,
                         2 * Math.PI,
@@ -1681,8 +1085,9 @@ function orbital (svgContainer, data) {
                 
                 clear ();
                 
-                if (renderHint === "1" || renderHint === "1+")
+                if (renderHint === "1" || renderHint === "1+") {
                     ctx.restore ();
+                }
             }
                 
             if (
@@ -1933,7 +1338,8 @@ function orbital (svgContainer, data) {
         }
     }
         
-    function clear () {
+    function clear (fill) {
+        if (!fill) fill = fill2
         ctx.fillStyle = fill2;
         ctx.fillRect(0, 0, ww, hh);
     }
@@ -2003,10 +1409,10 @@ function orbital (svgContainer, data) {
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
             
             if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                var tmp0 = (2 * fishEye.width * (fishEye.height + (dragY - y0) * superSampling) + fishEye.width + (dragX - x0) * superSampling) * 4;
-                var tmp1 = (2 * fishEye.width * (fishEye.height + (y - y0) * superSampling) + fishEye.width + (x - x0) * superSampling) * 4;
+                var tmp0 = (2 * fishEye.data.width * (fishEye.data.height + (dragY - y0) * fishEye.superSampling) + fishEye.data.width + (dragX - x0) * fishEye.superSampling) * 4;
+                var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + (y - y0) * fishEye.superSampling) + fishEye.data.width + (x - x0) * fishEye.superSampling) * 4;
                 
-                setCenter (select, oldCenterX + fishEye.array[tmp0] - fishEye.array[tmp1], oldCenterY + fishEye.array[tmp0 + 1] - fishEye.array[tmp1 + 1]);
+                setCenter (select, oldCenterX + fishEye.data.array[tmp0] - fishEye.data.array[tmp1], oldCenterY + fishEye.data.array[tmp0 + 1] - fishEye.data.array[tmp1 + 1]);
                 select.cursor.cachedCnv = false;
                 select.cursor.cachedData = null;
             } else {
@@ -2532,7 +1938,7 @@ function orbital (svgContainer, data) {
                         if (!inertPan[i] || !inertPan[j])
                             break;
                             
-                        if (inertPan[i].time - inertPan[j].time > 300) {
+                        if (inertPan[i].time - inertPan[j].time > 250) {
                             break;
                         }
 
@@ -2563,7 +1969,7 @@ function orbital (svgContainer, data) {
                         i -= 1; j -= 1; k -= 1;
                     }
                     
-                    if (avgt < 300) {
+                    if (avgt < 250) {
                         var t0 = globalt0;//(new Date()).getTime();
                         var di = 1;
                         function dInert (select) {
@@ -2680,8 +2086,8 @@ function orbital (svgContainer, data) {
     function resize(width, height) {
         setDimensions (width, height);
     
-        fishEye = initFishEye (superSampling);
-        
+        fishEye = FishEye (squashX, squashY, rr, ratio);
+
         function rec1 (c) {
             if (c.cachedCnv) {
                 c.cachedCnv = false;
@@ -2722,6 +2128,7 @@ function orbital (svgContainer, data) {
     var tt, ll, ww, hh, rr, xx, yy, w0, h0, squashX, squashY;
     var r1, x1, y1;
     var path = [], cursor, select, preSelect, animating, panning;
+    var cnvScaled, fishEye;
     cursor = {parent: null, index: 0, centerX: 0, centerY: 0, cachedCnv:true, cachedData: null, angle: Math.PI, children: []}
     cursor.parent = {index: 0, children: [cursor]};
 
@@ -2878,7 +2285,7 @@ function orbital (svgContainer, data) {
     var cnvScaled = crispBitmapXY(cnvim2);
     */
     
-    var cnvScaled = crispBitmapXY(generateGrid ("grid1", 800, 2500, 50, 1));
+    cnvScaled = Crisp.crispBitmapXY(generateGrid ("grid1", 800, 2500, 50, 1));
 
     //initFishEye();
     //var img = new Image();
@@ -2893,7 +2300,7 @@ function orbital (svgContainer, data) {
     //}
 
     
-    var fishEye; //init in resize ... = initFishEye ();
+    //var fishEye; //init in resize ... = initFishEye ();
     /*
     // offscreen
     var cnvos = document.createElement ("canvas");

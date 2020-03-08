@@ -142,7 +142,7 @@ Crisp = (function () {
     }
 }) ();
 
-function FishEye (squashX, squashY, rr, ratio, superSampling) {
+function FishEye (radius, squashX, squashY, superSampling) {
     var curvature = 0.25;
     var curvatureFrontier = Math.pow (1, curvature);
     //var superSampling = 1;
@@ -161,12 +161,13 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
 
     function initFishEye(magn) {
         "use strict";
-        var feWidth = Math.round(rr * squashX * magn);
-        var feHeight = Math.round(rr * squashY * magn);
+        var feWidth = Math.round(radius * squashX * magn);
+        var feHeight = Math.round(radius * squashY * magn);
         
 	    var feArray = new Float32Array (feWidth * feHeight * 4 * 4);
 	    
-	    var maxR = rr * ratio;
+	    //var maxR = radius * ratio;
+        var maxR = radius / squashX / squashY;
 
         for (var y = -feHeight; y < feHeight; y++) {
             for (var x = -feWidth; x < feWidth; x++) {
@@ -174,7 +175,7 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
 
                 var a = Math.atan2(y / squashY, x / squashX);
                 
-                var d = 2
+                var d = 2;
                 x -= d / 2;
                 y -= d / 2;
                 
@@ -248,15 +249,15 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
                         var newrv = rv * rmv;
                         var newr0 = r0 * rm0;
                         
-                        feArray[i]     = Math.round ((feWidth * curvatureFrontier + newr * Math.cos(a) * squashX) / curvatureFrontier);
-                        feArray[i + 1] = Math.round((feHeight * curvatureFrontier + newr * Math.sin(a) * squashY) / curvatureFrontier);
+                        feArray[i]     = ((feWidth * curvatureFrontier + newr * Math.cos(a) * squashX) / curvatureFrontier);
+                        feArray[i + 1] = ((feHeight * curvatureFrontier + newr * Math.sin(a) * squashY) / curvatureFrontier);
 
                         if (curvature > 0) {
-                            var dx = Math.abs (Math.cos (a) * (newr0 - newr)) / magn / curvatureFrontier;
-                            var dy = Math.abs (Math.sin (a) * (newr0 - newr)) / magn / curvatureFrontier;
+                            var dx = Math.abs (Math.cos (a) * (newr0 - newr) * squashX) / magn / curvatureFrontier;
+                            var dy = Math.abs (Math.sin (a) * (newr0 - newr) * squashY) / magn / curvatureFrontier;
                         } else {
-                            var dx = Math.abs (Math.cos (a) * (newrh - newr)) / magn / curvatureFrontier;
-                            var dy = Math.abs (Math.sin (a) * (newrv - newr)) / magn / curvatureFrontier;
+                            var dx = Math.abs (Math.cos (a) * (newrh - newr) * squashX) / magn / curvatureFrontier;
+                            var dy = Math.abs (Math.sin (a) * (newrv - newr) * squashY) / magn / curvatureFrontier;
                         }
 
                         feArray[i + 2] = dx;
@@ -273,10 +274,10 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
         "use strict";
         var magn = 1;
 
-        var mdx = Math.floor((fishEye.width - width / 2) / magn);
-        var mdy = Math.floor((fishEye.height - height / 2) / magn);
-        var ddx = Math.floor(cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
-        var ddy = Math.floor(cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
+        var mdx = ((fishEye.width - width / 2) / magn);
+        var mdy = ((fishEye.height - height / 2) / magn);
+        var ddx = (cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
+        var ddy = (cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
         
         var x1 = 0, y1 = 0;
 
@@ -298,8 +299,8 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
         for (var y1 = 0; y1 < Math.ceil (height); y1++) {
             for (var x1 = 0; x1 < Math.ceil (width); x1++) {
                 var fe = (
-                    Math.floor(fishEye.height - (fishEye.height - y1) / magn + mdy) * fishEye.width * 2 + 
-                    Math.floor(fishEye.width - (fishEye.width - x1) / magn + mdx)
+                    Math.round(fishEye.height - (fishEye.height - y1) / magn + mdy) * fishEye.width * 2 + 
+                    Math.round(fishEye.width - (fishEye.width - x1) / magn + mdx)
                 ) * 4;
                 var X = fishEye.array[fe] + ddx;
                 var Y = fishEye.array[fe + 1] + ddy;
@@ -308,9 +309,10 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
 
                 var delta = (y1 * width + x1) * 10
 
-                var radius = Math.sqrt ((x1 - Math.ceil (width) / 2) * (x1 - Math.ceil (width) / 2) / squashX / squashX + (y1 - Math.ceil (height) / 2) * (y1 - Math.ceil (height) / 2) / squashY / squashY) / superSampling;
+                var rad = Math.sqrt ((x1 - Math.ceil (width) / 2) * (x1 - Math.ceil (width) / 2) / squashX / squashX + (y1 - Math.ceil (height) / 2) * (y1 - Math.ceil (height) / 2) / squashY / squashY) / superSampling;
                 renderMap[delta + Dout] = 1;
-                if ((mX == 0 && mY == 0) || rr * ratio - 4 < radius)
+                //if ((mX == 0 && mY == 0) || radius * ratio - 4 < radius)
+                if ((mX == 0 && mY == 0) || radius / squashX / squashY - 4 < rad)
                     renderMap[delta + Dout] = 0;
                 
                 else {
@@ -425,7 +427,7 @@ function FishEye (squashX, squashY, rr, ratio, superSampling) {
                         bmpscaleY = Math.max (bmpscaleY - 1, 0);
                         finalY = (renderMap[delta2 + DY - width * 10] + centerY) >> bmpscaleY;
                     }
-                    
+
                     var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
                     var scaledData = scaled.imageData.data;
                     if (finalX >= 0 && finalX < scaled.width && finalY >= 0 && finalY < scaled.height) {
@@ -484,7 +486,7 @@ function Orbital (svgContainer, data) {
     ctx.imageSmoothingEnabled       = true
     */
     
-    var superSampling = 1;
+    var superSampling = 2;
 
 
     //const opts = { desynchronized: true };
@@ -608,6 +610,31 @@ function Orbital (svgContainer, data) {
             ctxim.fillStyle = "black";
             ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
         
+        } else if (mode === "circles") {
+            ctxim.lineWidth = 1;
+            for (var x = 0; x < nlines / 2; x++) {
+                ctxim.beginPath();
+                ctxim.ellipse (
+                    width / 2,
+                    height / 2,
+                    x * lw,
+                    x * lh,
+                    0,
+                    0,
+                    2 * Math.PI,
+                    false
+                );
+                ctxim.stroke(); 
+            }
+
+            ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
+            
+            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+            
+            ctxim.font = "12pt sans-serif";
+            ctxim.fillStyle = "black";
+            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+
         } else if (mode !== "grid") {
             for (var y = 0; y < nlines - 1; y+=4) {
                 if ((y / 4) % 2 == 0 ) {
@@ -2089,7 +2116,7 @@ function Orbital (svgContainer, data) {
     function resize(width, height) {
         setDimensions (width, height);
     
-        fishEye = FishEye (squashX, squashY, rr, ratio, superSampling);
+        fishEye = FishEye (rr, squashX, squashY, superSampling);
 
         function rec1 (c) {
             if (c.cachedCnv) {
@@ -2288,7 +2315,7 @@ function Orbital (svgContainer, data) {
     var cnvScaled = crispBitmapXY(cnvim2);
     */
     
-    cnvScaled = Crisp.crispBitmapXY(generateGrid ("grid1", 800, 2500, 50, 1));
+    cnvScaled = Crisp.crispBitmapXY(generateGrid ("circles", 2500, 2500, 50, 1));
 
     //initFishEye();
     //var img = new Image();

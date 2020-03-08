@@ -175,9 +175,9 @@ function FishEye (radius, squashX, squashY, superSampling) {
 
                 var a = Math.atan2(y / squashY, x / squashX);
                 
-                var d = 2;
-                x -= d / 2;
-                y -= d / 2;
+                var d = 1;
+                //x -= d / 2;
+                //y -= d / 2;
                 
                 if (x < 0 && y < 0) {
                     var xh = x - d;
@@ -220,17 +220,17 @@ function FishEye (radius, squashX, squashY, superSampling) {
                 var r = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
                 var rm = Math.pow (maxR / (maxR - r), curvature);
 
-                var rh = Math.sqrt (xh * xh / squashX / squashX + yh * yh / squashY / squashY) / magn;
+                var rh = Math.sqrt (xh * xh / squashX / squashX + yh * yh / squashY / squashY) / magn + 1;
                 var rmh = Math.pow (maxR / (maxR - rh), curvature);
 
-                var rv = Math.sqrt (xv * xv / squashX / squashX + yv * yv / squashY / squashY) / magn;
+                var rv = Math.sqrt (xv * xv / squashX / squashX + yv * yv / squashY / squashY) / magn + 1;
                 var rmv = Math.pow (maxR / (maxR - rv), curvature);
 
-                var r0 = Math.sqrt (x0 * x0 / squashX / squashX + y0 * y0 / squashY / squashY) / magn;
+                var r0 = Math.sqrt (x0 * x0 / squashX / squashX + y0 * y0 / squashY / squashY) / magn + 1;
                 var rm0 = Math.pow (maxR / (maxR - r0), curvature);
 
-                x += d / 2;
-                y += d / 2;
+                //x += d / 2;
+                //y += d / 2;
 
                 if (r >= Math.floor (maxR)) {
                     feArray [i + 2] = 0;

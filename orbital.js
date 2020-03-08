@@ -610,7 +610,7 @@ function Orbital (svgContainer, data) {
             ctxim.fillStyle = "black";
             ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
         
-        } else if (mode === "circles") {
+        } else if (mode === "polar") {
             ctxim.lineWidth = 1;
             for (var x = 0; x < nlines / 2; x++) {
                 ctxim.beginPath();
@@ -624,6 +624,14 @@ function Orbital (svgContainer, data) {
                     2 * Math.PI,
                     false
                 );
+                ctxim.stroke(); 
+
+            }
+            
+            for (var a = 0; a < 2 * Math.PI; a += Math.PI / 8) {
+                ctxim.beginPath();
+                ctxim.moveTo(Math.floor (width / 2) + 0.5, Math.floor (height / 2) + 0.5);
+                ctxim.lineTo(Math.floor (width / 2) + 0.5 + Math.cos (a) * width / 2, Math.floor (height / 2) + 0.5 + Math.sin(a) * height / 2);
                 ctxim.stroke(); 
             }
 
@@ -861,8 +869,8 @@ function Orbital (svgContainer, data) {
 
                 if (!isCache) {
                     cnvCache = document.createElement ("canvas");
-                    var cacheW = Math.floor (2 * rr * ratio * squashX * fishEye.superSampling);
-                    var cacheH = Math.floor (2 * rr * ratio * squashY * fishEye.superSampling);
+                    var cacheW = Math.floor (2 * rr * ratio * squashX) * fishEye.superSampling;
+                    var cacheH = Math.floor (2 * rr * ratio * squashY) * fishEye.superSampling;
                     cnvCache.width = cacheW;
                     cnvCache.height = cacheH;
                     var ctxCache = cnvCache.getContext('2d');
@@ -882,8 +890,8 @@ function Orbital (svgContainer, data) {
                     
                 } else if (level === 1 && panning) {
                     var cnvCache1 = document.createElement ("canvas");
-                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * fishEye.superSampling);
-                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * fishEye.superSampling);
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX) * fishEye.superSampling;
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY) * fishEye.superSampling;
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
@@ -909,8 +917,8 @@ function Orbital (svgContainer, data) {
 
                 } else if (!cursor.cachedCnv || !cursor.cachedData) {
                     var cnvCache1 = document.createElement ("canvas");
-                    var cacheW1 = Math.floor (2 * rr * ratio * squashX * fishEye.superSampling);
-                    var cacheH1 = Math.floor (2 * rr * ratio * squashY * fishEye.superSampling);
+                    var cacheW1 = Math.floor (2 * rr * ratio * squashX) * fishEye.superSampling;
+                    var cacheH1 = Math.floor (2 * rr * ratio * squashY) * fishEye.superSampling;
                     cnvCache1.width = cacheW1;
                     cnvCache1.height = cacheH1;
                     var ctxCache1 = cnvCache1.getContext('2d');
@@ -938,7 +946,7 @@ function Orbital (svgContainer, data) {
                     w = cachedCnv.width / fishEye.superSampling;
                     h = cachedCnv.height / fishEye.superSampling;
                     ctx.drawImage(cachedCnv, xo, yo, w, h);
-                    
+                
                 } else if (true || (animating || dragging)) {
                     /*
                     //brzo, smudged
@@ -2315,7 +2323,7 @@ function Orbital (svgContainer, data) {
     var cnvScaled = crispBitmapXY(cnvim2);
     */
     
-    cnvScaled = Crisp.crispBitmapXY(generateGrid ("circles", 2500, 2500, 50, 1));
+    cnvScaled = Crisp.crispBitmapXY(generateGrid ("polar", 2500, 2500, 50, 1));
 
     //initFishEye();
     //var img = new Image();

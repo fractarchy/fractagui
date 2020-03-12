@@ -81,27 +81,50 @@
             */
             var tmout;
             function setSize () {
+                var ratio = 1;// / 1.61803398875;
+                
                 var w = document.body.clientWidth;
                 var h = document.body.clientHeight;
                 
                 if (w >= h) {
                     var m = document.body.clientHeight / 950;
+                    var ratioX = ratio;
+                    var ratioY = 1;
+
                 } else {
                     var m = document.body.clientWidth / 950;
+                    var ratioX = 1;
+                    var ratioY = ratio;
+
                 }
                 
-                i1.style.height = m * 215 + "px";
-                i2.style.height = m * 215 + "px";
-                i3.style.height = m * 215 + "px";
+                //i1.style.height = m * 215 + "px";
+                //i2.style.height = m * 215 + "px";
+                //i3.style.height = m * 215 + "px";
                 
-                i1.style.width = m * 238 + "px";
-                i2.style.width = m * 238 + "px";
-                i3.style.width = m * 238 + "px";
+                i1.style.width = m * 215 + "px";
+                i2.style.width = m * 215 + "px";
+                i3.style.width = m * 215 + "px";
 
                 clearTimeout (tmout);
+                /*
                 i1.style.transform = "";
                 i2.style.transform = "";
                 i3.style.transform = "";
+                */
+
+                i1.style.transform = " scale(" +
+                  ratioX + ", " +
+                  ratioY +
+                  ")";
+                i2.style.transform = " scale(" +
+                  ratioX + ", " +
+                  ratioY +
+                  ")";
+                i3.style.transform = " scale(" +
+                  ratioX + ", " +
+                  ratioY +
+                  ")";
 
                 if (w >= h) {
                     var gap = (h - i1.clientHeight - i2.clientHeight - i3.clientHeight) / 4;
@@ -117,8 +140,8 @@
                             t0 = t1;
                             if (d > 1) d = 1;
                             ins.style.transform = "translate(" + ins.clientWidth * ((1 - d) + (im * d) - 1) / 2 + "px, 0px) scale(" +
-                              (1 - d + (im * d)) + ", " +
-                              (1 - d + (im * d)) +
+                              ratioX * (1 - d + (im * d)) + ", " +
+                              ratioY * (1 - d + (im * d)) +
                               ")";
                           
                             //ins.style.opacity = 0.5 + 0.5 * d;
@@ -139,8 +162,8 @@
                             t0 = t1;
                             if (d > 1) d = 1;
                             ins.style.transform = "translate(" + ins.clientWidth * (d + (im * (1 - d)) - 1) / 2 + "px, 0px) scale(" +
-                              (d + (im * (1 - d))) + ", " +
-                              (d + (im * (1 - d))) +
+                              ratioX * (d + (im * (1 - d))) + ", " +
+                              ratioY * (d + (im * (1 - d))) +
                               ")";
 
                             //ins.style.opacity = 0.5 + 0.5 * (1 - d);
@@ -198,8 +221,8 @@
                             t0 = t1;
                             if (d > 1) d = 1;
                             ins.style.transform = "translate(0px, " + ins.clientHeight * ((1 - d) + (im * d) - 1) / 2 + "px) scale(" +
-                              (1 - d + (im * d)) + ", " +
-                              (1 - d + (im * d)) +
+                              ratioX * (1 - d + (im * d)) + ", " +
+                              ratioY * (1 - d + (im * d)) +
                               ")";
                           
                             //ins.style.opacity = 0.5 + 0.5 * d;
@@ -220,8 +243,8 @@
                             t0 = t1;
                             if (d > 1) d = 1;
                             ins.style.transform = "translate(0px, " + ins.clientHeight * (d + (im * (1 - d)) - 1) / 2 + "px) scale(" +
-                              (d + (im * (1 - d))) + ", " +
-                              (d + (im * (1 - d))) +
+                              ratioX * (d + (im * (1 - d))) + ", " +
+                              ratioY * (d + (im * (1 - d))) +
                               ")";
                           
                             //ins.style.opacity = 0.5 + 0.5 * (1 - d);

@@ -1,5 +1,3 @@
-// orbiteque UI Rotos Ovals Creatia
-
 Crisp = (function () {
     function crispBitmap (cnvim) {
         "use strict";

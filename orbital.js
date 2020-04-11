@@ -1,13 +1,243 @@
 // orbiteque UI Rotos Ovals Creatia
 
+function generateGrid (mode, width, height, nlines, lineWidth) {
+    //nlines = 4 * 16;
+    var cnvim = document.createElement ("canvas");
+    cnvim.width = width;
+    cnvim.height = height;
+    var ctxim = cnvim.getContext('2d');
+    
+    ctxim.fillStyle = "white";//fill1;//"rgb(255, 255, 150)";
+    ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+    ctxim.lineWidth = lineWidth;
+    ctxim.strokeStyle = "gray";
+    var nlines = nlines;
+    var lw = cnvim.width / nlines;
+    var lh = cnvim.height / nlines;
+
+    if (mode === "grid") {
+        for (var x = 0; x < nlines; x++) {
+            ctxim.beginPath();
+            ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
+            ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
+            ctxim.stroke(); 
+        }
+        
+        
+        for (var y = 0; y < nlines; y++) {
+            ctxim.beginPath();
+            ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
+            ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
+            ctxim.stroke(); 
+        }
+
+        //ctxim.strokeStyle = "rgb(0,0,0)";
+        //ctxim.lineWidth = lineWidth * 2;
+        ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
+        
+        var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+        
+        ctxim.font = "12pt sans-serif";
+        ctxim.fillStyle = "black";
+        ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+    
+    } else if (mode === "polar") {
+        ctxim.lineWidth = 1;
+        for (var x = 0; x <= nlines / 2; x++) {
+            ctxim.beginPath();
+            ctxim.ellipse (
+                Math.floor (width / 2) + 0.5,
+                Math.floor (height / 2) + 0.5,
+                x * lw,
+                x * lh,
+                0,
+                0,
+                2 * Math.PI,
+                false
+            );
+            ctxim.stroke(); 
+
+        }
+        
+        for (var a = 0; a < 2 * Math.PI; a += Math.PI / 8) {
+            ctxim.beginPath();
+            ctxim.moveTo(Math.floor (width / 2) + 0.5, Math.floor (height / 2) + 0.5);
+            ctxim.lineTo(Math.floor (width / 2) + 0.5 + Math.cos (a) * width / 2, Math.floor (height / 2) + 0.5 + Math.sin(a) * height / 2);
+            ctxim.stroke(); 
+        }
+
+        ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
+        
+        var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+        
+        ctxim.font = "12pt sans-serif";
+        ctxim.fillStyle = "black";
+        ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+
+    } else {
+        for (var y = 0; y <= nlines - 1; y+=4) {
+            if ((y / 4) % 2 == 0 ) {
+                ctxim.fillStyle = "rgb(230,230,230)";
+                ctxim.fillRect(0.5, Math.floor(y * lh) + lh * 2, cnvim.width - 0.5, lh * 4);
+            }
+        }
+
+        for (var y = 1; y < nlines + 1; y++) {
+                //var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
+                var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+                ctxim.font = "18pt sans-serif";
+                ctxim.fillStyle = "rgb(0,0,0)";
+                ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh - 10);
+        }
+    }
+
+    /*
+    ctxim.strokeStyle = "black";
+    ctxim.beginPath();
+    ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
+    ctxim.lineTo(cnvim.width, Math.floor(cnvim.height / 2) + 0.5);
+    ctxim.stroke(); 
+    ctxim.beginPath();
+    ctxim.moveTo(Math.floor(cnvim.width / 2) + 0.5, 0);
+    ctxim.lineTo(Math.floor(cnvim.width / 2) + 0.5, cnvim.height);
+    ctxim.stroke(); 
+    */
+    /*
+    */
+    //ctxim.strokeStyle = "rgb(255, 0, 0)";
+
+    
+    return cnvim
+}
+
 Crisp = (function () {
+    var step = 2;
+    
+    var log = [-Infinity];
+    for (var i = 1; i < 65535; i++) {
+        //log.push (Math.ceil (Math.log2(i)));
+        log.push (Math.ceil (Math.log(i) / Math.log(step)));
+    }
+
+    function interpolate (ratio, pixf, pixc) {
+        var f = ~~ratio;
+        var c = f + 1;
+
+        var f1 = (ratio - f);
+        var c1 = (c - ratio);
+        
+        return (
+            ((255                                                  ) <<  24) |
+            ((c1 * (pixf <<  24 >>> 24) + f1 * (pixc <<  24 >>> 24)) <<  16) |
+            ((c1 * (pixf <<  16 >>> 24) + f1 * (pixc <<  16 >>> 24)) <<   8) |
+            ((c1 * (pixf <<   8 >>> 24) + f1 * (pixc <<   8 >>> 24))       )
+        );
+    }
+
+    function crispBitmap3 (cnvim) {
+        "use strict";
+        var ctxim = cnvim.getContext('2d');
+        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        //var dataim = imgim.data;
+        
+        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: step, images: []};        
+        var iWidth = cnvim.width;
+        var iHeight = cnvim.height;
+
+        var dataH = {im: imageDataim, cnv: cnvim}//dataim;
+        cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
+
+        while (true) {
+            iWidth = Math.ceil (iWidth / cnvScaled.step);
+            iHeight = Math.ceil (iHeight / cnvScaled.step);
+            
+            var cnv = document.createElement ("canvas")
+            cnv.width = iWidth;
+            cnv.height = iHeight;
+            var ctx = cnv.getContext("2d");
+            var img = ctx.createImageData(iWidth, iHeight);
+            
+            resize.hermiteInterpolation (imageDataim, img);
+            ctx.putImageData(img, 0, 0)            
+            
+            dataH = {cnv: cnv, im: img};
+            
+            cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
+            
+            imageDataim = img;
+
+            if (iWidth <= 4 || iHeight <= 4) break;
+        }
+        
+        return cnvScaled;
+    }
+    
+    function crispBitmapXY3 (cnvim) {
+        "use strict";
+        var ctxim = cnvim.getContext('2d');
+        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        
+        var cnvScaled1 = {width: cnvim.width, height: cnvim.height, step: step, images: []};
+        
+        var iWidth = cnvim.width;
+        var iHeight = cnvim.height;
+
+        var dataW = {im: imageDataim, cnv: cnvim};
+        cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, dataBuffer: new Uint32Array(dataW.im.data.buffer), canvas: dataW.cnv}]);
+        var x = cnvScaled1.images.length - 1;
+        
+        while (true) {
+            var dataH = dataW;
+            while (iHeight / cnvScaled1.step > 4) {
+                iHeight = Math.ceil (iHeight / cnvScaled1.step);
+                
+                var cnv = document.createElement ("canvas")
+                cnv.width = iWidth;
+                cnv.height = iHeight;
+                var ctx = cnv.getContext("2d");
+                var img = ctx.createImageData(iWidth, iHeight);
+                resize.hermiteInterpolation (dataH.im, img);
+                ctx.putImageData(img, 0, 0)            
+                
+                dataH = {cnv: cnv, im: img};
+
+                cnvScaled1.images[x].push ({width: iWidth, height: iHeight, imageData: dataH.im, dataBuffer: new Uint32Array(dataH.im.data.buffer), canvas: dataH.cnv});
+                
+            }
+            
+            iHeight = cnvim.height;
+            if (iWidth / cnvScaled1.step > 4) {
+                iWidth = Math.ceil (iWidth / cnvScaled1.step);
+
+                var cnv = document.createElement ("canvas")
+                cnv.width = iWidth;
+                cnv.height = iHeight;
+                var ctx = cnv.getContext("2d");
+                var img = ctx.createImageData(iWidth, iHeight);
+                
+                resize.hermiteInterpolation (dataW.im, img);
+                ctx.putImageData(img, 0, 0)            
+                
+                dataW = {cnv: cnv, im: img};
+
+                cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, dataBuffer: new Uint32Array(dataW.im.data.buffer), canvas: dataW.cnv}]);
+                
+                x = cnvScaled1.images.length - 1;
+
+            } else
+                break;
+        }
+        
+        return cnvScaled1;
+    }
+
     function crispBitmap (cnvim) {
         "use strict";
         var ctxim = cnvim.getContext('2d');
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
         //var dataim = imgim.data;
         
-        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: 2, images: []};
+        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: step, images: []};
         
         var iWidth = cnvim.width;
         var iHeight = cnvim.height;
@@ -16,29 +246,163 @@ Crisp = (function () {
         cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
 
         while (true) {
-            var dataW = crispX (dataH.im, iWidth, iHeight, cnvScaled.step);
+            var dataW = crispX (dataH.cnv, dataH.im, iWidth, iHeight, cnvScaled.step);
+            //var dataW = crispX (dataH.cnv, iWidth, iHeight, cnvScaled.step);
             iWidth = Math.ceil (iWidth / cnvScaled.step);
 
-            dataH = crispY (dataW.im, iWidth, iHeight, cnvScaled.step);
+            dataH = crispY (dataW.cnv, dataW.im, iWidth, iHeight, cnvScaled.step);
+            //dataH = crispY (dataW.cnv, iWidth, iHeight, cnvScaled.step);
             iHeight = Math.ceil (iHeight / cnvScaled.step);
             
             cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
 
-            if (iWidth === 1 && iHeight == 1) break;
+            if (iWidth <= 4 || iHeight <= 4) break;
         }
         
         return cnvScaled;
     }
 
-    function crispX (imageData1, width1, height1, step) {
+    function crispBitmapXY (cnvim) {
+        "use strict";
+        var ctxim = cnvim.getContext('2d');
+        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        
+        var cnvScaled1 = {width: cnvim.width, height: cnvim.height, step: step, images: []};
+        
+        var iWidth = cnvim.width;
+        var iHeight = cnvim.height;
+
+        var dataW = {im: imageDataim, cnv: cnvim};
+        cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, dataBuffer: new Uint32Array(dataW.im.data.buffer), canvas: dataW.cnv}]);
+        var x = cnvScaled1.images.length - 1;
+        
+        while (true) {
+            var dataH = dataW;
+            while (iHeight / cnvScaled1.step > 4) {
+                dataH = crispY (dataH.cnv, dataH.im, iWidth, iHeight, cnvScaled1.step);
+                //dataH = crispY (dataH.cnv, iWidth, iHeight, cnvScaled1.step);
+                iHeight = Math.ceil (iHeight / cnvScaled1.step);
+                cnvScaled1.images[x].push ({width: iWidth, height: iHeight, imageData: dataH.im, dataBuffer: new Uint32Array(dataH.im.data.buffer), canvas: dataH.cnv});
+            }
+            
+            iHeight = cnvim.height;
+            if (iWidth / cnvScaled1.step > 4) {
+                dataW = crispX (dataW.cnv, dataW.im, iWidth, iHeight, cnvScaled1.step);
+                //dataW = crispX (dataW.cnv, iWidth, iHeight, cnvScaled1.step);
+                iWidth = Math.ceil (iWidth / cnvScaled1.step);
+                cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, dataBuffer: new Uint32Array(dataW.im.data.buffer), canvas: dataW.cnv}]);
+                x = cnvScaled1.images.length - 1;
+            } else
+                break;
+        }
+        
+        return cnvScaled1;
+    }
+
+    function crispX0 (oldCnv, imageData1, width1, height1, step) {
+        "use strict";
+        var data1 = imageData1.data;
+        var cnv1 = document.createElement ("canvas")
+        cnv1.width = Math.ceil (width1 / step);
+        cnv1.height = height1;
+        
+        var ctx1 = cnv1.getContext('2d');
+        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
+        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+        
+        return {cnv: cnv1, im: imData};
+    }
+    
+    function crispY0 (oldCnv, imageData1, width1, height1, step) {
+        "use strict";
+        var data1 = imageData1.data;
+        var cnv1 = document.createElement ("canvas")
+        cnv1.width = width1;
+        cnv1.height = Math.ceil (height1 / step);
+        
+        var ctx1 = cnv1.getContext('2d');
+        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
+        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+
+        return {cnv: cnv1, im: imData};
+    }
+
+    function crispX (oldCnv, imageData1, width1, height1, step) {
         "use strict";
         var data1 = imageData1.data;
         var cnv1 = document.createElement ("canvas")
         cnv1.width = Math.ceil (width1 / step);
         cnv1.height = height1;
 
-        var ctx1 = cnv1.getContext('2d');
+        var ctx1 = cnv1.getContext('2d');        
+        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
+        var data = imData.data;
         
+        var source = new Uint32Array(data1.buffer);
+        var target = new Uint32Array(data.buffer);
+        
+        for (var cy = 0; cy < height1; cy += 1) {
+            for (var cx = 1 / step; cx < width1; cx += step) {
+                var ci1 = (cy * width1 + Math.floor (cx));
+                var ci = (cy * cnv1.width + Math.floor (cx / step));
+                if (Math.floor (cx) + 1 > width1 - 1) {
+                    var ci2 = (cy * width1 + Math.floor (cx));
+                } else {
+                    var ci2 = (cy * width1 + Math.floor (cx) + 1);
+                }
+                
+                if (source[ci1] >>> 24 === 255 && source[ci2] >>> 24 === 255)
+                    target[ci] = interpolate (cx, source[ci1], source[ci2]);
+            }
+        }
+
+        ctx1.putImageData(imData, 0, 0);
+
+        return {cnv: cnv1, im: imData};
+    }
+
+    function crispY (oldCnv, imageData1, width1, height1, step) {
+        "use strict";
+        var data1 = imageData1.data;
+        var cnv1 = document.createElement ("canvas")
+        cnv1.width = width1;
+        cnv1.height = Math.ceil (height1 / step);
+        
+        var ctx1 = cnv1.getContext('2d');        
+        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
+        var data = imData.data;
+        
+        var source = new Uint32Array(data1.buffer);
+        var target = new Uint32Array(data.buffer);
+
+        for (var cy = 1 / step; cy < height1; cy += step) {
+            for (var cx = 0; cx < width1; cx += 1) {
+                var ci1 = (Math.floor (cy) * width1 + cx);
+                var ci = (Math.floor (cy / step) * cnv1.width + cx);
+                if (Math.floor (cy) + 1 > height1 - 1) {
+                    var ci2 = ((Math.floor (cy)) * width1 + cx);
+                } else {
+                    var ci2 = ((Math.floor (cy) + 1) * width1 + cx);
+                }
+                
+                if (source[ci1] >>> 24 === 255 && source[ci2] >>> 24 === 255)
+                    target[ci] = interpolate (cy, source[ci1], source[ci2]);
+            }
+        }
+        
+        ctx1.putImageData(imData, 0, 0);
+
+        return {cnv: cnv1, im: imData};
+    }
+
+    function crispX2 (oldCnv, imageData1, width1, height1, step) {
+        "use strict";
+        var data1 = imageData1.data;
+        var cnv1 = document.createElement ("canvas")
+        cnv1.width = Math.ceil (width1 / step);
+        cnv1.height = height1;
+
+        var ctx1 = cnv1.getContext('2d');        
         var imData = ctx1.createImageData(cnv1.width, cnv1.height);
         var data = imData.data;
         
@@ -64,16 +428,15 @@ Crisp = (function () {
 
         return {cnv: cnv1, im: imData};
     }
-    
-    function crispY (imageData1, width1, height1, step) {
+
+    function crispY2 (oldCnv, imageData1, width1, height1, step) {
         "use strict";
         var data1 = imageData1.data;
         var cnv1 = document.createElement ("canvas")
         cnv1.width = width1;
         cnv1.height = Math.ceil (height1 / step);
-
-        var ctx1 = cnv1.getContext('2d');
         
+        var ctx1 = cnv1.getContext('2d');        
         var imData = ctx1.createImageData(cnv1.width, cnv1.height);
         var data = imData.data;
         
@@ -101,44 +464,11 @@ Crisp = (function () {
         return {cnv: cnv1, im: imData};
     }
 
-    function crispBitmapXY (cnvim) {
-        "use strict";
-        var ctxim = cnvim.getContext('2d');
-        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
-        
-        var cnvScaled1 = {width: cnvim.width, height: cnvim.height, step: 2, images: []};
-        
-        var iWidth = cnvim.width;
-        var iHeight = cnvim.height;
-
-        var dataW = {im: imageDataim, cnv: cnvim};
-        cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
-        var x = cnvScaled1.images.length - 1;
-        
-        while (true) {
-            var dataH = dataW;
-            while (iHeight / cnvScaled1.step > 1) {
-                dataH = crispY (dataH.im, iWidth, iHeight, 2);
-                iHeight = Math.ceil (iHeight / 2);
-                cnvScaled1.images[x].push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
-            }
-            
-            iHeight = cnvim.height;
-            if (iWidth / cnvScaled1.step > 1) {
-                dataW = crispX (dataW.im, iWidth, iHeight, 2);
-                iWidth = Math.ceil (iWidth / 2);
-                cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, canvas: dataW.cnv}]);
-                x = cnvScaled1.images.length - 1;
-            } else
-                break;
-        }
-        
-        return cnvScaled1;
-    }
-
     return {
         crispBitmap: crispBitmap,
-        crispBitmapXY: crispBitmapXY
+        crispBitmapXY: crispBitmapXY,
+        log: log,
+        step: step
     }
 }) ();
 
@@ -154,11 +484,6 @@ function FishEye (radius, squashX, squashY, superSampling) {
     var renderMap;
     var tmpRenderMap;
 
-    var log2 = [1];
-    for (var i = 1; i < 65535; i++) {
-        log2.push (Math.ceil (Math.log2(i)));
-    }
-
     function initFishEye(magn) {
         "use strict";
         var feWidth = Math.floor(radius * squashX * magn);
@@ -167,7 +492,7 @@ function FishEye (radius, squashX, squashY, superSampling) {
 	    var feArray = new Float32Array (feWidth * feHeight * 4 * 4);
 
 	    var maxR = radius / squashY / squashX;
-        //var maxR = radius / squashX / squashY;
+        
         for (var y = -feHeight; y < feHeight; y++) {
             for (var x = -feWidth; x < feWidth; x++) {
                 var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
@@ -193,7 +518,8 @@ function FishEye (radius, squashX, squashY, superSampling) {
                         feArray[i]     = (feWidth + Math.cos (a) * newr * squashX / curvatureFrontier);
                         feArray[i + 1] = (feHeight + Math.sin (a) * newr * squashY / curvatureFrontier);
 
-                        var d = 1 / 2;
+                        /*
+                        var d = 0.5;//(superSampling <= 1? 0.5: 0.5) * superSampling;
                         if (x >= 0) {
                             var x0 = x - d;
                             var x1 = x + d;
@@ -215,24 +541,60 @@ function FishEye (radius, squashX, squashY, superSampling) {
                         var a0 = Math.atan2(y0 / squashY, x0 / squashX);
                         var r0 = Math.sqrt (x0 * x0 / squashX / squashX + y0 * y0 / squashY / squashY) / magn; 
                         var m0 = Math.pow (maxR / (maxR - r0), curvature);
-
+                        
                         var a1 = Math.atan2(y1 / squashY, x1 / squashX);
                         var r1 = Math.sqrt (x1 * x1 / squashX / squashX + y1 * y1 / squashY / squashY) / magn; 
                         var m1 = Math.pow (maxR / (maxR - r1), curvature);
-                        
+
                         var newr0 = r0 * m0;
                         var newr1 = r1 * m1;
                         
-                        var dx = Math.abs ((Math.cos (a0) * newr0 - Math.cos (a1) * newr1) * squashX) / magn / curvatureFrontier
-                        var dy = Math.abs ((Math.sin (a0) * newr0 - Math.sin (a1) * newr1) * squashY) / magn / curvatureFrontier
+                        //var dx = Math.abs ((Math.cos (a0) * newr0 - Math.cos (a1) * newr1) * squashX) / magn / curvatureFrontier + 0.0 * m * Math.abs (Math.sin (a * 2)) + 0.5 * m * Math.abs (Math.cos (a * 2));
+                        //var dy = Math.abs ((Math.sin (a0) * newr0 - Math.sin (a1) * newr1) * squashY) / magn / curvatureFrontier + 0.0 * m * Math.abs (Math.sin (a * 2)) + 0.5 * m * Math.abs (Math.cos (a * 2));
+
+                        var dx = Math.abs ((Math.cos (a0) * newr0 - Math.cos (a1) * newr1) * squashX) / magn / curvatureFrontier;// + (superSampling <= 1? 0: superSampling * m / 2);
+                        var dy = Math.abs ((Math.sin (a0) * newr0 - Math.sin (a1) * newr1) * squashY) / magn / curvatureFrontier;// + (superSampling <= 1? 0: superSampling * m / 2);
+                        */
                         
+                        var d = 1;//(superSampling <= 1? 0.5: 0.5) * superSampling;
+                        if (x >= 0) {
+                            var x0 = x + d;
+                            var x1 = x;
+                            
+                        } else {
+                            var x0 = x - d;
+                            var x1 = x;
+                        }
+                        
+                        if (y >= 0) {
+                            var y0 = y;
+                            var y1 = y + d;
+                            
+                        } else {
+                            var y0 = y;
+                            var y1 = y - d;
+                        }
+
+                        var a0 = Math.atan2(y0 / squashY, x0 / squashX);
+                        var r0 = Math.sqrt (x0 * x0 / squashX / squashX + y0 * y0 / squashY / squashY) / magn; 
+                        var m0 = Math.pow (maxR / (maxR - r0), curvature);
+                        
+                        var a1 = Math.atan2(y1 / squashY, x1 / squashX);
+                        var r1 = Math.sqrt (x1 * x1 / squashX / squashX + y1 * y1 / squashY / squashY) / magn; 
+                        var m1 = Math.pow (maxR / (maxR - r1), curvature);
+
+                        var newr0 = r0 * m0;
+                        var newr1 = r1 * m1;
+                        
+                        var dx = Math.abs ((Math.cos (a0) * newr0 - Math.cos (a) * newr) * squashX) / magn / curvatureFrontier;
+                        var dy = Math.abs ((Math.sin (a1) * newr1 - Math.sin (a) * newr) * squashY) / magn / curvatureFrontier;
+
                         feArray[i + 2] = dx;
                         feArray[i + 3] = dy;
                     }                    
                 }
             }
         }
-        
 
         /*
         for (var y = -feHeight; y < feHeight; y++) {
@@ -408,8 +770,12 @@ function FishEye (radius, squashX, squashY, superSampling) {
         
         var Dout = 8;
         
+        var DpixelsizeX = 9;
+        var DpixelsizeY = 10
         
-        var renderMap = new Float32Array (width * height * 10);
+        var length = 12;
+        
+        var renderMap = new Float32Array (width * height * length);
         
         for (var y1 = 0; y1 < Math.ceil (height); y1++) {
             for (var x1 = 0; x1 < Math.ceil (width); x1++) {
@@ -422,7 +788,7 @@ function FishEye (radius, squashX, squashY, superSampling) {
                 var mX = fishEye.array[fe + 2];// / MAX_INT32;
                 var mY = fishEye.array[fe + 3];// / MAX_INT32;
 
-                var delta = (y1 * width + x1) * 10
+                var delta = (y1 * Math.floor (width) + x1) * length
 
                 var rad = Math.sqrt ((x1 - Math.ceil (width) / 2) * (x1 - Math.ceil (width) / 2) / squashX / squashX + (y1 - Math.ceil (height) / 2) * (y1 - Math.ceil (height) / 2) / squashY / squashY) / superSampling;
                 renderMap[delta + Dout] = 1;
@@ -433,18 +799,21 @@ function FishEye (radius, squashX, squashY, superSampling) {
                 else {
                     
                     // X
-                    var tmpX = Math.floor (mX / magn);
+                    var tmpX = mX / magn;
                         
-                    if (tmpX >= log2.length) {
-                        var bmpscaleX = log2[log2.length - 1];
+                    if (tmpX >= Crisp.log.length) {
+                        var bmpscaleX = Crisp.log[Crisp.log.length - 1];
                     } else {
-                        var bmpscaleX = log2[tmpX];// - 1;
+                        var bmpscaleX = Crisp.log[Math.ceil (tmpX * 0.5)] - 1;
                     }
                     
-                    bmpscaleX = Math.max (bmpscaleX, 1);
+                    bmpscaleX = Math.max (bmpscaleX, 0);
                     bmpscaleX = Math.min (bmpscaleX, cnvScaled.images.length - 1);
                         
-                    var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
+                    //var bmpscalefactorX = cnvScaled.step << (bmpscaleX - 1);
+                    //var bmpscalefactorX = cnvScaled.step * Math.pow (2, bmpscaleX - 1);
+                    var bmpscalefactorX = Math.pow (cnvScaled.step, bmpscaleX);
+                    //var bmpscalefactorX = cnvScaled.step * Math.pow (2, (Math.log2 (tmpX + 1) - 1));
                     //var bmpscalefactorX = tmpX;
                     var finalX = Math.round (X / bmpscalefactorX);
                     
@@ -452,19 +821,22 @@ function FishEye (radius, squashX, squashY, superSampling) {
                     renderMap[delta + DbmpscaleX] = bmpscaleX;
                     renderMap[delta + DbmpscalefactorX] = bmpscalefactorX;
                     renderMap[delta + DfinalX] = finalX;
+                    renderMap[delta + DpixelsizeX] = tmpX;
 
                     // Y
-                    var tmpY = Math.floor (mY / magn);
-                    if (tmpY >= log2.length) {
-                        var bmpscaleY = log2[log2.length - 1];
+                    var tmpY = mY / magn;
+                    if (tmpY >= Crisp.log.length) {
+                        var bmpscaleY = Crisp.log[Crisp.log.length - 1];
                     } else {
-                        var bmpscaleY = log2[tmpY];// - 1;
+                        var bmpscaleY = Crisp.log[Math.ceil (tmpY * 0.5)] - 1;
                     }
                     
-                    bmpscaleY = Math.max (bmpscaleY, 1);
+                    bmpscaleY = Math.max (bmpscaleY, 0);
                     bmpscaleY = Math.min (bmpscaleY, cnvScaled.images.length - 1);
                         
-                    var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
+                    //var bmpscalefactorY = cnvScaled.step << (bmpscaleY - 1);
+                    //var bmpscalefactorY = cnvScaled.step * Math.pow (2, bmpscaleY - 1)
+                    var bmpscalefactorY = Math.pow (cnvScaled.step, bmpscaleY)
                     //var bmpscalefactorY = tmpY;
                     var finalY = Math.round (Y / bmpscalefactorY);
 
@@ -472,6 +844,7 @@ function FishEye (radius, squashX, squashY, superSampling) {
                     renderMap[delta + DbmpscaleY] = bmpscaleY;
                     renderMap[delta + DbmpscalefactorY] = bmpscalefactorY;
                     renderMap[delta + DfinalY] = finalY;
+                    renderMap[delta + DpixelsizeY] = tmpY;
                 }
             }
         }
@@ -576,10 +949,18 @@ function FishEye (radius, squashX, squashY, superSampling) {
 
         return renderMap;
     }
-*/    
+*/
+    
+    //var dabuffer = new ArrayBuffer(Math.pow(2, 24));
+    //var daarr = new Uint32Array(dabuffer);
+    //var asm = asmjs ({Math: Math, Uint32Array: Uint32Array}, {}, daarr.buffer);
+
     function renderFishEye (data, width, height, magn, centerX, centerY, cnvScaled) {
         "use strict";
         
+        width = Math.floor (width);
+        height = Math.floor (height);
+
         if (!renderMap)
             renderMap = prepareFishEyeMap (width, height, magn, 0, 0, cnvScaled);
 
@@ -600,62 +981,307 @@ function FishEye (radius, squashX, squashY, superSampling) {
         var TDfinalX = 0;
         var TDfinalY = 1;
 
+        var DpixelsizeX = 9;
+        var DpixelsizeY = 10
+        
+        var length = 12;
+
         var i = 0;
         
-        for (var y1 = superSampling; y1 < height; y1++) {
-            i += 4 * superSampling;
-            for (var x1 = superSampling; x1 < width; x1++) {
-                var delta2 = (y1 * width + x1) * 2 * 5;
+        function interpolate (ratio, pixf, pixc) {
+            var f = ~~ratio;
+            var c = f + 1;
 
-                if (renderMap[delta2 + Dout] == 0 || renderMap[delta2 + Dout] == 0) {
-                    data[i + 3] = 0;                            // alpha
+            var f1 = (ratio - f);
+            var c1 = (c - ratio);
+            
+            return (
+                ((255                                                  ) <<  24) |
+                ((c1 * (pixf <<  24 >>> 24) + f1 * (pixc <<  24 >>> 24)) <<  16) |
+                ((c1 * (pixf <<  16 >>> 24) + f1 * (pixc <<  16 >>> 24)) <<   8) |
+                ((c1 * (pixf <<   8 >>> 24) + f1 * (pixc <<   8 >>> 24))       )
+            );
+        }
+
+        var dataBuff = new Uint32Array(data.buffer);
+        
+        //const resize_array_right = (array, length, fill_with) => array.concat((new Uint32Array(length)).fill(fill_with)).slice(0, length);
+        //var db = resize_array_right (dataBuff, Math.pow(2, 24) - dataBuff.length, 0);
+
+        for (var y1 = Math.floor (superSampling); y1 < height; y1++) {
+            i += Math.floor (superSampling);
+            var delta = (y1 * width + Math.floor (superSampling)) * length;
+            for (var x1 = Math.floor (superSampling); x1 < width; x1++) {
+                //var delta1 = (y1 * width + x1) * 2;
+                if (renderMap[delta + Dout] > 0) {
+                    /*
+                    var fx = delta1 + TDfinalX;
+                    var fy = delta1 + TDfinalY;
+
+                    tmpRenderMap[fx] = Math.floor ((renderMap[delta + DX] + centerX) / renderMap[delta + DbmpscalefactorX]);
+                    tmpRenderMap[fy] = Math.floor ((renderMap[delta + DY] + centerY) / renderMap[delta + DbmpscalefactorY]);
+                    
+                    var finalX = tmpRenderMap[fx - 2];
+                    if (finalX === tmpRenderMap[fx - 4] || finalX === tmpRenderMap[fx]) {
+                        var finalX0 = (renderMap[delta + DX - length] + centerX) / renderMap[delta + DbmpscalefactorX - length] * 2;
+                        var bmpscaleX = Math.max (renderMap[delta + DbmpscaleX - length] - 1, 0);
+                        var sx = true;
+                    } else {
+                        var finalX0 = (renderMap[delta + DX - length] + centerX) / renderMap[delta + DbmpscalefactorX - length];
+                        var bmpscaleX = Math.max (renderMap[delta + DbmpscaleX - length], 0);
+                        var sx = false;
+                    }
+                    
+                    var finalY = tmpRenderMap[fy - fwidth * 2];
+                    if (finalY === tmpRenderMap[fy - fwidth * 4] || finalY === tmpRenderMap[fy]) {
+                        var finalY0 = (renderMap[delta + DY - fwidth * length] + centerY) / renderMap[delta + DbmpscalefactorY - fwidth * length] * 2;
+                        var bmpscaleY = Math.max (renderMap[delta + DbmpscaleY - fwidth * length] - 1, 0);
+                        var sy = true;
+                    } else {
+                        var finalY0 = (renderMap[delta + DY - fwidth * length] + centerY) / renderMap[delta + DbmpscalefactorY - fwidth * length];
+                        var bmpscaleY = Math.max (renderMap[delta + DbmpscaleY - fwidth * length], 0);
+                        var sy = false;
+                    }
+                    
+                    var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
+
+                    if (finalX0 >= 0 && finalX0 < scaled.width - 1 && finalY0 >= 0 && finalY0 < scaled.height - 1) {
+                        var buff = scaled.dataBuffer;
+
+                        var iim1 = (Math.floor(finalY0) * scaled.width + Math.floor (finalX0));
+                        if (sx)
+                            var pixf = interpolate (finalX0, buff[iim1], buff[iim1 + 1]);
+                        else
+                            var pixf = buff[iim1];
+                        
+                        if (sy) {
+                            var iim2 = iim1 + scaled.width;
+                            var pixc = interpolate (finalX0, buff[iim2], buff[iim2 + 1]);
+
+                            var pix = interpolate (finalY0, pixf, pixc);
+                        } else
+                            pix = pixf;
+                            
+                        dataBuff[i] = pix;
+                    }
+                    */
+                    
+                    var finalX0 = (renderMap[delta + DX] + centerX) / renderMap[delta + DbmpscalefactorX];
+                    var finalY0 = (renderMap[delta + DY] + centerY) / renderMap[delta + DbmpscalefactorY];
+                    var scaled = cnvScaled.images[renderMap[delta + DbmpscaleX]][renderMap[delta + DbmpscaleY]];
+
+                    if (finalX0 >= 0 && finalX0 < scaled.width - 1 && finalY0 >= 0 && finalY0 < scaled.height - 1) {
+                        var buff = scaled.dataBuffer;
+                        /*
+                        var iim = (Math.floor(finalY0) * scaled.width + Math.floor (finalX0));
+                        var b1 = buff[iim];
+                        var b2 = buff[iim + 1];
+                        
+                        iim += scaled.width;
+                        var b3 = buff[iim];
+                        var b4 = buff[iim + 1];
+                        
+                        asm.putPix (i|0, +finalX0, +finalY0, b1|0, b2|0, b3|0, b4|0);
+                        */
+                        var iim0 = (~~finalY0 * scaled.width + ~~finalX0);
+                        var iim1 = iim0 + scaled.width;
+                        dataBuff[i] = interpolate (finalY0, interpolate (finalX0, buff[iim0], buff[iim0 + 1]), interpolate (finalX0, buff[iim1], buff[iim1 + 1]));
+                        /*
+                        var iim = (Math.floor(finalY0) * scaled.width + Math.floor (finalX0));
+                        var pixf = asm.interpolate (finalX0, buff[iim], buff[iim + 1]);
+                        
+                        iim += scaled.width;
+                        var pixc = asm.interpolate (finalX0, buff[iim], buff[iim + 1]);
+
+                        var pix = asm.interpolate (finalY0, pixf, pixc);
+                        dataBuff[i] = pix;
+                        //asm.put (i, pix);
+                        */
+                    }
+                    /*
+                    //checkpoint interpolation
+                    var finalX0 = (renderMap[delta + DX] + centerX) / renderMap[delta + DbmpscalefactorX];
+                    var finalY0 = (renderMap[delta + DY] + centerY) / renderMap[delta + DbmpscalefactorY];
+                    var scaled = cnvScaled.images[renderMap[delta + DbmpscaleX]][renderMap[delta + DbmpscaleY]];
+
+                    if (finalX0 >= 0 && finalX0 < scaled.width - 1 && finalY0 >= 0 && finalY0 < scaled.height - 1) {
+                        var buff = scaled.dataBuffer;
+                        
+                        var iim = (Math.floor(finalY0) * scaled.width + Math.floor (finalX0));
+                        var pixf = asm.interpolate (finalX0, buff[iim], buff[iim + 1]);
+                        
+                        iim += scaled.width;
+                        var pixc = asm.interpolate (finalX0, buff[iim], buff[iim + 1]);
+
+                        var pix = asm.interpolate (finalY0, pixf, pixc);
+                        //dataBuff[i] = pix;
+                        asm.put (i, pix);
+                    }
+                    */
+                    /*
+                    var dx = Math.floor (finalX1) - Math.floor (finalX0);
+                    var dy = Math.floor (finalY1) - Math.floor (finalY0);
+                    
+                    var fx = 1 / dx;
+                    var fy = 1 / dy;
+                    if (dx > 0 && dx < 4 && dy > 0 && dy < 4) {
+                        var pixx0 = 0, pixx1 = 0;
+
+                        var ry = 0, gy = 0, by = 0;
+                        for (var yy = 0; yy <= dy; yy++) {
+                            var iim = (Math.floor(finalY0 + yy) * scaled.width + Math.floor (finalX0));
+
+                            var rx = 0, gx = 0, bx = 0;
+                            for (var xx = 0; xx < dx; xx++) {
+                            
+                                if (xx === 0)
+                                    var p = interpolate (finalX0, buff[iim], buff[iim + 1]);
+
+                                else if (xx === dx - 1)
+                                    var p = interpolate (finalX1, buff[iim + xx], buff[iim + xx + 1]);
+
+                                else
+                                    var p = interpolate (0.5, buff[iim + xx], buff[iim + xx + 1]);
+
+                                rx += Math.floor ((p <<  24 >>> 24) * fx)
+                                gx += Math.floor ((p <<  16 >>> 24) * fx)
+                                bx += Math.floor ((p <<   8 >>> 24) * fx)
+                            }
+                            
+                            pixx0 = pixx1;
+                            pixx1 = ( 
+                                (255  <<  24) |
+                                (rx   <<  16) |
+                                (gx   <<   8) |
+                                (bx         )
+                            );
+                            
+                            if (yy > 0) {
+                                if (yy === 1)
+                                    var p = interpolate (finalY0, pixx0, pixx1);
+
+                                else if (yy === dy)
+                                    var p = interpolate (finalY1, pixx0, pixx1);
+
+                                else
+                                    var p = interpolate (0.5, pixx0, pixx1);
+
+                                ry += Math.floor ((p <<  24 >>> 24) * fy)
+                                gy += Math.floor ((p <<  16 >>> 24) * fy)
+                                by += Math.floor ((p <<   8 >>> 24) * fy)
+                            }
+                        }
+                        
+                        var pix =
+                        ( 
+                            (255  <<  24) |
+                            (ry   <<  16) |
+                            (gy   <<   8) |
+                            (by         )
+                        );
+                        
+                        dataBuff[i] = pix;
+                        
+                    }
+                    */
+                }
+                delta += length;
+                i += 1;
+            }
+        }
+        //dataBuff.set (daarr.subarray(0, dataBuff.length));
+    }
+    
+    /*
+    function renderFishEye (data, width, height, magn, centerX, centerY, cnvScaled) {
+        "use strict";
+        
+        width = Math.floor (width);
+        height = Math.floor (height);
+
+        if (!renderMap)
+            renderMap = prepareFishEyeMap (width, height, magn, 0, 0, cnvScaled);
+
+        var x1 = 0, y1 = 0;
+
+        var DX = 0;
+        var DbmpscaleX = 1;
+        var DbmpscalefactorX = 2;
+        var DfinalX = 3;
+        
+        var DY = 4;
+        var DbmpscaleY = 5;
+        var DbmpscalefactorY = 6;
+        var DfinalY = 7;
+
+        var Dout = 8;
+        
+        var TDfinalX = 0;
+        var TDfinalY = 1;
+
+        var DpixelsizeX = 9;
+        var DpixelsizeY = 10
+        
+        var length = 12;
+
+        var i = 0;
+        
+        var dataBuff = new Int32Array(data.buffer);
+        var fwidth = Math.floor (width);
+
+        for (var y1 = Math.floor (superSampling); y1 < height; y1++) {
+            i += Math.floor (superSampling);
+
+            for (var x1 = Math.floor (superSampling); x1 < width; x1++) {
+                var delta = (y1 * fwidth + x1) * length;
+
+                if (renderMap[delta + Dout] === 0) {
+                    dataBuff[i] = 0;                            // alpha
 
                 } else {
-
-                    var finalX = (renderMap[delta2 + DX] + centerX) / renderMap[delta2 + DbmpscalefactorX] * 2;
-                    var finalY = (renderMap[delta2 + DY] + centerY) / renderMap[delta2 + DbmpscalefactorY] * 2;
-
-                    var bmpscaleX = Math.max (renderMap[delta2 + DbmpscaleX] - 1, 0);
-                    var bmpscaleY = Math.max (renderMap[delta2 + DbmpscaleY] - 1, 0);
-
+                    var finalX = (renderMap[delta + DX] + centerX) / renderMap[delta + DbmpscalefactorX] * 2;
+                    var bmpscaleX = Math.max (renderMap[delta + DbmpscaleX] - 1, 0);
+                    
+                    var finalY = (renderMap[delta + DY] + centerY) / renderMap[delta + DbmpscalefactorY] * 2;
+                    var bmpscaleY = Math.max (renderMap[delta + DbmpscaleY] - 1, 0);
+                    
                     var scaled = cnvScaled.images[bmpscaleX][bmpscaleY];
-                    var scaledData = scaled.imageData.data;
-                    if (finalX >= 0 && finalX < scaled.width - 1 && finalY >= 0 && finalY < scaled.height - 1) {
-                        var ffx = Math.floor (finalX);
-                        var ffy = Math.floor (finalY);
-                        var cfx = Math.ceil (finalX);
-                        var cfy = Math.ceil (finalY);
+                    var buff = scaled.dataBuffer;
+                    
+                    //dataBuff[i] = buff[(Math.floor(finalY) * scaled.width + Math.floor (finalX))];
+                    
+                    function interpolate (ratio, pixf, pixc) {
+                        var ffy = Math.floor (ratio);
+                        var cfy = ffy + 1;
 
-                        if (finalX == ffx) cfx = ffx + 1;
-                        if (finalY == ffy) cfy = ffy + 1;
-
-                        var ffx1 = finalX - ffx;
-                        var ffy1 = finalY - ffy;
-                        var cfx1 = cfx - finalX;
-                        var cfy1 = cfy - finalY;
+                        var ffy1 = (ratio - ffy);
+                        var cfy1 = (cfy - ratio);
                         
-                        var iim1 = (ffy * scaled.width + ffx) * 4;
-                        var iim2 = (ffy * scaled.width + cfx) * 4;
-                        var iim3 = (cfy * scaled.width + ffx) * 4;
-                        var iim4 = (cfy * scaled.width + cfx) * 4;
+                        return (
+                            ((255                                                      ) <<  24) |
+                            ((cfy1 * (pixf <<  24 >>> 24) + ffy1 * (pixc <<  24 >>> 24)) <<  16) |
+                            ((cfy1 * (pixf <<  16 >>> 24) + ffy1 * (pixc <<  16 >>> 24)) <<   8) |
+                            ((cfy1 * (pixf <<   8 >>> 24) + ffy1 * (pixc <<   8 >>> 24))       )
+                        );
+                    }
 
-                        data[i]     = cfy1 * (cfx1 * scaledData[iim1] + ffx1 * scaledData[iim2]) + 
-                                      ffy1 * (cfx1 * scaledData[iim3] + ffx1 * scaledData[iim4]);                   // red
-                        data[i + 1] = cfy1 * (cfx1 * scaledData[iim1 + 1] + ffx1 * scaledData[iim2 + 1]) + 
-                                      ffy1 * (cfx1 * scaledData[iim3 + 1] + ffx1 * scaledData[iim4 + 1]);           // green
-                        data[i + 2] = cfy1 * (cfx1 * scaledData[iim1 + 2] + ffx1 * scaledData[iim2 + 2]) + 
-                                      ffy1 * (cfx1 * scaledData[iim3 + 2] + ffx1 * scaledData[iim4 + 2]);           // blue
-                        data[i + 3] = 255;                                                                          // alpha
-
-                    } else
-                        data[i + 3] = 0;                            // alpha
+                    var iim = (Math.floor(finalY) * scaled.width + Math.floor (finalX));
+                    var pixf = interpolate (finalX, buff[iim], buff[iim + 1]);
+                    
+                    iim += scaled.width;
+                    var pixc = interpolate (finalX, buff[iim], buff[iim + 1]);
+                    
+                    var pix = interpolate (finalY, pixf, pixc);
+                    
+                    dataBuff[i] = pix;
                     
                 }
                 
-                i += 4;
+                i += 1;
             }
         }
     }
+    */
     /*
     function renderFishEye (data, width, height, magn, centerX, centerY, cnvScaled) {
         "use strict";
@@ -749,6 +1375,388 @@ function FishEye (radius, squashX, squashY, superSampling) {
     }
 }
 
+function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle) {
+    var pixelPrecision = 1 / Math.pow (2, 16);
+
+    var hilight = "white"
+    var fill1 = "rgb(255, 255, 255)";//"lightgray";
+    //var fill1r = 255;
+    //var fill1g = 255;
+    //var fill1b = 150;
+    var fill1r = 225;
+    var fill1g = 225;
+    var fill1b = 225;
+    var stroke1 = "gray";
+    var fill2 = stroke1;
+    var stroke2 = fill1;
+
+    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint) {
+        function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
+            var beta = angle + alpha - Math.PI / 2;
+            
+            var ra = 0;
+            var xa = x0 + r0 * Math.cos (beta);
+            var ya = y0 + r0 * Math.sin (beta);
+            
+            var rb = 2 * r1;
+            var xb = x0 + (r0 + rb) * Math.cos (beta);
+            var yb = y0 + (r0 + rb) * Math.sin (beta);
+
+            var dr = (rb - ra) / 2;
+            var dx = (xb - xa) / 2;
+            var dy = (yb - ya) / 2;
+            
+            ra += dr;
+            xa += dx;
+            ya += dy;
+
+            var j;
+            do {
+                dx /= 2;
+                dy /= 2;
+                dr /= 2;
+                var d = Math.sqrt (Math.pow ((xa - x1), 2) + Math.pow ((ya - y1), 2));
+                if (Math.abs (ra - r1) <= d) {
+                    xa -= dx;
+                    ya -= dy;
+                    ra -= dr;
+                } else {
+                    xa += dx;
+                    ya += dy;
+                    ra += dr;
+                }
+            } while (dr > pixelPrecision);
+
+            return {
+                x: (r0 + ra) * Math.cos (beta),
+                y: (r0 + ra) * Math.sin (beta),
+                r: ra,
+                alpha: alpha
+            };
+        }
+        
+        function getNeighbor (c1, direction, x0, y0, r0, x1, y1, r1) {
+            if (direction == "+") {
+                var alpha = c1.alpha / 2;
+                var dalpha = alpha;
+            } else {
+                var alpha = (2 * Math.PI + c1.alpha) / 2;
+                var dalpha = -(2 * Math.PI - alpha);
+            }
+            
+            var da = Math.acos ((2 * r1 - pixelPrecision) / (2 * r1));
+            do {
+                var c2 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
+                dalpha /= 2;
+                var d = Math.sqrt (Math.pow ((c1.x - c2.x), 2) + Math.pow ((c1.y - c2.y), 2));
+                if ((c1.r + c2.r) >= d) {
+                    alpha -= dalpha;
+                } else {
+                    alpha += dalpha;
+                }
+            } while (Math.abs(dalpha) > da);
+
+            return c2;
+        }
+        
+        function clear (fill) {
+            if (!fill) fill = fill2
+            ctx.fillStyle = fill2;
+            ctx.fillRect(0, 0, ww, hh);
+        }
+        
+        function ellipse(ctx, x, y, xDis, yDis) {
+            var kappa = 0.5522848, // 4 * ((√(2) - 1) / 3)
+                ox = xDis * kappa,  // control point offset horizontal
+                oy = yDis * kappa,  // control point offset vertical
+                xe = x + xDis,      // x-end
+                ye = y + yDis;      // y-end
+
+            ctx.moveTo(x - xDis, y);
+            ctx.bezierCurveTo(x - xDis, y - oy, x - ox, y - yDis, x, y - yDis);
+            ctx.bezierCurveTo(x + ox, y - yDis, xe, y - oy, xe, y);
+            ctx.bezierCurveTo(xe, y + oy, x + ox, ye, x, ye);
+            ctx.bezierCurveTo(x - ox, ye, x - xDis, y + oy, x - xDis, y);
+        }
+        
+        var i;
+        
+        var r0 = r1 * ratio;
+        var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
+        var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
+        
+        if (rec === 1) {
+            if (renderHint === "1") {
+                ctx.save ();
+                ctx.beginPath();
+                ctx.ellipse (
+                    x0 * squashX,
+                    y0 * squashY,
+                    r0 * squashX,
+                    r0 * squashY,
+                    0,
+                    0,
+                    2 * Math.PI,
+                    false
+                );
+                ctx.closePath ();
+                ctx.clip ();
+                
+            } else if (renderHint === "1+") {                   
+                
+                ctx.save ();
+                ctx.beginPath ();
+                
+                ctx.moveTo ((x1     ) * squashX, (y1 - r1) * squashY);
+                ctx.lineTo ((x1 - r1) * squashX, (y1 - r1) * squashY);
+                ctx.lineTo ((x1 - r1) * squashX, (y1 + r1) * squashY);
+                ctx.lineTo ((x1 + r1) * squashX, (y1 + r1) * squashY);
+                ctx.lineTo ((x1 + r1) * squashX, (y1 - r1) * squashY);
+                ctx.lineTo ((x1     ) * squashX, (y1 - r1) * squashY);
+                
+                ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
+                ctx.closePath();
+                ctx.clip (); //"evenodd"
+            }
+            
+            clear ();
+            
+            if (renderHint === "1" || renderHint === "1+") {
+                ctx.restore ();
+            }
+        }
+            
+        if (
+            Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr
+        ) {
+            if ((r1 * squashY * squashX) >= minRadius) {
+                var colorFill = fill1;
+                /*
+                if (
+                    (animating || dragging || panning || device === "mouse") &&
+                    (selectedCursor?cursor === selectedCursor: mouse) &&
+                    (mouse?(Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) < r0): true)
+                ) {
+                    colorFill = hilight;
+                } else {
+                */
+                    colorFill = fill1;
+                //}
+                
+                if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
+                    //var ttt1 = (new Date()).getTime();
+                    //for (var abc = 1; abc < 100; abc++)
+                        drawCircle(x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec);
+                        
+                    //alert ((new Date()).getTime() - ttt1);
+                    //return;
+                }
+                
+                if (renderHint !== "1") {                   
+                    var ret, idx, alp;
+                    var got;
+                    var c0, c1;
+                    var alpha = (cursor?cursor.angle:Math.PI);
+                    var ci;
+                    var oldr, delta;
+        
+                    c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
+                    ci = (cursor?cursor.index:0);
+                    if (c0.r * squashX * squashY >= minRadius) {
+                        got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                        if (got) {
+                            idx = ci;
+                            alp = alpha;
+                            ret = got;
+                        }
+                    }
+                    
+                    oldr = c0.r;
+                    c1 = getNeighbor (c0, "+", x0, y0, r0, x1, y1, r1);
+                    alpha = c1.alpha;
+                    ci = (cursor?cursor.index:0);
+                    while (true){
+                        delta = c1.r > oldr;
+                        ci++;
+                        
+                        if (c1.r * squashX * squashY >= minRadius) {
+                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                            if (!ret && got) {
+                                idx = ci;
+                                alp = alpha;
+                                ret = got;
+                            }
+                        } else
+                            if (!delta)
+                                break;
+                        
+                        oldr = c1.r;
+                        c1 = getNeighbor (c1, "+", x0, y0, r0, x1, y1, r1);
+                        alpha = c1.alpha;
+                    }
+                    
+
+                    oldr = c0.r;
+                    c1 = getNeighbor (c0, "-", x0, y0, r0, x1, y1, r1);
+                    alpha = c1.alpha;
+                    ci = (cursor?cursor.index:0);
+                    while (true){
+                        delta = c1.r > oldr;
+                        ci--;
+
+                        if (c1.r * squashX * squashY >= minRadius) {
+                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                            if (!ret && got) {
+                                idx = ci;
+                                alp = alpha;
+                                ret = got;
+                            }
+                        } else
+                            if (!delta)
+                                break;
+                        
+                        oldr = c1.r;
+                        c1 = getNeighbor (c1, "-", x0, y0, r0, x1, y1, r1);
+                        alpha = c1.alpha;
+                    }
+                }
+                
+                var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
+                
+                if (ret || cond) {
+                    var pass = {
+                        rec: rec,
+                        data: data,
+                        index: index,
+                        angle: angle,
+                        index1: idx,
+                        angle1: alp,
+                        revertAng: alp,
+                        cursor: null,
+                        child: ret,
+                        smallX: x0,
+                        smallY: y0,
+                        smallR: r0,
+                        largeX: x1,
+                        largeY: y1,
+                        largeR: r1,
+                        getMetrics: function () {
+                            var c, x;
+                            var a = pass.getAbsoluteAngle();
+                            if (pass.parent) {
+                                x = pass.parent.getMetrics ();
+                                
+                                var rr1 = x.r;
+                                var xx1 = x.x;
+                                var yy1 = x.y;
+                            } else {
+                                var rr1 = r1;
+                                var xx1 = x1;
+                                var yy1 = y1;
+                            }
+                            
+                            var r0 = rr1 * ratio;
+                            var x0 = xx1 + (rr1 - r0) * Math.cos (a - Math.PI / 2);
+                            var y0 = yy1 + (rr1 - r0) * Math.sin (a - Math.PI / 2);
+                            c = getCircle (pass.cursor.angle, x0, y0, r0, xx1, yy1, rr1);
+                            
+                            return {x: x0 + c.x, y: y0 + c.y, r: c.r};
+                        },
+                        getAbsoluteAngle: function () {
+                            return angle;
+                        },
+                        getAngMin: function () {
+                            var m0, m1;
+                            
+                            m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
+
+                            m1 = m0;
+                            for (i = 0; i < data.index; i++)
+                                m1 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
+                            
+                            return m1.alpha;
+                        },
+                        getAngMax: function () {
+                            var m0, m1;
+                            
+                            m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
+
+                            m1 = m0;
+                            for (i = data.index; i < data.children.length - 1; i++)
+                                m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
+                            
+                            return m1.alpha;
+                        },
+                        getCircle: function (ang) {
+                            return getCircle (ang, x0, y0, r0, x1, y1, r1);
+                        },
+                        setAngle: (function () {
+                            if (mouse) {
+                                var alp1 = - angle + 3 * Math.PI / 2 + Math.atan2((y0 * squashY - mouse.y) / squashY, (x0 * squashX - mouse.x) / squashX);
+                                while (alp1 > 2 * Math.PI) alp1 = alp1 - 2 * Math.PI;
+                                while (alp1 < 0) alp1 = alp1 + 2 * Math.PI;
+                            } else {
+                                var alp1 = alp;
+                            }
+                            
+                            var dalp = alp1 - alp;
+                            
+                            var c = getCircle (alp, x0, y0, r0, x1, y1, r1);
+                            
+                            return function (ang, percent) {
+                                if (percent === undefined) percent = 1;
+                                var nc = getCircle (ang, x0, y0, r0, x1, y1, r1);
+                                var sang = ang - dalp * (nc.r / c.r) * percent;
+                                pass.calcCursor (sang);
+                                pass.revertAng = alp;
+                            }
+                        }) (),
+                        revertAngle: function () {
+                            pass.calcCursor (pass.revertAng);
+                        },
+                        calcCursor: function (ang) {
+                            var mi, m1, m2;
+                            mi = idx;
+                            m2 = getCircle (ang, x0, y0, r0, x1, y1, r1);
+                            
+                            if (ang > Math.PI) {
+                                do {
+                                    m1 = m2;
+                                    m2 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
+                                    mi++;
+                                } while (m1.r <= m2.r);
+                                
+                                pass.cursor.index = mi - 1;
+                                pass.cursor.angle = m1.alpha;
+                               
+                            } else {
+                                do {
+                                    m1 = m2;
+                                    m2 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
+                                    mi--;
+                                } while (m1.r <= m2.r);
+                                
+                                pass.cursor.index = mi + 1;
+                                pass.cursor.angle = m1.alpha;
+                            }
+                            
+                            pass.angle1 = ang;
+                        }
+                    };
+                    
+                    if (ret) ret.parent = pass;
+                    
+                    return pass;
+                }
+            }
+        }
+    };
+    
+    return {
+        render: render
+    };
+}
+
 function Orbital (svgContainer, data) {
     "use strict";
 
@@ -766,13 +1774,13 @@ function Orbital (svgContainer, data) {
     cnv.draggable = false;
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
-    
+    /*
     ctx.mozImageSmoothingEnabled    = true
     ctx.imageSmoothingQuality       = "high"
     ctx.webkitImageSmoothingEnabled = true
     ctx.msImageSmoothingEnabled     = true
     ctx.imageSmoothingEnabled       = true
-    
+    */
     
     var superSampling = 1;
 
@@ -786,8 +1794,9 @@ function Orbital (svgContainer, data) {
     var minRadius;
     var recCount = 4;
 
-    var pixelPrecision = 1 / Math.pow (2, 16);
+    //var pixelPrecision = 1 / Math.pow (2, 16);
     var dragPrecision = Math.pow (2, 8);
+    /*
     var hilight = "white"
     var fill1 = "rgb(255, 255, 255)";//"lightgray";
     //var fill1r = 255;
@@ -799,18 +1808,13 @@ function Orbital (svgContainer, data) {
     var stroke1 = "gray";
     var fill2 = stroke1;
     var stroke2 = fill1;
+    */
 
     var MAX_INT32 = Math.pow (2, 31) - 1;// 4294967296 / 2 - 1;
 
     var cnvCache;
     var cache, isCache;
-    
-    var log2 = [1];
-    for (var i = 1; i < 65535; i++) {
-        log2.push (Math.ceil (Math.log2(i)));
-    }
-
-
+/*    
     function ellipse(ctx, x, y, xDis, yDis) {
         var kappa = 0.5522848, // 4 * ((√(2) - 1) / 3)
             ox = xDis * kappa,  // control point offset horizontal
@@ -824,7 +1828,7 @@ function Orbital (svgContainer, data) {
         ctx.bezierCurveTo(xe, y + oy, x + ox, ye, x, ye);
         ctx.bezierCurveTo(x - ox, ye, x - xDis, y + oy, x - xDis, y);
     }
-
+*/
 /*	
 	var a32 = new Uint32Array (250 * 250 * 2);
 	var fe = InitFishEye ({Math:Math,Uint32Array:Uint32Array}, {}, a32.buffer)
@@ -851,116 +1855,7 @@ function Orbital (svgContainer, data) {
 	}
 */
 
-    function generateGrid (mode, width, height, nlines, lineWidth) {
-        nlines = 4 * 16;
-        var cnvim = document.createElement ("canvas");
-        cnvim.width = width;
-        cnvim.height = height;
-        var ctxim = cnvim.getContext('2d');
-        
-        ctxim.fillStyle = fill1;//"rgb(255, 255, 150)";
-        ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
-        ctxim.lineWidth = lineWidth;
-        ctxim.strokeStyle = "gray";
-        var nlines = nlines;
-        var lw = cnvim.width / nlines;
-        var lh = cnvim.height / nlines;
-
-        if (mode === "grid") {
-            for (var x = 0; x < nlines; x++) {
-                ctxim.beginPath();
-                ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
-                ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
-                ctxim.stroke(); 
-            }
-            
-            
-            for (var y = 0; y < nlines; y++) {
-                ctxim.beginPath();
-                ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
-                ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
-                ctxim.stroke(); 
-            }
-
-            //ctxim.strokeStyle = "rgb(0,0,0)";
-            //ctxim.lineWidth = lineWidth * 2;
-            ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
-            
-            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-            
-            ctxim.font = "12pt sans-serif";
-            ctxim.fillStyle = "black";
-            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
-        
-        } else if (mode === "polar") {
-            ctxim.lineWidth = 1;
-            for (var x = 0; x <= nlines / 2; x++) {
-                ctxim.beginPath();
-                ctxim.ellipse (
-                    Math.floor (width / 2) + 0.5,
-                    Math.floor (height / 2) + 0.5,
-                    x * lw,
-                    x * lh,
-                    0,
-                    0,
-                    2 * Math.PI,
-                    false
-                );
-                ctxim.stroke(); 
-
-            }
-            
-            for (var a = 0; a < 2 * Math.PI; a += Math.PI / 8) {
-                ctxim.beginPath();
-                ctxim.moveTo(Math.floor (width / 2) + 0.5, Math.floor (height / 2) + 0.5);
-                ctxim.lineTo(Math.floor (width / 2) + 0.5 + Math.cos (a) * width / 2, Math.floor (height / 2) + 0.5 + Math.sin(a) * height / 2);
-                ctxim.stroke(); 
-            }
-
-            ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
-            
-            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-            
-            ctxim.font = "12pt sans-serif";
-            ctxim.fillStyle = "black";
-            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
-
-        } else {
-            for (var y = 0; y <= nlines - 1; y+=4) {
-                if ((y / 4) % 2 == 0 ) {
-                    ctxim.fillStyle = "rgb(230,230,230)";
-                    ctxim.fillRect(0.5, Math.floor(y * lh) + lh * 2, cnvim.width - 0.5, lh * 4);
-                }
-            }
-
-            for (var y = 1; y < nlines + 1; y++) {
-                    //var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
-                    var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-                    ctxim.font = "18pt sans-serif";
-                    ctxim.fillStyle = "rgb(0,0,0)";
-                    ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh - 10);
-            }
-        }
-
-        /*
-        ctxim.strokeStyle = "black";
-        ctxim.beginPath();
-        ctxim.moveTo(0, Math.floor(cnvim.height / 2) + 0.5);
-        ctxim.lineTo(cnvim.width, Math.floor(cnvim.height / 2) + 0.5);
-        ctxim.stroke(); 
-        ctxim.beginPath();
-        ctxim.moveTo(Math.floor(cnvim.width / 2) + 0.5, 0);
-        ctxim.lineTo(Math.floor(cnvim.width / 2) + 0.5, cnvim.height);
-        ctxim.stroke(); 
-        */
-        /*
-        */
-        //ctxim.strokeStyle = "rgb(255, 0, 0)";
-
-        
-        return cnvim
-    }
-
+    /*
     function downsample(dest, source1, destWidth, destHeight, magn) {
         function round(val) {
           return (val + 0.49) << 0
@@ -1037,7 +1932,8 @@ function Orbital (svgContainer, data) {
         }
       }
     }
-
+    */
+    /*
     function renderScaledCnv (data, crisped, width, height, magn) {
         var renderMap = new Int32Array (width * height * 2);
         var DX = 0;
@@ -1105,6 +2001,7 @@ function Orbital (svgContainer, data) {
             }
         }
     }
+    */
     
     function invalidateCache () {
         isCache = false;
@@ -1267,10 +2164,10 @@ function Orbital (svgContainer, data) {
                     
                     //brzo                    
                     var tmp = Math.ceil (cachedCnv.width / w);
-                    if (tmp >= log2.length) {
-                        var bmpscale = log2[log2.length - 1];
+                    if (tmp >= Crisp.log.length) {
+                        var bmpscale = Crisp.log[Crisp.log.length - 1];
                     } else {
-                        var bmpscale = log2[tmp] - 1;//(fishEye.superSampling - 1);
+                        var bmpscale = Crisp.log[tmp] - 1;//(fishEye.superSampling - 1);
                     }
                     
                     //if (level === 1) bmpscale--;
@@ -1313,353 +2210,6 @@ function Orbital (svgContainer, data) {
                 }
             }
         }
-    }
-
-    function node() {
-        var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint) {
-            function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
-                var beta = angle + alpha - Math.PI / 2;
-                
-                var ra = 0;
-                var xa = x0 + r0 * Math.cos (beta);
-                var ya = y0 + r0 * Math.sin (beta);
-                
-                var rb = 2 * r1;
-                var xb = x0 + (r0 + rb) * Math.cos (beta);
-                var yb = y0 + (r0 + rb) * Math.sin (beta);
-
-                var dr = (rb - ra) / 2;
-                var dx = (xb - xa) / 2;
-                var dy = (yb - ya) / 2;
-                
-                ra += dr;
-                xa += dx;
-                ya += dy;
-
-                var j;
-                do {
-                    dx /= 2;
-                    dy /= 2;
-                    dr /= 2;
-                    var d = Math.sqrt (Math.pow ((xa - x1), 2) + Math.pow ((ya - y1), 2));
-                    if (Math.abs (ra - r1) <= d) {
-                        xa -= dx;
-                        ya -= dy;
-                        ra -= dr;
-                    } else {
-                        xa += dx;
-                        ya += dy;
-                        ra += dr;
-                    }
-                } while (dr > pixelPrecision);
-
-                return {
-                    x: (r0 + ra) * Math.cos (beta),
-                    y: (r0 + ra) * Math.sin (beta),
-                    r: ra,
-                    alpha: alpha
-                };
-            }
-            
-            function getNeighbor (c1, direction, x0, y0, r0, x1, y1, r1) {
-                if (direction == "+") {
-                    var alpha = c1.alpha / 2;
-                    var dalpha = alpha;
-                } else {
-                    var alpha = (2 * Math.PI + c1.alpha) / 2;
-                    var dalpha = -(2 * Math.PI - alpha);
-                }
-                
-                var da = Math.acos ((2 * r1 - pixelPrecision) / (2 * r1));
-                do {
-                    var c2 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
-                    dalpha /= 2;
-                    var d = Math.sqrt (Math.pow ((c1.x - c2.x), 2) + Math.pow ((c1.y - c2.y), 2));
-                    if ((c1.r + c2.r) >= d) {
-                        alpha -= dalpha;
-                    } else {
-                        alpha += dalpha;
-                    }
-                } while (Math.abs(dalpha) > da);
-
-                return c2;
-            }
-            
-            var i;
-            
-            var r0 = r1 * ratio;
-            var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
-            var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
-            
-            if (rec === 1) {
-                if (renderHint === "1") {
-                    ctx.save ();
-                    ctx.beginPath();
-                    ctx.ellipse (
-                        x0 * squashX,
-                        y0 * squashY,
-                        r0 * squashX,
-                        r0 * squashY,
-                        0,
-                        0,
-                        2 * Math.PI,
-                        false
-                    );
-                    ctx.closePath ();
-                    ctx.clip ();
-                    
-                } else if (renderHint === "1+") {                   
-                    
-                    ctx.save ();
-                    ctx.beginPath ();
-                    
-                    ctx.moveTo ((x1     ) * squashX, (y1 - r1) * squashY);
-                    ctx.lineTo ((x1 - r1) * squashX, (y1 - r1) * squashY);
-                    ctx.lineTo ((x1 - r1) * squashX, (y1 + r1) * squashY);
-                    ctx.lineTo ((x1 + r1) * squashX, (y1 + r1) * squashY);
-                    ctx.lineTo ((x1 + r1) * squashX, (y1 - r1) * squashY);
-                    ctx.lineTo ((x1     ) * squashX, (y1 - r1) * squashY);
-                    
-                    ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
-                    ctx.closePath();
-                    ctx.clip (); //"evenodd"
-                }
-                
-                clear ();
-                
-                if (renderHint === "1" || renderHint === "1+") {
-                    ctx.restore ();
-                }
-            }
-                
-            if (
-                Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr
-            ) {
-                if ((r1 * squashY * squashX) >= minRadius) {
-                    var colorFill = fill1;
-                    
-                    if (
-                        (animating || dragging || panning || device === "mouse") &&
-                        (selectedCursor?cursor === selectedCursor: mouse) &&
-                        (mouse?(Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) < r0): true)
-                    ) {
-                        colorFill = hilight;
-                    } else {
-                        colorFill = fill1;
-                    }
-                    
-                    if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
-                        //var ttt1 = (new Date()).getTime();
-                        //for (var abc = 1; abc < 100; abc++)
-                            drawCircle(x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec);
-                            
-                        //alert ((new Date()).getTime() - ttt1);
-                        //return;
-                    }
-                    
-                    if (renderHint !== "1") {                   
-                        var ret, idx, alp;
-                        var got;
-                        var c0, c1;
-                        var alpha = (cursor?cursor.angle:Math.PI);
-                        var ci;
-                        var oldr, delta;
-            
-                        c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
-                        ci = (cursor?cursor.index:0);
-                        if (c0.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
-                            if (got) {
-                                idx = ci;
-                                alp = alpha;
-                                ret = got;
-                            }
-                        }
-                        
-                        oldr = c0.r;
-                        c1 = getNeighbor (c0, "+", x0, y0, r0, x1, y1, r1);
-                        alpha = c1.alpha;
-                        ci = (cursor?cursor.index:0);
-                        while (true){
-                            delta = c1.r > oldr;
-                            ci++;
-                            
-                            if (c1.r * squashX * squashY >= minRadius) {
-                                got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
-                                if (!ret && got) {
-                                    idx = ci;
-                                    alp = alpha;
-                                    ret = got;
-                                }
-                            } else
-                                if (!delta)
-                                    break;
-                            
-                            oldr = c1.r;
-                            c1 = getNeighbor (c1, "+", x0, y0, r0, x1, y1, r1);
-                            alpha = c1.alpha;
-                        }
-                        
-
-                        oldr = c0.r;
-                        c1 = getNeighbor (c0, "-", x0, y0, r0, x1, y1, r1);
-                        alpha = c1.alpha;
-                        ci = (cursor?cursor.index:0);
-                        while (true){
-                            delta = c1.r > oldr;
-                            ci--;
-
-                            if (c1.r * squashX * squashY >= minRadius) {
-                                got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, null/*data.children[ci]*/, ci, (cursor?cursor.children[ci]:null), selectedCursor);
-                                if (!ret && got) {
-                                    idx = ci;
-                                    alp = alpha;
-                                    ret = got;
-                                }
-                            } else
-                                if (!delta)
-                                    break;
-                            
-                            oldr = c1.r;
-                            c1 = getNeighbor (c1, "-", x0, y0, r0, x1, y1, r1);
-                            alpha = c1.alpha;
-                        }
-                    }
-                    
-                    var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
-                    
-                    if (ret || cond) {
-                        var pass = {
-                            rec: rec,
-                            data: data,
-                            index: index,
-                            angle: angle,
-                            index1: idx,
-                            angle1: alp,
-                            revertAng: alp,
-                            cursor: null,
-                            child: ret,
-                            smallX: x0,
-                            smallY: y0,
-                            smallR: r0,
-                            largeX: x1,
-                            largeY: y1,
-                            largeR: r1,
-                            getMetrics: function () {
-                                var c, x;
-                                var a = pass.getAbsoluteAngle();
-                                if (pass.parent) {
-                                    x = pass.parent.getMetrics ();
-                                    
-                                    var rr1 = x.r;
-                                    var xx1 = x.x;
-                                    var yy1 = x.y;
-                                } else {
-                                    var rr1 = r1;
-                                    var xx1 = x1;
-                                    var yy1 = y1;
-                                }
-                                
-                                var r0 = rr1 * ratio;
-                                var x0 = xx1 + (rr1 - r0) * Math.cos (a - Math.PI / 2);
-                                var y0 = yy1 + (rr1 - r0) * Math.sin (a - Math.PI / 2);
-                                c = getCircle (pass.cursor.angle, x0, y0, r0, xx1, yy1, rr1);
-                                
-                                return {x: x0 + c.x, y: y0 + c.y, r: c.r};
-                            },
-                            getAbsoluteAngle: function () {
-                                return angle;
-                            },
-                            getAngMin: function () {
-                                var m0, m1;
-                                
-                                m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
-
-                                m1 = m0;
-                                for (i = 0; i < data.index; i++)
-                                    m1 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
-                                
-                                return m1.alpha;
-                            },
-                            getAngMax: function () {
-                                var m0, m1;
-                                
-                                m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
-
-                                m1 = m0;
-                                for (i = data.index; i < data.children.length - 1; i++)
-                                    m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
-                                
-                                return m1.alpha;
-                            },
-                            getCircle: function (ang) {
-                                return getCircle (ang, x0, y0, r0, x1, y1, r1);
-                            },
-                            setAngle: (function () {
-                                if (mouse) {
-                                    var alp1 = - angle + 3 * Math.PI / 2 + Math.atan2((y0 * squashY - mouse.y) / squashY, (x0 * squashX - mouse.x) / squashX);
-                                    while (alp1 > 2 * Math.PI) alp1 = alp1 - 2 * Math.PI;
-                                    while (alp1 < 0) alp1 = alp1 + 2 * Math.PI;
-                                } else {
-                                    var alp1 = alp;
-                                }
-                                
-                                var dalp = alp1 - alp;
-                                
-                                var c = getCircle (alp, x0, y0, r0, x1, y1, r1);
-                                
-                                return function (ang, percent) {
-                                    if (percent === undefined) percent = 1;
-                                    var nc = getCircle (ang, x0, y0, r0, x1, y1, r1);
-                                    var sang = ang - dalp * (nc.r / c.r) * percent;
-                                    pass.calcCursor (sang);
-                                    pass.revertAng = alp;
-                                }
-                            }) (),
-                            revertAngle: function () {
-                                pass.calcCursor (pass.revertAng);
-                            },
-                            calcCursor: function (ang) {
-                                var mi, m1, m2;
-                                mi = idx;
-                                m2 = getCircle (ang, x0, y0, r0, x1, y1, r1);
-                                
-                                if (ang > Math.PI) {
-                                    do {
-                                        m1 = m2;
-                                        m2 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
-                                        mi++;
-                                    } while (m1.r <= m2.r);
-                                    
-                                    pass.cursor.index = mi - 1;
-                                    pass.cursor.angle = m1.alpha;
-                                   
-                                } else {
-                                    do {
-                                        m1 = m2;
-                                        m2 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
-                                        mi--;
-                                    } while (m1.r <= m2.r);
-                                    
-                                    pass.cursor.index = mi + 1;
-                                    pass.cursor.angle = m1.alpha;
-                                }
-                                
-                                pass.angle1 = ang;
-                            }
-                        };
-                        
-                        if (ret) ret.parent = pass;
-                        
-                        return pass;
-                    }
-                }
-            }
-        };
-        
-        return {
-            render: render
-        };
     }
     
     function setupSelect (range) {
@@ -1751,8 +2301,8 @@ function Orbital (svgContainer, data) {
             var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
             
             if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                var tmp0 = (2 * fishEye.data.width * (fishEye.data.height + (dragY - y0) * fishEye.superSampling) + fishEye.data.width + (dragX - x0) * fishEye.superSampling) * 4;
-                var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + (y - y0) * fishEye.superSampling) + fishEye.data.width + (x - x0) * fishEye.superSampling) * 4;
+                var tmp0 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((dragY - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((dragX - x0) * fishEye.superSampling)) * 4;
+                var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
                 
                 setCenter (select, oldCenterX + fishEye.data.array[tmp0] - fishEye.data.array[tmp1], oldCenterY + fishEye.data.array[tmp0 + 1] - fishEye.data.array[tmp1 + 1]);
                 select.cursor.cachedCnv = false;
@@ -2452,6 +3002,7 @@ function Orbital (svgContainer, data) {
     
         fishEye = FishEye (rr, squashX, squashY, superSampling);
 
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle);
         /*
         function rec1 (c) {
             if (c.cachedCnv) {
@@ -2507,7 +3058,7 @@ function Orbital (svgContainer, data) {
     
     var device = "mouse";
 
-    var n = node();
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');
@@ -2650,7 +3201,7 @@ function Orbital (svgContainer, data) {
     var cnvScaled = crispBitmapXY(cnvim2);
     */
     
-    cnvScaled = Crisp.crispBitmapXY(generateGrid ("polar1", 2500, 2500, 50, 1));
+    cnvScaled = Crisp.crispBitmapXY(generateGrid ("polar1", Math.pow(2, 11), Math.pow(2, 11), 4 * 12, 1));
 
     //initFishEye();
     //var img = new Image();

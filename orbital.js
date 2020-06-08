@@ -87,7 +87,7 @@ function generateGrid (mode, width, height, nlines, lineWidth) {
                 var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
                 ctxim.font = "18pt sans-serif";
                 ctxim.fillStyle = "rgb(0,0,0)";
-                ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh - 10);
+                ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh - lh * 0.3);
         }
     }
 
@@ -2008,7 +2008,7 @@ function Orbital (svgContainer, data) {
         fishEye.clearRenderMap();
         
         function invalidateCursor (x) {
-            x.cachedCnv = false;
+            x.cachedCnv = true;
             x.cachedData = null;
             for (var i = 0; i < x.children.length; i++) {
                 if (x.children[i]) invalidateCursor (x.children[i]);
@@ -2083,8 +2083,9 @@ function Orbital (svgContainer, data) {
                     
                     isCache = true;
                 }
+
+                if (!cursor || cursor.cachedCnv === true) {
                 
-                if (!cursor || cursor.cachedCnv == true) {
                     var cachedCnv = cnvCache;
                     var cachedData = cache;
                     
@@ -2116,7 +2117,7 @@ function Orbital (svgContainer, data) {
                     //var cachedCnv = cursor.cachedCnv;
                     var cachedCnv = cnvCache1;
 
-                } else if (!cursor.cachedCnv || !cursor.cachedData) {
+                } else if (cursor && (!cursor.cachedCnv || !cursor.cachedData)) {
                     var cnvCache1 = document.createElement ("canvas");
                     var cacheW1 = w * fishEye.superSampling;//Math.floor (2 * rr * ratio * squashX) * fishEye.superSampling;
                     var cacheH1 = h * fishEye.superSampling;//Math.floor (2 * rr * ratio * squashY) * fishEye.superSampling;
@@ -2137,7 +2138,6 @@ function Orbital (svgContainer, data) {
                 } else {
                     var cachedCnv = cursor.cachedCnv;
                     var cachedData = cursor.cachedData;
-
                 }
                 
                 if (renderHint === "0") {
@@ -2196,6 +2196,7 @@ function Orbital (svgContainer, data) {
                     ctx.drawImage(cnvIm, xo, yo, w, h);
                     */
                 } else {
+                    /*
                     var cnvIm = document.createElement ("canvas");
                     cnvIm.width = w;
                     cnvIm.height = h;
@@ -2207,6 +2208,7 @@ function Orbital (svgContainer, data) {
                     
                     ctxIm.putImageData(imData, 0, 0);
                     ctx.drawImage(cnvIm, xo, yo, w, h);
+                    */
                 }
             }
         }

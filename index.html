@@ -23,6 +23,13 @@
             text-align: center;
         }
         
+        @media all and (min-device-width:device-width)and (orientation:landscape){
+            // All CSS for Landscape and Desktop
+        }
+        @media only screen and (max-device-width:device-width)and (orientation:portrait){
+            // All CSS for Portrait view
+        }
+        
         a, a.exHover:visited, a.exHover:link {cursor: pointer; background-color: white; color: gray; text-decoration:none; border-radius: 100px; border:0px solid #4466DD;}
         a.exHover:hover {cursor: pointer; background-color: lightgray; color:gray; text-decoration:none; border-radius: 100px; border:0px solid #6699FF;}
         a.exHover:active {cursor: pointer; background-color: lightgray; color:gray; text-decoration:none; border-radius: 100px; border:0px solid #DDDDFF;}

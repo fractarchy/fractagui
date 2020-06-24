@@ -231,6 +231,10 @@
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
             
+            document
+            .querySelector("meta[name=viewport]")
+            .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+            
             window.addEventListener("load", function () {
                 // scale on phones
                 document.getElementById("splash").style.visibility = "hidden";
@@ -254,6 +258,10 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
+                    document
+                    .querySelector("meta[name=viewport]")
+                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+                    
                     document.getElementById("splash").style.visibility = "visible";
                     
                     document.getElementById("vis").style.visibility = "hidden";
@@ -277,7 +285,7 @@
                 });
             });
             
-
+/*
             function updateOrientation() {
               switch (window.orientation) {
                 case 0: //portrait
@@ -300,7 +308,7 @@
             
             updateOrientation();
             window.addEventListener('orientationchange', updateOrientation, false);
-
+*/
 
             var divContainer = document.getElementById ("divContainer")
             Orbital(divContainer, generateCanvasScape ());

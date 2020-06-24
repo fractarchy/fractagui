@@ -144,7 +144,7 @@
               }
             }
             */
-            var tmout;
+
             function setSize () {
                 i1.draggable = false;
                 i1.ondragstart = function () {return false};
@@ -176,7 +176,6 @@
                 i2.style.width = m * 215 + "px";
                 i3.style.width = m * 215 + "px";
 
-                clearTimeout (tmout);
                 /*
                 i1.style.transform = "";
                 i2.style.transform = "";
@@ -228,8 +227,6 @@
                 divContainer.dispatchEvent(event1);
             }
             
-            var vis1 = document.getElementById("vis");
-            
             var i1 = document.getElementById("i1");
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
@@ -255,6 +252,7 @@
 
                 setSize ();
 
+                var resizeId;
                 window.addEventListener('resize', function () {
                     document.getElementById("splash").style.visibility = "visible";
                     
@@ -264,7 +262,8 @@
                     i3.style.visibility = "hidden";
                     divContainer.style.visibility = "hidden";
                     
-                    setTimeout(function () {
+                    clearTimeout(resizeId);
+                    resizeId = setTimeout(function () {
                         document.getElementById("splash").style.visibility = "hidden";
                         
                         document.getElementById("vis").style.visibility = "visible";
@@ -274,15 +273,15 @@
                         divContainer.style.visibility = "visible";
 
                         setSize ();
-                    }, 0);
+                    }, 500);
                 });
             });
 
             var divContainer = document.getElementById ("divContainer")
-            var o = Orbital(divContainer, generateCanvasScape ());
+            Orbital(divContainer, generateCanvasScape ());
             
         </script>
-        <!--svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0; visibility: hidden;"
+        <!--svg id="fs" onclick="toggleFullScreen ()" style="position: absolute; top: 0; right: 0;"
            xmlns:dc="http://purl.org/dc/elements/1.1/"
            xmlns:cc="http://creativecommons.org/ns#"
            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -313,19 +312,19 @@
             <path
                id="path833"
                d="m 3.2248744,288.37355 v -2.70078 h 2.7007782"
-               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+               style="fill:none;stroke:rgb(255, 255, 255);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
             <path
                id="path835"
                d="m 8.6381733,285.67277 h 2.6890357 v 2.70078"
-               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+               style="fill:none;stroke:rgb(255, 255, 255);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
             <path
                id="path837"
                d="m 11.327209,291.07433 v 2.70078 H 8.6381733"
-               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+               style="fill:none;stroke:rgb(255, 255, 255);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
             <path
                id="path839"
                d="M 5.9256526,293.77511 H 3.2248744 v -2.70078"
-               style="fill:none;stroke:rgb(255, 255, 150);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+               style="fill:none;stroke:rgb(255, 255, 255);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           </g>
         </svg-->
         <a id="vis" class="exhover" style="visibility: hidden; position: absolute; bottom: 0px; right: 5px; clip-path: circle(40% at 50% 50%);">

@@ -2,7 +2,7 @@
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale = 0.25, maximum-scale = 1.0" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale = 1.0, maximum-scale = 1.0" />
     <title>Orbiteque</title>
         <style media="screen">
         html, body
@@ -277,29 +277,29 @@
                 });
             });
             
-/*
+
             function updateOrientation() {
               var viewport = document.querySelector("meta[name=viewport]");
 
               switch (window.orientation) {
                 case 0: //portrait
                   //set the viewport attributes to whatever you want!
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=0.25, maximum-scale=1.0;')
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1.0;')
                   break;
                 case 90: case -90: //landscape
                   //set the viewport attributes to whatever you want!
-                    viewport.setAttribute('content', 'width=device-height, initial-scale=0.25, maximum-scale=1.0;')
+                    viewport.setAttribute('content', 'width=device-height, initial-scale=1, maximum-scale=1.0;')
                   break;
                 default:
                   //set the viewport attributes to whatever you want!
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=0.25, maximum-scale=1.0;')
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1.0;')
                   break;
               }
                 //alert(swidth + ' lead to an initial width of ' + vpwidth + ' and a rotate width of ' + vlwidth);
             }
 
             window.addEventListener('orientationchange', updateOrientation, false);
-*/
+
 
             var divContainer = document.getElementById ("divContainer")
             Orbital(divContainer, generateCanvasScape ());

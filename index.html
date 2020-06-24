@@ -23,13 +23,6 @@
             text-align: center;
         }
         
-        @media all and (min-device-width:device-width)and (orientation:landscape){
-            // All CSS for Landscape and Desktop
-        }
-        @media only screen and (max-device-width:device-width)and (orientation:portrait){
-            // All CSS for Portrait view
-        }
-        
         a, a.exHover:visited, a.exHover:link {cursor: pointer; background-color: white; color: gray; text-decoration:none; border-radius: 100px; border:0px solid #4466DD;}
         a.exHover:hover {cursor: pointer; background-color: lightgray; color:gray; text-decoration:none; border-radius: 100px; border:0px solid #6699FF;}
         a.exHover:active {cursor: pointer; background-color: lightgray; color:gray; text-decoration:none; border-radius: 100px; border:0px solid #DDDDFF;}
@@ -283,6 +276,30 @@
                     }, 500);
                 });
             });
+            
+            function updateOrientation() {
+
+
+              var viewport = document.querySelector("meta[name=viewport]");
+
+              switch (window.orientation) {
+                case 0: //portrait
+                  //set the viewport attributes to whatever you want!
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1.0;')
+                  break;
+                case 90: case -90: //landscape
+                  //set the viewport attributes to whatever you want!
+                    viewport.setAttribute('content', 'width=device-height, initial-scale=1, maximum-scale=1.0;')
+                  break;
+                default:
+                  //set the viewport attributes to whatever you want!
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1.0;')
+                  break;
+              }
+                //alert(swidth + ' lead to an initial width of ' + vpwidth + ' and a rotate width of ' + vlwidth);
+            }
+
+            window.addEventListener('orientationchange', updateOrientation, false);
 
             var divContainer = document.getElementById ("divContainer")
             Orbital(divContainer, generateCanvasScape ());

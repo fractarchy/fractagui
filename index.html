@@ -37,7 +37,8 @@
 
     </style>
     <body>
-        <div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255); height: 50%;">
+        <!--div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255); height: 50%;"-->
+        <div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(255, 255, 255);">
             ...computing bitmaps...
         </div>
         <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
@@ -259,10 +260,10 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    document
+                    /*document
                     .querySelector("meta[name=viewport]")
                     .setAttribute('content', 'initial-scale=1.0', 'maximum-scale=1.0', 'width=' + (document.documentElement.clientWidth * 1), 'height=' + (document.documentElement.clientHeight * 1));
-                    
+                    */
                     document.getElementById("splash").style.visibility = "visible";
                     
                     document.getElementById("vis").style.visibility = "hidden";

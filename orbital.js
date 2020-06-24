@@ -1,66 +1,3 @@
-// orbiteque UI Rotos Ovals Creatia
-
-function getNumberCanvas (number) {
-    var cnvim = document.createElement ("canvas");
-    cnvim.width = 550;
-    cnvim.height = 350;
-    var ctxim = cnvim.getContext('2d');
-
-    ctxim.fillStyle = "white";
-    ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
-
-    ctxim.globalAlpha = 0.50;
-
-    for (var i = 0; i < 1; i++) {
-        var rnd = (100 + Math.round (Math.random () * 100));
-        ctxim.fillStyle = "rgb(" + rnd + "," + rnd + "," + rnd + ")";
-        ctxim.fillRect(Math.random () * 225, Math.random () * 175, Math.random () * 225, Math.random () * 175);
-        
-        ctxim.beginPath();
-        var rnda = Math.random () * Math.PI * 2 / 3;
-        var rndr = 0 + Math.random () * 225;
-        ctxim.moveTo(225 + 2 * Math.cos (rnda) * rndr, 175 + Math.sin (rnda) * rndr);
-        rnda = Math.PI * 2 / 3 + Math.random () * Math.PI * 2 / 3;
-        rndr = 0 + Math.random () * 225;
-        ctxim.lineTo(225 + 2 * Math.cos (rnda) * rndr, 175 + Math.sin (rnda) * rndr);
-        rnda = Math.PI * 4 / 3 + Math.random () * Math.PI * 2 / 3;
-        rndr = 0 + Math.random () * 225;
-        ctxim.lineTo(225 + 2 * Math.cos (rnda) * rndr, 175 + Math.sin (rnda) * rndr);
-        ctxim.closePath ();
-        
-        rnd = (100 + Math.round (Math.random () * 100));
-        ctxim.fillStyle = "rgba(" + rnd + "," + rnd + "," + rnd + ", 128)";
-        ctxim.fill (); 
-
-        ctxim.beginPath();
-        ctxim.ellipse (
-            175 + Math.random () * 225,
-            50 + Math.random () * 175,
-            Math.random () * 225,
-            Math.random () * 175,
-            0,
-            0,
-            2 * Math.PI,
-            false
-        );
-        ctxim.closePath ();
-
-        rnd = (100 + Math.round (Math.random () * 100));
-        ctxim.fillStyle = "rgba(" + rnd + "," + rnd + "," + rnd + ", 128)";
-        ctxim.fill (); 
-    }
-
-    ctxim.globalAlpha = 1;
-
-    var h = 225;
-    var text = number
-    ctxim.font = h + "px sans";
-    ctxim.fillStyle = "black";
-    ctxim.fillText(text, cnvim.width / 2 - ctxim.measureText(text).width / 2, cnvim.height / 2 + h / 2 - h / 4.8);
-    
-    return cnvim
-}
-
 function createInputOutput (mode, back, fore) {
     //nlines = 4 * 16;
     if (mode === "output")
@@ -650,13 +587,6 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     var pixelPrecision = 1 / Math.pow (2, 16);
 
     var hilight = fill1;//"white"
-    //var fill1 = "rgb(255, 255, 255)";//"lightgray";
-    //var fill1r = 255;
-    //var fill1g = 255;
-    //var fill1b = 150;
-    //var fill1r = 225;
-    //var fill1g = 225;
-    //var fill1b = 225;
     var stroke1 = "gray";
     var fill2 = stroke1;
     var stroke2 = fill1;
@@ -1075,10 +1005,38 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
+function Orbital (divContainer, data) {
     "use strict";
+    
+    function prepareData (canvasScape, parent, index) {
+        if (!index) index = 0;
+        var fst;
+        if (!parent) {
+            fst = true;
+            parent = {index: 0}; 
+        }
+        
+        var data = {
+            parent: parent,
+            index: index,
+            scaledBitmap: Crisp.crispBitmapXY(canvasScape.canvas),
+            children: []
+        };
+        
+        if (fst)
+            parent.children = [data];
+        
+        for (var i = 0; i < canvasScape.children.length; i++)
+            data.children.push (prepareData (canvasScape.children[i], data, i));
+        
+        return data;
+    } 
 
-    if (!orientation) orientation = 0;
+    data = prepareData (data);
+    
+    var fill1 = "white"
+    var orientation = 0;
+    var curvature = 0.25;
     
     var svgns = "http://www.w3.org/2000/svg";
     
@@ -1119,19 +1077,6 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
 
     //var pixelPrecision = 1 / Math.pow (2, 16);
     var dragPrecision = Math.pow (2, 8);
-    /*
-    var hilight = "white"
-    var fill1 = "rgb(255, 255, 255)";//"lightgray";
-    //var fill1r = 255;
-    //var fill1g = 255;
-    //var fill1b = 150;
-    var fill1r = 225;
-    var fill1g = 225;
-    var fill1b = 225;
-    var stroke1 = "gray";
-    var fill2 = stroke1;
-    var stroke2 = fill1;
-    */
 
     var MAX_INT32 = Math.pow (2, 31) - 1;// 4294967296 / 2 - 1;
 
@@ -1201,14 +1146,6 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
             //ctx.stroke ();
             
             
-            /*
-            ctx.strokeStyle = "white";
-            ctx.beginPath();
-            ctx.moveTo(ac.smallX, ac.smallY);
-            ctx.lineTo(ac.smallX + 100 * Math.cos(ang[i]), ac.smallY + 100 * Math.sin(ang[i]));
-            ctx.stroke();
-            */
-            
             if (r > 5) {
                 var magn = r / (rr * ratio);
                 var xo = Math.floor (x * squashX) - Math.floor (r * squashX);
@@ -1228,22 +1165,6 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
                 }
                 
                 if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
-                    /*
-                    var cnvCache = document.createElement ("canvas");
-                    //var cacheW = w * fishEye.superSampling;// Math.floor (2 * rr * ratio * squashX) * fishEye.superSampling;
-                    //var cacheH = h * fishEye.superSampling;// Math.floor (2 * rr * ratio * squashY) * fishEye.superSampling;
-                    var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
-                    var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
-                    cnvCache.width = cacheW;
-                    cnvCache.height = cacheH;
-                    var ctxCache = cnvCache.getContext('2d');
-                    var imgCache = ctxCache.createImageData(cacheW, cacheH);
-                    
-                    //fishEye.clearRenderMap ();
-                    fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx, cy, data.scaledBitmap);
-                    ctxCache.putImageData(imgCache, 0, 0);
-                    */
-
                     data.cachedCnv = getCnvCache (data, cx, cy, rr);//cnvCache;
                     data.centerX = cx;
                     data.centerY = cy;
@@ -1373,13 +1294,11 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
                 var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
                 
                 setCenter (select, oldCenterX + fishEye.data.array[tmp0] - fishEye.data.array[tmp1], oldCenterY + fishEye.data.array[tmp0 + 1] - fishEye.data.array[tmp1 + 1]);
-                //select.cursor.data.cachedCnv = false;
-                //select.cursor.data.cachedData = null;
+
             } else {
                 select.cursor.centerX = 0;
                 select.cursor.centerY = 0;
-                //select.cursor.data.cachedCnv = false;
-                //select.cursor.data.cachedData = null;
+
             }
             
             //window.requestAnimationFrame(function () {
@@ -1757,8 +1676,6 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
                                 
                                 panning = false;
                                 animating = "level";
-                                //cursor.data.cachedCnv = false;
-                                //cursor.data.cachedData = null;
                                 cursor.centerX = 0;
                                 cursor.centerY = 0;
                                 aEnsmall();
@@ -2027,7 +1944,6 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
                 
                 if (!animating){
                     panning = false;
-                    //cursor.cachedCnv = false;
                     //window.requestAnimationFrame(function () {
                         redraw ({x: mouse.x, y: mouse.y});
                     //});
@@ -2113,23 +2029,6 @@ function Orbital (divContainer, data, fill1, content1, orientation, curvature) {
         fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature);
 
         n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1);
-        /*
-        function rec1 (c) {
-            if (c.cachedCnv) {
-                c.cachedCnv = false;
-                c.cachedData = null;
-            }
-                
-            for (var tmp in c.children)
-                rec1 (c.children[tmp]);
-                
-        }
-        
-        var c = cursor;
-        while (c.parent)
-            c = c.parent;
-        rec1 (c.children[0]);
-        */
         
         minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio;
 

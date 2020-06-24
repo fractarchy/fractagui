@@ -279,28 +279,23 @@
             
 
             function updateOrientation() {
-                document
-                .querySelector("meta[name=viewport]")
-                .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
-/*
-              var viewport = document.querySelector("meta[name=viewport]");
-
               switch (window.orientation) {
                 case 0: //portrait
-                  //set the viewport attributes to whatever you want!
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0;')
+                    document
+                    .querySelector("meta[name=viewport]")
+                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
                   break;
                 case 90: case -90: //landscape
-                  //set the viewport attributes to whatever you want!
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0;')
+                    document
+                    .querySelector("meta[name=viewport]")
+                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientHeight * 2), 'height=' + (document.documentElement.clientWidth * 2));
                   break;
                 default:
-                  //set the viewport attributes to whatever you want!
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0;')
+                    document
+                    .querySelector("meta[name=viewport]")
+                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
                   break;
               }
-                //alert(swidth + ' lead to an initial width of ' + vpwidth + ' and a rotate width of ' + vlwidth);
-*/
             }
             
             updateOrientation();

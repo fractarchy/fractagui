@@ -258,30 +258,32 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    /*document
-                    .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
-                    */
-                    document.getElementById("splash").style.visibility = "visible";
-                    
-                    document.getElementById("vis").style.visibility = "hidden";
-                    i1.style.visibility = "hidden";
-                    i2.style.visibility = "hidden";
-                    i3.style.visibility = "hidden";
-                    divContainer.style.visibility = "hidden";
-                    
-                    clearTimeout(resizeId);
-                    resizeId = setTimeout(function () {
-                        document.getElementById("splash").style.visibility = "hidden";
+                    setTimeout(function () {
+                        /*document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+                        */
+                        document.getElementById("splash").style.visibility = "visible";
                         
-                        document.getElementById("vis").style.visibility = "visible";
-                        i1.style.visibility = "visible";
-                        i2.style.visibility = "visible";
-                        i3.style.visibility = "visible";
-                        divContainer.style.visibility = "visible";
+                        document.getElementById("vis").style.visibility = "hidden";
+                        i1.style.visibility = "hidden";
+                        i2.style.visibility = "hidden";
+                        i3.style.visibility = "hidden";
+                        divContainer.style.visibility = "hidden";
+                        
+                        clearTimeout(resizeId);
+                        resizeId = setTimeout(function () {
+                            document.getElementById("splash").style.visibility = "hidden";
+                            
+                            document.getElementById("vis").style.visibility = "visible";
+                            i1.style.visibility = "visible";
+                            i2.style.visibility = "visible";
+                            i3.style.visibility = "visible";
+                            divContainer.style.visibility = "visible";
 
-                        setSize ();
-                    }, 500);
+                            setSize ();
+                        }, 500);
+                    }, 0);
                 });
             });
             

@@ -262,10 +262,9 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    /*document
+                    document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=1.0', 'maximum-scale=1.0', 'width=' + (document.documentElement.clientWidth * 1), 'height=' + (document.documentElement.clientHeight * 1));
-                    */
+                    .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
                     document.getElementById("splash").style.visibility = "visible";
                     
                     document.getElementById("vis").style.visibility = "hidden";

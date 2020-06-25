@@ -291,6 +291,10 @@
             var cw = 1;
             var ch = 1;
             function updateOrientation() {
+              document
+              .querySelector("meta[name=viewport]")
+              .setAttribute('content', 'width=' + (document.body.clientWidth / cw), 'height=' + (document.body.clientHeight / ch), 'user-scalable=no');
+              /*
               switch (window.orientation) {
                 case 0: //portrait
                     document
@@ -308,6 +312,7 @@
                     .setAttribute('content', 'width=' + (document.body.clientWidth / cw), 'height=' + (document.body.clientHeight / ch), 'user-scalable=no');
                   break;
               }
+              */
               cw = document.body.clientWidth;
               ch = document.body.clientHeight;
             /*

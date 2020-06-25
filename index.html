@@ -288,45 +288,24 @@
                 });
             });
             
-            var dew = document.documentElement.clientWidth;
-            var deh = document.documentElement.clientHeight;
             function updateOrientation() {
               switch (window.orientation) {
                 case 0: //portrait
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=' + (dew), 'height=' + (deh), 'user-scalable=no');
+                    .setAttribute('content', 'target-densitydpi=medium-dpi');
                   break;
                 case 90: case -90: //landscape
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=' + (deh), 'height=' + (dew), 'user-scalable=no');
+                    .setAttribute('content', 'target-densitydpi=medium-dpi');
                   break;
                 default:
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=' + (dew), 'height=' + (deh), 'user-scalable=no');
+                    .setAttribute('content', 'target-densitydpi=medium-dpi');
                   break;
               }
-            /*
-              switch (window.orientation) {
-                case 0: //portrait
-                    document
-                    .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=device-width', 'height=device-height', 'target-densitydpi=device-dpi', 'user-scalable=no');
-                  break;
-                case 90: case -90: //landscape
-                    document
-                    .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=device-height', 'height=device-width', 'target-densitydpi=device-dpi', 'user-scalable=no');
-                  break;
-                default:
-                    document
-                    .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=device-width', 'height=device-height', 'target-densitydpi=device-dpi', 'user-scalable=no');
-                  break;
-              }
-              */
             }
             
             updateOrientation();

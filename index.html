@@ -290,9 +290,23 @@
             
 
             function updateOrientation() {
+              switch (window.orientation) {
+                case 0: //portrait
                     document
                     .querySelector("meta[name=viewport]")
                     .setAttribute('content', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight), 'user-scalable=no');
+                  break;
+                case 90: case -90: //landscape
+                    document
+                    .querySelector("meta[name=viewport]")
+                    .setAttribute('content', 'width=' + (document.documentElement.clientHeight), 'height=' + (document.documentElement.clientWidth), 'user-scalable=no');
+                  break;
+                default:
+                    document
+                    .querySelector("meta[name=viewport]")
+                    .setAttribute('content', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight), 'user-scalable=no');
+                  break;
+              }
             /*
               switch (window.orientation) {
                 case 0: //portrait

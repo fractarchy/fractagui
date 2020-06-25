@@ -288,30 +288,30 @@
                 });
             });
             
-/*
+
             function updateOrientation() {
               switch (window.orientation) {
                 case 0: //portrait
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+                    .setAttribute('content', 'width=device-width', 'height=device-height', 'target-densitydpi=device-dpi', 'user-scalable=no');
                   break;
                 case 90: case -90: //landscape
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientHeight * 2), 'height=' + (document.documentElement.clientWidth * 2));
+                    .setAttribute('content', 'width=device-height', 'height=device-width', 'target-densitydpi=device-dpi', 'user-scalable=no');
                   break;
                 default:
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+                    .setAttribute('content', 'width=device-width', 'height=device-height', 'target-densitydpi=device-dpi', 'user-scalable=no');
                   break;
               }
             }
             
             updateOrientation();
             window.addEventListener('orientationchange', updateOrientation, false);
-*/
+
 
             var divContainer = document.getElementById ("divContainer")
             Orbital(divContainer, generateCanvasScape ());

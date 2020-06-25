@@ -923,6 +923,32 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                             
                             return m1.alpha;
                         },
+                        getCustomAngMin: function (data) {
+                            var m0, m1;
+                            
+                            m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
+
+                            m1 = m0;
+                            for (i = 0; i < data.index; i++)
+                                m1 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
+                            
+                            var a = m1.alpha;//+ 3 * Math.PI / 2;
+                            while (a > 2 * Math.PI) a = a - 2 * Math.PI;
+                            while (a < 0) a = a + 2 * Math.PI;
+                            
+                            return a;
+                        },
+                        getCustomAngMax: function (data) {
+                            var m0, m1;
+                            
+                            m0 = getCircle (Math.PI, x0, y0, r0, x1, y1, r1);
+
+                            m1 = m0;
+                            for (i = data.index; i < data.parent.children.length - 1; i++)
+                                m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
+                            
+                            return m1.alpha;
+                        },
                         getCircle: function (ang) {
                             return getCircle (ang, x0, y0, r0, x1, y1, r1);
                         },
@@ -989,11 +1015,11 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                             
                             } else                                 
                                 pass.angle1 = ang;
-                        }
+                        },
                     };
                     
                     if (ret) ret.parent = pass;
-                    
+                                        
                     return pass;
                 }
             }
@@ -1040,6 +1066,7 @@ function Orbital (divContainer, data) {
     
     var svgns = "http://www.w3.org/2000/svg";
     
+    divContainer.innerHTML = "";
     // clip path
     var svg = document.createElementNS (svgns, "svg");
     svg.style.display = "block";
@@ -1366,11 +1393,15 @@ function Orbital (divContainer, data) {
                 if (angMin && ang[ip] < angMin)
                     ang[ip] = angMin;
                         
+                if (angMax && ang[ip] > angMax)
+                    ang[ip] = angMax;
+                        
                 if (ip === 0) {
                     angMin = ac.getAngMin ();
                     angMax = ac.getAngMax ();
                         
-                }                
+                } 
+                               
 
                 //drawCircle (ac.smallX, ac.smallY, ac.smallR, "red", "white", "yxz"); 
                 
@@ -1429,12 +1460,13 @@ function Orbital (divContainer, data) {
                 if (!isOnParent) {
                     if (Math.floor (mouseDistance) >= Math.floor (maxR))
                         animateAng0 = ang[0];
+                                                
                         if (animateAng0 < angMin)
                             animateAng0 = angMin;
                             
                         if (animateAng0 > angMax)
                             animateAng0 = angMax;
-                    
+                        
                     if (select.parent && select.parent.parent)
                         animateAng2 = ang[2];
 
@@ -1581,8 +1613,18 @@ function Orbital (divContainer, data) {
                                 var cc = select.cursor.parent;
                                 var cp = select.parent;
                                 while (cp) {
-                                    angles.push (cp.angle1);
-                                    cc.index = cp.index1;
+                                    var angle = cp.angle1;
+                                    //if (cp !== select.parent.parent) {
+                                        angle = Math.min (cp.getCustomAngMax (cp.data), angle);
+                                        angle = Math.max (cp.getCustomAngMin (cp.data), angle);
+                                    //}
+                                    
+                                    angles.push (angle);
+                                    //angles.push (cp.angle1);
+                                    
+                                    if (angle === cp.angle1)
+                                        cc.index = cp.index1;
+                                        
                                     cc = cc.parent;
                                     cp = cp.parent;
                                 }
@@ -2249,6 +2291,8 @@ function Orbital (divContainer, data) {
 function Magnifier (divContainer, fill1, content1, curvature) {
     "use strict";
 
+    divContainer.innerHTML = "";
+
     var svgns = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS (svgns, "svg");
     svg.style.display = "block";
@@ -2913,9 +2957,5 @@ function Magnifier (divContainer, fill1, content1, curvature) {
     divContainer.addEventListener('resize1', function (e) {
         resize (divContainer.clientWidth, divContainer.clientHeight);
     });
-    
-    return {
-        resize: resize
-    }
 }
 

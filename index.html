@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!--meta name="viewport" content="width=device-width, height=device-height, initial-scale = 0.5, maximum-scale = 0.5" /-->
-    <meta name="viewport" content="user-scalable=no" />
+    <meta name="viewport" content="user-scalable=no, target-densitydpi=device-dpi" />
     <title>Orbiteque</title>
         <style media="screen">
         html, body
@@ -233,10 +233,10 @@
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
             
-            document
+            /*document
             .querySelector("meta[name=viewport]")
             .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
-            
+            */
             window.addEventListener("load", function () {
                 // scale on phones
                 document.getElementById("splash").style.visibility = "hidden";
@@ -262,11 +262,11 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    document
+                    /*document
                     .querySelector("meta[name=viewport]")
                     .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
                     document.getElementById("splash").style.visibility = "visible";
-                    
+                    */
                     document.getElementById("vis").style.visibility = "hidden";
                     i1.style.visibility = "hidden";
                     i2.style.visibility = "hidden";

@@ -238,13 +238,9 @@
             .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
             */
             window.addEventListener("load", function () {
-                // scale on phones
-                document.getElementById("splash").style.visibility = "hidden";
-
-                /*document.getElementById("vis").onclick = (function () {
+                document.getElementById("vis").onclick = (function () {
                     window.location.href = 'https://github.com/e-teoria/Orbiteque';
                 })
-                */
                 
                 document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
                 
@@ -252,6 +248,7 @@
                 .querySelector("meta[name=viewport]")
                 .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
                 */
+                document.getElementById("splash").style.visibility = "hidden";
                 document.getElementById("vis").style.visibility = "visible";
                 i1.style.visibility = "visible";
                 i2.style.visibility = "visible";
@@ -267,6 +264,7 @@
                     .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
                     document.getElementById("splash").style.visibility = "visible";
                     */
+                    document.getElementById("splash").style.visibility = "visible";
                     document.getElementById("vis").style.visibility = "hidden";
                     i1.style.visibility = "hidden";
                     i2.style.visibility = "hidden";
@@ -288,6 +286,7 @@
                 });
             });
             
+            /*
             function updateOrientation() {
               switch (window.orientation) {
                 case 0: //portrait
@@ -310,7 +309,7 @@
             
             updateOrientation();
             window.addEventListener('orientationchange', updateOrientation, false);
-
+            */
 
             var divContainer = document.getElementById ("divContainer")
             Orbital(divContainer, generateCanvasScape ());

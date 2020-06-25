@@ -288,33 +288,26 @@
                 });
             });
             
-            var cw = 1;
-            var ch = 1;
+            var dew = document.documentElement.clientWidth;
+            var deh = document.documentElement.clientHeight;
             function updateOrientation() {
-              document
-              .querySelector("meta[name=viewport]")
-              .setAttribute('content', 'width=' + (document.body.clientWidth / cw), 'height=' + (document.body.clientHeight / ch), 'user-scalable=no');
-              /*
               switch (window.orientation) {
                 case 0: //portrait
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=' + (document.body.clientWidth / ch), 'height=' + (document.body.clientHeight / cw), 'user-scalable=no');
+                    .setAttribute('content', 'width=' + (dew), 'height=' + (deh), 'user-scalable=no');
                   break;
                 case 90: case -90: //landscape
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=' + (document.body.clientHeight / cw), 'height=' + (document.body.clientWidth / ch), 'user-scalable=no');
+                    .setAttribute('content', 'width=' + (deh), 'height=' + (dew), 'user-scalable=no');
                   break;
                 default:
                     document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'width=' + (document.body.clientWidth / cw), 'height=' + (document.body.clientHeight / ch), 'user-scalable=no');
+                    .setAttribute('content', 'width=' + (dew), 'height=' + (deh), 'user-scalable=no');
                   break;
               }
-              */
-              cw = document.body.clientWidth;
-              ch = document.body.clientHeight;
             /*
               switch (window.orientation) {
                 case 0: //portrait

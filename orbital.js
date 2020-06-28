@@ -1142,7 +1142,7 @@ function Orbital (divContainer, data) {
         
         //fishEye.clearRenderMap ();
         fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx, cy, data.scaledBitmap);
-        ctxCache.putImageData(imgCache, 0, 0);
+        ctxCache.putImageData (imgCache, 0, 0);
         
         return cnvCache;
     }
@@ -1151,7 +1151,7 @@ function Orbital (divContainer, data) {
 
         if (r * squashX > 0.5 && r * squashY > 0.5) {
             
-            ctx.beginPath();
+            ctx.beginPath ();
             ctx.ellipse (
                 x * squashX,
                 y * squashY,
@@ -1220,7 +1220,7 @@ function Orbital (divContainer, data) {
                     bmpscale = Math.max (0, bmpscale);
                     bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
 
-                    ctx.drawImage(data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
+                    ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
                 
                 }
             }
@@ -1372,43 +1372,24 @@ function Orbital (divContainer, data) {
         var angMin, angMax;
         if ((dragging || panning) && select) {
             gettingLevel = select;
-            
-            var ip = 0;
-            var ang = [];
-            var ac = select;
-            while (ac && ip < 3) {
-                var phi =  ac.angle;
-                    
-                ang[ip] =
-                    - phi +
+
+            var ang1;
+            if (select.parent) {
+                ang1 =
+                    - select.parent.angle +
                     3 * Math.PI / 2 +
                     Math.atan2 (
-                        (ac.smallY * squashY - mouse.y) / squashY,
-                        (ac.smallX * squashX - mouse.x) / squashX
+                        (select.parent.smallY * squashY - mouse.y) / squashY,
+                        (select.parent.smallX * squashX - mouse.x) / squashX
                     );
                     
-                while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
-                while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
-                
-                if (angMin && ang[ip] < angMin)
-                    ang[ip] = angMin;
-                        
-                if (angMax && ang[ip] > angMax)
-                    ang[ip] = angMax;
-                        
-                if (ip === 0) {
-                    angMin = ac.getAngMin ();
-                    angMax = ac.getAngMax ();
-                        
-                } 
-                               
+                while (ang1 > 2 * Math.PI) ang1 = ang1 - 2 * Math.PI;
+                while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
 
-                //drawCircle (ac.smallX, ac.smallY, ac.smallR, "red", "white", "yxz"); 
-                
-                ac = ac.parent;
-                ip++;
+                ang1 = Math.min (select.getAngMax (), ang1);
+                ang1 = Math.max (select.getAngMin (), ang1);
             }
-            
+
             var isOnParent = select.parent;
             while (isOnParent) {
                 if (isOnParent.smallR > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
@@ -1421,7 +1402,7 @@ function Orbital (divContainer, data) {
             if (!isOnParent) {
                 if (select.parent) {
                     minR = select.parent.smallR;
-                    maxR = select.parent.smallR + 2 * select.parent.getCircle(ang[1]).r * ratio;//select.smallR;
+                    maxR = select.parent.smallR + 2 * select.parent.getCircle(ang1).r * ratio;//select.smallR;
                     mouseDistance = Math.sqrt (Math.pow (select.parent.smallX - mouse.x / squashX, 2) + Math.pow(select.parent.smallY - mouse.y / squashY, 2));
 
                 } else {
@@ -1433,10 +1414,10 @@ function Orbital (divContainer, data) {
 
             if (!animating && dragging && select.parent && !isOnParent && mouseDistance < maxR) {
                 //select.parent.setAngle (ang[1], dr);
-                select.parent.setAngle (ang[1], 0);
+                select.parent.setAngle (ang1, 0);
                 //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {
                     //inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: dr, time: (new Date()).getTime()};
-                    inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: 0, centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
+                    inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang1, percentRawAngle: 0, centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
                     inertIdx++;
                     if (inertIdx === 20) inertIdx = 0;
 
@@ -1457,15 +1438,89 @@ function Orbital (divContainer, data) {
                 mouseup (lastMouseEvent);
                 
             } else {
-                if (!isOnParent) {
-                    if (Math.floor (mouseDistance) >= Math.floor (maxR))
-                        animateAng0 = ang[0];
-                                                
-                        if (animateAng0 < angMin)
-                            animateAng0 = angMin;
+                if (isOnParent) {
+                } else if (mouseDistance > maxR) {
+                    
+                }
+
+                // adjust angMin, angMax
+                var ip = 0;
+                var ang = [];
+                var ac = select;
+                while (ac && ip < 3) {
+                    if (ip === 0) {
+                        angMin = ac.getAngMin ();
+                        angMax = ac.getAngMax ();
                             
-                        if (animateAng0 > angMax)
-                            animateAng0 = angMax;
+                        var ac1 = ac;
+                        while (ac1.parent)
+                            ac1 = ac1.parent;
+                            
+                        var ac0 = ac1;
+                        while (ac1) {
+                            // TO-DO: compose fresh select cursor in outer function;
+                            ac0 = ac1;
+                            ac1 = ac1.child;
+                        }
+                        
+                        var phi =  ac0.angle;
+                            
+                        ang[0] =
+                            - phi +
+                            3 * Math.PI / 2 +
+                            Math.atan2 (
+                                (ac0.smallY * squashY - mouse.y) / squashY,
+                                (ac0.smallX * squashX - mouse.x) / squashX
+                            );
+                            
+                        while (ang[0] > 2 * Math.PI) ang[0] = ang[0] - 2 * Math.PI;
+                        while (ang[0] < 0) ang[0] = ang[0] + 2 * Math.PI;
+                        
+                    } else {
+                        var phi =  ac.angle;
+                            
+                        ang[ip] =
+                            - phi +
+                            3 * Math.PI / 2 +
+                            Math.atan2 (
+                                (ac.smallY * squashY - mouse.y) / squashY,
+                                (ac.smallX * squashX - mouse.x) / squashX
+                            );
+                            
+                        while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
+                        while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
+
+                    }
+                    
+                    ac = ac.parent;
+                    ip++;
+                }
+
+                if (!isOnParent) {
+                    if (Math.floor (mouseDistance) >= Math.floor (maxR)) {
+                        if (!select.parent) {
+                            animateAng0 = ang[0];
+                            
+                            if (animateAng0 < angMin)
+                                animateAng0 = angMin;
+                                
+                            if (animateAng0 > angMax)
+                                animateAng0 = angMax;
+                              
+                            animateAng0Start = Math.PI;//ang[0];
+
+                        } else {
+                            animateAng0 = ang[0];
+                            
+                            if (animateAng0 < angMin)
+                                animateAng0 = angMin;
+                                
+                            if (animateAng0 > angMax)
+                                animateAng0 = angMax;
+                              
+                            animateAng0Start = ang[1];
+                        }
+                    }
                         
                     if (select.parent && select.parent.parent)
                         animateAng2 = ang[2];
@@ -1614,21 +1669,19 @@ function Orbital (divContainer, data) {
                                 var cp = select.parent;
                                 while (cp) {
                                     var angle = cp.angle1;
-                                    //if (cp !== select.parent.parent) {
-                                        angle = Math.min (cp.getCustomAngMax (cp.data), angle);
-                                        angle = Math.max (cp.getCustomAngMin (cp.data), angle);
-                                    //}
+                                    angle = Math.min (cp.getCustomAngMax (cp.data), angle);
+                                    angle = Math.max (cp.getCustomAngMin (cp.data), angle);
                                     
-                                    angles.push (angle);
+                                    angles.push ([cp.angle1, angle]);
                                     //angles.push (cp.angle1);
                                     
-                                    if (angle === cp.angle1)
+                                    //if (angle === cp.angle1)
                                         cc.index = cp.index1;
                                         
                                     cc = cc.parent;
                                     cp = cp.parent;
                                 }
-                                angles.push (Math.PI);
+                                angles.push ([Math.PI, Math.PI]);
 
                                 function aEnsmall () {
                                     cc = select.cursor.parent;
@@ -1638,9 +1691,10 @@ function Orbital (divContainer, data) {
                                     var lastAngle = Math.PI;
                                     while (ap < angles.length) {
                                         if (ap > 0) {
-                                            cc.angle = angles[ap] * (1 - i) + angles[ap - 1] * (i);
+                                            cc.angle = (angles[ap][0] * (1 - i) + angles[ap][1] * (i)) * (1 - i) + (angles[ap - 1][0] * (1 - i) + angles[ap - 1][1] * (i)) * (i);
                                         } else {
-                                            cc.angle = angles[ap] * (1 - i) + animateAng0 * (i);//Math.PI + (animateAng0 - Math.PI) * (i);
+                                            //cc.angle = angles[ap][1] * (1 - i) + (animateAng0Start * (1 - i) + animateAng0 * i) * (i);//Math.PI + (animateAng0 - Math.PI) * (i);
+                                            cc.angle = (angles[ap][0] * (1 - i) + angles[ap][1] * (i)) * (1 - i) + (animateAng0Start * (1 - i) + animateAng0 * i) * (i);
                                         }
                                         lastAngle = cc.angle;
                                         cc = cc.parent;
@@ -1772,7 +1826,6 @@ function Orbital (divContainer, data) {
             if (Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
                 if (panning) {
                     panning = false;
-                    //cursor.cachedCnv = false;
                 }
             }
         }
@@ -2119,7 +2172,7 @@ function Orbital (divContainer, data) {
     cursor = {parent: null, index: 0, centerX: 0, centerY: 0, angle: Math.PI, children: []}
     cursor.parent = {index: 0, children: [cursor]};
 
-    var level, gettingLevel, animateAng0, animateAng2, animateAng2Start, curAnimateAng2;
+    var level, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
     var lastMouseEvent, globalt0;
 
     var mouseDown = false;

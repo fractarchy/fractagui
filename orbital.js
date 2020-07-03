@@ -1180,10 +1180,18 @@ function Orbital (divContainer, data) {
             
             if (r > 5) {
                 var magn = r / (rr * ratio);
-                var xo = Math.floor (x * squashX) - Math.floor (r * squashX);
-                var yo = Math.floor (y * squashY) - Math.floor (r * squashY);
-                var xi = Math.floor (x * squashX) + Math.floor (r * squashX);
-                var yi = Math.floor (y * squashY) + Math.floor (r * squashY);
+                /*
+                var xo = x * squashX - r * squashX;
+                var yo = y * squashY - r * squashY;
+                var xi = x * squashX + r * squashX;
+                var yi = y * squashY + r * squashY;
+                */
+                
+                var xo = Math.round (x * squashX - r * squashX);
+                var yo = Math.round (y * squashY - r * squashY);
+                var xi = Math.round (x * squashX + r * squashX);
+                var yi = Math.round (y * squashY + r * squashY);
+                
                 var w = xi - xo;
                 var h = yi - yo;
 
@@ -1450,11 +1458,8 @@ function Orbital (divContainer, data) {
                 var ang = [];
                 var ac = select;
                 while (ac && ip < 3) {
+                    /*
                     if (ip === 0) {
-                        /*
-                        angMin0 = ac.getAngMin ();
-                        angMax0 = ac.getAngMax ();
-                        */
                         var ac1 = ac;
                         while (ac1.parent)
                             ac1 = ac1.parent;
@@ -1477,12 +1482,7 @@ function Orbital (divContainer, data) {
                             );
                             
                     } else {
-                        /*
-                        if (ip == 2) {
-                            angMin2 = ac.getCustomAngMin (ac.data);
-                            angMax2 = ac.getCustomAngMax (ac.data);
-                        }
-                        */
+                    */
                         var phi =  ac.angle;
                             
                         ang[ip] =
@@ -1493,7 +1493,7 @@ function Orbital (divContainer, data) {
                                 (ac.smallX * squashX - mouse.x) / squashX
                             );
                             
-                    }
+                    //}
 
                     while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
                     while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
@@ -1507,13 +1507,6 @@ function Orbital (divContainer, data) {
                     if (!isOnParent) {
                         if (mouseDistance > maxR) {
                             animateAng0 = ang[0];
-                            /*
-                            if (animateAng0 < angMin0)
-                                animateAng0 = angMin0;
-                                
-                            if (animateAng0 > angMax0)
-                                animateAng0 = angMax0;
-                            */
 
                             if (!select.parent) {
                                 animateAng0Start = Math.PI;

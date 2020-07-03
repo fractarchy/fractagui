@@ -589,7 +589,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
 }
 
 function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1) {
-    var pixelPrecision = 1 / Math.pow (2, 16);
+    var pixelPrecision = 1 / Math.pow (2, 8); /* set it to less, and you are doomed */
 
     var hilight = fill1;//"white"
     var stroke1 = "gray";
@@ -1502,7 +1502,7 @@ function Orbital (divContainer, data) {
                     ip++;
                 }
 
-                if (!animating) { // remove this `if` and you are doomed
+                //if (!animating) { // remove this `if` and you are doomed
                     // mouse animation during zooming
                     if (!isOnParent) {
                         if (mouseDistance > maxR) {
@@ -1545,6 +1545,7 @@ function Orbital (divContainer, data) {
                             
                             if (!animating && select.parent.parent)
                                 animateAng2Start = select.parent.parent.angle1;
+                                
                         }
 
                         if (!animateAng2)
@@ -1558,7 +1559,7 @@ function Orbital (divContainer, data) {
                     animateAng0 = Math.max (animateAng0, angMin);
                     animateAng2 = Math.min (animateAng2, angMax);
                     animateAng2 = Math.max (animateAng2, angMin);
-                }                
+                //}                
 
                 if (!animating) {
                     var topc = select;
@@ -1688,7 +1689,7 @@ function Orbital (divContainer, data) {
                             animating = "level";
                             aEnlarge();
                         }    
-                    } else if (mouseDistance > maxR) {
+                    } else if (mouseDistance > maxR + 1) {
                         //alert ("level up");
                         if (path.length > 0) {
                             if (level !== gettingLevel) {

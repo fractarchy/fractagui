@@ -453,7 +453,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
                     if (tmpX >= Crisp.log.length) {
                         var bmpscaleX = Crisp.log[Crisp.log.length - 1];
                     } else {
-                        var bmpscaleX = Crisp.log[Math.ceil (tmpX * 0.5)] - 1;
+                        var bmpscaleX = Crisp.log[Math.ceil (tmpX * 0.5)] - 1; //remove `* 0.5` and you are doomed
                     }
                     
                     bmpscaleX = Math.max (bmpscaleX, 0);
@@ -1374,7 +1374,7 @@ function Orbital (divContainer, data) {
             }
         }
         
-        var angMin, angMax;
+        var angMin, angMax;//, angMin0, angMax0, angMin2, angMax2;
         if ((dragging || panning) && select) {
             gettingLevel = select;
 
@@ -1397,7 +1397,7 @@ function Orbital (divContainer, data) {
 
             var isOnParent = select.parent;
             while (isOnParent) {
-                if (isOnParent.smallR > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
+                if (isOnParent.smallR - 1 > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
                     break;
                     
                 isOnParent = isOnParent.parent
@@ -1443,20 +1443,18 @@ function Orbital (divContainer, data) {
                 mouseup (lastMouseEvent);
                 
             } else {
-                if (isOnParent) {
-                } else if (mouseDistance > maxR) {
-                    
-                }
-
-                // adjust angMin, angMax
+                angMin = select.getAngMin ();
+                angMax = select.getAngMax ();
+                
                 var ip = 0;
                 var ang = [];
                 var ac = select;
                 while (ac && ip < 3) {
                     if (ip === 0) {
-                        angMin = ac.getAngMin ();
-                        angMax = ac.getAngMax ();
-                            
+                        /*
+                        angMin0 = ac.getAngMin ();
+                        angMax0 = ac.getAngMax ();
+                        */
                         var ac1 = ac;
                         while (ac1.parent)
                             ac1 = ac1.parent;
@@ -1478,10 +1476,13 @@ function Orbital (divContainer, data) {
                                 (ac0.smallX * squashX - mouse.x) / squashX
                             );
                             
-                        while (ang[0] > 2 * Math.PI) ang[0] = ang[0] - 2 * Math.PI;
-                        while (ang[0] < 0) ang[0] = ang[0] + 2 * Math.PI;
-                        
                     } else {
+                        /*
+                        if (ip == 2) {
+                            angMin2 = ac.getCustomAngMin (ac.data);
+                            angMax2 = ac.getCustomAngMax (ac.data);
+                        }
+                        */
                         var phi =  ac.angle;
                             
                         ang[ip] =
@@ -1492,62 +1493,72 @@ function Orbital (divContainer, data) {
                                 (ac.smallX * squashX - mouse.x) / squashX
                             );
                             
-                        while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
-                        while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
-
                     }
+
+                    while (ang[ip] > 2 * Math.PI) ang[ip] = ang[ip] - 2 * Math.PI;
+                    while (ang[ip] < 0) ang[ip] = ang[ip] + 2 * Math.PI;
                     
                     ac = ac.parent;
                     ip++;
                 }
 
-                if (!isOnParent) {
-                    if (Math.floor (mouseDistance) >= Math.floor (maxR)) {
-                        if (!select.parent) {
+                if (!animating) { // remove this `if` and you are doomed
+                    // mouse animation during zooming
+                    if (!isOnParent) {
+                        if (mouseDistance > maxR) {
                             animateAng0 = ang[0];
-                            
-                            if (animateAng0 < angMin)
-                                animateAng0 = angMin;
+                            /*
+                            if (animateAng0 < angMin0)
+                                animateAng0 = angMin0;
                                 
-                            if (animateAng0 > angMax)
-                                animateAng0 = angMax;
-                              
-                            animateAng0Start = ang[0];
+                            if (animateAng0 > angMax0)
+                                animateAng0 = angMax0;
+                            */
 
-                        } else {
-                            animateAng0 = ang[0];
-                            
-                            if (animateAng0 < angMin)
-                                animateAng0 = angMin;
-                                
-                            if (animateAng0 > angMax)
-                                animateAng0 = angMax;
-                              
-                            animateAng0Start = ang[1];
-                        }
-                    }
-                        
-                    if (select.parent && select.parent.parent)
-                        animateAng2 = ang[2];
+                            if (!select.parent) {
+                                animateAng0Start = Math.PI;
 
-                } else {
-                    if (isOnParent !== select.parent) {
-                        if (select.parent.parent) {
-                            if (animating) {
-                                animateAng2 = curAnimateAng2;
-                                animateAng2Start = curAnimateAng2;
                             } else {
-                                animateAng2 = select.parent.parent.angle1;
-                                animateAng2Start = select.parent.parent.angle1;
+                                animateAng0Start = ang[1];
+
                             }
                         }
-                        
+                            
+                        //if (select.parent && select.parent.parent)
+                        //    animateAng2 = ang[2];
+
                     } else {
-                        animateAng2 = ang[2];
-                        if (!animating && select.parent.parent)
-                            animateAng2Start = select.parent.parent.angle1;
+                        if (isOnParent !== select.parent) {
+                            if (select.parent.parent) {
+                                //if (animating) {
+                                //    animateAng2 = curAnimateAng2;
+                                //    animateAng2Start = curAnimateAng2;
+                                    
+                                //} else {
+                                    animateAng2 = select.parent.parent.angle1;
+                                    animateAng2Start = select.parent.parent.angle1;
+                                //}
+                            }
+                            
+                        } else {
+                            animateAng2 = ang[2];
+                            
+                            if (!animating && select.parent.parent)
+                                animateAng2Start = select.parent.parent.angle1;
+                        }
+
+                        if (!animateAng2)
+                            animateAng2 = Math.PI;
+                            
+                        if (!animateAng2Start)
+                            animateAng2Start = Math.PI;
                     }
-                }
+                    
+                    animateAng0 = Math.min (animateAng0, angMax);
+                    animateAng0 = Math.max (animateAng0, angMin);
+                    animateAng2 = Math.min (animateAng2, angMax);
+                    animateAng2 = Math.max (animateAng2, angMin);
+                }                
 
                 if (!animating) {
                     var topc = select;
@@ -1566,25 +1577,40 @@ function Orbital (divContainer, data) {
                             var cc = select.parent.cursor;
                             var cp = select.parent;
                             do {
-                                angles.push (cp.angle1);
+                                var angle = cp.angle1;
+                                angle = Math.min (cp.getCustomAngMax (cp.data), angle);
+                                angle = Math.max (cp.getCustomAngMin (cp.data), angle);
+                                angles.push ([cp.angle1, angle]);
+                                //angles.push (angle);
+                                
+                                //angles.push (cp.angle1);
                                 cc.index = cp.index1;
                                 cc = cc.parent;
                                 cp = cp.parent;
                             } while (cp);
                             
                             function aEnlarge () {
-                                angles[1] = animateAng2Start * (1 - i) + animateAng2 * i;
+                                if (angles[1]) 
+                                    angles[1] = [angles[1][0] * (1 - i) + angles[1][1] * (i), animateAng2Start * (1 - i) + animateAng2 * i];
+                                    
+                                else
+                                    angles[1] = [Math.PI, animateAng2Start * (1 - i) + animateAng2 * i];
+                                    
+                                //angles[1] = animateAng2Start * (1 - i) + animateAng2 * i;
+
                                 curAnimateAng2 = angles[1]
                                 cc = select.parent.cursor;
                                 cp = select.parent;
                                 var ap = 0;
                                 while (cp.parent) {
-                                    cc.angle = angles[ap] * (1 - i) + angles[ap + 1] * i;
+                                    cc.angle = (angles[ap][0] * (1 - i) + angles[ap][1] * (i)) * (1 - i) + (angles[ap + 1][0] * (1 - i) + angles[ap + 1][1] * (i)) * (i);
+                                    //cc.angle = angles[ap] * (1 - i) + angles[ap + 1] * i;
                                     cc = cc.parent;
                                     cp = cp.parent;
                                     ap++
                                 };
-                                cc.angle = angles[ap] * (1 - i) + Math.PI * i;
+                                cc.angle = (angles[ap][0] * (1 - i) + angles[ap][1] * (i)) * (1 - i) + Math.PI * i;
+                                //cc.angle = angles[ap] * (1 - i) + Math.PI * i;
                                 var m = topc.getCircle (topc.cursor.angle);
                                 
                                 var x0 = topc.smallX + m.x;

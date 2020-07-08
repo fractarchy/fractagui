@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="480"
+   height="580"
+   viewBox="0 0 127 153.45833"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
+   sodipodi:docname="0-1.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="232.41746"
+     inkscape:cy="257.5"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;opacity:0.98;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="1.2353805"
+       y="12.034297"
+       id="text12"><tspan
+         sodipodi:role="line"
+         x="1.2353805"
+         y="12.034297"
+         style="font-weight:bold;font-size:14.1111px;stroke-width:0.264583"
+         id="tspan64">1. purpose and</tspan><tspan
+         id="tspan544"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="29.673172"
+         style="font-weight:bold;font-size:14.1111px;stroke-width:0.264583">restrictions</tspan><tspan
+         id="tspan538"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="40.445293"
+         style="font-size:6.35px;stroke-width:0.264583" /><tspan
+         id="tspan540"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="48.382793"
+         style="font-size:6.35px;stroke-width:0.264583"><tspan
+   id="tspan542"
+   style="font-style:italic">e-fun</tspan> is optimized to visualize and na-</tspan><tspan
+         id="tspan546"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="56.320293"
+         style="font-size:6.35px;stroke-width:0.264583">vigate relatively small number of con-</tspan><tspan
+         id="tspan548"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="64.25779"
+         style="font-size:6.35px;stroke-width:0.264583">tent elements (up to 50 separate page</tspan><tspan
+         id="tspan550"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="72.19529"
+         style="font-size:6.35px;stroke-width:0.264583">units, varying on pages size and client</tspan><tspan
+         id="tspan552"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="80.13279"
+         style="font-size:6.35px;stroke-width:0.264583">performance). Since <tspan
+   id="tspan554"
+   style="font-style:italic">e-fun</tspan> visual inter-</tspan><tspan
+         id="tspan556"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="88.07029"
+         style="font-size:6.35px;stroke-width:0.264583">face is very processing intensive, all</tspan><tspan
+         id="tspan558"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="96.00779"
+         style="font-size:6.35px;stroke-width:0.264583">the graphical elements are pre-cached</tspan><tspan
+         id="tspan560"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="103.94529"
+         style="font-size:6.35px;stroke-width:0.264583">upon main HTML page load event. Pre-</tspan><tspan
+         id="tspan562"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="111.88279"
+         style="font-size:6.35px;stroke-width:0.264583">caching is used to deliver smooth and</tspan><tspan
+         id="tspan564"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="119.82029"
+         style="font-size:6.35px;stroke-width:0.264583">flicker-free browsing experience as</tspan><tspan
+         id="tspan566"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="127.75779"
+         style="font-size:6.35px;stroke-width:0.264583">much as it is possible, but it may also</tspan><tspan
+         id="tspan568"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="135.6953"
+         style="font-size:6.35px;stroke-width:0.264583">introduce an initial startup delay on</tspan><tspan
+         id="tspan570"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="143.6328"
+         style="font-size:6.35px;stroke-width:0.264583">slower machines if using a larger num-</tspan><tspan
+         id="tspan572"
+         sodipodi:role="line"
+         x="1.2353805"
+         y="151.5703"
+         style="font-size:6.35px;stroke-width:0.264583">ber of image elements.</tspan></text>
+  </g>
+</svg>

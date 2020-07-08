@@ -164,7 +164,7 @@ Crisp = (function () {
             ((c1 * (pixf <<   8 >>> 24) + f1 * (pixc <<   8 >>> 24))       )
         );
     }
-
+    
     function crispBitmap (cnvim) {
         "use strict";
         var ctxim = cnvim.getContext('2d');
@@ -530,6 +530,8 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
         var i = 0;
         
         function interpolate (ratio, pixf, pixc) {
+            "use strict";
+            
             var f = ~~ratio;
             var c = f + 1;
 
@@ -537,13 +539,89 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
             var c1 = (c - ratio);
             
             return (
-                ((255                                                  ) <<  24) |
-                ((c1 * (pixf <<  24 >>> 24) + f1 * (pixc <<  24 >>> 24)) <<  16) |
-                ((c1 * (pixf <<  16 >>> 24) + f1 * (pixc <<  16 >>> 24)) <<   8) |
-                ((c1 * (pixf <<   8 >>> 24) + f1 * (pixc <<   8 >>> 24))       )
+                ((255                                                      ) <<  24) |
+                ((~~(c1 * (pixf <<  24 >>> 24) + f1 * (pixc <<  24 >>> 24))) <<  16) |
+                ((~~(c1 * (pixf <<  16 >>> 24) + f1 * (pixc <<  16 >>> 24))) <<   8) |
+                ((~~(c1 * (pixf <<   8 >>> 24) + f1 * (pixc <<   8 >>> 24)))       )
             );
         }
 
+        function getCrispSquare (buff, scale, x, y, width) {
+            "use strict";
+            
+            if (scale === 0){
+                pix = buff[~~y * width + ~~x];
+                
+            } else {
+                var pix00 = getCrispSquare (buff, scale - 1, (x << 2)    , (y << 2)    , width);
+                var pix01 = getCrispSquare (buff, scale - 1, (x << 2)    , (y << 2) + 1, width);
+                var pix10 = getCrispSquare (buff, scale - 1, (x << 2) + 1, (y << 2)    , width);
+                var pix11 = getCrispSquare (buff, scale - 1, (x << 2) + 1, (y << 2) + 1, width);
+                
+                var pix0 = (
+                    ((255                                               ) << 24) |
+                    ((((pix00 << 24 >>> 24) + (pix01 << 24 >>> 24)) >> 2) << 16) |
+                    ((((pix00 << 16 >>> 24) + (pix01 << 16 >>> 24)) >> 2) << 8 ) |
+                    ((((pix00 <<  8 >>> 24) + (pix01 <<  8 >>> 24)) >> 2)      )
+                );
+                
+                var pix1 = (
+                    ((255                                               ) << 24) |
+                    ((((pix10 << 24 >>> 24) + (pix11 << 24 >>> 24)) >> 2) << 16) |
+                    ((((pix10 << 16 >>> 24) + (pix11 << 16 >>> 24)) >> 2) << 8 ) |
+                    ((((pix10 <<  8 >>> 24) + (pix11 <<  8 >>> 24)) >> 2)      )
+                );
+                
+                var pix = (
+                    ((255                                             ) << 24) |
+                    ((((pix0 << 24 >>> 24) + (pix1 << 24 >>> 24)) >> 2) << 16) |
+                    ((((pix0 << 16 >>> 24) + (pix1 << 16 >>> 24)) >> 2) << 8 ) |
+                    ((((pix0 <<  8 >>> 24) + (pix1 <<  8 >>> 24)) >> 2)      )
+                );
+            }
+                
+            return pix;
+        }
+        
+        function getCrispPixel (canvas, scaleX, scaleY, x, y, width) {
+            "use strict";
+            
+            var buff = canvas.dataBuffer;
+
+            ///
+            scaleX = Math.min (scaleX, scaleY);
+            scaleY = Math.min (scaleX, scaleY);
+            var avgPix = 0;
+            
+            if (scaleX >= scaleY) {
+                var diff = scaleX - scaleY;
+                var scale = scaleY;
+                for (var i = 0; i <= diff; i++) {
+                    if (i === 0 || i == diff) {
+                        var pix00 = getCrispSquare (buff, scale, ((~~x) >> scale) + i    , ((~~y) >> scale)    , width);
+                        var pix01 = getCrispSquare (buff, scale, ((~~x) >> scale) + i    , ((~~y) >> scale) + 1, width);
+                        var pix10 = getCrispSquare (buff, scale, ((~~x) >> scale) + i + 1, ((~~y) >> scale)    , width);
+                        var pix11 = getCrispSquare (buff, scale, ((~~x) >> scale) + i + 1, ((~~y) >> scale) + 1, width);
+                        var pix = interpolate (y, interpolate (x, pix00, pix10), interpolate (x, pix01, pix11));
+                        
+                    } else {
+                        var pix = getCrispSquare (buff, scaleY, ((~~x) >> scale) + i, (~~y) >> scale, width);
+                    }
+                    
+                    avgPix += (
+                        ((255                          ) << 24) |
+                        ((~~((pix << 24 >>> 24) / diff)) << 16) |
+                        ((~~((pix << 16 >>> 24) / diff)) << 8 ) |
+                        ((~~((pix <<  8 >>> 24) / diff))      )
+                    );
+                    
+                }
+            } else {
+            }
+            
+            return avgPix;
+        }
+        
         var dataBuff = new Uint32Array(data.buffer);
         
         for (var y1 = Math.floor (superSampling); y1 < height; y1++) {
@@ -557,6 +635,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
                     var scx, scy;
                     scx = Math.min (renderMap[delta + DbmpscaleX], cnvScaled.images.length - 1);
                     scy = Math.min (renderMap[delta + DbmpscaleY], cnvScaled.images[scx].length - 1);
+                    
                     var scaled = cnvScaled.images[scx][scy];
                     //var scaled = cnvScaled.images[renderMap[delta + DbmpscaleX]][renderMap[delta + DbmpscaleY]];
 
@@ -566,6 +645,14 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
                         var iim1 = iim0 + scaled.width;
                         dataBuff[i] = interpolate (finalY0, interpolate (finalX0, buff[iim0], buff[iim0 + 1]), interpolate (finalX0, buff[iim1], buff[iim1 + 1]));
                     }
+                    
+                    
+                    /*
+                    var scaled = cnvScaled.images[0][0];
+                    if (finalX0 >= 0 && finalX0 < scaled.width - 1 && finalY0 >= 0 && finalY0 < scaled.height - 1) {
+                        dataBuff[i] = getCrispPixel (cnvScaled.images[0][0], scx, scy, finalX0, finalY0, cnvScaled.images[0][0].width);
+                    }
+                    */
                 }
                 delta += length;
                 i += 1;
@@ -1057,8 +1144,9 @@ function Orbital (divContainer, data) {
         if (fst)
             parent.children = [data];
         
-        for (var i = 0; i < canvasScape.children.length; i++)
-            data.children.push (prepareData (canvasScape.children[i], data, i));
+        if (canvasScape.children)
+            for (var i = 0; i < canvasScape.children.length; i++)
+                data.children.push (prepareData (canvasScape.children[i], data, i));
         
         return data;
     } 
@@ -1180,17 +1268,18 @@ function Orbital (divContainer, data) {
             
             if (r > 5) {
                 var magn = r / (rr * ratio);
-                /*
+                
                 var xo = x * squashX - r * squashX;
                 var yo = y * squashY - r * squashY;
                 var xi = x * squashX + r * squashX;
                 var yi = y * squashY + r * squashY;
-                */
                 
+                /*
                 var xo = Math.round (x * squashX - r * squashX);
                 var yo = Math.round (y * squashY - r * squashY);
                 var xi = Math.round (x * squashX + r * squashX);
                 var yi = Math.round (y * squashY + r * squashY);
+                */
                 
                 var w = xi - xo;
                 var h = yi - yo;

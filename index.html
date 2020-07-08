@@ -343,12 +343,13 @@
                                 }                 
                             }
                             Orbital (divContainer, data.data);
-                            if (!document.readyState) {
+                            if (document.readyState === "complete" || document.readyState === "interactive") {
+                                wonload();
+                            } else {
                                 window.addEventListener("load", function () {
                                     wonload ();
                                 });
-                            } else
-                                wonload();
+                            }
                         }
                         
                         waitForImages ();

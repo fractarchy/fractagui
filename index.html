@@ -234,56 +234,60 @@
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
             
+            var wloaded = false;
             wonload = function () {
-                document.getElementById("vis").onclick = (function () {
-                    window.location.href = 'https://github.com/e-teoria/Orbiteque';
-                })
-                
-                document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
-                
-                /*document
-                .querySelector("meta[name=viewport]")
-                .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
-                */
-                document.getElementById("splash").style.visibility = "hidden";
-                document.getElementById("heading1").style.visibility = "visible";
-                document.getElementById("vis").style.visibility = "visible";
-                i1.style.visibility = "visible";
-                i2.style.visibility = "visible";
-                i3.style.visibility = "visible";
-                divContainer.style.visibility = "visible";
-
-                setSize ();
-
-                var resizeId;
-                window.addEventListener('resize', function () {
+                if (!wloaded) {
+                    wloaded = true;
+                    document.getElementById("vis").onclick = (function () {
+                        window.location.href = 'https://github.com/e-teoria/Orbiteque';
+                    })
+                    
+                    document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
+                    
                     /*document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
-                    document.getElementById("splash").style.visibility = "visible";
+                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
                     */
-                    //document.getElementById("splash").style.visibility = "visible";
-                    document.getElementById("heading1").style.visibility = "hidden";
-                    document.getElementById("vis").style.visibility = "hidden";
-                    i1.style.visibility = "hidden";
-                    i2.style.visibility = "hidden";
-                    i3.style.visibility = "hidden";
-                    divContainer.style.visibility = "hidden";
-                    
-                    clearTimeout(resizeId);
-                    resizeId = setTimeout(function () {
-                        //document.getElementById("splash").style.visibility = "hidden";
-                        
-                        document.getElementById("heading1").style.visibility = "visible";
-                        document.getElementById("vis").style.visibility = "visible";
-                        i1.style.visibility = "visible";
-                        i2.style.visibility = "visible";
-                        i3.style.visibility = "visible";
-                        divContainer.style.visibility = "visible";
+                    document.getElementById("splash").style.visibility = "hidden";
+                    document.getElementById("heading1").style.visibility = "visible";
+                    document.getElementById("vis").style.visibility = "visible";
+                    i1.style.visibility = "visible";
+                    i2.style.visibility = "visible";
+                    i3.style.visibility = "visible";
+                    divContainer.style.visibility = "visible";
 
-                        setSize ();
-                    }, 500);
-                });
+                    setSize ();
+
+                    var resizeId;
+                    window.addEventListener('resize', function () {
+                        /*document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
+                        document.getElementById("splash").style.visibility = "visible";
+                        */
+                        //document.getElementById("splash").style.visibility = "visible";
+                        document.getElementById("heading1").style.visibility = "hidden";
+                        document.getElementById("vis").style.visibility = "hidden";
+                        i1.style.visibility = "hidden";
+                        i2.style.visibility = "hidden";
+                        i3.style.visibility = "hidden";
+                        divContainer.style.visibility = "hidden";
+                        
+                        clearTimeout(resizeId);
+                        resizeId = setTimeout(function () {
+                            //document.getElementById("splash").style.visibility = "hidden";
+                            
+                            document.getElementById("heading1").style.visibility = "visible";
+                            document.getElementById("vis").style.visibility = "visible";
+                            i1.style.visibility = "visible";
+                            i2.style.visibility = "visible";
+                            i3.style.visibility = "visible";
+                            divContainer.style.visibility = "visible";
+
+                            setSize ();
+                        }, 500);
+                    });
+                }
             }
 
             function createCanvas (img) {
@@ -314,7 +318,7 @@
                     }
                     
                     node.img.src = node.image;
-                    images.push (node.img);
+                    images.push (node);
 
                     if (node.children)
                         for (var i = 0; i < node.children.length; i++)
@@ -337,19 +341,13 @@
                         
                         var waitForImages = function () {
                             for (var i = 0; i < images.length; i++){
-                                if (!images[i].complete) {
-                                    setTimeout(waitForImages, 50);
+                                if (!images[i].canvas) {
+                                    setTimeout(waitForImages, 0);
                                     return;
                                 }                 
                             }
                             Orbital (divContainer, data.data);
-                            if (document.readyState === "complete" || document.readyState === "interactive") {
-                                wonload();
-                            } else {
-                                window.addEventListener("load", function () {
-                                    wonload ();
-                                });
-                            }
+                            window.addEventListener("load", wonload ());
                         }
                         
                         waitForImages ();

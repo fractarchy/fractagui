@@ -509,7 +509,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
 
                 var rad = Math.sqrt ((x1 - Math.ceil (width) / 2) * (x1 - Math.ceil (width) / 2) / squashX / squashX + (y1 - Math.ceil (height) / 2) * (y1 - Math.ceil (height) / 2) / squashY / squashY) / superSampling;
                 renderMap[delta + Dout] = 1;
-                if ((mX == 0 && mY == 0) || radius / squashX / squashY - 4 < rad)
+                if ((mX == 0 && mY == 0) || radius / squashX / squashY - 8 < rad)
                     renderMap[delta + Dout] = 0;
                 
                 else {
@@ -1336,11 +1336,18 @@ function Orbital (divContainer, data) {
             
             if (r > 5) {
                 var magn = r / (rr * ratio);
+                /*
+                var xo = Math.floor (x * squashX) - Math.floor (r * squashX);
+                var yo = Math.floor (y * squashY) - Math.floor (r * squashY);
+                var xi = Math.floor (x * squashX) + Math.floor (r * squashX);
+                var yi = Math.floor (y * squashY) + Math.floor (r * squashY);
+                */
                 
                 var xo = x * squashX - r * squashX;
                 var yo = y * squashY - r * squashY;
                 var xi = x * squashX + r * squashX;
                 var yi = y * squashY + r * squashY;
+                
                 
                 /*
                 var xo = Math.round (x * squashX - r * squashX);

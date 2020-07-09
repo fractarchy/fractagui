@@ -8,19 +8,19 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
-   sodipodi:docname="0-1.svg"
+   sodipodi:docname="0-3.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 190.5 132.29167"
-   height="500"
+   viewBox="0 0 190.5 124.35417"
+   height="470"
    width="720">
   <sodipodi:namedview
      inkscape:current-layer="layer1"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="67"
-     inkscape:cy="314.5"
-     inkscape:cx="309.07645"
+     inkscape:cy="229.5"
+     inkscape:cx="360"
      inkscape:zoom="1"
      showgrid="false"
      id="namedview32"
@@ -60,14 +60,14 @@
      id="layer1">
     <text
        id="text823"
-       y="72.22184"
-       x="0.90937704"
-       style="font-style:normal;font-weight:normal;font-size:38.756px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.337988"
+       y="72.915047"
+       x="0.88476735"
+       style="font-style:normal;font-weight:normal;font-size:29.9462px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.261158"
        xml:space="preserve"><tspan
-         style="font-size:36.9534px;stroke-width:0.337988"
-         y="72.22184"
-         x="0.90937704"
-         id="tspan821">e</tspan></text>
+         style="font-size:28.5533px;stroke-width:0.261158"
+         y="72.915047"
+         x="0.88476735"
+         id="tspan821">T</tspan></text>
     <text
        transform="translate(-10.693089,-67.428145)"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
@@ -75,10 +75,10 @@
        xml:space="preserve"><tspan
          x="12.470703"
          y="83.296455"><tspan
-           style="font-weight:bold;font-size:16.9333px">1. purpose and </tspan></tspan><tspan
+           style="font-weight:bold;font-size:16.9333px">3. building e-fun </tspan></tspan><tspan
          x="12.470703"
          y="104.46308"><tspan
-           style="font-weight:bold;font-size:16.9333px">restrictions</tspan><tspan
+           style="font-weight:bold;font-size:16.9333px">based site</tspan><tspan
            style="font-size:16.9333px">
 </tspan></tspan><tspan
          x="12.470703"
@@ -87,39 +87,37 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="124.20347"><tspan
-           style="font-weight:bold;font-size:6.35px">          </tspan><tspan
-           style="font-style:italic">-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> is optimized to visualize and navigate
+           style="font-weight:bold;font-size:6.35px">        </tspan><tspan
+           style="shape-inside:url(#rect203)">o populate </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> site with custom contents, it is
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
-           style="shape-inside:url(#rect203)">           relatively small number of content elements (up to
+           style="shape-inside:url(#rect203)">         necessary to prepare graphical images representing
 </tspan></tspan><tspan
          x="12.470703"
          y="140.07847"><tspan
-           style="shape-inside:url(#rect203)">           50 separate page units, varying on pages size and </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">         our pages, to have an access to arbitrary textual </tspan></tspan><tspan
          x="12.470703"
          y="148.01597"><tspan
-           style="shape-inside:url(#rect203)">client performance). Since </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> visual interface is very </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">editor, and it may be good to have a local web server at </tspan></tspan><tspan
          x="12.470703"
          y="155.95347"><tspan
-           style="shape-inside:url(#rect203)">processing intensive, all the graphical elements are pre-</tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">disposition for testing our new site. </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> represents a so-</tspan></tspan><tspan
          x="12.470703"
          y="163.89097"><tspan
-           style="shape-inside:url(#rect203)">cached upon main HTML page load event. Pre-caching is </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">called flat file CMS, meaning there is no server database </tspan></tspan><tspan
          x="12.470703"
          y="171.82847"><tspan
-           style="shape-inside:url(#rect203)">used to deliver smooth and flicker-free browsing </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">or server scripting technology setup, yet all the </tspan></tspan><tspan
          x="12.470703"
          y="179.76597"><tspan
-           style="shape-inside:url(#rect203)">experience as much as it is possible, but it may also </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">information needed for functioning is extracted only from </tspan></tspan><tspan
          x="12.470703"
          y="187.70347"><tspan
-           style="shape-inside:url(#rect203)">introduce an initial startup delay on slower machines if </tspan></tspan><tspan
-         x="12.470703"
-         y="195.64097"><tspan
-           style="shape-inside:url(#rect203)">using a larger number of image elements.</tspan></tspan></text>
+           style="shape-inside:url(#rect203)">file-folder structure accessed over HTTP interface.</tspan></tspan></text>
   </g>
 </svg>

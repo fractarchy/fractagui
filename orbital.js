@@ -1358,7 +1358,7 @@ function Orbital (divContainer, data) {
                     cy = cursor.centerY;
                 } else {
                     cx = 0;
-                    cy = Math.max (-rr / 3, -data.scaledBitmap.height / 2);
+                    cy = Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
                 }
                 
                 if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
@@ -1407,7 +1407,7 @@ function Orbital (divContainer, data) {
                 select = select.child;
                 
                 if (!sc.children[select.index]) {
-                    var cy = Math.max (-rr / 3, -sc.data.scaledBitmap.height / 2);
+                    var cy = Math.max (/*center*/ -select.data.scaledBitmap.height / 2 + rr / 3, -select.data.scaledBitmap.height / 2);
                     sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: cy, angle: Math.PI, children: []};
                 }
                 
@@ -1497,7 +1497,7 @@ function Orbital (divContainer, data) {
             } else {
                 select.cursor.centerX = 0;
                 //select.cursor.centerY = 0;
-                select.cursor.centerY = Math.max (-rr / 3, -select.cursor.data.scaledBitmap.height / 2);
+                select.cursor.centerY = Math.max (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + rr / 3, -select.cursor.data.scaledBitmap.height / 2);
 
             }
             
@@ -1803,7 +1803,7 @@ function Orbital (divContainer, data) {
                                     inert = [];
 
                                     if (!cursor.children[cursor.index]) {
-                                        var cy = Math.max (-rr / 3, -topc.child.data.scaledBitmap.height / 2);
+                                        var cy = Math.max (/*center*/ -topc.child.data.scaledBitmap.height / 2 + rr / 3, -topc.child.data.scaledBitmap.height / 2);
                                         cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: cy, index: 0, angle: Math.PI, children: []};
                                     }
                                         
@@ -1962,7 +1962,7 @@ function Orbital (divContainer, data) {
                                 animating = "level";
                                 cursor.centerX = 0;
                                 //cursor.centerY = 0;
-                                cursor.centerY = Math.max (-rr / 3, -cursor.data.scaledBitmap.height / 2);
+                                cursor.centerY = Math.max (/*center*/ -cursor.data.scaledBitmap.height / 2 + rr / 3, -cursor.data.scaledBitmap.height / 2);
 
                                 aEnsmall();
                             }
@@ -2335,7 +2335,7 @@ function Orbital (divContainer, data) {
             if (!data.centerX || !data.centerY) {
                 data.centerX = 0;
                 //data.centerY = 0;
-                var cy = Math.max (-rr / 3, -data.scaledBitmap.height / 2);
+                var cy = Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
                 data.centerY = cy;
             }
             
@@ -2352,7 +2352,7 @@ function Orbital (divContainer, data) {
             c = c.parent;
         updateCache (c.children[0].data?c.children[0].data:data);
         
-        var cy = Math.max (-rr / 3, -data.scaledBitmap.height / 2);
+        var cy = Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
         cursor.centerY = cy;
         
         redraw ();

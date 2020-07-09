@@ -8,7 +8,7 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
-   sodipodi:docname="0-1.svg"
+   sodipodi:docname="0-2.svg"
    id="svg8"
    version="1.1"
    viewBox="0 0 190.5 132.29167"
@@ -19,7 +19,7 @@
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="67"
-     inkscape:cy="314.5"
+     inkscape:cy="393"
      inkscape:cx="309.07645"
      inkscape:zoom="1"
      showgrid="false"
@@ -75,10 +75,10 @@
        xml:space="preserve"><tspan
          x="12.470703"
          y="83.296455"><tspan
-           style="font-weight:bold;font-size:16.9333px">1. purpose and </tspan></tspan><tspan
+           style="font-weight:bold;font-size:16.9333px">2. browsing the </tspan></tspan><tspan
          x="12.470703"
          y="104.46308"><tspan
-           style="font-weight:bold;font-size:16.9333px">restrictions</tspan><tspan
+           style="font-weight:bold;font-size:16.9333px">content</tspan><tspan
            style="font-size:16.9333px">
 </tspan></tspan><tspan
          x="12.470703"
@@ -88,38 +88,35 @@
          x="12.470703"
          y="124.20347"><tspan
            style="font-weight:bold;font-size:6.35px">          </tspan><tspan
-           style="font-style:italic">-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> is optimized to visualize and navigate
+           style="shape-inside:url(#rect203)">-fun brings a simple and minimalistic kind of
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
-           style="shape-inside:url(#rect203)">           relatively small number of content elements (up to
+           style="shape-inside:url(#rect203)">           contents structuring and organization. All the pages
 </tspan></tspan><tspan
          x="12.470703"
          y="140.07847"><tspan
-           style="shape-inside:url(#rect203)">           50 separate page units, varying on pages size and </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">           are displayed inside a number of ovals that </tspan></tspan><tspan
          x="12.470703"
          y="148.01597"><tspan
-           style="shape-inside:url(#rect203)">client performance). Since </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> visual interface is very </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">hierarchically relate between each other. Central oval is </tspan></tspan><tspan
          x="12.470703"
          y="155.95347"><tspan
-           style="shape-inside:url(#rect203)">processing intensive, all the graphical elements are pre-</tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">supposed to be used for reading and viewing contents, </tspan></tspan><tspan
          x="12.470703"
          y="163.89097"><tspan
-           style="shape-inside:url(#rect203)">cached upon main HTML page load event. Pre-caching is </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">while orbiting ovals are supposed to be used for contents </tspan></tspan><tspan
          x="12.470703"
          y="171.82847"><tspan
-           style="shape-inside:url(#rect203)">used to deliver smooth and flicker-free browsing </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">navigation. All the actions of browsing contents are </tspan></tspan><tspan
          x="12.470703"
          y="179.76597"><tspan
-           style="shape-inside:url(#rect203)">experience as much as it is possible, but it may also </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">performed by dragging displayed elements by mouse </tspan></tspan><tspan
          x="12.470703"
          y="187.70347"><tspan
-           style="shape-inside:url(#rect203)">introduce an initial startup delay on slower machines if </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">(click-drag-release cycles), or by touch screen interaction </tspan></tspan><tspan
          x="12.470703"
          y="195.64097"><tspan
-           style="shape-inside:url(#rect203)">using a larger number of image elements.</tspan></tspan></text>
+           style="shape-inside:url(#rect203)">(point-drag-release cycles).</tspan></tspan></text>
   </g>
 </svg>

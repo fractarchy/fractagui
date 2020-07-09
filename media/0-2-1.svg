@@ -8,18 +8,18 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
-   sodipodi:docname="0-1.svg"
+   sodipodi:docname="0-2-1.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 190.5 132.29167"
-   height="500"
+   viewBox="0 0 190.5 145.52084"
+   height="550"
    width="720">
   <sodipodi:namedview
      inkscape:current-layer="layer1"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="67"
-     inkscape:cy="314.5"
+     inkscape:cy="393"
      inkscape:cx="309.07645"
      inkscape:zoom="1"
      showgrid="false"
@@ -75,10 +75,10 @@
        xml:space="preserve"><tspan
          x="12.470703"
          y="83.296455"><tspan
-           style="font-weight:bold;font-size:16.9333px">1. purpose and </tspan></tspan><tspan
+           style="font-weight:bold;font-size:16.9333px">2.1. panning the </tspan></tspan><tspan
          x="12.470703"
          y="104.46308"><tspan
-           style="font-weight:bold;font-size:16.9333px">restrictions</tspan><tspan
+           style="font-weight:bold;font-size:16.9333px">content elements</tspan><tspan
            style="font-size:16.9333px">
 </tspan></tspan><tspan
          x="12.470703"
@@ -89,37 +89,41 @@
          y="124.20347"><tspan
            style="font-weight:bold;font-size:6.35px">          </tspan><tspan
            style="font-style:italic">-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> is optimized to visualize and navigate
+           style="shape-inside:url(#rect203)"> implements a real time magnifyer rendering
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
-           style="shape-inside:url(#rect203)">           relatively small number of content elements (up to
+           style="shape-inside:url(#rect203)">           effect for displaying content that is larger than
 </tspan></tspan><tspan
          x="12.470703"
          y="140.07847"><tspan
-           style="shape-inside:url(#rect203)">           50 separate page units, varying on pages size and </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">           display area. The center of oval area uses a </tspan></tspan><tspan
          x="12.470703"
          y="148.01597"><tspan
-           style="shape-inside:url(#rect203)">client performance). Since </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> visual interface is very </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">magnification factor of 1, the border area uses a </tspan></tspan><tspan
          x="12.470703"
          y="155.95347"><tspan
-           style="shape-inside:url(#rect203)">processing intensive, all the graphical elements are pre-</tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">magnification factor of 0, while the space in between uses </tspan></tspan><tspan
          x="12.470703"
          y="163.89097"><tspan
-           style="shape-inside:url(#rect203)">cached upon main HTML page load event. Pre-caching is </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">a fine range between those two. Such content is no longer </tspan></tspan><tspan
          x="12.470703"
          y="171.82847"><tspan
-           style="shape-inside:url(#rect203)">used to deliver smooth and flicker-free browsing </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">required to use scroll bars to focus an area of interest, yet </tspan></tspan><tspan
          x="12.470703"
          y="179.76597"><tspan
-           style="shape-inside:url(#rect203)">experience as much as it is possible, but it may also </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">the entire content image pane fits in an oval with a </tspan></tspan><tspan
          x="12.470703"
          y="187.70347"><tspan
-           style="shape-inside:url(#rect203)">introduce an initial startup delay on slower machines if </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">combined range of different magnification factors. User is </tspan></tspan><tspan
          x="12.470703"
          y="195.64097"><tspan
-           style="shape-inside:url(#rect203)">using a larger number of image elements.</tspan></tspan></text>
+           style="shape-inside:url(#rect203)">always free to pan and focus any area of content by </tspan></tspan><tspan
+         x="12.470703"
+         y="203.57847"><tspan
+           style="shape-inside:url(#rect203)">dragging it to the center of an oval. However, note that </tspan></tspan><tspan
+         x="12.470703"
+         y="211.51597"><tspan
+           style="shape-inside:url(#rect203)">only the central oval accepts panning events.</tspan></tspan></text>
   </g>
 </svg>

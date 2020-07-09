@@ -297,7 +297,7 @@ Crisp = (function () {
         
         return cnvScaled1;
     }
-
+    /*
     function crispX (oldCnv, imageData1, width1, height1, step) {
         "use strict";
         var data1 = imageData1.data;
@@ -362,6 +362,35 @@ Crisp = (function () {
         }
         
         ctx1.putImageData(imData, 0, 0);
+
+        return {cnv: cnv1, im: imData};
+    }
+    */
+    
+    function crispX (oldCnv, imageData1, width1, height1, step) {
+        "use strict";
+        var data1 = imageData1.data;
+        var cnv1 = document.createElement ("canvas")
+        cnv1.width = Math.ceil (width1 / step);
+        cnv1.height = height1;
+        
+        var ctx1 = cnv1.getContext('2d');
+        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
+        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+        
+        return {cnv: cnv1, im: imData};
+    }
+    
+    function crispY (oldCnv, imageData1, width1, height1, step) {
+        "use strict";
+        var data1 = imageData1.data;
+        var cnv1 = document.createElement ("canvas")
+        cnv1.width = width1;
+        cnv1.height = Math.ceil (height1 / step);
+        
+        var ctx1 = cnv1.getContext('2d');
+        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
+        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
 
         return {cnv: cnv1, im: imData};
     }

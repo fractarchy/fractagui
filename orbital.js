@@ -1,145 +1,210 @@
-function createInputOutput (mode, back, fore) {
-    //nlines = 4 * 16;
-    if (mode === "output")
-        var h = 128;
-        
-    else
-        var h = 92;
-    
-    var cnvim = document.createElement ("canvas");
-    cnvim.width = 640;
-    cnvim.height = 400;
-    var ctxim = cnvim.getContext('2d');
-    
-    ctxim.fillStyle = back;
-    ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+generator = {
+    numberCanvas: function (text) {
+        var cnvim = document.createElement ("canvas");
+        cnvim.width = 550;
+        cnvim.height = 350;
+        var ctxim = cnvim.getContext('2d');
 
-    var text = mode
-    ctxim.font = "bold " + h + "px sans";
-    ctxim.fillStyle = fore;
-    ctxim.fillText(text, cnvim.width / 2 - ctxim.measureText(text).width / 2, cnvim.height /2 + h / 2 - h / 4.8);
-    
-    return cnvim
-}
+        ctxim.fillStyle = "white";
+        ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
 
-function generateGrid (mode, width, height, nlines, lineWidth, invert) {
-    //nlines = 4 * 16;
-    var cnvim = document.createElement ("canvas");
-    cnvim.width = width;
-    cnvim.height = height;
-    var ctxim = cnvim.getContext('2d');
-    
-    if (invert)
-        ctxim.fillStyle = "black";//fill1;//"rgb(255, 255, 150)";
-        
-    else
-        ctxim.fillStyle = "white";//fill1;//"rgb(255, 255, 150)";
-        
-    ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
-    ctxim.lineWidth = lineWidth;
-    ctxim.strokeStyle = "gray";
-    var nlines = nlines;
-    var lw = cnvim.width / nlines;
-    var lh = cnvim.height / nlines;
+        ctxim.globalAlpha = 0.5;
 
-    if (mode === "grid") {
-        for (var x = 0; x < nlines; x++) {
-            ctxim.beginPath();
-            ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
-            ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
-            ctxim.stroke(); 
-        }
-        
-        
-        for (var y = 0; y < nlines; y++) {
-            ctxim.beginPath();
-            ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
-            ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
-            ctxim.stroke(); 
-        }
-
-        //ctxim.strokeStyle = "rgb(0,0,0)";
-        //ctxim.lineWidth = lineWidth * 2;
-        ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
-        
-        var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-        
-        ctxim.font = "12pt sans-serif";
-
-        if (invert)
-            ctxim.fillStyle = "white";
-        else
-            ctxim.fillStyle = "black";
+        for (var i = 0; i < 1; i++) {
+            var rnd = (100 + Math.round (Math.random () * 50));
+            ctxim.fillStyle = "rgb(" + rnd + "," + rnd + "," + rnd + ")";
+            var x = Math.random () * 225;
+            var y = Math.random () * 175;
+            ctxim.fillRect(x, y, 550 - x - Math.random () * 225, 350 - y - Math.random () * 175);
             
-        ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
-    
-    } else if (mode === "polar") {
-        ctxim.lineWidth = 1;
-        for (var x = 0; x <= nlines / 2; x++) {
+            ctxim.beginPath();
+            var rnda = Math.random () * Math.PI * 1 / 3;
+            var rndr = 100 + Math.random () * 50;
+            ctxim.moveTo(225 + Math.cos (rnda) * rndr, 175 + Math.sin (rnda) * rndr);
+            rnda = Math.PI * 2 / 3 + Math.random () * Math.PI * 1 / 3;
+            rndr = 100 + Math.random () * 50;
+            ctxim.lineTo(225 + Math.cos (rnda) * rndr, 175 + Math.sin (rnda) * rndr);
+            rnda = Math.PI * 4 / 3 + Math.random () * Math.PI * 1 / 3;
+            rndr = 100 + Math.random () * 50;
+            ctxim.lineTo(225 + Math.cos (rnda) * rndr, 175 + Math.sin (rnda) * rndr);
+            ctxim.closePath ();
+            
+            rnd = (100 + Math.round (Math.random () * 50));
+            ctxim.fillStyle = "rgba(" + rnd + "," + rnd + "," + rnd + ", 128)";
+            ctxim.fill (); 
+
             ctxim.beginPath();
             ctxim.ellipse (
-                Math.floor (width / 2) + 0.5,
-                Math.floor (height / 2) + 0.5,
-                x * lw,
-                x * lh,
+                225 + Math.random () * 100,
+                175 + Math.random () * 80,
+                50 + Math.random () * 50,
+                50 + Math.random () * 50,
                 0,
                 0,
                 2 * Math.PI,
                 false
             );
-            ctxim.stroke(); 
+            ctxim.closePath ();
 
-        }
-        
-        for (var a = 0; a < 2 * Math.PI; a += Math.PI / 8) {
-            ctxim.beginPath();
-            ctxim.moveTo(Math.floor (width / 2) + 0.5, Math.floor (height / 2) + 0.5);
-            ctxim.lineTo(Math.floor (width / 2) + 0.5 + Math.cos (a) * width / 2, Math.floor (height / 2) + 0.5 + Math.sin(a) * height / 2);
-            ctxim.stroke(); 
+            rnd = (100 + Math.round (Math.random () * 50));
+            ctxim.fillStyle = "rgba(" + rnd + "," + rnd + "," + rnd + ", 128)";
+            ctxim.fill (); 
         }
 
-        ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
-        
-        var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-        
-        ctxim.font = "12pt sans-serif";
+        ctxim.globalAlpha = 1;
 
-        if (invert)
-            ctxim.fillStyle = "white";
-        else
-            ctxim.fillStyle = "black";
+        var h = 225;
+        var text1 = text
+        ctxim.font = h + "px sans";
+        ctxim.fillStyle = "black";
+        ctxim.fillText(text, cnvim.width / 2 - ctxim.measureText(text1).width / 2, cnvim.height / 2 + h / 2 - h / 4.8);
+        
+        return cnvim
+    },
+
+    inputOutput: function (mode, back, fore) {
+        //nlines = 4 * 16;
+        if (mode === "output")
+            var h = 128;
             
-        ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+        else
+            var h = 92;
+        
+        var cnvim = document.createElement ("canvas");
+        cnvim.width = 640;
+        cnvim.height = 400;
+        var ctxim = cnvim.getContext('2d');
+        
+        ctxim.fillStyle = back;
+        ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
 
-    } else {
-        for (var y = 0; y <= nlines - 1; y+=4) {
-            if ((y / 4) % 2 == 0 ) {
-                if (invert)
-                    ctxim.fillStyle = "rgb(25,25,25)";
-                else
-                    ctxim.fillStyle = "rgb(230,230,230)";
+        var text = mode
+        ctxim.font = "bold " + h + "px sans";
+        ctxim.fillStyle = fore;
+        ctxim.fillText(text, cnvim.width / 2 - ctxim.measureText(text).width / 2, cnvim.height /2 + h / 2 - h / 4.8);
+        
+        return cnvim
+    },
+
+    grid: function (mode, width, height, nlines, lineWidth, invert) {
+        //nlines = 4 * 16;
+        var cnvim = document.createElement ("canvas");
+        cnvim.width = width;
+        cnvim.height = height;
+        var ctxim = cnvim.getContext('2d');
+        
+        if (invert)
+            ctxim.fillStyle = "black";//fill1;//"rgb(255, 255, 150)";
+            
+        else
+            ctxim.fillStyle = "white";//fill1;//"rgb(255, 255, 150)";
+            
+        ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+        ctxim.lineWidth = lineWidth;
+        ctxim.strokeStyle = "gray";
+        var nlines = nlines;
+        var lw = cnvim.width / nlines;
+        var lh = cnvim.height / nlines;
+
+        if (mode === "grid") {
+            for (var x = 0; x < nlines; x++) {
+                ctxim.beginPath();
+                ctxim.moveTo(Math.floor(x * lw) + 0.5, 0);
+                ctxim.lineTo(Math.floor(x * lw) + 0.5, cnvim.height);
+                ctxim.stroke(); 
+            }
+            
+            
+            for (var y = 0; y < nlines; y++) {
+                ctxim.beginPath();
+                ctxim.moveTo(0, Math.floor(y * lh) + 0.5);
+                ctxim.lineTo(cnvim.width, Math.floor(y * lh) + 0.5);
+                ctxim.stroke(); 
+            }
+
+            //ctxim.strokeStyle = "rgb(0,0,0)";
+            //ctxim.lineWidth = lineWidth * 2;
+            ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
+            
+            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+            
+            ctxim.font = "12pt sans-serif";
+
+            if (invert)
+                ctxim.fillStyle = "white";
+            else
+                ctxim.fillStyle = "black";
+                
+            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+        
+        } else if (mode === "polar") {
+            ctxim.lineWidth = 1;
+            for (var x = 0; x <= nlines / 2; x++) {
+                ctxim.beginPath();
+                ctxim.ellipse (
+                    Math.floor (width / 2) + 0.5,
+                    Math.floor (height / 2) + 0.5,
+                    x * lw,
+                    x * lh,
+                    0,
+                    0,
+                    2 * Math.PI,
+                    false
+                );
+                ctxim.stroke(); 
+
+            }
+            
+            for (var a = 0; a < 2 * Math.PI; a += Math.PI / 8) {
+                ctxim.beginPath();
+                ctxim.moveTo(Math.floor (width / 2) + 0.5, Math.floor (height / 2) + 0.5);
+                ctxim.lineTo(Math.floor (width / 2) + 0.5 + Math.cos (a) * width / 2, Math.floor (height / 2) + 0.5 + Math.sin(a) * height / 2);
+                ctxim.stroke(); 
+            }
+
+            ctxim.strokeRect(0.5, 0.5, cnvim.width - 1, cnvim.height - 1);
+            
+            var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+            
+            ctxim.font = "12pt sans-serif";
+
+            if (invert)
+                ctxim.fillStyle = "white";
+            else
+                ctxim.fillStyle = "black";
+                
+            ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, height /2);
+
+        } else {
+            for (var y = 0; y <= nlines - 1; y+=4) {
+                if ((y / 4) % 2 == 0 ) {
+                    if (invert)
+                        ctxim.fillStyle = "rgb(25,25,25)";
+                    else
+                        ctxim.fillStyle = "rgb(230,230,230)";
+                        
+                    ctxim.fillRect(0.5, Math.floor(y * lh) + lh * 2, cnvim.width - 0.5, lh * 4);
+                }
+            }
+
+            for (var y = 1; y < nlines + 1; y++) {
+                    //var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
+                    var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
+                    ctxim.font = "18pt sans-serif";
                     
-                ctxim.fillRect(0.5, Math.floor(y * lh) + lh * 2, cnvim.width - 0.5, lh * 4);
+                    if (invert)
+                        ctxim.fillStyle = "white";
+                    else
+                        ctxim.fillStyle = "black";
+                        
+                    ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh - lh * 0.3);
             }
         }
 
-        for (var y = 1; y < nlines + 1; y++) {
-                //var text = "ཡིག་མགོ་ སྦྲུལ་ཤད བསྐུར་ཡིག་མགོ ཙེག་ ཚིག་གྲུབ་ དོན་ཚན་ བསྡུས་རྟགས་ གུག་རྟགས་གཡོན་ གུག་རྟགས་གཡས་ ཨང་ཁང་གཡོན་ ཨང་ཁང་གཡས་";
-                var text = "Quicky-flicky brown fox jumps over the lazy-daisy dog."
-                ctxim.font = "18pt sans-serif";
-                
-                if (invert)
-                    ctxim.fillStyle = "white";
-                else
-                    ctxim.fillStyle = "black";
-                    
-                ctxim.fillText(text, width / 2 - ctxim.measureText(text).width / 2, y * lh - lh * 0.3);
-        }
+        
+        return cnvim
     }
-
-    
-    return cnvim
-}
+};
 
 Crisp = (function () {
     var step = 2;
@@ -394,7 +459,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
             }
         }
 
-        return {width: feWidth, height: feHeight, array: feArray};
+        return {width: feWidth, height: feHeight, array: feArray, contentWidth: 640, contentHeight: 480};
     }
     
     function prepareFishEyeMap (width, height, magn, centerX, centerY, cnvScaled) {
@@ -403,8 +468,10 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
 
         var mdx = ((fishEye.width - width / 2) / magn);
         var mdy = ((fishEye.height - height / 2) / magn);
-        var ddx = (cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
-        var ddy = (cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
+        //var ddx = (cnvScaled.images[0][0].width / 2 - fishEye.width) + centerX;
+        //var ddy = (cnvScaled.images[0][0].height / 2 - fishEye.height) + centerY;
+        var ddx = (fishEye.contentWidth / 2 - fishEye.width) + centerX;
+        var ddy = (fishEye.contentHeight / 2 - fishEye.height) + centerY;
         
         var x1 = 0, y1 = 0;
 
@@ -1234,7 +1301,8 @@ function Orbital (divContainer, data) {
         var imgCache = ctxCache.createImageData(cacheW, cacheH);
         
         //fishEye.clearRenderMap ();
-        fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx, cy, data.scaledBitmap);
+        //fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx, cy, data.scaledBitmap);
+        fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
         ctxCache.putImageData (imgCache, 0, 0);
         
         return cnvCache;
@@ -1290,7 +1358,7 @@ function Orbital (divContainer, data) {
                     cy = cursor.centerY;
                 } else {
                     cx = 0;
-                    cy = 0;
+                    cy = Math.max (-rr / 3, -data.scaledBitmap.height / 2);
                 }
                 
                 if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
@@ -1338,8 +1406,10 @@ function Orbital (divContainer, data) {
             while (select.child) {
                 select = select.child;
                 
-                if (!sc.children[select.index])
-                    sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: 0, angle: Math.PI, children: []};
+                if (!sc.children[select.index]) {
+                    var cy = Math.max (-rr / 3, -sc.data.scaledBitmap.height / 2);
+                    sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: cy, angle: Math.PI, children: []};
+                }
                 
                 sc = sc.children[select.index];
                 select.cursor = sc;
@@ -1423,10 +1493,11 @@ function Orbital (divContainer, data) {
                 var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
                 
                 setCenter (select, oldCenterX + fishEye.data.array[tmp0] - fishEye.data.array[tmp1], oldCenterY + fishEye.data.array[tmp0 + 1] - fishEye.data.array[tmp1 + 1]);
-
+            
             } else {
                 select.cursor.centerX = 0;
-                select.cursor.centerY = 0;
+                //select.cursor.centerY = 0;
+                select.cursor.centerY = Math.max (-rr / 3, -select.cursor.data.scaledBitmap.height / 2);
 
             }
             
@@ -1731,8 +1802,11 @@ function Orbital (divContainer, data) {
                                     inertIdx = 0;
                                     inert = [];
 
-                                    if (!cursor.children[cursor.index])
-                                        cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: 0, index: 0, angle: Math.PI, children: []};
+                                    if (!cursor.children[cursor.index]) {
+                                        var cy = Math.max (-rr / 3, -topc.child.data.scaledBitmap.height / 2);
+                                        cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: cy, index: 0, angle: Math.PI, children: []};
+                                    }
+                                        
                                     cursor = cursor.children[cursor.index];
 
                                     path.push (data);
@@ -1887,7 +1961,9 @@ function Orbital (divContainer, data) {
                                 panning = false;
                                 animating = "level";
                                 cursor.centerX = 0;
-                                cursor.centerY = 0;
+                                //cursor.centerY = 0;
+                                cursor.centerY = Math.max (-rr / 3, -cursor.data.scaledBitmap.height / 2);
+
                                 aEnsmall();
                             }
                         }
@@ -2258,7 +2334,9 @@ function Orbital (divContainer, data) {
         function updateCache (data) {
             if (!data.centerX || !data.centerY) {
                 data.centerX = 0;
-                data.centerY = 0;
+                //data.centerY = 0;
+                var cy = Math.max (-rr / 3, -data.scaledBitmap.height / 2);
+                data.centerY = cy;
             }
             
             data.cachedCnv = getCnvCache (data, data.centerX, data.centerY, rr);
@@ -2273,6 +2351,9 @@ function Orbital (divContainer, data) {
         while (c.parent)
             c = c.parent;
         updateCache (c.children[0].data?c.children[0].data:data);
+        
+        var cy = Math.max (-rr / 3, -data.scaledBitmap.height / 2);
+        cursor.centerY = cy;
         
         redraw ();
     }

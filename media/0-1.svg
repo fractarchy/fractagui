@@ -19,7 +19,7 @@
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="67"
-     inkscape:cy="314.5"
+     inkscape:cy="311.5"
      inkscape:cx="309.07645"
      inkscape:zoom="1"
      showgrid="false"
@@ -61,13 +61,13 @@
     <text
        id="text823"
        y="72.22184"
-       x="0.90937704"
-       style="font-style:normal;font-weight:normal;font-size:38.756px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.337988"
+       x="-0.3143068"
+       style="font-style:normal;font-weight:normal;font-size:29.2135px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.254769"
        xml:space="preserve"><tspan
-         style="font-size:36.9534px;stroke-width:0.337988"
+         style="font-size:27.8547px;stroke-width:0.254769"
          y="72.22184"
-         x="0.90937704"
-         id="tspan821">e</tspan></text>
+         x="-0.3143068"
+         id="tspan821">E</tspan></text>
     <text
        transform="translate(-10.693089,-67.428145)"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
@@ -87,20 +87,21 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="124.20347"><tspan
-           style="font-weight:bold;font-size:6.35px">          </tspan><tspan
+           style="font-weight:bold;font-size:6.35px">       </tspan><tspan
            style="font-style:italic">-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> is optimized to visualize and navigate
+           style="shape-inside:url(#rect203)"> is optimized to visualize and navigate relatively
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
-           style="shape-inside:url(#rect203)">           relatively small number of content elements (up to
+           style="shape-inside:url(#rect203)">        small number of content elements (up to 50
 </tspan></tspan><tspan
          x="12.470703"
          y="140.07847"><tspan
-           style="shape-inside:url(#rect203)">           50 separate page units, varying on pages size and </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">        separate page units, varying on pages size and </tspan><tspan
+           style="shape-inside:url(#rect203)">client </tspan></tspan><tspan
          x="12.470703"
          y="148.01597"><tspan
-           style="shape-inside:url(#rect203)">client performance). Since </tspan><tspan
+           style="shape-inside:url(#rect203)">performance). Since </tspan><tspan
            style="font-style:italic">e-fun</tspan><tspan
            style="shape-inside:url(#rect203)"> visual interface is very </tspan></tspan><tspan
          x="12.470703"

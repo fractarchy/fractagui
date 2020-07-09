@@ -7,42 +7,42 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
-   sodipodi:docname="0-2.svg"
-   id="svg8"
-   version="1.1"
-   viewBox="0 0 190.5 132.29167"
+   width="720"
    height="500"
-   width="720">
+   viewBox="0 0 190.5 132.29167"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="0-2.svg"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)">
   <sodipodi:namedview
-     inkscape:current-layer="layer1"
-     inkscape:window-maximized="1"
-     inkscape:window-y="27"
-     inkscape:window-x="67"
-     inkscape:cy="393"
-     inkscape:cx="309.07645"
-     inkscape:zoom="1"
-     showgrid="false"
-     id="namedview32"
-     inkscape:window-height="1025"
-     inkscape:window-width="1853"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0"
-     guidetolerance="10"
-     gridtolerance="10"
-     objecttolerance="10"
-     borderopacity="1"
-     bordercolor="#666666"
+     inkscape:document-rotation="0"
      pagecolor="#ffffff"
-     inkscape:document-rotation="0" />
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     id="namedview32"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="309.07645"
+     inkscape:cy="391.5"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
   <defs
      id="defs2">
     <rect
-       id="rect203"
-       height="167.42966"
-       width="187.91502"
+       x="12.471195"
        y="68.314278"
-       x="12.471195" />
+       width="187.91502"
+       height="167.42966"
+       id="rect203" />
   </defs>
   <metadata
      id="metadata5">
@@ -59,20 +59,10 @@
   <g
      id="layer1">
     <text
-       id="text823"
-       y="72.22184"
-       x="0.90937704"
-       style="font-style:normal;font-weight:normal;font-size:38.756px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.337988"
-       xml:space="preserve"><tspan
-         style="font-size:36.9534px;stroke-width:0.337988"
-         y="72.22184"
-         x="0.90937704"
-         id="tspan821">e</tspan></text>
-    <text
-       transform="translate(-10.693089,-67.428145)"
-       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
+       xml:space="preserve"
        id="text201"
-       xml:space="preserve"><tspan
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="translate(-10.693089,-67.428145)"><tspan
          x="12.470703"
          y="83.296455"><tspan
            style="font-weight:bold;font-size:16.9333px">2. browsing the </tspan></tspan><tspan
@@ -87,36 +77,47 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="124.20347"><tspan
-           style="font-weight:bold;font-size:6.35px">          </tspan><tspan
-           style="shape-inside:url(#rect203)">-fun brings a simple and minimalistic kind of
+           style="font-weight:bold;font-size:6.35px">       </tspan><tspan
+           style="font-style:italic">-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> brings a simple and minimalistic kind of contents
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
-           style="shape-inside:url(#rect203)">           contents structuring and organization. All the pages
+           style="shape-inside:url(#rect203)">        structuring and organization. All the pages are
 </tspan></tspan><tspan
          x="12.470703"
          y="140.07847"><tspan
-           style="shape-inside:url(#rect203)">           are displayed inside a number of ovals that </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">        displayed inside a number of ovals that hierarchically </tspan></tspan><tspan
          x="12.470703"
          y="148.01597"><tspan
-           style="shape-inside:url(#rect203)">hierarchically relate between each other. Central oval is </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">relate between each other. Central oval is supposed to be </tspan></tspan><tspan
          x="12.470703"
          y="155.95347"><tspan
-           style="shape-inside:url(#rect203)">supposed to be used for reading and viewing contents, </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">used for reading and viewing contents, while orbiting </tspan></tspan><tspan
          x="12.470703"
          y="163.89097"><tspan
-           style="shape-inside:url(#rect203)">while orbiting ovals are supposed to be used for contents </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">ovals are supposed to be used for contents navigation. All </tspan></tspan><tspan
          x="12.470703"
          y="171.82847"><tspan
-           style="shape-inside:url(#rect203)">navigation. All the actions of browsing contents are </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">the actions of browsing contents are performed by </tspan></tspan><tspan
          x="12.470703"
          y="179.76597"><tspan
-           style="shape-inside:url(#rect203)">performed by dragging displayed elements by mouse </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">dragging displayed elements by mouse (click-drag-release </tspan></tspan><tspan
          x="12.470703"
          y="187.70347"><tspan
-           style="shape-inside:url(#rect203)">(click-drag-release cycles), or by touch screen interaction </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">cycles), or by touch screen interaction (point-drag-release </tspan></tspan><tspan
          x="12.470703"
          y="195.64097"><tspan
-           style="shape-inside:url(#rect203)">(point-drag-release cycles).</tspan></tspan></text>
+           style="shape-inside:url(#rect203)">cycles).</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:29.0561px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.253396"
+       x="-0.29957622"
+       y="72.22184"
+       id="text823"><tspan
+         id="tspan821"
+         x="-0.29957622"
+         y="72.22184"
+         style="font-size:27.7047px;stroke-width:0.253396">E</tspan></text>
   </g>
 </svg>

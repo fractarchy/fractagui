@@ -234,22 +234,25 @@
                 }
             }
 
-            function createCanvas (img) {
+            function createCanvas (img, scale) {
                 var cnvim = document.createElement ("canvas");
-                cnvim.width = img.width;
-                cnvim.height = img.height;
+                cnvim.width = ~~(img.width * scale);
+                cnvim.height = ~~(img.height * scale);
                 var ctxim = cnvim.getContext ('2d');
 
                 ctxim.fillStyle = "white";
-                ctxim.fillRect(0, 0, img.width, img.height);
+                ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+                
+                //img.width = cnvim.width;
+                //img.height = cnvim.height;
 
-                ctxim.drawImage (img, 0, 0);
+                ctxim.drawImage (img, 0, 0, cnvim.width, cnvim.height);
 
                 return cnvim
             }            
             
             
-            var loader = function (data) {
+            var loader = function (data, scale) {
                 var images = [];
 
                 (function loadImages (node) {
@@ -258,7 +261,7 @@
                     node.img.crossOrigin = "anonymous";
                     
                     node.img.onload = function (e) {
-                        node.canvas = createCanvas (node.img);
+                        node.canvas = createCanvas (node.img, scale);
                     }
                     
                     node.img.onerror = function (e) {
@@ -282,23 +285,42 @@
                     if (this.readyState == 4 && this.status == 200) {
                         data = JSON.parse (this.responseText);
                         
-                        try {
-                            if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
+                        if (data["flat-area"])
+                            try {
+                                if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
+                                    throw new error ();
+                                
+                                var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
+                                if (flatArea < 0 || flatArea > 100)
+                                    throw new error ();
+                                
+                            } catch (e) {
+                                alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
                                 throw new error ();
-                            
-                            var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
-                            if (flatArea < 0 || flatArea > 100)
+                            }
+                        else
+                            flatArea = 0;
+
+                        if (data["scale"])
+                            try {
+                                if (data["scale"].substr(data["scale"].length - 1, 1) !== "%")
+                                    throw new error ();
+                                
+                                var scale = parseFloat (data["scale"].substr(0, data["scale"].length - 1));
+                                if (scale <= 0)
+                                    throw new error ();
+                                
+                            } catch (e) {
+                                alert ('Error: "scale" hast to be a percent greater than "0%"');
                                 throw new error ();
-                            
-                        } catch (e) {
-                            alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
-                            throw new error ();
-                        }
+                            }
+                        else
+                            scale = 100;
                         
                         document.getElementById("heading1").innerHTML = data.title;
                         document.getElementsByTagName("TITLE")[0].text = data.title;
                         
-                        var images = loader (data.data);
+                        var images = loader (data.data, scale / 100);
                         
                         var waitForImages = function () {
                             for (var i = 0; i < images.length; i++){

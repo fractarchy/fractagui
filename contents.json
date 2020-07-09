@@ -1,6 +1,7 @@
 {
     "title" : "E-Fun",
-    "flat-area": "90%",
+    "flat-area": "80%",
+    "scale": "80%",
     "data" : {
         "image": "contents/0.svg",
         "children" : [

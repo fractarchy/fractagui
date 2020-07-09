@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="720"
+   height="580"
+   viewBox="0 0 190.5 153.45834"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="0-3-2.svg"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)">
+  <sodipodi:namedview
+     inkscape:document-rotation="0"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     id="namedview32"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="360"
+     inkscape:cy="228"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="12.471195"
+       y="68.314278"
+       width="187.91502"
+       height="167.42966"
+       id="rect203" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:29.9462px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.261158"
+       x="0.88476735"
+       y="72.915047"
+       id="text823"><tspan
+         id="tspan821"
+         x="0.88476735"
+         y="72.915047"
+         style="font-size:28.5533px;stroke-width:0.261158">T</tspan></text>
+    <text
+       xml:space="preserve"
+       id="text201"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="translate(-10.693089,-67.428145)"><tspan
+         x="12.470703"
+         y="83.296455"><tspan
+           style="font-weight:bold;font-size:16.9333px">3.2. customizing </tspan></tspan><tspan
+         x="12.470703"
+         y="104.46308"><tspan
+           style="font-weight:bold;font-size:16.9333px">our site</tspan><tspan
+           style="font-size:16.9333px">
+</tspan></tspan><tspan
+         x="12.470703"
+         y="116.26597"><tspan
+           style="font-weight:bold;font-size:6.35px">
+</tspan></tspan><tspan
+         x="12.470703"
+         y="124.20347"><tspan
+           style="font-weight:bold;font-size:6.35px">         </tspan><tspan>o fully customize our new </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan> site, first we have
+</tspan></tspan><tspan
+         x="12.470703"
+         y="132.14097"><tspan>          to prepare vector or bitmap images that will
+</tspan></tspan><tspan
+         x="12.470703"
+         y="140.07847"><tspan>          represent our pages. These images have to be </tspan></tspan><tspan
+         x="12.470703"
+         y="148.01597"><tspan>copied under </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">`media`</tspan><tspan> folder, while deleting existing </tspan></tspan><tspan
+         x="12.470703"
+         y="155.95347"><tspan>example images we don't need anymore. After copying </tspan></tspan><tspan
+         x="12.470703"
+         y="163.89097"><tspan>images, we have to introduce particular changes to </tspan></tspan><tspan
+         x="12.470703"
+         y="171.82847"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">`contents.json`</tspan><tspan> file in external text editor of your </tspan></tspan><tspan
+         x="12.470703"
+         y="179.76597"><tspan>choice. By default, </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">`contents.json`</tspan><tspan> is set up to display </tspan></tspan><tspan
+         x="12.470703"
+         y="187.70347"><tspan>these instructions pages, and to customize it for our own </tspan></tspan><tspan
+         x="12.470703"
+         y="195.64097"><tspan>images structure, it should be easy to follow the similar </tspan></tspan><tspan
+         x="12.470703"
+         y="203.57847"><tspan>pattern. After modifying </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">`contents.json`</tspan><tspan> file and saving </tspan></tspan><tspan
+         x="12.470703"
+         y="211.51597"><tspan>changes, our site is ready for uploading to a server of our </tspan></tspan><tspan
+         x="12.470703"
+         y="219.45347"><tspan>choice.</tspan></tspan></text>
+  </g>
+</svg>

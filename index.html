@@ -24,11 +24,11 @@
             text-align: center;
         }
         
-        a, a.exHover:visited, a.exHover:link {cursor: pointer; background-color: white; color: gray; text-decoration:none; border-radius: 100px; border:0px solid #4466DD;}
-        a.exHover:hover {cursor: pointer; background-color: lightgray; color:gray; text-decoration:none; border-radius: 100px; border:0px solid #6699FF;}
-        a.exHover:active {cursor: pointer; background-color: lightgray; color:gray; text-decoration:none; border-radius: 100px; border:0px solid #DDDDFF;}
+        a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
+        a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
+        a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
 
-        a, img {
+        a, img, div {
           -webkit-user-select: none; /* Safari 3.1+ */
           -moz-user-select: none; /* Firefox 2+ */
           -ms-user-select: none; /* IE 10+ */
@@ -48,12 +48,13 @@
         </div>
         <div id="divContainer" style="position: absolute; top: 58px; bottom: 10px; left: 10px; right: 10px;">
         </div>
-        <img id="i1" src="media/i1.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i2" src="media/i2.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i3" src="media/i3.svg" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i1" src="instructions/i1.svg" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i2" src="instructions/i2.svg" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i3" src="instructions/i3.svg" style="visibility: hidden; position: absolute; opacity: 1;">
         <!--script src="commonmark.min.js"></script-->
         <script src="orbital.js"></script>
         <script>
+            /*
             function generateCanvasScape (r, index) {
                 if (!r) r = 0;
                 if (!index) index = 0;
@@ -69,7 +70,7 @@
                 
                 return data;
             }
-            
+            */
             /*
             function toggleFullScreen() {
               var doc = window.document;
@@ -260,6 +261,10 @@
                         node.canvas = createCanvas (node.img);
                     }
                     
+                    node.img.onerror = function (e) {
+                        alert ('Error loading: "' + node.image + '"');
+                    }
+
                     node.img.src = node.image;
                     images.push (node);
 
@@ -277,6 +282,19 @@
                     if (this.readyState == 4 && this.status == 200) {
                         data = JSON.parse (this.responseText);
                         
+                        try {
+                            if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
+                                throw new error ();
+                            
+                            var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
+                            if (flatArea < 0 || flatArea > 100)
+                                throw new error ();
+                            
+                        } catch (e) {
+                            alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
+                            throw new error ();
+                        }
+                        
                         document.getElementById("heading1").innerHTML = data.title;
                         document.getElementsByTagName("TITLE")[0].text = data.title;
                         
@@ -289,7 +307,7 @@
                                     return;
                                 }                 
                             }
-                            Orbital (divContainer, data.data);
+                            Orbital (divContainer, data.data, flatArea / 100);
                             window.addEventListener("load", wonload ());
                         }
                         
@@ -356,8 +374,11 @@
                style="fill:none;stroke:rgb(255, 255, 255);stroke-width:0.52916667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           </g>
         </svg-->
-        <a id="vis" class="exhover" style="visibility: hidden; position: absolute; bottom: 0px; right: 5px; clip-path: circle(40% at 50% 50%);">
+        <!--a id="vis" class="exhover" style="visibility: hidden; position: absolute; bottom: 0px; right: 5px; clip-path: circle(40% at 50% 50%);">
             <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="" style="width:96px; height:96px; padding-top: 3px; padding-left: 4px; padding-right: 4px; padding-bottom: 0px;">
+        </a-->
+        <a id="vis" class="exHover" style="visibility: hidden; position: absolute; bottom: 5px; right: 5px; font-family: Arial, Helvetica, sans-serif; font-size: 8pt;">
+          powered by e-fun
         </a>
     </body>
 </html>

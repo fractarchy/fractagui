@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
+   sodipodi:docname="0-1.svg"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 190.5 132.29167"
+   height="500"
+   width="720">
+  <sodipodi:namedview
+     inkscape:current-layer="layer1"
+     inkscape:window-maximized="1"
+     inkscape:window-y="27"
+     inkscape:window-x="67"
+     inkscape:cy="311.5"
+     inkscape:cx="309.07645"
+     inkscape:zoom="1"
+     showgrid="false"
+     id="namedview32"
+     inkscape:window-height="1025"
+     inkscape:window-width="1853"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     inkscape:document-rotation="0" />
+  <defs
+     id="defs2">
+    <rect
+       id="rect203"
+       height="167.42966"
+       width="187.91502"
+       y="68.314278"
+       x="12.471195" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <text
+       id="text823"
+       y="72.22184"
+       x="-0.3143068"
+       style="font-style:normal;font-weight:normal;font-size:29.2135px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.254769"
+       xml:space="preserve"><tspan
+         style="font-size:27.8547px;stroke-width:0.254769"
+         y="72.22184"
+         x="-0.3143068"
+         id="tspan821">E</tspan></text>
+    <text
+       transform="translate(-10.693089,-67.428145)"
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
+       id="text201"
+       xml:space="preserve"><tspan
+         x="12.470703"
+         y="83.296455"><tspan
+           style="font-weight:bold;font-size:16.9333px">1. purpose and </tspan></tspan><tspan
+         x="12.470703"
+         y="104.46308"><tspan
+           style="font-weight:bold;font-size:16.9333px">restrictions</tspan><tspan
+           style="font-size:16.9333px">
+</tspan></tspan><tspan
+         x="12.470703"
+         y="116.26597"><tspan
+           style="font-weight:bold;font-size:6.35px">
+</tspan></tspan><tspan
+         x="12.470703"
+         y="124.20347"><tspan
+           style="font-weight:bold;font-size:6.35px">       </tspan><tspan
+           style="font-style:italic">-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> is optimized to visualize and navigate relatively
+</tspan></tspan><tspan
+         x="12.470703"
+         y="132.14097"><tspan
+           style="shape-inside:url(#rect203)">        small number of content elements (up to 50
+</tspan></tspan><tspan
+         x="12.470703"
+         y="140.07847"><tspan
+           style="shape-inside:url(#rect203)">        separate page units, varying on pages size and </tspan><tspan
+           style="shape-inside:url(#rect203)">client </tspan></tspan><tspan
+         x="12.470703"
+         y="148.01597"><tspan
+           style="shape-inside:url(#rect203)">performance). Since </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> visual interface is very </tspan></tspan><tspan
+         x="12.470703"
+         y="155.95347"><tspan
+           style="shape-inside:url(#rect203)">processing intensive, all the graphical elements are pre-</tspan></tspan><tspan
+         x="12.470703"
+         y="163.89097"><tspan
+           style="shape-inside:url(#rect203)">cached upon main HTML page load event. Pre-caching is </tspan></tspan><tspan
+         x="12.470703"
+         y="171.82847"><tspan
+           style="shape-inside:url(#rect203)">used to deliver smooth and flicker-free browsing </tspan></tspan><tspan
+         x="12.470703"
+         y="179.76597"><tspan
+           style="shape-inside:url(#rect203)">experience as much as it is possible, but it may also </tspan></tspan><tspan
+         x="12.470703"
+         y="187.70347"><tspan
+           style="shape-inside:url(#rect203)">introduce an initial startup delay on slower machines if </tspan></tspan><tspan
+         x="12.470703"
+         y="195.64097"><tspan
+           style="shape-inside:url(#rect203)">using a larger number of image elements.</tspan></tspan></text>
+  </g>
+</svg>

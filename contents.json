@@ -1,45 +1,46 @@
 {
     "title" : "E-Fun",
+    "flat-area": "90%",
     "data" : {
-        "image": "media/0.svg",
+        "image": "contents/0.svg",
         "children" : [
             {
-                "image" : "media/0-1.svg",
+                "image" : "contents/0-1.svg",
                 "children" : [
                     {
-                        "image" : "media/0-1-1.svg"
+                        "image" : "contents/0-1-1.svg"
                     }
                 ]
             },
             {
-                "image" : "media/0-2.svg",
+                "image" : "contents/0-2.svg",
                 "children" : [
                     {
-                        "image" : "media/0-2-1.svg"
+                        "image" : "contents/0-2-1.svg"
                     },
                     {
-                        "image" : "media/0-2-2.svg"
+                        "image" : "contents/0-2-2.svg"
                     }
                 ]
             },
             {
-                "image" : "media/0-3.svg",
+                "image" : "contents/0-3.svg",
                 "children" : [
                     {
-                        "image" : "media/0-3-1.svg",
+                        "image" : "contents/0-3-1.svg",
                         "children" : [
                         ]
                     },
                     {
-                        "image" : "media/0-3-2.svg"
+                        "image" : "contents/0-3-2.svg"
                     },
                     {
-                        "image" : "media/0-3-3.svg"
+                        "image" : "contents/0-3-3.svg"
                     }
                 ]
             },
             {
-                "image" : "media/0-4.svg"
+                "image" : "contents/0-4.svg"
             }
         ]
     }

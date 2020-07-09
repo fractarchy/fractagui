@@ -374,9 +374,10 @@ Crisp = (function () {
     }
 }) ();
 
-function FishEye (radius, squashX, squashY, superSampling, curvature) {
+function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) {
     if (!curvature) curvature = 0.25;
     var curvatureFrontier = Math.pow (1, curvature);
+    if (!flatArea) flatArea = 0;
     //var superSampling = 1;
 
     var fishEye;
@@ -399,15 +400,17 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
                 var i = ((feHeight + y) * feWidth * 2 + feWidth + x) * 4;
 
                 var a = Math.atan2(y / squashY, x / squashX);
-                var r = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn;
-                var m = Math.pow (maxR / (maxR - r), curvature);
+                var r = Math.sqrt (x * x / squashX / squashX + y * y / squashY / squashY) / magn / curvatureFrontier;
+                var m = Math.pow (maxR / (maxR - r) * (1 - flatArea), curvature);
+
+                if (m < 1) m = 1;
 
                 if (r >= Math.floor (maxR)) {
                     feArray [i + 2] = 0;
                     feArray [i + 3] = 0;
 
                 } else {
-                    if (curvature === 0) {
+                    if (curvature === 0 || m <= 1) {
                         feArray[i]     = Math.ceil (x / superSampling + feWidth);
                         feArray[i + 1] = Math.ceil (y / superSampling + feHeight);
                         feArray[i + 2] = superSampling;
@@ -416,8 +419,8 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
                     } else {
                         var newr = r * m;
                         
-                        feArray[i]     = (feWidth + Math.cos (a) * newr * squashX / curvatureFrontier);
-                        feArray[i + 1] = (feHeight + Math.sin (a) * newr * squashY / curvatureFrontier);
+                        feArray[i]     = (feWidth + Math.cos (a) * newr * squashX / magn / curvatureFrontier);
+                        feArray[i + 1] = (feHeight + Math.sin (a) * newr * squashY / magn / curvatureFrontier);
 
                         var d = 1;//(superSampling <= 1? 0.5: 0.5) * superSampling;
                         if (x >= 0) {
@@ -440,11 +443,14 @@ function FishEye (radius, squashX, squashY, superSampling, curvature) {
 
                         var a0 = Math.atan2(y0 / squashY, x0 / squashX);
                         var r0 = Math.sqrt (x0 * x0 / squashX / squashX + y0 * y0 / squashY / squashY) / magn; 
-                        var m0 = Math.pow (maxR / (maxR - r0), curvature);
+                        var m0 = Math.pow (maxR / (maxR - r0) * (1 - flatArea), curvature);
                         
                         var a1 = Math.atan2(y1 / squashY, x1 / squashX);
                         var r1 = Math.sqrt (x1 * x1 / squashX / squashX + y1 * y1 / squashY / squashY) / magn; 
-                        var m1 = Math.pow (maxR / (maxR - r1), curvature);
+                        var m1 = Math.pow (maxR / (maxR - r1) * (1 - flatArea), curvature);
+                        
+                        if (m0 < 1) m0 = 1;
+                        if (m1 < 1) m1 = 1;
 
                         var newr0 = r0 * m0;
                         var newr1 = r1 * m1;
@@ -1190,7 +1196,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data) {
+function Orbital (divContainer, data, flatArea) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -1365,7 +1371,7 @@ function Orbital (divContainer, data) {
                     cy = cursor.centerY;
                 } else {
                     cx = 0;
-                    cy = Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
+                    cy = ~~Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
                 }
                 
                 if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
@@ -1414,7 +1420,7 @@ function Orbital (divContainer, data) {
                 select = select.child;
                 
                 if (!sc.children[select.index]) {
-                    var cy = Math.max (/*center*/ -select.data.scaledBitmap.height / 2 + rr / 3, -select.data.scaledBitmap.height / 2);
+                    var cy = ~~Math.max (/*center*/ -select.data.scaledBitmap.height / 2 + rr / 3, -select.data.scaledBitmap.height / 2);
                     sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: cy, angle: Math.PI, children: []};
                 }
                 
@@ -1504,7 +1510,7 @@ function Orbital (divContainer, data) {
             } else {
                 select.cursor.centerX = 0;
                 //select.cursor.centerY = 0;
-                select.cursor.centerY = Math.max (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + rr / 3, -select.cursor.data.scaledBitmap.height / 2);
+                select.cursor.centerY = ~~Math.max (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + rr / 3, -select.cursor.data.scaledBitmap.height / 2);
 
             }
             
@@ -1810,7 +1816,7 @@ function Orbital (divContainer, data) {
                                     inert = [];
 
                                     if (!cursor.children[cursor.index]) {
-                                        var cy = Math.max (/*center*/ -topc.child.data.scaledBitmap.height / 2 + rr / 3, -topc.child.data.scaledBitmap.height / 2);
+                                        var cy = ~~Math.max (/*center*/ -topc.child.data.scaledBitmap.height / 2 + rr / 3, -topc.child.data.scaledBitmap.height / 2);
                                         cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: cy, index: 0, angle: Math.PI, children: []};
                                     }
                                         
@@ -1969,7 +1975,7 @@ function Orbital (divContainer, data) {
                                 animating = "level";
                                 cursor.centerX = 0;
                                 //cursor.centerY = 0;
-                                cursor.centerY = Math.max (/*center*/ -cursor.data.scaledBitmap.height / 2 + rr / 3, -cursor.data.scaledBitmap.height / 2);
+                                cursor.centerY = ~~Math.max (/*center*/ -cursor.data.scaledBitmap.height / 2 + rr / 3, -cursor.data.scaledBitmap.height / 2);
 
                                 aEnsmall();
                             }
@@ -1987,12 +1993,12 @@ function Orbital (divContainer, data) {
         }
 
         //window.requestAnimationFrame(function () {                
-        
+        /*
         setTimeout(function () {
             if (!mouseDown && !animating && !dragging && !panning)
                 redraw ({x: mouse.x, y: mouse.y});
         }, 0);
-        
+        */
     }
     
 
@@ -2318,7 +2324,7 @@ function Orbital (divContainer, data) {
     function resize(width, height) {
         setDimensions (width, height);
     
-        fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature);
+        fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature, flatArea);
 
         n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1);
         
@@ -2342,7 +2348,7 @@ function Orbital (divContainer, data) {
             if (!data.centerX || !data.centerY) {
                 data.centerX = 0;
                 //data.centerY = 0;
-                var cy = Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
+                var cy = ~~Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
                 data.centerY = cy;
             }
             
@@ -2359,7 +2365,7 @@ function Orbital (divContainer, data) {
             c = c.parent;
         updateCache (c.children[0].data?c.children[0].data:data);
         
-        var cy = Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
+        var cy = ~~Math.max (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, -data.scaledBitmap.height / 2);
         cursor.centerY = cy;
         
         redraw ();

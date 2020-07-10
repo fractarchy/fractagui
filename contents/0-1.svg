@@ -7,42 +7,42 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
-   sodipodi:docname="0-1.svg"
-   id="svg8"
+   width="500"
+   height="350"
+   viewBox="0 0 132.29167 92.604169"
    version="1.1"
-   viewBox="0 0 190.5 132.29167"
-   height="500"
-   width="720">
+   id="svg8"
+   sodipodi:docname="0-1.svg"
+   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)">
   <sodipodi:namedview
-     inkscape:current-layer="layer1"
-     inkscape:window-maximized="1"
-     inkscape:window-y="27"
-     inkscape:window-x="67"
-     inkscape:cy="311.5"
-     inkscape:cx="309.07645"
-     inkscape:zoom="1"
-     showgrid="false"
-     id="namedview32"
-     inkscape:window-height="1025"
-     inkscape:window-width="1853"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0"
-     guidetolerance="10"
-     gridtolerance="10"
-     objecttolerance="10"
-     borderopacity="1"
-     bordercolor="#666666"
+     inkscape:document-rotation="0"
      pagecolor="#ffffff"
-     inkscape:document-rotation="0" />
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     id="namedview32"
+     showgrid="false"
+     inkscape:zoom="1"
+     inkscape:cx="309.07645"
+     inkscape:cy="311.5"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8" />
   <defs
      id="defs2">
     <rect
-       id="rect203"
-       height="167.42966"
-       width="187.91502"
+       x="12.471195"
        y="68.314278"
-       x="12.471195" />
+       width="187.91502"
+       height="167.42966"
+       id="rect203" />
   </defs>
   <metadata
      id="metadata5">
@@ -57,22 +57,23 @@
     </rdf:RDF>
   </metadata>
   <g
+     transform="matrix(0.69006494,0,0,0.69006494,0.55094494,0.93072589)"
      id="layer1">
     <text
-       id="text823"
-       y="72.22184"
-       x="-0.3143068"
+       xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:29.2135px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.254769"
-       xml:space="preserve"><tspan
-         style="font-size:27.8547px;stroke-width:0.254769"
-         y="72.22184"
+       x="-0.3143068"
+       y="72.22184"
+       id="text823"><tspan
+         id="tspan821"
          x="-0.3143068"
-         id="tspan821">E</tspan></text>
+         y="72.22184"
+         style="font-size:27.8547px;stroke-width:0.254769">E</tspan></text>
     <text
-       transform="translate(-10.693089,-67.428145)"
-       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
+       xml:space="preserve"
        id="text201"
-       xml:space="preserve"><tspan
+       style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="translate(-10.693089,-67.428145)"><tspan
          x="12.470703"
          y="83.296455"><tspan
            style="font-weight:bold;font-size:16.9333px">1. purpose and </tspan></tspan><tspan

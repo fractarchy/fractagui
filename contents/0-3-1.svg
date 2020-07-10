@@ -11,17 +11,17 @@
    sodipodi:docname="0-3-1.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 190.5 243.41666"
-   height="920"
-   width="720">
+   viewBox="0 0 132.29167 164.04167"
+   height="620"
+   width="500">
   <sodipodi:namedview
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="67"
-     inkscape:cy="145.34953"
-     inkscape:cx="200.72847"
+     inkscape:cy="412.62607"
+     inkscape:cx="348.08172"
      inkscape:zoom="1"
      showgrid="false"
      id="namedview32"
@@ -71,14 +71,14 @@
   <g
      id="layer1">
     <rect
-       y="90.655273"
-       x="1.4664235"
-       height="110.70658"
-       width="187.47205"
+       y="61.670109"
+       x="1.3794483"
+       height="72.563759"
+       width="129.83917"
        id="rect153"
-       style="opacity:0.98;fill:#ececec;stroke:#000000;stroke-width:0.533204;stroke-miterlimit:4;stroke-dasharray:none" />
+       style="opacity:0.98;fill:#ececec;stroke:#000000;stroke-width:0.359254;stroke-miterlimit:4;stroke-dasharray:none" />
     <text
-       transform="translate(-10.693089,-67.428145)"
+       transform="matrix(0.69252543,0,0,0.69252543,-7.0363215,-46.7023)"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
        id="text201"
        xml:space="preserve"><tspan
@@ -94,13 +94,15 @@
          y="116.26597"><tspan>
 </tspan></tspan><tspan
          x="12.470703"
-         y="124.20347"><tspan>After downloading the </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan> software bundle from </tspan></tspan><tspan
+         y="124.20347"><tspan>          </tspan><tspan>fter downloading the </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan> software bundle from
+</tspan></tspan><tspan
          x="12.470703"
-         y="132.14097"><tspan
-           style="fill:#0000ff">dedicated github pages</tspan><tspan>, we have to unpack the </tspan></tspan><tspan
+         y="132.14097"><tspan>          </tspan><tspan
+           style="fill:#0000ff">dedicated github pages</tspan><tspan>, we have to unpack the
+</tspan></tspan><tspan
          x="12.470703"
-         y="140.07847"><tspan>downloaded archive to a local folder of our choice. </tspan></tspan><tspan
+         y="140.07847"><tspan>          </tspan><tspan>downloaded archive to a local folder of our choice. </tspan></tspan><tspan
          x="12.470703"
          y="148.01597"><tspan>Unpacking will produce the following folder-file structure:
 </tspan></tspan><tspan
@@ -164,76 +166,84 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">
 </tspan></tspan><tspan
          x="12.470703"
-         y="275.01597"><tspan>
-</tspan></tspan><tspan
+         y="275.01597"><tspan>The unpacked files reflect an example site containing </tspan></tspan><tspan
          x="12.470703"
-         y="282.95347"><tspan>The unpacked files reflect an example site containing </tspan></tspan><tspan
+         y="282.95347"><tspan>these instructions we are currently reading. After </tspan></tspan><tspan
          x="12.470703"
-         y="290.89097"><tspan>these instructions we are currently reading. After </tspan></tspan><tspan
+         y="290.89097"><tspan>unpacking, we have to modify the example site to adjust it </tspan></tspan><tspan
          x="12.470703"
-         y="298.82847"><tspan>unpacking, we have to modify the example site to adjust it </tspan></tspan><tspan
-         x="12.470703"
-         y="306.76597"><tspan>to our requirements and introduce our own contents.</tspan></tspan></text>
+         y="298.82847"><tspan>to our requirements and introduce our own contents.</tspan></tspan></text>
     <text
        xml:space="preserve"
        id="text149"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.15;font-family:sans-serif;white-space:pre;shape-inside:url(#rect151);fill:#000000;fill-opacity:1;stroke:none;"
-       transform="translate(-10.693041,19.88436)"><tspan
+       transform="matrix(0.69252543,0,0,0.69252543,0.29293911,12.664446)"><tspan
          x="12.470703"
          y="73.615215"><tspan
-           style="font-weight:normal">
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">
 </tspan></tspan><tspan
          x="12.470703"
          y="80.917713"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">    └─┬ orbiteque-home-folder
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">└─┬ orbiteque-home-folder
 </tspan></tspan><tspan
          x="12.470703"
          y="88.22021"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  ├─┬ media
 </tspan></tspan><tspan
          x="12.470703"
          y="95.522708"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      ├─┬ media
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  │ ├── i1.svg
 </tspan></tspan><tspan
          x="12.470703"
          y="102.82521"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │ │
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  │ ├── i2.svg
 </tspan></tspan><tspan
          x="12.470703"
          y="110.1277"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │ └── ... content images go here ...
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  │ └── i3.svg
 </tspan></tspan><tspan
          x="12.470703"
          y="117.4302"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  │
 </tspan></tspan><tspan
          x="12.470703"
          y="124.7327"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      ├── README.md
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  ├─┬ contents
 </tspan></tspan><tspan
          x="12.470703"
          y="132.0352"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  │ └── ... content images go here ...
 </tspan></tspan><tspan
          x="12.470703"
          y="139.3377"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      ├── index.html
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  │
 </tspan></tspan><tspan
          x="12.470703"
          y="146.64021"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  ├── README.md
 </tspan></tspan><tspan
          x="12.470703"
          y="153.94271"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      ├── orbital.js
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  ├── index.html
 </tspan></tspan><tspan
          x="12.470703"
          y="161.24522"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      │
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  ├── orbital.js
 </tspan></tspan><tspan
          x="12.470703"
          y="168.54773"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">      └── contents.json 
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace">  └── contents.json 
 </tspan></tspan></text>
+    <text
+       id="text183"
+       y="50.456158"
+       x="1.5123178"
+       style="font-style:normal;font-weight:normal;font-size:20.0161px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.500403"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.500403"
+         y="50.456158"
+         x="1.5123178"
+         id="tspan181"
+         sodipodi:role="line">A</tspan></text>
   </g>
 </svg>

@@ -48,9 +48,9 @@
         </div>
         <div id="divContainer" style="position: absolute; top: 58px; bottom: 10px; left: 10px; right: 10px;">
         </div>
-        <img id="i1" src="instructions/i1.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i2" src="instructions/i2.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i3" src="instructions/i3.svg" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i1" src="media/i1.svg" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i2" src="media/i2.svg" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i3" src="media/i3.svg" style="visibility: hidden; position: absolute; opacity: 1;">
         <!--script src="commonmark.min.js"></script-->
         <script src="orbital.js"></script>
         <script>
@@ -317,8 +317,10 @@
                         else
                             scale = 100;
                         
-                        document.getElementById("heading1").innerHTML = data.title;
-                        document.getElementsByTagName("TITLE")[0].text = data.title;
+                        if (data["title"]) {
+                            document.getElementById("heading1").innerHTML = data["title"];
+                            document.getElementsByTagName("TITLE")[0].text = data["title"];
+                        }
                         
                         var images = loader (data.data, scale / 100);
                         

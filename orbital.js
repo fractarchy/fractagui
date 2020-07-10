@@ -1257,7 +1257,7 @@ function Orbital (divContainer, data, flatArea) {
     
     var fill1 = "white"
     var orientation = 0;
-    var curvature = 0.25;
+    var curvature = 0.125;
     
     var svgns = "http://www.w3.org/2000/svg";
     

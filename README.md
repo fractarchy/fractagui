@@ -77,7 +77,7 @@ Finally, when we are done testing our site, to publish it to a remote online ser
 
 ## 4. licencing, owning a copy, and joining mailing list
 
-- **e-fun** is shared to public under [Creative Commons Attribution-NoDerivatives 4.0 International License ![Creative Commons License](https://i.creativecommons.org/l/by-nd/4.0/80x15.png)](http://creativecommons.org/licenses/by-nd/4.0/)).
+- **e-fun** is shared to public under [Creative Commons Attribution-NoDerivatives 4.0 International License ![Creative Commons License](https://i.creativecommons.org/l/by-nd/4.0/80x15.png)](http://creativecommons.org/licenses/by-nd/4.0/).
 - As already mentioned, a copy of **e-fun** can be downloaded from [dedicated github pages](https://github.com/contrast-zone/e-fun).
 - To ask any questions about **e-fun**, to report a bug, or to track new releases, please refer to a [dedicated mailing list](https://groups.google.com/d/forum/czone-efun).
 

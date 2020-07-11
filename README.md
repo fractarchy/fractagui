@@ -43,7 +43,7 @@ To populate **e-fun** site with custom contents, it is necessary to prepare grap
 
 ### 3.1. making a local copy
 
-After downloading the **e-fun** software bundle from [dedicated github pages](https://github.com/e-contrast/e-fun), we have to unpack the downloaded archive to a local folder of our choice. Unpacking will produce the following folder-file structure:
+After downloading the **e-fun** software bundle from [dedicated github pages](https://github.com/contrast-zone/e-fun), we have to unpack the downloaded archive to a local folder of our choice. Unpacking will produce the following folder-file structure:
 
     └─┬ orbiteque-home-folder
       ├─┬ instructions
@@ -78,7 +78,7 @@ Finally, when we are done testing our site, to publish it to a remote online ser
 ## 4. licencing, owning a copy, and joining mailing list
 
 - **e-fun** is shared to public under [Creative Commons Attribution-NoDerivatives 4.0 International License ![Creative Commons License](https://i.creativecommons.org/l/by-nd/4.0/80x15.png)](http://creativecommons.org/licenses/by-nd/4.0/)).
-- As already mentioned, a copy of **e-fun** can be downloaded from [dedicated github pages](https://github.com/e-contrast/e-fun).
+- As already mentioned, a copy of **e-fun** can be downloaded from [dedicated github pages](https://github.com/contrast-zone/e-fun).
 - To ask any questions about **e-fun**, to report a bug, or to track new releases, please refer to a [dedicated mailing list](https://groups.google.com/d/forum/czone-efun).
 
 With this section, we conclude **e-fun** instructions exposure. I hope I got you interested, and I wish you a productive web knitting.

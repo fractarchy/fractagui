@@ -11,15 +11,18 @@
    sodipodi:docname="0-3-3.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 132.29167 211.66669"
-   height="800"
-   width="500">
+   viewBox="0 0 132.29167 219.60419"
+   height="830"
+   width="500"
+   inkscape:export-filename="/home/ivanv/workspace/contrast-zone/e-fun/contents/0-3-3.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <sodipodi:namedview
      inkscape:current-layer="layer1"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="67"
-     inkscape:cy="389.5"
+     inkscape:cy="428"
      inkscape:cx="360"
      inkscape:zoom="1"
      showgrid="false"
@@ -39,8 +42,8 @@
      id="defs2">
     <rect
        id="rect203"
-       height="311.66772"
-       width="187.22168"
+       height="328.51141"
+       width="186.3423"
        y="68.314278"
        x="12.471195" />
   </defs>
@@ -83,85 +86,120 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="116.26597"><tspan
-           style="font-weight:bold;font-size:6.35px">
+           style="shape-inside:url(#rect203)">
 </tspan></tspan><tspan
          x="12.470703"
          y="124.20347"><tspan
-           style="font-weight:bold;font-size:6.35px">         </tspan><tspan>nfortunately, it is not possible to test </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan> pages
+           style="shape-inside:url(#rect203)">          nfortunately, it is not possible to test </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> pages
 </tspan></tspan><tspan
          x="12.470703"
-         y="132.14097"><tspan>          from a local file system due to web browsers image
+         y="132.14097"><tspan
+           style="shape-inside:url(#rect203)">          from a local file system due to web browsers image
 </tspan></tspan><tspan
          x="12.470703"
-         y="140.07847"><tspan>          copyright policy. This copyright policy prevents </tspan></tspan><tspan
+         y="140.07847"><tspan
+           style="shape-inside:url(#rect203)">          copyright policy. This copyright policy prevents </tspan></tspan><tspan
          x="12.470703"
-         y="148.01597"><tspan>HTML scripting engine to extract individual pixels from </tspan></tspan><tspan
+         y="148.01597"><tspan
+           style="shape-inside:url(#rect203)">HTML scripting engine to extract individual pixels from </tspan></tspan><tspan
          x="12.470703"
-         y="155.95347"><tspan>local images, and since </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan> manipulates raw pixel data, </tspan></tspan><tspan
+         y="155.95347"><tspan
+           style="shape-inside:url(#rect203)">local images, and since </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> manipulates raw pixel data, </tspan></tspan><tspan
          x="12.470703"
-         y="163.89097"><tspan>this HTML-image synergy works only over general HTTP </tspan></tspan><tspan
+         y="163.89097"><tspan
+           style="shape-inside:url(#rect203)">the HTML-image synergy works only over general HTTP </tspan></tspan><tspan
          x="12.470703"
-         y="171.82847"><tspan>calls that browsers consider safe regarding to </tspan></tspan><tspan
+         y="171.82847"><tspan
+           style="shape-inside:url(#rect203)">calls that browsers consider safe regarding to </tspan></tspan><tspan
          x="12.470703"
-         y="179.76597"><tspan>copyrighting. Thus, to test the pages locally, it is </tspan></tspan><tspan
+         y="179.76597"><tspan
+           style="shape-inside:url(#rect203)">copyrighting. Thus, to test the pages locally, it is </tspan></tspan><tspan
          x="12.470703"
-         y="187.70347"><tspan>necessary to install a third party web server like </tspan><tspan
+         y="187.70347"><tspan
+           style="shape-inside:url(#rect203)">necessary to install a third party web server like </tspan><tspan
            style="font-style:italic">Apache </tspan></tspan><tspan
          x="12.470703"
          y="195.64097"><tspan
-           style="font-style:italic">HTTP Server</tspan><tspan> or similar to a local computer.
+           style="font-style:italic">HTTP Server Project</tspan><tspan
+           style="shape-inside:url(#rect203)"> or similar server to a local computer.
 </tspan></tspan><tspan
          x="12.470703"
-         y="203.57847"><tspan>
+         y="203.57847"><tspan
+           style="shape-inside:url(#rect203)">
 </tspan></tspan><tspan
          x="12.470703"
-         y="211.51597"><tspan>When we have a local HTTP server running, all we have to </tspan></tspan><tspan
+         y="211.51597"><tspan
+           style="shape-inside:url(#rect203)">When we have a local HTTP server installed and running, </tspan></tspan><tspan
          x="12.470703"
-         y="219.45347"><tspan>do is to copy the entire modified structure from below the </tspan></tspan><tspan
+         y="219.45347"><tspan
+           style="shape-inside:url(#rect203)">all we have to do is to copy the entire modified structure </tspan></tspan><tspan
          x="12.470703"
-         y="227.39097"><tspan>orbiteque-home-folder to HTTP server home folder, just to </tspan></tspan><tspan
+         y="227.39097"><tspan
+           style="shape-inside:url(#rect203)">from below the e-fun-home-folder to HTTP server home </tspan></tspan><tspan
          x="12.470703"
-         y="235.32847"><tspan>check if everything runs as it is supposed to be. If </tspan></tspan><tspan
+         y="235.32847"><tspan
+           style="shape-inside:url(#rect203)">folder, just to check if everything runs as it is supposed to </tspan></tspan><tspan
          x="12.470703"
-         y="243.26597"><tspan>everything goes well, our new pages can be accessed in a </tspan></tspan><tspan
+         y="243.26597"><tspan
+           style="shape-inside:url(#rect203)">be. If everything goes well, our new pages can be </tspan></tspan><tspan
          x="12.470703"
-         y="251.20347"><tspan>web browser from local HTTP address.
+         y="251.20347"><tspan
+           style="shape-inside:url(#rect203)">accessed in a web browser from local HTTP address </tspan></tspan><tspan
+         x="12.470703"
+         y="259.14097"><tspan
+           style="shape-inside:url(#rect203)">assigned by installed server.
 </tspan></tspan><tspan
          x="12.470703"
-         y="259.14097"><tspan>
+         y="267.07847"><tspan
+           style="shape-inside:url(#rect203)">
 </tspan></tspan><tspan
          x="12.470703"
-         y="267.07847"><tspan>To simplify testing, natural choice would also be keeping </tspan></tspan><tspan
+         y="275.01597"><tspan
+           style="shape-inside:url(#rect203)">To simplify testing, natural choice would also be keeping </tspan></tspan><tspan
          x="12.470703"
-         y="275.01597"><tspan>and modifying our site directly in local server home folder </tspan></tspan><tspan
+         y="282.95347"><tspan
+           style="shape-inside:url(#rect203)">and modifying our site directly in local testing server </tspan></tspan><tspan
          x="12.470703"
-         y="282.95347"><tspan>instead of some other arbitrary local folder. This would </tspan></tspan><tspan
+         y="290.89097"><tspan
+           style="shape-inside:url(#rect203)">home folder instead of some other arbitrary local folder. </tspan></tspan><tspan
          x="12.470703"
-         y="290.89097"><tspan>save us the step of copying site from local folder to local </tspan></tspan><tspan
+         y="298.82847"><tspan
+           style="shape-inside:url(#rect203)">This would save us the step of copying site from local </tspan></tspan><tspan
          x="12.470703"
-         y="298.82847"><tspan>testing server home folder.
+         y="306.76597"><tspan
+           style="shape-inside:url(#rect203)">folder to local testing server home folder.
 </tspan></tspan><tspan
          x="12.470703"
-         y="306.76597"><tspan>
+         y="314.70347"><tspan
+           style="shape-inside:url(#rect203)">
 </tspan></tspan><tspan
          x="12.470703"
-         y="314.70347"><tspan>Finally, when we are done testing our site, to publish it to </tspan></tspan><tspan
+         y="322.64097"><tspan
+           style="shape-inside:url(#rect203)">Finally, when we are done testing our site, we would want </tspan></tspan><tspan
          x="12.470703"
-         y="322.64097"><tspan>a remote online server, we copy again the entire structure </tspan></tspan><tspan
+         y="330.57847"><tspan
+           style="shape-inside:url(#rect203)">to publish it to a remote online server. Again, we copy the </tspan></tspan><tspan
          x="12.470703"
-         y="330.57847"><tspan>from below the orbiteque-home-folder, but this time to a </tspan></tspan><tspan
+         y="338.51597"><tspan
+           style="shape-inside:url(#rect203)">entire structure from below the e-fun-home-folder, but </tspan></tspan><tspan
          x="12.470703"
-         y="338.51597"><tspan>remote server home folder. We can usually do this by </tspan></tspan><tspan
+         y="346.45347"><tspan
+           style="shape-inside:url(#rect203)">this time to the remote online server home folder. We can </tspan></tspan><tspan
          x="12.470703"
-         y="346.45347"><tspan>using control panel pages provided by the remote server, </tspan></tspan><tspan
+         y="354.39097"><tspan
+           style="shape-inside:url(#rect203)">usually do this by using control panel pages provided by </tspan></tspan><tspan
          x="12.470703"
-         y="354.39097"><tspan>or via FTP if we have an access to FTP user name and </tspan></tspan><tspan
+         y="362.32847"><tspan
+           style="shape-inside:url(#rect203)">the remote server, or via FTP if we have an access to our </tspan></tspan><tspan
          x="12.470703"
-         y="362.32847"><tspan>password. If everything goes well, our new site would be </tspan></tspan><tspan
+         y="370.26597"><tspan
+           style="shape-inside:url(#rect203)">FTP user name and password. If everything goes well, our </tspan></tspan><tspan
          x="12.470703"
-         y="370.26597"><tspan>spinning on the web.
-</tspan></tspan></text>
+         y="378.20347"><tspan
+           style="shape-inside:url(#rect203)">new site would be hapilly spinning on the web.</tspan></tspan></text>
   </g>
 </svg>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!--meta name="viewport" content="width=device-width, height=device-height, initial-scale = 0.5, maximum-scale = 0.5" /-->
-    <meta name="viewport" content="initial-scale = 0.5, maximum-scale = 0.5, minimum-scale = 0.5, user-scalable=no" />
+    <meta name="viewport" content="initial-scale = 0.5, maximum-scale = 0.5, minimum-scale = 0.5, user-scalable=no"/>
     <title>E-Fun</title>
         <style media="screen">
         html, body
@@ -22,6 +22,13 @@
             top: 50%;
             width: 100%;
             text-align: center;
+            animation: fadeIn 0.5s infinite alternate;
+        }
+        .fadeinfadeout {
+            animation: fadeIn 0.5s infinite alternate;
+        }
+        @keyframes fadeIn { 
+          from { opacity: 0; } 
         }
         
         a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
@@ -34,13 +41,14 @@
           -ms-user-select: none; /* IE 10+ */
           user-select: none; /* Standard syntax */
         }
-
     </style>
     <body>
-        <!--div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255); height: 50%;"-->
-        <div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(255, 255, 255);">
-            ...computing bitmaps...
+        <div id="splash" class="fadeinfadeout" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
+            
         </div>
+        <!--div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(208, 208, 208);">
+            ... loading data ...
+        </div-->
         <div id="heading1" align="center" style="background-color: rgb(48, 48, 48); color: rgb(208, 208, 208); visibility: hidden; position: absolute; top: 0px; right: 0px; left: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 48px; font-weight: bold;">
             <heading1>
                 E-Fun
@@ -87,6 +95,18 @@
               }
             }
             */
+
+            function showSplash(txt) {
+                var spl = document.getElementById("splash");
+                spl.innerHTML = txt;
+                spl.style.visibility = "visible";
+                spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
+                spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
+            }
+            
+            function hideSplash() {
+                document.getElementById("splash").style.visibility = "hidden";
+            }
 
             function setSize () {
                 var ratio = 1;// / 1.61803398875;
@@ -177,63 +197,59 @@
             var i1 = document.getElementById("i1");
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
-            
-            var wloaded = false;
+
             wonload = function () {
-                if (!wloaded) {
-                    wloaded = true;
-                    document.getElementById("vis").onclick = (function () {
-                        window.location.href = 'https://github.com/e-teoria/Orbiteque';
-                    })
-                    
-                    document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
-                    
+                document.getElementById("vis").onclick = (function () {
+                    window.location.href = 'https://github.com/contrast-zone/e-fun';
+                })
+                
+                document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
+                
+                /*document
+                .querySelector("meta[name=viewport]")
+                .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+                */
+                document.getElementById("splash").style.visibility = "hidden";
+                document.getElementById("heading1").style.visibility = "visible";
+                document.getElementById("vis").style.visibility = "visible";
+                i1.style.visibility = "visible";
+                i2.style.visibility = "visible";
+                i3.style.visibility = "visible";
+                divContainer.style.visibility = "visible";
+
+                setSize ();
+
+                var resizeId;
+                window.addEventListener('resize', function () {
                     /*document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
+                    .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
                     */
-                    document.getElementById("splash").style.visibility = "hidden";
-                    document.getElementById("heading1").style.visibility = "visible";
-                    document.getElementById("vis").style.visibility = "visible";
-                    i1.style.visibility = "visible";
-                    i2.style.visibility = "visible";
-                    i3.style.visibility = "visible";
-                    divContainer.style.visibility = "visible";
+                    //document.getElementById("splash").style.visibility = "visible";
+                    showSplash ("... computing bitmaps ...");
+                    document.getElementById("heading1").style.visibility = "hidden";
+                    document.getElementById("vis").style.visibility = "hidden";
+                    i1.style.visibility = "hidden";
+                    i2.style.visibility = "hidden";
+                    i3.style.visibility = "hidden";
+                    divContainer.style.visibility = "hidden";
+                    
+                    clearTimeout(resizeId);
+                    resizeId = setTimeout(function () {
+                        //document.getElementById("splash").style.visibility = "hidden";
+                        hideSplash ();
+                        document.getElementById("heading1").style.visibility = "visible";
+                        document.getElementById("vis").style.visibility = "visible";
+                        i1.style.visibility = "visible";
+                        i2.style.visibility = "visible";
+                        i3.style.visibility = "visible";
+                        divContainer.style.visibility = "visible";
 
-                    setSize ();
-
-                    var resizeId;
-                    window.addEventListener('resize', function () {
-                        /*document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
-                        document.getElementById("splash").style.visibility = "visible";
-                        */
-                        //document.getElementById("splash").style.visibility = "visible";
-                        document.getElementById("heading1").style.visibility = "hidden";
-                        document.getElementById("vis").style.visibility = "hidden";
-                        i1.style.visibility = "hidden";
-                        i2.style.visibility = "hidden";
-                        i3.style.visibility = "hidden";
-                        divContainer.style.visibility = "hidden";
-                        
-                        clearTimeout(resizeId);
-                        resizeId = setTimeout(function () {
-                            //document.getElementById("splash").style.visibility = "hidden";
-                            
-                            document.getElementById("heading1").style.visibility = "visible";
-                            document.getElementById("vis").style.visibility = "visible";
-                            i1.style.visibility = "visible";
-                            i2.style.visibility = "visible";
-                            i3.style.visibility = "visible";
-                            divContainer.style.visibility = "visible";
-
-                            setSize ();
-                        }, 500);
-                    });
-                }
+                        setSize ();
+                    }, 500);
+                });
             }
-
+            
             function createCanvas (img, scale) {
                 var cnvim = document.createElement ("canvas");
                 cnvim.width = ~~(img.width * scale);
@@ -243,9 +259,6 @@
                 ctxim.fillStyle = "white";
                 ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
                 
-                //img.width = cnvim.width;
-                //img.height = cnvim.height;
-
                 ctxim.drawImage (img, 0, 0, cnvim.width, cnvim.height);
 
                 return cnvim
@@ -271,6 +284,24 @@
                     node.img.src = node.image;
                     images.push (node);
 
+                    if (node.hyperlinks) {
+                        for (var i = 0; i < node.hyperlinks.length; i++) {
+                            try {
+                                var target = node.target;
+                                var href = node.href;
+                                var l = parseFloat (node.left);
+                                var t = parseFloat (node.top);
+                                var r = parseFloat (node.right);
+                                var b = parseFloat (node.bottom);
+                                
+                            } catch (e) {
+                                alert ('Error: hyperlink for "' + node.image + '" are not valid');
+                                hideSplash ();
+                                throw e;
+                            }
+                        }
+                    }
+                    
                     if (node.children)
                         for (var i = 0; i < node.children.length; i++)
                             loadImages (node.children[i]);
@@ -279,64 +310,85 @@
                 return images;
             };
             
+            function setupEnv (data) {
+                if (data["flat-area"])
+                    try {
+                        if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
+                        if (flatArea < 0 || flatArea > 100)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
+                        hideSplash ();
+                        throw new error ();
+                    }
+                else
+                    flatArea = 0;
+
+                if (data["scale"])
+                    try {
+                        if (data["scale"].substr(data["scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var scale = parseFloat (data["scale"].substr(0, data["scale"].length - 1));
+                        if (scale <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error: "scale" hast to be a percent greater than "0%"');
+                        hideSplash ();
+                        throw new error ();
+                    }
+                else
+                    scale = 100;
+                
+                if (data["title"]) {
+                    document.getElementById("heading1").innerHTML = data["title"];
+                    document.getElementsByTagName("TITLE")[0].text = data["title"];
+                }
+                
+                return {
+                    title: data["title"],
+                    flatArea: flatArea,
+                    scale: scale
+                }
+            }
+            
             function loadContents () {
                 var xhttp = new XMLHttpRequest ();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        data = JSON.parse (this.responseText);
-                        
-                        if (data["flat-area"])
-                            try {
-                                if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
-                                    throw new error ();
-                                
-                                var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
-                                if (flatArea < 0 || flatArea > 100)
-                                    throw new error ();
-                                
-                            } catch (e) {
-                                alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
-                                throw new error ();
-                            }
-                        else
-                            flatArea = 0;
-
-                        if (data["scale"])
-                            try {
-                                if (data["scale"].substr(data["scale"].length - 1, 1) !== "%")
-                                    throw new error ();
-                                
-                                var scale = parseFloat (data["scale"].substr(0, data["scale"].length - 1));
-                                if (scale <= 0)
-                                    throw new error ();
-                                
-                            } catch (e) {
-                                alert ('Error: "scale" hast to be a percent greater than "0%"');
-                                throw new error ();
-                            }
-                        else
-                            scale = 100;
-                        
-                        if (data["title"]) {
-                            document.getElementById("heading1").innerHTML = data["title"];
-                            document.getElementsByTagName("TITLE")[0].text = data["title"];
+                        try {
+                            data = JSON.parse (this.responseText);
+                        } catch (e) {
+                            alert ('JSON parsing error');
+                            hideSplash ();
+                            throw e;
                         }
                         
-                        var images = loader (data.data, scale / 100);
+                        var env = setupEnv (data);
+                        var images = loader (data.data, env.scale / 100);
                         
                         var waitForImages = function () {
                             for (var i = 0; i < images.length; i++){
                                 if (!images[i].canvas) {
-                                    setTimeout(waitForImages, 0);
+                                    setTimeout (waitForImages, 0);
                                     return;
                                 }                 
                             }
-                            Orbital (divContainer, data.data, flatArea / 100);
-                            window.addEventListener("load", wonload ());
+                            
+                            showSplash ("... computing bitmaps ...");            
+                                                        
+                            setTimeout (function () {
+                                Orbital (divContainer, data.data, env.flatArea / 100);
+                                window.addEventListener("load", wonload ());
+                            }, 50);
                         }
                         
                         waitForImages ();
-                            
                         
                     }
                 
@@ -347,7 +399,8 @@
             
             var divContainer = document.getElementById ("divContainer")
             //Orbital(divContainer, generateCanvasScape ());
-            
+
+            showSplash ("... loading data ...");            
             loadContents ();
             
             

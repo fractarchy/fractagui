@@ -3,45 +3,112 @@
     "flat-area": "0%",
     "scale": "100%",
     "data" : {
-        "image": "contents/0.svg",
+        "image": "contents/0.png",
         "children" : [
             {
-                "image" : "contents/0-1.svg",
+                "image" : "contents/0-1.png",
                 "children" : [
                     {
-                        "image" : "contents/0-1-1.svg"
+                        "image" : "contents/0-1-1.png"
                     }
                 ]
             },
             {
-                "image" : "contents/0-2.svg",
+                "image" : "contents/0-2.png",
                 "children" : [
                     {
-                        "image" : "contents/0-2-1.svg"
+                        "image" : "contents/0-2-1.png"
                     },
                     {
-                        "image" : "contents/0-2-2.svg"
+                        "image" : "contents/0-2-2.png"
                     }
                 ]
             },
             {
-                "image" : "contents/0-3.svg",
+                "image" : "contents/0-3.png",
                 "children" : [
                     {
-                        "image" : "contents/0-3-1.svg",
+                        "image" : "contents/0-3-1.png",
+                        "hyperlinks" : [
+                            {
+                                "type": "rect",
+                                "target": "_new",
+                                "href": "https://github.com/contrast-zone/e-fun",
+                                "left": "58",
+                                "top": "155",
+                                "right": "258",
+                                "bottom": "175"
+                            }
+                        ],
                         "children" : [
                         ]
                     },
                     {
-                        "image" : "contents/0-3-2.svg"
+                        "image" : "contents/0-3-2.png"
                     },
                     {
-                        "image" : "contents/0-3-3.svg"
+                        "image" : "contents/0-3-3.png"
                     }
                 ]
             },
             {
-                "image" : "contents/0-4.svg"
+                "image" : "contents/0-4.png",
+                "hyperlinks" : [
+                    {
+                        "type": "rect",
+                        "target": "_new",
+                        "href": "http://creativecommons.org/licenses/by/4.0/",
+                        "left": "265",
+                        "top": "265",
+                        "right": "430",
+                        "bottom": "285"
+                    },
+                    {
+                        "type": "rect",
+                        "target": "_new",
+                        "href": "http://creativecommons.org/licenses/by/4.0/",
+                        "left": "5",
+                        "top": "290",
+                        "right": "310",
+                        "bottom": "310"
+                    },
+                    {
+                        "type": "rect",
+                        "target": "_new",
+                        "href": "https://github.com/contrast-zone/",
+                        "left": "340",
+                        "top": "290",
+                        "right": "455",
+                        "bottom": "310"
+                    },
+                    {
+                        "type": "rect",
+                        "target": "_self",
+                        "href": "https://github.com/contrast-zone/e-fun/",
+                        "left": "50",
+                        "top": "372",
+                        "right": "250",
+                        "bottom": "392"
+                    },
+                    {
+                        "type": "rect",
+                        "target": "_new",
+                        "href": "https://groups.google.com/d/forum/czone-efun/",
+                        "left": "320",
+                        "top": "435",
+                        "right": "470",
+                        "bottom": "455"
+                    },
+                    {
+                        "type": "rect",
+                        "target": "_new",
+                        "href": "https://groups.google.com/d/forum/czone-efun/",
+                        "left": "5",
+                        "top": "455",
+                        "right": "30",
+                        "bottom": "475"
+                    }
+                ]
             }
         ]
     }

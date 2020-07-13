@@ -215,6 +215,7 @@ Crisp = (function () {
         log.push (Math.ceil (Math.log(i) / Math.log(step)));
     }
 
+    /*
     function interpolate (ratio, pixf, pixc) {
         var f = ~~ratio;
         var c = f + 1;
@@ -229,7 +230,9 @@ Crisp = (function () {
             ((c1 * (pixf <<   8 >>> 24) + f1 * (pixc <<   8 >>> 24))       )
         );
     }
-    
+    */
+
+    /*    
     function crispBitmap (cnvim) {
         "use strict";
         var ctxim = cnvim.getContext('2d');
@@ -256,6 +259,44 @@ Crisp = (function () {
             if (iWidth <= 32 || iHeight <= 32) break;
             
             cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataH.im, canvas: dataH.cnv});
+        }
+        
+        return cnvScaled;
+    }
+    */
+
+    function crispBitmap (cnvim) {
+        "use strict";
+        var ctxim = cnvim.getContext('2d');
+        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        //var dataim = imgim.data;
+        
+        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: step, images: []};
+        
+        var iWidth = cnvim.width;
+        var iHeight = cnvim.height;
+
+        var dataWH = {im: imageDataim, cnv: cnvim}//dataim;
+        cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataWH.im, canvas: dataWH.cnv});
+
+        while (true) {
+            iWidth = Math.ceil (iWidth / cnvScaled.step);
+            iHeight = Math.ceil (iHeight / cnvScaled.step);
+
+            if (iWidth <= 32 || iHeight <= 32) break;
+            
+            var data = dataWH.im;
+            var cnv = document.createElement ("canvas")
+            cnv.width = iWidth;
+            cnv.height = iHeight;
+            
+            var ctx = cnv.getContext('2d');
+            ctx.drawImage(dataWH.cnv, 0, 0, cnv.width, cnv.height);
+            var imageData = ctx.getImageData(0, 0, cnv.width, cnv.height);
+            
+            dataWH = {cnv: cnv, im: imageData};
+            
+            cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataWH.im, canvas: dataWH.cnv});
         }
         
         return cnvScaled;
@@ -297,6 +338,7 @@ Crisp = (function () {
         
         return cnvScaled1;
     }
+
     /*
     function crispX (oldCnv, imageData1, width1, height1, step) {
         "use strict";
@@ -778,7 +820,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
 }
 
 function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1) {
-    var pixelPrecision = 1 / Math.pow (2, 8); /* set it to less, and you are doomed */
+    var pixelPrecision = 1 / Math.pow (2, 4); /* set it to less, and you are doomed */
 
     var hilight = fill1;//"white"
     var stroke1 = "gray";
@@ -1243,6 +1285,23 @@ function Orbital (divContainer, data, flatArea) {
             children: []
         };
         
+        if (canvasScape.hyperlinks) {
+            data.hyperlinks = [];
+            for (var i = 0; i < canvasScape.hyperlinks.length; i++) {
+               var hl = canvasScape.hyperlinks[i];
+               data.hyperlinks.push (
+                    {
+                        target: hl.target,
+                        href: hl.href,
+                        left: hl.left,
+                        top: hl.top,
+                        right: hl.right,
+                        bottom: hl.bottom
+                    }
+                );
+            }
+        }
+
         if (fst)
             parent.children = [data];
         
@@ -1277,6 +1336,20 @@ function Orbital (divContainer, data, flatArea) {
     cnv.draggable = false;
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
+    
+    var onHyperlink;
+    var tooltip = document.createElement("DIV");
+    tooltip.style.position = "absolute";
+    tooltip.style.bottom = "0px";
+    tooltip.style.left = "0px";
+    tooltip.style.backgroundColor = "rgb(208, 208, 208)";
+    tooltip.style.color = "rgb(48, 48, 48)";
+    tooltip.style.visibility = "hidden";
+    tooltip.style.fontFamily = "Arial, Helvetica, sans-serif";
+    tooltip.style.fontSize = "10pt";
+    tooltip.innerText = "";
+    document.body.appendChild(tooltip);
+    
     /*
     ctx.mozImageSmoothingEnabled    = true
     ctx.imageSmoothingQuality       = "high"
@@ -1417,7 +1490,7 @@ function Orbital (divContainer, data, flatArea) {
                 } else if (level === 1) {
                     //w = data.cachedCnv.width / fishEye.superSampling;
                     //h = data.cachedCnv.height / fishEye.superSampling;
-                    ctx.drawImage(data.cachedCnv, xo, yo);//, w, h);
+                    ctx.drawImage(data.cachedCnv, Math.round (xo), Math.round (yo));//, w, h);
                 
                 } else {
                     if (!data.cachedData)
@@ -1550,6 +1623,47 @@ function Orbital (divContainer, data, flatArea) {
         }
     }
     
+    function setMouseHyperlink (x, y) {
+        var found = false;
+        if (cursor) {
+            //setupSelect(preSelect);
+        //if (path[0] && path[0].hyperlinks && path[0].hyperlinks.length > 0) {
+            if (!dragging && !panning && !animating) {
+                var r0 = r1 * ratio;
+
+                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
+
+                if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
+                    var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
+
+                    var hx = cursor.centerX + cursor.data.scaledBitmap.width / 2 + fishEye.data.array[tmp1] - fishEye.data.width ;
+                    var hy = cursor.centerY + cursor.data.scaledBitmap.height / 2 + fishEye.data.array[tmp1 + 1] - fishEye.data.height;
+                    //document.getElementById("heading1").innerHTML = hx + "-" + hy;
+                    
+                    if (cursor.data.hyperlinks) {
+                        for (var i = 0; i < cursor.data.hyperlinks.length; i++) {
+                            var hl = cursor.data.hyperlinks[i];
+                            if (hl.top < hy && hl.bottom > hy && hl.left < hx && hl.right > hx) {
+                                found = true;
+                                cnv.style.cursor = "pointer";
+                                tooltip.style.visibility = "visible";
+                                tooltip.innerText = " " + hl.href + " ";
+                                tooltip.myHref = hl.href;
+                                tooltip.myTarget = hl.target;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!found) {
+            cnv.style.cursor = "default";
+            tooltip.style.visibility = "hidden";
+            tooltip.innerText = "";
+        }
+    }
+    
     function mousemove (e) {
         "use strict";
         
@@ -1583,7 +1697,7 @@ function Orbital (divContainer, data, flatArea) {
                 }
             }
         }
-        
+
         var angMin, angMax;//, angMin0, angMax0, angMin2, angMax2;
         if ((dragging || panning) && select) {
             gettingLevel = select;
@@ -2026,17 +2140,22 @@ function Orbital (divContainer, data, flatArea) {
         setTimeout(function () {
             if (!mouseDown && !animating && !dragging && !panning)
                 redraw ({x: mouse.x, y: mouse.y});
+                
         }, 0);
         */
+        setMouseHyperlink (mouse.x, mouse.y);
     }
     
 
     function mousedown (e) {
         mouse = getMouse (e);
-        
+                
         globalt0 = (new Date()).getTime();
 
         if (e.which === 1) {
+            setMouseHyperlink (mouse.x, mouse.y);
+            onHyperlink = tooltip.innerText;
+            
             if (!animating) {
                 preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
             } else if (animating === true) {
@@ -2068,6 +2187,11 @@ function Orbital (divContainer, data, flatArea) {
         mouseDown = 0;
 
         if (animating === "level") dragging = false;
+
+        setMouseHyperlink (mouse.x, mouse.y);
+        if (onHyperlink !== "" && onHyperlink === tooltip.innerText) {
+            window.open(tooltip.myHref, tooltip.myTarget); 
+        }
 
         if (!animating) {
             if (dragging && inert.length > 1) {
@@ -2237,6 +2361,7 @@ function Orbital (divContainer, data, flatArea) {
                                         animating = false;
                                         //cursor.cachedCnv = false;
                                         redraw ({x: mouse.x, y: mouse.y});
+                                        setMouseHyperlink (mouse.x, mouse.y);
                                     }
 
                                 } else {
@@ -2244,6 +2369,7 @@ function Orbital (divContainer, data, flatArea) {
                                     animating = false;
                                     //cursor.cachedCnv = false;
                                     redraw ({x: mouse.x, y: mouse.y});
+                                    setMouseHyperlink (mouse.x, mouse.y);
                                 }
                             } else if (mouseDown === 1) {
                                 var r0 = r1 * ratio;
@@ -2261,6 +2387,7 @@ function Orbital (divContainer, data, flatArea) {
                                     animating = false;
                                     cursor.cachedCnv = false;
                                     preSelect = redraw ({x: mouse.x, y: mouse.y});
+                                    setMouseHyperlink (mouse.x, mouse.y);
                                 }
                             }
                         }

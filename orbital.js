@@ -1339,6 +1339,7 @@ function Orbital (divContainer, data, flatArea) {
     
     var onHyperlink;
     var tooltip = document.createElement("DIV");
+    tooltip.id = "tooltip";
     tooltip.style.position = "absolute";
     tooltip.style.bottom = "0px";
     tooltip.style.left = "0px";

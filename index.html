@@ -11,7 +11,7 @@
             var addEvent = 'addEventListener',
                 type = 'gesturestart',
                 qsa = 'querySelectorAll',
-                scales = [0.5, 0.5],
+                scales = [1, 1],
                 meta = qsa in doc ? doc[qsa]('meta[name=viewport]') : [];
 
             function fix() {
@@ -21,7 +21,7 @@
 
             if ((meta = meta[meta.length - 1]) && addEvent in doc) {
                 fix();
-                scales = [.25, 1.6];
+                scales = [0.5, 0.5];
                 doc[addEvent](type, fix, true);
             }
 

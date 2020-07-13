@@ -2,31 +2,9 @@
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale = 0.5, maximum-scale=0.5, minimum-scale=0.5">
+    <meta name="viewport" content="width=device-width, initial-scale = 0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
     <!--meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no"/-->
     <head>
-        <!--script type="text/javascript">
-        (function(doc) {
-
-            var addEvent = 'addEventListener',
-                type = 'gesturestart',
-                qsa = 'querySelectorAll',
-                scales = [1, 1],
-                meta = qsa in doc ? doc[qsa]('meta[name=viewport]') : [];
-
-            function fix() {
-                meta.content = 'minimum-scale=' + scales[0] + ',maximum-scale=' + scales[1] + ', user-scalable=no';
-                doc.removeEventListener(type, fix, true);
-            }
-
-            if ((meta = meta[meta.length - 1]) && addEvent in doc) {
-                fix();
-                scales = [0.5, 0.5];
-                doc[addEvent](type, fix, true);
-            }
-
-        }(document));
-        </script-->
         <style media="screen">
             section {
                 position: absolute; top:0; bottom:0; left:0; right:0;
@@ -43,13 +21,6 @@
                 touch-action: none;
                 pointer-events: auto;
                 background-color: gray;
-            }
-            .center {
-                position: absolute;
-                top: 50%;
-                width: 100%;
-                text-align: center;
-                animation: fadeIn 0.5s infinite alternate;
             }
             .fadeinfadeout {
                 animation: fadeIn 0.5s infinite alternate;
@@ -74,9 +45,6 @@
       <section>
         <title>E-Fun</title>
         <div id="splash" class="fadeinfadeout" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"></div>
-        <!--div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(208, 208, 208);">
-            ... loading data ...
-        </div-->
         <div id="heading1" align="center" style="background-color: rgb(48, 48, 48); color: rgb(208, 208, 208); visibility: hidden; position: absolute; top: 0px; right: 0px; left: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 48px; font-weight: bold;">
             <heading1>
                 E-Fun
@@ -90,6 +58,20 @@
         <!--script src="commonmark.min.js"></script-->
         <script src="orbital.js"></script>
         <script>
+            function isDesign(str) {
+                var design;
+                if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
+                    design = 'touch';
+                } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                    design = 'tablet';
+                } else if (window.matchMedia('screen').matches) {
+                    design = 'desktop';
+                } else if (window.matchMedia('handheld').matches) {
+                    design = 'mobile';
+                }
+                return(str == design);
+            }
+            
             /*
             function generateCanvasScape (r, index) {
                 if (!r) r = 0;

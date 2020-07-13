@@ -4,8 +4,31 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!--meta name="viewport" content="width=device-width, height=device-height, initial-scale = 0.5, maximum-scale = 0.5" /-->
     <meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no"/>
-    <title>E-Fun</title>
-        <style media="screen">
+    <head>
+        <script type="text/javascript">
+        (function(doc) {
+
+            var addEvent = 'addEventListener',
+                type = 'gesturestart',
+                qsa = 'querySelectorAll',
+                scales = [0.5, 0.5],
+                meta = qsa in doc ? doc[qsa]('meta[name=viewport]') : [];
+
+            function fix() {
+                meta.content = 'width=device-width,minimum-scale=' + scales[0] + ',maximum-scale=' + scales[1];
+                doc.removeEventListener(type, fix, true);
+            }
+
+            if ((meta = meta[meta.length - 1]) && addEvent in doc) {
+                fix();
+                scales = [.25, 1.6];
+                doc[addEvent](type, fix, true);
+            }
+
+        }(document));
+        </script>
+    </head>
+    <style media="screen">
         html, body
         {
             overflow: hidden;
@@ -43,6 +66,7 @@
         }
     </style>
     <body>
+        <title>E-Fun</title>
         <div id="splash" class="fadeinfadeout" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"></div>
         <!--div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(208, 208, 208);">
             ... loading data ...
@@ -203,9 +227,9 @@
                 
                 document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
                 
-                document
-                .querySelector("meta[name=viewport]")
-                .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
+                //document
+                //.querySelector("meta[name=viewport]")
+                //.setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
                 
                 document.getElementById("splash").style.visibility = "hidden";
                 document.getElementById("heading1").style.visibility = "visible";
@@ -219,9 +243,9 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    document
-                    .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
+                    //document
+                    //.querySelector("meta[name=viewport]")
+                    //.setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
 
                     showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
                     document.getElementById("tooltip").style.visibility = "hidden"

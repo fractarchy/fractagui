@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!--meta name="viewport" content="width=device-width, height=device-height, initial-scale = 0.5, maximum-scale = 0.5" /-->
-    <meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no"/>
+    <!--meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no"/-->
     <head>
         <script type="text/javascript">
         (function(doc) {
@@ -11,17 +11,17 @@
             var addEvent = 'addEventListener',
                 type = 'gesturestart',
                 qsa = 'querySelectorAll',
-                scales = [0.5, 0.5],
+                scales = [1, 1],
                 meta = qsa in doc ? doc[qsa]('meta[name=viewport]') : [];
 
             function fix() {
-                meta.content = 'width=device-width,minimum-scale=' + scales[0] + ',maximum-scale=' + scales[1];
+                meta.content = 'minimum-scale=' + scales[0] + ',maximum-scale=' + scales[1] + ', user-scalable=no';
                 doc.removeEventListener(type, fix, true);
             }
 
             if ((meta = meta[meta.length - 1]) && addEvent in doc) {
                 fix();
-                scales = [1, 1];
+                scales = [0.5, 0.5];
                 doc[addEvent](type, fix, true);
             }
 

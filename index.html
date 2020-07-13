@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!--meta name="viewport" content="width=device-width, height=device-height, initial-scale = 0.5, maximum-scale = 0.5" /-->
-    <meta name="viewport" content="initial-scale = 0.5, maximum-scale = 0.5, minimum-scale = 0.5, user-scalable=no"/>
+    <meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no"/>
     <title>E-Fun</title>
         <style media="screen">
         html, body
@@ -203,10 +203,10 @@
                 
                 document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
                 
-                /*document
+                document
                 .querySelector("meta[name=viewport]")
-                .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'width=' + (document.documentElement.clientWidth * 2), 'height=' + (document.documentElement.clientHeight * 2));
-                */
+                .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
+                
                 document.getElementById("splash").style.visibility = "hidden";
                 document.getElementById("heading1").style.visibility = "visible";
                 document.getElementById("vis").style.visibility = "visible";
@@ -219,11 +219,10 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    /*document
+                    document
                     .querySelector("meta[name=viewport]")
-                    .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
-                    */
-                    //document.getElementById("splash").style.visibility = "visible";
+                    .setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
+
                     showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
                     document.getElementById("tooltip").style.visibility = "hidden"
                     document.getElementById("heading1").style.visibility = "hidden";

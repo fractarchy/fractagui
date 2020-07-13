@@ -43,7 +43,7 @@
         }
     </style>
     <body>
-        <div id="splash" class="fadeinfadeout" style="position: absolute; text-align: center; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"></div>
+        <div id="splash" class="fadeinfadeout" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"></div>
         <!--div id="splash" class="center" style="visibility: visible; font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(208, 208, 208);">
             ... loading data ...
         </div-->
@@ -224,7 +224,7 @@
                     .setAttribute('content', 'user-scalable=no', 'width=' + (document.documentElement.clientWidth), 'height=' + (document.documentElement.clientHeight));
                     */
                     //document.getElementById("splash").style.visibility = "visible";
-                    showSplash ("computing bitmaps");
+                    showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
                     document.getElementById("tooltip").style.visibility = "hidden"
                     document.getElementById("heading1").style.visibility = "hidden";
                     document.getElementById("vis").style.visibility = "hidden";
@@ -379,7 +379,7 @@
                                 }                 
                             }
                             
-                            showSplash ("computing bitmaps");            
+                            showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");            
                                                         
                             setTimeout (function () {
                                 Orbital (divContainer, data.data, env.flatArea / 100);
@@ -399,7 +399,7 @@
             var divContainer = document.getElementById ("divContainer")
             //Orbital(divContainer, generateCanvasScape ());
 
-            showSplash ("loading data");            
+            showSplash ("...&nbsp;loading&nbsp;data&nbsp;...");            
             loadContents ();
             
             

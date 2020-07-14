@@ -2189,8 +2189,7 @@ function Orbital (divContainer, data, flatArea) {
 
         if (animating === "level") dragging = false;
 
-        setMouseHyperlink (mouse.x, mouse.y);
-        if (onHyperlink !== "" && onHyperlink === tooltip.innerText) {
+        if (!animating && !panning && onHyperlink !== "" && onHyperlink === tooltip.innerText) {
             window.open(tooltip.myHref, tooltip.myTarget); 
         }
 
@@ -2388,8 +2387,8 @@ function Orbital (divContainer, data, flatArea) {
                                     animating = false;
                                     cursor.cachedCnv = false;
                                     preSelect = redraw ({x: mouse.x, y: mouse.y});
-                                    setMouseHyperlink (mouse.x, mouse.y);
                                 }
+                                setMouseHyperlink (mouse.x, mouse.y);
                             }
                         }
                         animating = true;
@@ -2414,6 +2413,8 @@ function Orbital (divContainer, data, flatArea) {
             
             //select = null;
         }
+        
+        setMouseHyperlink (mouse.x, mouse.y);
     }
     
     function setDimensions(width, height) {

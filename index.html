@@ -210,7 +210,8 @@
 
             wonload = function () {
                 document.getElementById("vis").onclick = (function () {
-                    window.location.href = 'https://github.com/contrast-zone/e-fun';
+                    window.open('https://github.com/contrast-zone/e-fun', '_new'); 
+                    //window.location.href = 'https://github.com/contrast-zone/e-fun';
                 })
                 
                 document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;

@@ -283,7 +283,7 @@ Crisp = (function () {
             iWidth = Math.ceil (iWidth / cnvScaled.step);
             iHeight = Math.ceil (iHeight / cnvScaled.step);
 
-            if (iWidth <= 32 || iHeight <= 32) break;
+            if (iWidth <= 64 || iHeight <= 64) break;
             
             var data = dataWH.im;
             var cnv = document.createElement ("canvas")
@@ -318,7 +318,7 @@ Crisp = (function () {
         
         while (true) {
             var dataH = dataW;
-            while (iHeight / cnvScaled1.step > 32) {
+            while (iHeight / cnvScaled1.step > 64) {
                 dataH = crispY (dataH.cnv, dataH.im, iWidth, iHeight, cnvScaled1.step);
                 //dataH = crispY (dataH.cnv, iWidth, iHeight, cnvScaled1.step);
                 iHeight = Math.ceil (iHeight / cnvScaled1.step);
@@ -326,7 +326,7 @@ Crisp = (function () {
             }
             
             iHeight = cnvim.height;
-            if (iWidth / cnvScaled1.step > 32) {
+            if (iWidth / cnvScaled1.step > 64) {
                 dataW = crispX (dataW.cnv, dataW.im, iWidth, iHeight, cnvScaled1.step);
                 //dataW = crispX (dataW.cnv, iWidth, iHeight, cnvScaled1.step);
                 iWidth = Math.ceil (iWidth / cnvScaled1.step);

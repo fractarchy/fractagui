@@ -320,7 +320,7 @@ Crisp = (function () {
         
         while (true) {
             var dataH = dataW;
-            while (iHeight / cnvScaled1.step > 128) {
+            while (iHeight / cnvScaled1.step > 256) {
                 dataH = crispY (dataH.cnv, dataH.im, iWidth, iHeight, cnvScaled1.step);
                 //dataH = crispY (dataH.cnv, iWidth, iHeight, cnvScaled1.step);
                 iHeight = Math.ceil (iHeight / cnvScaled1.step);
@@ -328,7 +328,7 @@ Crisp = (function () {
             }
             
             iHeight = cnvim.height;
-            if (iWidth / cnvScaled1.step > 128) {
+            if (iWidth / cnvScaled1.step > 256) {
                 dataW = crispX (dataW.cnv, dataW.im, iWidth, iHeight, cnvScaled1.step);
                 //dataW = crispX (dataW.cnv, iWidth, iHeight, cnvScaled1.step);
                 iWidth = Math.ceil (iWidth / cnvScaled1.step);

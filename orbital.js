@@ -419,9 +419,14 @@ Crisp = (function () {
         cnv1.height = height1;
         
         var ctx1 = cnv1.getContext('2d');
+        /*
         ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
         var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
-        
+        */
+        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
+        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
+        ctx1.putImageData (imData, 0, 0);
+
         return {cnv: cnv1, im: imData};
     }
     
@@ -433,8 +438,13 @@ Crisp = (function () {
         cnv1.height = Math.ceil (height1 / step);
         
         var ctx1 = cnv1.getContext('2d');
+        /*
         ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
         var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+        */
+        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
+        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
+        ctx1.putImageData (imData, 0, 0);
 
         return {cnv: cnv1, im: imData};
     }

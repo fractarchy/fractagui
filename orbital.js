@@ -292,10 +292,15 @@ Crisp = (function () {
             cnv.height = iHeight;
             
             var ctx = cnv.getContext('2d');
-            ctx.drawImage(dataWH.cnv, 0, 0, cnv.width, cnv.height);
-            var imageData = ctx.getImageData(0, 0, cnv.width, cnv.height);
             
-            dataWH = {cnv: cnv, im: imageData};
+            ctx.drawImage(dataWH.cnv, 0, 0, cnv.width, cnv.height);
+            //var imageData = ctx.getImageData(0, 0, cnv.width, cnv.height);
+            /*
+            var imageData = ctx.createImageData(cnv.width, cnv.height);
+            ctx.drawImage(dataWH.cnv, 0, 0, cnv.width, cnv.height);
+            ctx.putImageData (imageData, 0, 0);
+            */
+            dataWH = {cnv: cnv, im: undefined/*imageData*/};
             
             cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataWH.im, canvas: dataWH.cnv});
         }

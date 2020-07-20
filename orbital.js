@@ -269,6 +269,7 @@ Crisp = (function () {
         "use strict";
         var ctxim = cnvim.getContext('2d');
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        //var imageDataim = ctxim.createImageData(cnvim.width, cnvim.height);
         //var dataim = imgim.data;
         
         var cnvScaled = {width: cnvim.width, height: cnvim.height, step: step, images: []};
@@ -306,6 +307,7 @@ Crisp = (function () {
         "use strict";
         var ctxim = cnvim.getContext('2d');
         var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        //var imageDataim = ctxim.createImageData(cnvim.width, cnvim.height);
         
         var cnvScaled1 = {width: cnvim.width, height: cnvim.height, step: step, images: []};
         
@@ -318,7 +320,7 @@ Crisp = (function () {
         
         while (true) {
             var dataH = dataW;
-            while (iHeight / cnvScaled1.step > 64) {
+            while (iHeight / cnvScaled1.step > 128) {
                 dataH = crispY (dataH.cnv, dataH.im, iWidth, iHeight, cnvScaled1.step);
                 //dataH = crispY (dataH.cnv, iWidth, iHeight, cnvScaled1.step);
                 iHeight = Math.ceil (iHeight / cnvScaled1.step);
@@ -326,7 +328,7 @@ Crisp = (function () {
             }
             
             iHeight = cnvim.height;
-            if (iWidth / cnvScaled1.step > 64) {
+            if (iWidth / cnvScaled1.step > 128) {
                 dataW = crispX (dataW.cnv, dataW.im, iWidth, iHeight, cnvScaled1.step);
                 //dataW = crispX (dataW.cnv, iWidth, iHeight, cnvScaled1.step);
                 iWidth = Math.ceil (iWidth / cnvScaled1.step);

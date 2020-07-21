@@ -1,4 +1,4 @@
-(version 0.1 beta)
+(E-Fun Version 0.1 Beta)
 
 ![](https://contrast-zone.github.io/e-fun/media/li1.svg) ![](https://contrast-zone.github.io/e-fun/media/li2.svg) ![](https://contrast-zone.github.io/e-fun/media/li3.svg)  
 

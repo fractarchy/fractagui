@@ -2,7 +2,7 @@
 
 ![](https://contrast-zone.github.io/e-fun/media/li1.svg) ![](https://contrast-zone.github.io/e-fun/media/li2.svg) ![](https://contrast-zone.github.io/e-fun/media/li3.svg)  
 
-test the beta here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/)  
+test nightly build here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/)  
 
 # e-fun
 

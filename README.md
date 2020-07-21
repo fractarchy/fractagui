@@ -1,8 +1,8 @@
-(alpha version)
+(version 0.1 beta)
 
 ![](https://contrast-zone.github.io/e-fun/media/li1.svg) ![](https://contrast-zone.github.io/e-fun/media/li2.svg) ![](https://contrast-zone.github.io/e-fun/media/li3.svg)  
 
-test a prototype here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/)  
+test the beta here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/)  
 
 # e-fun
 

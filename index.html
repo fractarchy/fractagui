@@ -2,8 +2,28 @@
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>E-Fun</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="E-Fun">
+    <meta name="description" content="A fractal inspired experimental content management system">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://contrast-zone.github.io/e-fun">
+    <meta property="og:title" content="E-Fun">
+    <meta property="og:description" content="A fractal inspired experimental content management system">
+    <meta property="og:image" content="media/sm.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://contrast-zone.github.io/e-fun">
+    <meta property="twitter:title" content="E-Fun">
+    <meta property="twitter:description" content="A fractal inspired experimental content management system">
+    <meta property="twitter:image" content="media/sm.png">
+
     <meta name="viewport" content="width=device-width, initial-scale = 0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
-    <!--meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no"/-->
     <head>
         <style media="screen">
             section {
@@ -43,7 +63,6 @@
     </head>
     <body>
       <section>
-        <title>E-Fun</title>
         <div id="splash" class="fadeinfadeout" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"></div>
         <div id="heading1" align="center" style="background-color: rgb(48, 48, 48); color: rgb(208, 208, 208); visibility: hidden; position: absolute; top: 0px; right: 0px; left: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 48px; font-weight: bold;">
             <heading1>
@@ -52,10 +71,9 @@
         </div>
         <div id="divContainer" style="position: absolute; top: 58px; bottom: 10px; left: 10px; right: 10px;">
         </div>
-        <img id="i1" src="media/i1.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i2" src="media/i2.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i3" src="media/i3.svg" style="visibility: hidden; position: absolute; opacity: 1;">
-        <!--script src="commonmark.min.js"></script-->
+        <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i2" style="visibility: hidden; position: absolute; opacity: 1;">
+        <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;">
         <script src="orbital.js"></script>
         <script>
             function isDesign(str) {
@@ -153,12 +171,6 @@
                 i2.style.width = m * 215 + "px";
                 i3.style.width = m * 215 + "px";
 
-                /*
-                i1.style.transform = "";
-                i2.style.transform = "";
-                i3.style.transform = "";
-                */
-
                 i1.style.transform = " scale(" +
                   ratioX + ", " +
                   ratioY +
@@ -211,14 +223,9 @@
             wonload = function () {
                 document.getElementById("vis").onclick = (function () {
                     window.open('https://github.com/contrast-zone/e-fun', '_new'); 
-                    //window.location.href = 'https://github.com/contrast-zone/e-fun';
                 })
                 
                 document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
-                
-                //document
-                //.querySelector("meta[name=viewport]")
-                //.setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
                 
                 document.getElementById("splash").style.visibility = "hidden";
                 document.getElementById("heading1").style.visibility = "visible";
@@ -232,10 +239,6 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    //document
-                    //.querySelector("meta[name=viewport]")
-                    //.setAttribute('content', 'initial-scale=0.5', 'maximum-scale=0.5', 'minimum-scale=0.5', 'user-scalable=no');
-
                     showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
                     document.getElementById("tooltip").style.visibility = "hidden"
                     document.getElementById("heading1").style.visibility = "hidden";
@@ -247,7 +250,6 @@
                     
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
-                        //document.getElementById("splash").style.visibility = "hidden";
                         hideSplash ();
                         document.getElementById("heading1").style.visibility = "visible";
                         document.getElementById("vis").style.visibility = "visible";
@@ -261,13 +263,13 @@
                 });
             }
             
-            function createCanvas (img, scale) {
+            function createCanvas (img, scale, fill) {
                 var cnvim = document.createElement ("canvas");
                 cnvim.width = ~~(img.width * scale);
                 cnvim.height = ~~(img.height * scale);
                 var ctxim = cnvim.getContext ('2d');
 
-                ctxim.fillStyle = "white";
+                ctxim.fillStyle = fill;
                 ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
                 
                 ctxim.drawImage (img, 0, 0, cnvim.width, cnvim.height);
@@ -276,7 +278,7 @@
             }            
             
             
-            var loader = function (data, scale) {
+            var loader = function (data, scale, fill) {
                 var images = [];
 
                 (function loadImages (node) {
@@ -285,7 +287,7 @@
                     node.img.crossOrigin = "anonymous";
                     
                     node.img.onload = function (e) {
-                        node.canvas = createCanvas (node.img, scale);
+                        node.canvas = createCanvas (node.img, scale, fill);
                     }
                     
                     node.img.onerror = function (e) {
@@ -306,8 +308,8 @@
                                 var b = parseFloat (node.bottom);
                                 
                             } catch (e) {
-                                alert ('Error: hyperlink for "' + node.image + '" are not valid');
                                 hideSplash ();
+                                alert ('Error: hyperlink for "' + node.image + '" are not valid');
                                 throw e;
                             }
                         }
@@ -332,8 +334,8 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
                         hideSplash ();
+                        alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
                         throw new error ();
                     }
                 else
@@ -349,8 +351,8 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error: "scale" hast to be a percent greater than "0%"');
                         hideSplash ();
+                        alert ('Error: "scale" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
                 else
@@ -361,10 +363,33 @@
                     document.getElementsByTagName("TITLE")[0].text = data["title"];
                 }
                 
+                if (data["theme"]) {
+                    if (data["theme"] !== "light" && data["theme"] !== "dark") {
+                        hideSplash ();
+                        alert ('Error: "theme" can only be "light" or "dark"');
+                        throw new error ();
+                    }
+                    
+                } else {
+                    data["theme"] = "light";
+                }
+                
+                if (data["theme"] === "dark") {
+                    document.getElementById("i1").src="media/di1.svg";
+                    document.getElementById("i2").src="media/di2.svg";
+                    document.getElementById("i3").src="media/di3.svg";
+                    
+                } else {
+                    document.getElementById("i1").src="media/li1.svg";
+                    document.getElementById("i2").src="media/li2.svg";
+                    document.getElementById("i3").src="media/li3.svg";
+                }
+                
                 return {
                     title: data["title"],
                     flatArea: flatArea,
-                    scale: scale
+                    scale: scale,
+                    theme: data["theme"]
                 }
             }
             
@@ -381,7 +406,7 @@
                         }
                         
                         var env = setupEnv (data);
-                        var images = loader (data.data, env.scale / 100);
+                        var images = loader (data.data, env.scale / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
                         
                         var waitForImages = function () {
                             for (var i = 0; i < images.length; i++){
@@ -394,7 +419,7 @@
                             showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");            
                                                         
                             setTimeout (function () {
-                                Orbital (divContainer, data.data, env.flatArea / 100);
+                                Orbital (divContainer, data.data, env.flatArea / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
                                 window.addEventListener("load", wonload ());
                             }, 50);
                         }

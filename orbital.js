@@ -322,10 +322,10 @@ Crisp = (function () {
         var dataW = {im: imageDataim, cnv: cnvim};
         cnvScaled1.images.push ([{width: iWidth, height: iHeight, imageData: dataW.im, dataBuffer: new Uint32Array(dataW.im.data.buffer), canvas: dataW.cnv}]);
         var x = cnvScaled1.images.length - 1;
-        
+        /*
         while (true) {
             var dataH = dataW;
-            while (iHeight / cnvScaled1.step > 256) {
+            while (iHeight / cnvScaled1.step > 64) {
                 dataH = crispY (dataH.cnv, dataH.im, iWidth, iHeight, cnvScaled1.step);
                 //dataH = crispY (dataH.cnv, iWidth, iHeight, cnvScaled1.step);
                 iHeight = Math.ceil (iHeight / cnvScaled1.step);
@@ -333,7 +333,7 @@ Crisp = (function () {
             }
             
             iHeight = cnvim.height;
-            if (iWidth / cnvScaled1.step > 256) {
+            if (iWidth / cnvScaled1.step > 64) {
                 dataW = crispX (dataW.cnv, dataW.im, iWidth, iHeight, cnvScaled1.step);
                 //dataW = crispX (dataW.cnv, iWidth, iHeight, cnvScaled1.step);
                 iWidth = Math.ceil (iWidth / cnvScaled1.step);
@@ -342,7 +342,7 @@ Crisp = (function () {
             } else
                 break;
         }
-        
+        */
         return cnvScaled1;
     }
 
@@ -424,13 +424,8 @@ Crisp = (function () {
         cnv1.height = height1;
         
         var ctx1 = cnv1.getContext('2d');
-        /*
         ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
         var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
-        */
-        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
-        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
-        ctx1.putImageData (imData, 0, 0);
 
         return {cnv: cnv1, im: imData};
     }
@@ -443,13 +438,8 @@ Crisp = (function () {
         cnv1.height = Math.ceil (height1 / step);
         
         var ctx1 = cnv1.getContext('2d');
-        /*
         ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
         var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
-        */
-        var imData = ctx1.createImageData(cnv1.width, cnv1.height);
-        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
-        ctx1.putImageData (imData, 0, 0);
 
         return {cnv: cnv1, im: imData};
     }
@@ -1284,7 +1274,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, flatArea) {
+function Orbital (divContainer, data, flatArea, theme) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -1331,7 +1321,8 @@ function Orbital (divContainer, data, flatArea) {
 
     data = prepareData (data);
     
-    var fill1 = "white"
+    //var fill1 = "white"
+    var fill1 = theme;
     var orientation = 0;
     var curvature = 0.125;
     

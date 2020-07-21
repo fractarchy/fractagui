@@ -1,6 +1,6 @@
 (alpha version)
 
-![](https://contrast-zone.github.io/e-fun/media/i1.svg) ![](https://contrast-zone.github.io/e-fun/media/i2.svg) ![](https://contrast-zone.github.io/e-fun/media/i3.svg)  
+![](https://contrast-zone.github.io/e-fun/media/li1.svg) ![](https://contrast-zone.github.io/e-fun/media/li2.svg) ![](https://contrast-zone.github.io/e-fun/media/li3.svg)  
 
 test a prototype here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/)  
 
@@ -50,9 +50,7 @@ After downloading the *e-fun* software bundle from [dedicated github pages](http
       │ └── ... content images go here ...
       │
       ├─┬ media
-      │ ├── i1.svg
-      │ ├── i2.svg
-      │ └── i3.svg
+      │ └── ... ui media ...
       │
       ├── README.md
       ├── contents.json 

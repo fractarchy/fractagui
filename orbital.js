@@ -268,16 +268,18 @@ Crisp = (function () {
     function crispBitmap (cnvim) {
         "use strict";
         var ctxim = cnvim.getContext('2d');
-        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
-        //var imageDataim = ctxim.createImageData(cnvim.width, cnvim.height);
-        //var dataim = imgim.data;
+        //var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
+        /*
+        var imageDataim = ctxim.createImageData(cnvim.width, cnvim.height);
+        var dataim = imgim.data;
+        */
         
         var cnvScaled = {width: cnvim.width, height: cnvim.height, step: step, images: []};
         
         var iWidth = cnvim.width;
         var iHeight = cnvim.height;
 
-        var dataWH = {im: imageDataim, cnv: cnvim}//dataim;
+        var dataWH = {im: undefined/*imageDataim*/, cnv: cnvim}//dataim;
         cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataWH.im, canvas: dataWH.cnv});
 
         while (true) {
@@ -1482,7 +1484,7 @@ function Orbital (divContainer, data, flatArea, theme) {
                     cy = cursor.centerY;
                 } else {
                     cx = 0;
-                    cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, data.scaledBitmap.height / 2);
+                    cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + squashY * rr / 3, data.scaledBitmap.height / 2);
                 }
                 
                 if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
@@ -1531,7 +1533,7 @@ function Orbital (divContainer, data, flatArea, theme) {
                 select = select.child;
                 
                 if (!sc.children[select.index]) {
-                    var cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + rr / 3, select.data.scaledBitmap.height / 2);
+                    var cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + squashY * rr / 3, select.data.scaledBitmap.height / 2);
                     sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: cy, angle: Math.PI, children: []};
                 }
                 
@@ -1621,7 +1623,7 @@ function Orbital (divContainer, data, flatArea, theme) {
             } else {
                 select.cursor.centerX = 0;
                 //select.cursor.centerY = 0;
-                select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + rr / 3, select.cursor.data.scaledBitmap.height / 2);
+                select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + squashY * rr / 3, select.cursor.data.scaledBitmap.height / 2);
 
             }
             
@@ -1968,7 +1970,7 @@ function Orbital (divContainer, data, flatArea, theme) {
                                     inert = [];
 
                                     if (!cursor.children[cursor.index]) {
-                                        var cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + rr / 3, topc.child.data.scaledBitmap.height / 2);
+                                        var cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + squashY * rr / 3, topc.child.data.scaledBitmap.height / 2);
                                         cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: cy, index: 0, angle: Math.PI, children: []};
                                     }
                                         
@@ -2127,7 +2129,7 @@ function Orbital (divContainer, data, flatArea, theme) {
                                 animating = "level";
                                 cursor.centerX = 0;
                                 //cursor.centerY = 0;
-                                cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + rr / 3, cursor.data.scaledBitmap.height / 2);
+                                cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + squashY * rr / 3, cursor.data.scaledBitmap.height / 2);
 
                                 aEnsmall();
                             }
@@ -2508,31 +2510,42 @@ function Orbital (divContainer, data, flatArea, theme) {
         cnv.setAttribute ("height", hh);
         cnv.style.clipPath = "url(#clip128)";
         
-        //invalidateCache ();
-
         function updateCache (data) {
-            if (!data.centerX || !data.centerY) {
+            //if (!data.centerX || !data.centerY) {
+                var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + squashY * rr / 3, data.scaledBitmap.height / 2);
                 data.centerX = 0;
-                //data.centerY = 0;
-                var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, data.scaledBitmap.height / 2);
                 data.centerY = cy;
-            }
+            //}
             
             data.cachedCnv = getCnvCache (data, data.centerX, data.centerY, rr);
             data.cachedData = Crisp.crispBitmap (data.cachedCnv);
             
             for (var i = 0; i < data.children.length; i++)
                 updateCache (data.children[i]);
+
         }
         
-        //fishEye.clearRenderMap();
+        function updateCursor (c) {
+            if (c) {
+                if (c.data) {
+                    var cy = ~~Math.min (/*center*/ -c.data.scaledBitmap.height / 2 + squashY * rr / 3, c.data.scaledBitmap.height / 2);
+                    c.centerX = 0;
+                    c.centerY = cy;
+                }
+                
+                for (var i = 0; i < c.children.length; i++)
+                    updateCursor (c.children[i]);
+                    
+            }
+        }
+        
         var c = cursor;
         while (c.parent)
             c = c.parent;
-        updateCache (c.children[0].data?c.children[0].data:data);
-        
-        var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + rr / 3, data.scaledBitmap.height / 2);
-        cursor.centerY = cy;
+            
+        //updateCache (c.children[0].data?c.children[0].data:data);
+        updateCursor (c);
+        updateCache (data);
         
         redraw ();
     }
@@ -2543,7 +2556,7 @@ function Orbital (divContainer, data, flatArea, theme) {
     var r1, x1, y1;
     var path = [], cursor, select, preSelect, animating, panning;
     var /*cnvScaled,*/ fishEye;
-    cursor = {parent: null, index: 0, centerX: 0, centerY: 0, angle: Math.PI, children: []}
+    cursor = {parent: null, index: 0, data: data, centerX: 0, centerY: 0, angle: Math.PI, children: []}
     cursor.parent = {index: 0, children: [cursor]};
 
     var level, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
@@ -2710,6 +2723,7 @@ function Orbital (divContainer, data, flatArea, theme) {
     var ctxos = cnvos.getContext('2d');
     var imgos = ctxos.getImageData(0, 0, cnvos.width, cnvos.height);
     */
+    //resize (divContainer.clientWidth, divContainer.clientHeight);
     divContainer.addEventListener('resize1', function (e) {
         resize (divContainer.clientWidth, divContainer.clientHeight);
     });

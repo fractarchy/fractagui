@@ -1,4 +1,4 @@
-This is nigtly build (live test [here](https://contrast-zone.github.io/e-fun/)) (download beta [here](https://github.com/contrast-zone/e-fun/releases))
+This is nigtly build (live test [here](https://contrast-zone.github.io/e-fun/)) (download recent beta [here](https://github.com/contrast-zone/e-fun/releases))
 
 ![](https://contrast-zone.github.io/e-fun/media/li1.svg) ![](https://contrast-zone.github.io/e-fun/media/li2.svg) ![](https://contrast-zone.github.io/e-fun/media/li3.svg)  
 

@@ -1276,7 +1276,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, flatArea, theme) {
+function Orbital (divContainer, data, flatArea, scale, theme) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -1302,10 +1302,10 @@ function Orbital (divContainer, data, flatArea, theme) {
                     {
                         target: hl.target,
                         href: hl.href,
-                        left: hl.left,
-                        top: hl.top,
-                        right: hl.right,
-                        bottom: hl.bottom
+                        left: hl.left * scale,
+                        top: hl.top * scale,
+                        right: hl.right * scale,
+                        bottom: hl.bottom * scale
                     }
                 );
             }
@@ -1361,13 +1361,13 @@ function Orbital (divContainer, data, flatArea, theme) {
     tooltip.innerText = "";
     document.body.appendChild(tooltip);
     
-    /*
+    
     ctx.mozImageSmoothingEnabled    = true
-    ctx.imageSmoothingQuality       = "high"
     ctx.webkitImageSmoothingEnabled = true
     ctx.msImageSmoothingEnabled     = true
     ctx.imageSmoothingEnabled       = true
-    */
+    ctx.imageSmoothingQuality       = "high"
+    
     
     var superSampling = 1;
 
@@ -1507,7 +1507,7 @@ function Orbital (divContainer, data, flatArea, theme) {
                     if (!data.cachedData)
                         data.cachedData = Crisp.crispBitmap (data.cachedCnv);
 
-                    var tmp = Math.ceil (data.cachedCnv.width / w);
+                    var tmp = Math.ceil (data.cachedCnv.width / w * 0.5); //remove 0.5 and you are doomed
                     if (tmp >= Crisp.log.length)
                         var bmpscale = Crisp.log[Crisp.log.length - 1];
                     else

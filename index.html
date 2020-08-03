@@ -250,14 +250,14 @@
             
             function createCanvas (img, scale, fill) {
                 var cnvim = document.createElement ("canvas");
-                cnvim.width = ~~(img.width * scale);
-                cnvim.height = ~~(img.height * scale);
+                cnvim.width = ~~(img.width * scale) + 2;
+                cnvim.height = ~~(img.height * scale) + 2;
                 var ctxim = cnvim.getContext ('2d');
 
                 ctxim.fillStyle = fill;
                 ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
                 
-                ctxim.drawImage (img, 0, 0, cnvim.width, cnvim.height);
+                ctxim.drawImage (img, 1, 1, cnvim.width - 2, cnvim.height - 2);
 
                 return cnvim
             }            
@@ -404,7 +404,7 @@
                             showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");            
                                                         
                             setTimeout (function () {
-                                Orbital (divContainer, data.data, env.flatArea / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
+                                Orbital (divContainer, data.data, env.flatArea / 100, env.scale / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
                                 window.addEventListener("load", wonload ());
                             }, 50);
                         }

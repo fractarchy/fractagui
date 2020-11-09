@@ -162,7 +162,7 @@
                 if (m < 0) m = 0;
                 
                 var s0 = document.getElementById("circle");
-                s0.style.transform = " scale(" + (m * 50) + "%)"
+                s0.style.transform = "scale(" + (m / 2) + ")";
 
                 var spl = document.getElementById("splash");
                 //spl.innerHTML = txt;
@@ -480,7 +480,7 @@
                         try {
                             data = JSON.parse (this.responseText);
                         } catch (e) {
-                            alert ('JSON parsing error');
+                            alert ('Error:\n' + e.message);
                             hideSplash ();
                             throw e;
                         }

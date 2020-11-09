@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <title>E-Fun</title>
-    <link rel="icon" type="image/png" href="media/favicon16.png"/>
+    <link rel="icon" type="image/png" href="media/favicon32.png"/>
 
     <!-- Primary Meta Tags -->
     <meta name="title" content="E-Fun">
@@ -15,14 +15,14 @@
     <meta property="og:url" content="https://contrast-zone.github.io/e-fun">
     <meta property="og:title" content="E-Fun">
     <meta property="og:description" content="A fractal inspired experimental content management system">
-    <meta property="og:image" content="media/sm.png">
+    <meta property="og:image" content="media/socmedia.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://contrast-zone.github.io/e-fun">
     <meta property="twitter:title" content="E-Fun">
     <meta property="twitter:description" content="A fractal inspired experimental content management system">
-    <meta property="twitter:image" content="media/sm.png">
+    <meta property="twitter:image" content="media/socmedia.png">
 
     <meta name="viewport" content="width=device-width, initial-scale = 0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
     <head>
@@ -50,6 +50,19 @@
               from { opacity: 0; } 
             }
             
+            .rotate {
+              animation: rotation 1s infinite linear;
+            }
+
+            @keyframes rotation {
+              from {
+                transform: rotate(-180deg);
+              }
+              to {
+                transform: rotate(180deg);
+              }
+            }
+
             a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
             a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
             a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
@@ -64,7 +77,9 @@
     </head>
     <body>
       <section>
-        <div id="splash" class="fadeinfadeout" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"></div>
+        <div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
+            <svg id="circle" height="300" width="300"><circle cx="100" cy="270" r="30" fill="white" /></svg>
+        </div>
         <div id="heading1" align="center" style="background-color: rgb(48, 48, 48); color: rgb(208, 208, 208); visibility: hidden; position: absolute; top: 0px; right: 0px; left: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 48px; font-weight: bold;">
             <heading1>
                 E-Fun
@@ -81,7 +96,7 @@
                 var design;
                 if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
                     design = 'touch';
-                } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                 } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
                     design = 'tablet';
                 } else if (window.matchMedia('screen').matches) {
                     design = 'desktop';
@@ -89,6 +104,28 @@
                     design = 'mobile';
                 }
                 return(str == design);
+            }
+            
+            function setDesign() {
+                var design;
+                var sc = 0.7;// document.body.clientWidth / 1920;
+                
+                if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                    design = 'touch, tablet';
+                    document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
+                } else if (window.matchMedia('screen').matches) {
+                    design = 'desktop';
+                    document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=1', 'maximum-scale=1', 'minimum-scale=1', 'user-scalable=no');
+                } else if (window.matchMedia('handheld').matches) {
+                    design = 'mobile';
+                    document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
+                }
             }
             
             /*
@@ -110,8 +147,25 @@
             */
 
             function showSplash(txt) {
+                var w = document.body.clientWidth;
+                var h = document.body.clientHeight;
+
+                if (w >= h) {
+                    var m = (document.body.clientHeight - 58) / 950;
+
+                } else {
+                    var m = document.body.clientWidth / 950;
+
+                }
+                
+                if (m > 0.7) m = 0.7;
+                if (m < 0) m = 0;
+                
+                var s0 = document.getElementById("circle");
+                s0.style.transform = " scale(" + (m * 50) + "%)"
+
                 var spl = document.getElementById("splash");
-                spl.innerHTML = txt;
+                //spl.innerHTML = txt;
                 spl.style.visibility = "visible";
                 spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
                 spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
@@ -224,7 +278,8 @@
 
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
+                    setDesign();
+                    
                     document.getElementById("tooltip").style.visibility = "hidden"
                     document.getElementById("heading1").style.visibility = "hidden";
                     document.getElementById("vis").style.visibility = "hidden";
@@ -232,9 +287,11 @@
                     i2.style.visibility = "hidden";
                     i3.style.visibility = "hidden";
                     divContainer.style.visibility = "hidden";
+                    showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
                     
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
+                        setSize ();
                         hideSplash ();
                         document.getElementById("heading1").style.visibility = "visible";
                         document.getElementById("vis").style.visibility = "visible";
@@ -243,7 +300,6 @@
                         i3.style.visibility = "visible";
                         divContainer.style.visibility = "visible";
 
-                        setSize ();
                     }, 500);
                 });
             }
@@ -265,6 +321,7 @@
             
             var loader = function (data, scale, fill) {
                 var images = [];
+                var iframes = [];
 
                 (function loadImages (node) {
                     node.img = new Image ();
@@ -281,6 +338,44 @@
 
                     node.img.src = node.image;
                     images.push (node);
+
+                    var ifr = document.createElement ('iframe');
+                    
+                    ifr.onload = function () {
+                        var links = ifr.contentWindow.document.getElementsByTagName("a");
+                        for (var i = 0; i < links.length; i++) {
+                            var tg = links[i].getAttribute('target')
+                            var hr = links[i].getAttribute('href');
+                            if (!hr)
+                                hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                          
+                            if (hr) {
+                                var rect = links[i].getBoundingClientRect()
+                                if (!node.hyperlinks)
+                                    node.hyperlinks = [];
+                                
+                                node.hyperlinks.push (
+                                    {
+                                        "type": "rect",
+                                        "target": tg,
+                                        "href": hr,
+                                        "left": rect.left,
+                                        "top": rect.top,
+                                        "right": rect.right,
+                                        "bottom": rect.bottom
+                                    }
+                                )
+                            }
+                        }
+                        ifr.remove();
+                        
+                        iframes.push (ifr);
+                    }
+                    
+                    ifr.src = node.image;
+                    ifr.style.visibility = "hidden";
+                    document.body.appendChild (ifr);
+
 
                     if (node.hyperlinks) {
                         for (var i = 0; i < node.hyperlinks.length; i++) {
@@ -305,7 +400,7 @@
                             loadImages (node.children[i]);
                 })(data);
                 
-                return images;
+                return {images: images, iframes: iframes};
             };
             
             function setupEnv (data) {
@@ -391,11 +486,13 @@
                         }
                         
                         var env = setupEnv (data);
-                        var images = loader (data.data, env.scale / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
+                        var ld = loader (data.data, env.scale / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
+                        var images = ld.images;
+                        var iframes = ld.iframes;
                         
                         var waitForImages = function () {
                             for (var i = 0; i < images.length; i++){
-                                if (!images[i].canvas) {
+                                if (iframes.length < images.length || !images[i].canvas) {
                                     setTimeout (waitForImages, 0);
                                     return;
                                 }                 
@@ -421,13 +518,14 @@
             var divContainer = document.getElementById ("divContainer")
             //Orbital(divContainer, generateCanvasScape ());
 
+            setDesign();
             showSplash ("...&nbsp;loading&nbsp;data&nbsp;...");            
             loadContents ();
             
             
         </script>
-        <a id="vis" class="exHover" style="visibility: hidden; position: absolute; bottom: 5px; right: 5px; font-family: Arial, Helvetica, sans-serif; font-size: 8pt;">
-          powered by e-fun
+        <a id="vis" class="exHover" style="visibility: hidden; position: absolute; bottom: 2px; right: 5px; font-family: Arial, Helvetica, sans-serif; font-size: 8pt;">
+          powered with ❤ by e-fun
         </a>
       </section>
     </body>

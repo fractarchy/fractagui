@@ -5,42 +5,42 @@
     "flat-area": "0%",
     "data" : {
         "image": "contents/c-0.svg",
-        "children" : [
+        "children": [
             {
-                "image" : "contents/c-0-1.svg",
-                "children" : [
+                "image": "contents/c-0-1.svg",
+                "children": [
                     {
-                        "image" : "contents/c-0-1-1.svg"
+                        "image": "contents/c-0-1-1.svg"
                     }
                 ]
             },
             {
-                "image" : "contents/c-0-2.svg",
-                "children" : [
+                "image": "contents/c-0-2.svg",
+                "children": [
                     {
-                        "image" : "contents/c-0-2-1.svg"
+                        "image": "contents/c-0-2-1.svg"
                     },
                     {
-                        "image" : "contents/c-0-2-2.svg"
+                        "image": "contents/c-0-2-2.svg"
                     }
                 ]
             },
             {
-                "image" : "contents/c-0-3.svg",
-                "children" : [
+                "image": "contents/c-0-3.svg",
+                "children": [
                     {
-                        "image" : "contents/c-0-3-1.svg"
+                        "image": "contents/c-0-3-1.svg"
                     },
                     {
-                        "image" : "contents/c-0-3-2.svg"
+                        "image": "contents/c-0-3-2.svg"
                     },
                     {
-                        "image" : "contents/c-0-3-3.svg"
+                        "image": "contents/c-0-3-3.svg"
                     }
                 ]
             },
             {
-                "image" : "contents/c-0-4.svg"
+                "image": "contents/c-0-4.svg"
             }
         ]
     }

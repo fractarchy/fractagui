@@ -18,4 +18,4 @@ E-fun is made as a helper to organize, emphasize, and publish your web pages. E-
 
 ## giving it a try
 
-Overview an example site contining instructions here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/).
+Overview an example site contining use instructions here: [**https://contrast-zone.github.io/e-fun/**](https://contrast-zone.github.io/e-fun/).

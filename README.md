@@ -2,7 +2,7 @@
 
 (v 0.1 - release candidate 1)  
 
-![](media/sm.png)  
+![](media/socmedia.png)  
 
 ## about e-fun
 

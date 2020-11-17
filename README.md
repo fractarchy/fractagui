@@ -1,6 +1,6 @@
 # e-fun
 
-(v0.1-release candidate 1)  
+(v 0.1 - release candidate 1)  
 
 ![](media/sm.png)  
 
@@ -10,7 +10,7 @@ E-fun is a fractal inspired, parent-child orbiting, zoomable, and minimalistic c
 
 ## user experience
 
-As much as E-fun makes the final result attractive and distinctive from mainstream products, on the other side, it offers a slackware flat-file experience for creating sites. This means that, besides creating and saving pages in external graphic editing tools, one has to possess a knowledge about editing the main contents JSON file in a text editor, as well as setting up a local web server for testing the site before publishing. Once that site is done, the files of which the site is composed of are ready to be uploaded to a remote server. All this may require some degree of technical knowledge from web authors, but once one gets into the stunt, maintaining web sites with E-fun should be an easy-peasy task.
+As much as E-fun makes the final result attractive and distinctive from mainstream products, on the other side, it offers a slackware flat-file experience for creating sites. This means that, besides creating and saving pages in external graphic editing tools, one has to possess a knowledge about editing the main contents XML file in a text editor, as well as setting up a local web server for testing the site before publishing. Once that site is done, the files of which the site is composed of are ready to be uploaded to a remote server. All this may require some degree of technical knowledge from web authors, but once one gets into the stunt, maintaining web sites with E-fun should be an easy-peasy task.
 
 ## target audience
 

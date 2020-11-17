@@ -2,7 +2,7 @@
 
 (v0.1-release candidate 1)
 
-![](https://contrast-zone.github.io/e-fun/media/li1.svg) ![](https://contrast-zone.github.io/e-fun/media/li2.svg) ![](https://contrast-zone.github.io/e-fun/media/li3.svg)  
+![](media/sm.png)
 
 ## about e-fun
 

@@ -1,6 +1,6 @@
 # e-fun
 
-(v0.1-release candidate 1)
+(v 0.1 - release candidate 1)
 
 ![](media/sm.png)
 

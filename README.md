@@ -1,8 +1,8 @@
 # e-fun
 
-(v 0.1 - release candidate 1)
+(v0.1-release candidate 1)  
 
-![](media/sm.png)
+![](media/sm.png)  
 
 ## about e-fun
 

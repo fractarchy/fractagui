@@ -7,12 +7,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
+   inkscape:version="1.0.1 (0767f8302a, 2020-10-17)"
    sodipodi:docname="0-3.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 132.29167 92.604168"
-   height="350"
+   viewBox="0 0 132.29167 89.958335"
+   height="340"
    width="500"
    inkscape:export-filename="/home/ivanv/workspace/contrast-zone/e-fun/contents/0-3.png"
    inkscape:export-xdpi="96"
@@ -21,14 +21,14 @@
      inkscape:current-layer="layer1"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
-     inkscape:window-x="67"
+     inkscape:window-x="72"
      inkscape:cy="239.35714"
      inkscape:cx="360"
      inkscape:zoom="1"
      showgrid="false"
      id="namedview32"
-     inkscape:window-height="1025"
-     inkscape:window-width="1853"
+     inkscape:window-height="1016"
+     inkscape:window-width="1848"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0"
      guidetolerance="10"
@@ -42,8 +42,8 @@
      id="defs2">
     <rect
        id="rect203"
-       height="167.42966"
-       width="187.91502"
+       height="122.84888"
+       width="185.62634"
        y="68.314278"
        x="12.471195" />
   </defs>
@@ -90,9 +90,7 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="124.20347"><tspan
-           style="shape-inside:url(#rect203)">         o populate </tspan><tspan
-           style="font-style:italic">e-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> site with custom contents, it is
+           style="shape-inside:url(#rect203)">         o populate *e-fun* site with custom contents, it is
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
@@ -106,23 +104,18 @@
            style="shape-inside:url(#rect203)">editor, and it may be a good practice to have a local web </tspan></tspan><tspan
          x="12.470703"
          y="155.95347"><tspan
-           style="shape-inside:url(#rect203)">server at disposition for testing our new site. </tspan><tspan
-           style="font-style:italic">E-fun</tspan><tspan
-           style="shape-inside:url(#rect203)"> </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">server at disposition for testing our new site. *E-fun* </tspan></tspan><tspan
          x="12.470703"
          y="163.89097"><tspan
            style="shape-inside:url(#rect203)">represents a so-called flat file CMS, meaning there is no </tspan></tspan><tspan
          x="12.470703"
          y="171.82847"><tspan
-           style="shape-inside:url(#rect203)">server database or server scripting technology setup, yet </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">server side processing, yet all the information needed for </tspan></tspan><tspan
          x="12.470703"
          y="179.76597"><tspan
-           style="shape-inside:url(#rect203)">all the information needed for functioning is extracted </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">functioning is extracted only from file-folder structure </tspan></tspan><tspan
          x="12.470703"
          y="187.70347"><tspan
-           style="shape-inside:url(#rect203)">only from file-folder structure accessed over HTTP </tspan></tspan><tspan
-         x="12.470703"
-         y="195.64097"><tspan
-           style="shape-inside:url(#rect203)">interface.</tspan></tspan></text>
+           style="shape-inside:url(#rect203)">accessed over HTTP interface.</tspan></tspan></text>
   </g>
 </svg>

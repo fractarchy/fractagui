@@ -11,12 +11,12 @@
    inkscape:export-xdpi="96"
    inkscape:export-filename="/home/ivanv/workspace/contrast-zone/e-fun/contents/0-3-2.png"
    width="500"
-   height="540"
-   viewBox="0 0 132.29167 142.87502"
+   height="620"
+   viewBox="0 0 132.29167 164.04169"
    version="1.1"
    id="svg8"
    sodipodi:docname="0-3-2.svg"
-   inkscape:version="1.0 (6e3e5246a0, 2020-05-07)">
+   inkscape:version="1.0.1 (0767f8302a, 2020-10-17)">
   <sodipodi:namedview
      inkscape:document-rotation="0"
      pagecolor="#ffffff"
@@ -27,14 +27,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1853"
-     inkscape:window-height="1025"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
      id="namedview32"
      showgrid="false"
      inkscape:zoom="1"
      inkscape:cx="360"
-     inkscape:cy="226.5"
-     inkscape:window-x="67"
+     inkscape:cy="265"
+     inkscape:window-x="72"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
@@ -43,8 +43,8 @@
     <rect
        x="12.471195"
        y="68.314278"
-       width="187.40611"
-       height="211.48776"
+       width="185.18875"
+       height="236.53943"
        id="rect203" />
   </defs>
   <metadata
@@ -90,11 +90,13 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="124.20347"><tspan
-           style="shape-inside:url(#rect203)">          o fully customize our new e-fun site, first we have
+           style="shape-inside:url(#rect203)">          o fully customize our new </tspan><tspan
+           style="font-style:italic">e-fun</tspan><tspan
+           style="shape-inside:url(#rect203)"> site, first we
 </tspan></tspan><tspan
          x="12.470703"
          y="132.14097"><tspan
-           style="shape-inside:url(#rect203)">          to prepare vector or bitmap images that will
+           style="shape-inside:url(#rect203)">          have to prepare vector or bitmap images that will
 </tspan></tspan><tspan
          x="12.470703"
          y="140.07847"><tspan
@@ -122,46 +124,59 @@
            style="shape-inside:url(#rect203)"> (commercial software), or other similar </tspan></tspan><tspan
          x="12.470703"
          y="179.76597"><tspan
-           style="shape-inside:url(#rect203)">software. Upon creating, images have to be copied under </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">software. Vector images have to be saved in SVG format </tspan></tspan><tspan
          x="12.470703"
          y="187.70347"><tspan
-           style="font-weight:bold">`contents`</tspan><tspan
-           style="shape-inside:url(#rect203)"> folder while deleting existing example images </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">(these may contain standard web hyperlinks). Supported </tspan></tspan><tspan
          x="12.470703"
          y="195.64097"><tspan
-           style="shape-inside:url(#rect203)">we don't need anymore. After copying images, we have to </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">bitmap formats are BMP, GIF, PNG and JPG. Upon </tspan></tspan><tspan
          x="12.470703"
          y="203.57847"><tspan
-           style="shape-inside:url(#rect203)">introduce particular changes to </tspan><tspan
-           style="font-weight:bold">`contents.json`</tspan><tspan
-           style="shape-inside:url(#rect203)"> file in </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">creating, all images have to be copied under </tspan><tspan
+           style="font-weight:bold">`contents`</tspan><tspan
+           style="shape-inside:url(#rect203)"> </tspan></tspan><tspan
          x="12.470703"
          y="211.51597"><tspan
-           style="shape-inside:url(#rect203)">external text editor of your choice. There are plenty free </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">folder while deleting existing example images we don't </tspan></tspan><tspan
          x="12.470703"
          y="219.45347"><tspan
-           style="shape-inside:url(#rect203)">text editors out there, just search the web and install one. </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">need anymore. After copying images, we have to </tspan></tspan><tspan
          x="12.470703"
          y="227.39097"><tspan
-           style="shape-inside:url(#rect203)">When we open </tspan><tspan
-           style="font-weight:bold">`contents.json`</tspan><tspan
-           style="shape-inside:url(#rect203)"> in the text editor for the </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">introduce particular changes to </tspan><tspan
+           style="font-style:normal;font-weight:bold">`index.xml`</tspan><tspan
+           style="shape-inside:url(#rect203)"> file under </tspan></tspan><tspan
          x="12.470703"
          y="235.32847"><tspan
-           style="shape-inside:url(#rect203)">first time, we will see it is set up to display these </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">the </tspan><tspan
+           style="font-weight:bold">`contents`</tspan><tspan
+           style="shape-inside:url(#rect203)"> folder in external text editor of your </tspan></tspan><tspan
          x="12.470703"
          y="243.26597"><tspan
-           style="shape-inside:url(#rect203)">instructions pages. To customize it for our own images </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">choice. There are plenty free text editors out there, just </tspan></tspan><tspan
          x="12.470703"
          y="251.20347"><tspan
-           style="shape-inside:url(#rect203)">structure, it should be easy to follow the similar pattern. </tspan></tspan><tspan
+           style="shape-inside:url(#rect203)">search the web and install one. When we open </tspan></tspan><tspan
          x="12.470703"
          y="259.14097"><tspan
-           style="shape-inside:url(#rect203)">After modifying </tspan><tspan
-           style="font-weight:bold">`contents.json`</tspan><tspan
-           style="shape-inside:url(#rect203)"> file and saving changes, </tspan></tspan><tspan
+           style="font-weight:bold">`index.xml`</tspan><tspan
+           style="shape-inside:url(#rect203)"> in the text editor for the first time, we will </tspan></tspan><tspan
          x="12.470703"
          y="267.07847"><tspan
-           style="shape-inside:url(#rect203)">our site is ready for uploading to a server of our choice.</tspan></tspan></text>
+           style="shape-inside:url(#rect203)">see that it is set up to display these instructions pages. To </tspan></tspan><tspan
+         x="12.470703"
+         y="275.01597"><tspan
+           style="shape-inside:url(#rect203)">customize it for our own images structure, it should be </tspan></tspan><tspan
+         x="12.470703"
+         y="282.95347"><tspan
+           style="shape-inside:url(#rect203)">easy to follow the similar pattern. After modifying </tspan></tspan><tspan
+         x="12.470703"
+         y="290.89097"><tspan
+           style="font-weight:bold">`index.xml`</tspan><tspan
+           style="shape-inside:url(#rect203)"> file and saving the changes, our site is </tspan></tspan><tspan
+         x="12.470703"
+         y="298.82847"><tspan
+           style="shape-inside:url(#rect203)">ready for uploading to a server of our choice.</tspan></tspan></text>
   </g>
 </svg>

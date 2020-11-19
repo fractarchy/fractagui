@@ -492,10 +492,10 @@
                         
                         var env = setupEnv (init);
                         
-                        const xhr = new XMLHttpRequest();
+                        var xhr = new XMLHttpRequest();
 
                         xhr.onload = function() {
-                            if (xhr.status == 200) {
+                            if (this.readyState == 4 && this.status == 200) {
                                 function formArray (xmlNode, arr) {
                                     var node;
                                     for (var i = 0; i < xmlNode.children.length; i++) {
@@ -532,22 +532,17 @@
                                 
                                 waitForImages ();
                                 
-                            } else {
-                                hideSplash ();
-                                alert ("Error while getting '" + init.index + "'");
                             }
                         }
 
                         xhr.onerror = function() {
-                          alert ("Error while getting '" + init.index + "'");
+                          alert ("Error while getting '" + init.contents + "'");
                         }
 
-                        xhr.open("GET", init.index);
+                        xhr.open("GET", init.contents, true);
                         xhr.responseType = "document";
                         xhr.send();
-                        
                     }
-                
                 };
                 xhttp.open("GET", "init.json", true);
                 xhttp.send();

@@ -3,6 +3,6 @@
     "theme": "light",
     "scale": "100%",
     "flat-area": "0%",
-    "index": "contents/index.xml"
+    "contents": "contents/index.xml"
 }
 

@@ -455,7 +455,7 @@ Crisp = (function () {
 }) ();
 
 function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) {
-    if (!curvature) curvature = 0.25;
+    if (!curvature) curvature = 0.125;
     var curvatureFrontier = Math.pow (1, curvature);
     if (!flatArea) flatArea = 0;
     //var superSampling = 1;
@@ -595,7 +595,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
 
                 var rad = Math.sqrt ((x1 - Math.ceil (width) / 2) * (x1 - Math.ceil (width) / 2) / squashX / squashX + (y1 - Math.ceil (height) / 2) * (y1 - Math.ceil (height) / 2) / squashY / squashY) / superSampling;
                 renderMap[delta + Dout] = 1;
-                if ((mX == 0 && mY == 0) || radius / squashX / squashY - 8 < rad)
+                if ((mX == 0 && mY == 0) || radius / squashX / squashY - 4 < rad)
                     renderMap[delta + Dout] = 0;
                 
                 else {
@@ -829,7 +829,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
 }
 
 function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1) {
-    var pixelPrecision = 1 / Math.pow (2, 4); /* set it to less, and you are doomed */
+    var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less, and you are doomed */
 
     var hilight = fill1;//"white"
     var stroke1 = "gray";
@@ -857,6 +857,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
             ya += dy;
 
             var j;
+            var steps = 12;
             do {
                 dx /= 2;
                 dy /= 2;
@@ -871,7 +872,8 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     ya += dy;
                     ra += dr;
                 }
-            } while (dr > pixelPrecision);
+                steps--;
+            } while (steps > 0 && dr > pixelPrecision);
 
             return {
                 x: (r0 + ra) * Math.cos (beta),
@@ -890,7 +892,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                 var dalpha = -(2 * Math.PI - alpha);
             }
             
-            var da = Math.acos ((2 * r1 - pixelPrecision) / (2 * r1));
+            var steps = 12;
             do {
                 var c2 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
                 dalpha /= 2;
@@ -900,7 +902,8 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                 } else {
                     alpha += dalpha;
                 }
-            } while (Math.abs(dalpha) > da);
+                steps--;
+            } while (steps > 0 && Math.abs ((c1.r + c2.r) - d) > pixelPrecision);
 
             return c2;
         }
@@ -1005,7 +1008,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     colorFill = hilight;
                 } else {
                 */
-                    colorFill = fill1;
+                //    colorFill = fill1;
                 //}
                 
                 if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
@@ -1028,6 +1031,9 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     if (cursor && cursor.index === cursor.maxIndex && alpha > Math.PI)
                         alpha = Math.PI;
                         
+                    if (alpha === -Infinity || alpha === Infinity)
+                        alpha = Math.PI;
+                    
                     var ci;
                     var oldr, delta;
         
@@ -1166,7 +1172,11 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                             for (i = pass.data.index; i < pass.data.parent.children.length - 1; i++)
                                 m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
                             
-                            return m1.alpha;
+                            var a = m1.alpha;//+ 3 * Math.PI / 2;
+                            while (a > 2 * Math.PI) a = a - 2 * Math.PI;
+                            while (a < 0) a = a + 2 * Math.PI;
+
+                            return a;
                         },
                         getCustomAngMin: function (data) {
                             var m0, m1;
@@ -1192,7 +1202,11 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                             for (i = data.index; i < data.parent.children.length - 1; i++)
                                 m1 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
                             
-                            return m1.alpha;
+                            var a = m1.alpha;//+ 3 * Math.PI / 2;
+                            while (a > 2 * Math.PI) a = a - 2 * Math.PI;
+                            while (a < 0) a = a + 2 * Math.PI;
+
+                            return a;
                         },
                         getCircle: function (ang) {
                             return getCircle (ang, x0, y0, r0, x1, y1, r1);
@@ -1232,7 +1246,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                                     m1 = m2;
                                     m2 = getNeighbor (m1, "+", x0, y0, r0, x1, y1, r1);
                                     mi++;
-                                } while (m1.r <= m2.r);
+                                } while (m1.r < m2.r);
                                 
                                 pass.cursor.index = mi - 1;
                                 pass.cursor.angle = m1.alpha;
@@ -1242,7 +1256,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                                     m1 = m2;
                                     m2 = getNeighbor (m1, "-", x0, y0, r0, x1, y1, r1);
                                     mi--;
-                                } while (m1.r <= m2.r);
+                                } while (m1.r < m2.r);
                                 
                                 pass.cursor.index = mi + 1;
                                 pass.cursor.angle = m1.alpha;
@@ -2249,6 +2263,7 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
                     
                     if (avgt < 250) {
                         var c = select.parent;
+                        if (inertIdx === 0) inertIdx = 1;
                         var ang0 = inert[inertIdx - 1].angle;
                         var c1 = c.getCircle(ang0).r;
                         var dang0 = inert[inertIdx - 1].angle - inert[inertIdx - 1].rawAngle;
@@ -2256,7 +2271,7 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
                         var i = 1;
                         var di = 1;
                         function aInert () {
-                            if (animating) {
+                            if (animating === true) {
                                 var dt = (new Date()).getTime() - t0;
                                 t0 = (new Date()).getTime();
                                 if (dt === 0) dt = 1;
@@ -2267,9 +2282,13 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
                                 var sindi = Math.sin (di * Math.PI / 2);
                                 if (di > 0){
                                     ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
-                                    c.setAngle (ang0 - dang0, inert[inertIdx - 1].percentRawAngle);
+                                    if (inertIdx === 0) inertIdx = 1;
+                                    var a0 = ang0 - dang0;
+                                    a0 = Math.max (a0, select.getAngMin());
+                                    a0 = Math.min (a0, select.getAngMax());
+                                    c.setAngle (a0, inert[inertIdx - 1].percentRawAngle);
 
-                                    redraw (null, "1+", select.cursor);
+                                    redraw (null, "1+", (select)?select.cursor:null);
                                     
                                     //window.requestAnimationFrame(aInert);
                                     setTimeout(function () {
@@ -2347,7 +2366,7 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
                         var t0 = globalt0;//(new Date()).getTime();
                         var di = 1;
                         function dInert (select) {
-                            if (animating) {
+                            if (animating === true) {
                                 var dt = (new Date()).getTime() - t0;
                                 t0 = (new Date()).getTime();
                                 if (dt === 0) dt = 1;

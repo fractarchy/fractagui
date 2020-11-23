@@ -6,7 +6,7 @@
 
 ## about e-fun
 
-E-fun is a fractal inspired, parent-child orbiting, zoomable, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. Composing content in E-fun is consisted of importing graphics from external vector image or bitmap editor, and arranging it within ovals using parent-children structure described in a separate file. Because E-fun treats individual pages as graphics, designers have complete freedom in composing content. Vector graphic pages are suitable for expressing textual content and illustrations, while bitmap pages are suitable for expressing photos.
+E-fun is a fractal inspired, parent-child orbiting, zoomable, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. Composing content in E-fun is consisted of importing graphics from external vector image or bitmap editor, and arranging it within ovals using parent-children structure described in a separate file. Because E-fun treats individual pages as graphics, designers have complete freedom in composing content. Vector graphic pages are suitable for expressing textual content and illustrations, while bitmap pages are suitable for expressing photos. Hyperlink creation is supported natively in vector graphic pages.
 
 ## user experience
 

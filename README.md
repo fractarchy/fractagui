@@ -1,6 +1,6 @@
 # e-fun
 
-(v 0.1 - release candidate 2)  
+(v 0.1 - release)  
 
 ![](media/socmedia.png)  
 

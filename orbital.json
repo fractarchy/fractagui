@@ -1,0 +1,10 @@
+{
+    "show-pictograms": "yes",
+    "pictogram-theme": "dark",
+    "oval-color": "white",
+    "background-color": "gray",
+    "scale": "100%",
+    "flat-area": "0%",
+    "contents": "contents/contents.xml"
+}
+

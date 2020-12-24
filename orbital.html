@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!--?xml version="1.0"?-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>E-Fun</title>
+    <link rel="icon" type="image/png" href="./media/favicon32.png"/>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="E-Fun">
+    <meta name="description" content="A fractal inspired experimental content management system">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://contrast-zone.github.io/e-fun">
+    <meta property="og:title" content="E-Fun">
+    <meta property="og:description" content="A fractal inspired experimental content management system">
+    <meta property="og:image" content="media/socmedia.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://contrast-zone.github.io/e-fun">
+    <meta property="twitter:title" content="E-Fun">
+    <meta property="twitter:description" content="A fractal inspired experimental content management system">
+    <meta property="twitter:image" content="media/socmedia.png">
+
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
+    <head>
+        <style media="screen">
+            section {
+                position: absolute; top:0; bottom:0; left:0; right:0;
+                overflow: hidden;
+            }
+            
+            html, body
+            {
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+                margin-top: 0px;
+                margin-left: 0px;
+                touch-action: none;
+                pointer-events: auto;
+                background-color: gray;
+            }
+            .fadeinfadeout {
+                animation: fadeIn 0.5s infinite alternate;
+            }
+            @keyframes fadeIn { 
+              from { opacity: 0; } 
+            }
+            
+            .rotate {
+              animation: rotation 1s infinite linear;
+            }
+
+            @keyframes rotation {
+              from {
+                transform: rotate(-180deg);
+              }
+              to {
+                transform: rotate(180deg);
+              }
+            }
+
+            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
+            a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
+            a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
+
+            a, img, div {
+              -webkit-user-select: none; /* Safari 3.1+ */
+              -moz-user-select: none; /* Firefox 2+ */
+              -ms-user-select: none; /* IE 10+ */
+              user-select: none; /* Standard syntax */
+            }
+        </style>
+    </head>
+    <body>
+      <noscript>E-Fun (Fractal inspired CMS)</noscript>
+      <section>
+        <div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
+            <svg id="circle" height="300" width="300"><circle cx="100" cy="270" r="30" fill="white" /></svg>
+        </div>
+        <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
+        </div>
+        <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;"/>
+        <img id="i2" style="visibility: hidden; position: absolute; opacity: 1;"/>
+        <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;"/>
+        <script src="html2canvas.min.js"></script>
+        <script src="orbital.js"></script>
+        <script>
+            function isDesign(str) {
+                var design;
+                if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
+                    design = 'touch';
+                 } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                    design = 'tablet';
+                } else if (window.matchMedia('screen').matches) {
+                    design = 'desktop';
+                } else if (window.matchMedia('handheld').matches) {
+                    design = 'mobile';
+                }
+                return(str == design);
+            }
+            
+            function setDesign() {
+                var design;
+                var sc = 0.5;// document.body.clientWidth / 1920;
+                
+                if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                    design = 'touch, tablet';
+                    document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
+                } else if (window.matchMedia('screen').matches) {
+                    design = 'desktop';
+                    document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=1', 'maximum-scale=1', 'minimum-scale=1', 'user-scalable=no');
+                } else if (window.matchMedia('handheld').matches) {
+                    design = 'mobile';
+                    document
+                        .querySelector("meta[name=viewport]")
+                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
+                }
+            }
+            
+            /*
+            function generateCanvasScape (r, index) {
+                if (!r) r = 0;
+                if (!index) index = 0;
+                
+                var data = {
+                    canvas: generateNumberCanvas (r + " - " + index),
+                    children: []
+                };
+                
+                if (r < 2)
+                    for (var i = 0; i < 5; i++)
+                        data.children.push (generateCanvasScape (r + 1, i));
+                
+                return data;
+            }
+            */
+
+            function showSplash(txt) {
+                var w = document.body.clientWidth;
+                var h = document.body.clientHeight;
+
+                if (w >= h) {
+                    var m = (document.body.clientHeight - 58) / 950;
+
+                } else {
+                    var m = document.body.clientWidth / 950;
+
+                }
+                
+                if (m > 0.7) m = 0.7;
+                if (m < 0) m = 0;
+                
+                var s0 = document.getElementById("circle");
+                s0.style.transform = "scale(" + (m / 2) + ")";
+
+                var spl = document.getElementById("splash");
+                //spl.innerHTML = txt;
+                spl.style.visibility = "visible";
+                spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
+                spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
+            }
+            
+            function hideSplash() {
+                document.getElementById("splash").style.visibility = "hidden";
+            }
+
+            function setSize () {
+                var ratio = 1;// / 1.61803398875;
+                
+                var w = document.body.clientWidth;
+                var h = document.body.clientHeight;
+                
+                var fs = Math.floor (h / 1080 * 48);
+
+                i1.draggable = false;
+                i1.ondragstart = function () {return false};
+                i2.draggable = false;
+                i2.ondragstart = function () {return false};
+                i3.draggable = false;
+                i3.ondragstart = function () {return false};
+                
+                if (w >= h) {
+                    var m = (document.body.clientHeight - 58) / 950;
+                    var ratioX = ratio;
+                    var ratioY = 1;
+
+                } else {
+                    var m = document.body.clientWidth / 950;
+                    var ratioX = 1;
+                    var ratioY = ratio;
+
+                }
+                
+                if (m > 0.7) m = 0.7;
+                if (m < 0) m = 0;
+                
+                i1.style.width = m * 215 + "px";
+                i2.style.width = m * 215 + "px";
+                i3.style.width = m * 215 + "px";
+
+                i1.style.transform = " scale(" +
+                  ratioX + ", " +
+                  ratioY +
+                  ")";
+                i2.style.transform = " scale(" +
+                  ratioX + ", " +
+                  ratioY +
+                  ")";
+                i3.style.transform = " scale(" +
+                  ratioX + ", " +
+                  ratioY +
+                  ")";
+
+                if (w >= h) {
+                    var gap = (h - i1.clientHeight - i2.clientHeight - i3.clientHeight - fs - 10) / 4;
+                    if (gap < 1) gap = 1;
+
+                    if (env.showPic === "yes") {
+                        i1.style.top = fs + gap + "px";
+                        i1.style.left = 10 + "px";
+                        i2.style.top = fs + gap + i1.clientHeight + gap + "px";
+                        i2.style.left = 10 + "px";
+                        i3.style.top = fs + gap + i1.clientHeight + gap + i2.clientHeight + gap + "px";
+                        i3.style.left = 10 + "px";
+                    
+                        divContainer.style.left = 20 + i1.clientWidth + "px";
+                        divContainer.style.top = (10) + "px";
+                    } else {
+                        divContainer.style.left = (10) + "px";
+                        divContainer.style.top = (10) + "px";
+                    }
+                    
+                } else {
+                    var gap = (w - i1.clientWidth - i2.clientWidth - i3.clientWidth) / 4;
+                    if (gap < 1) gap = 1;
+                    
+                    if (env.showPic === "yes") {
+                        i1.style.left = gap + "px";
+                        i1.style.top = 10 + "px";
+                        i2.style.left = gap + i1.clientWidth + gap + "px";
+                        i2.style.top = 10 + "px";
+                        i3.style.left = gap + i1.clientWidth + gap + i2.clientWidth + gap + "px";
+                        i3.style.top = 10 + "px";
+                    
+                        divContainer.style.left = "10px";
+                        divContainer.style.top = (10 + 10 + i1.clientHeight) + "px";
+                    } else {
+                        divContainer.style.left = "10px";
+                        divContainer.style.top = (10) + "px";
+                    }
+                }
+                
+                var event1 = new CustomEvent('resize1', null);
+                divContainer.dispatchEvent(event1);
+            }
+            
+            var i1 = document.getElementById("i1");
+            var i2 = document.getElementById("i2");
+            var i3 = document.getElementById("i3");
+
+            wonload = function () {
+                
+                document.getElementById("splash").style.visibility = "hidden";
+                if (env.showPic === "yes") {
+                    i1.style.visibility = "visible";
+                    i2.style.visibility = "visible";
+                    i3.style.visibility = "visible";
+                }
+                divContainer.style.visibility = "visible";
+
+                setSize ();
+
+                var resizeId;
+                window.addEventListener('resize', function () {
+                    setDesign();
+                    
+                    document.getElementById("tooltip").style.visibility = "hidden"
+                    if (env.showPic === "yes") {
+                        i1.style.visibility = "hidden";
+                        i2.style.visibility = "hidden";
+                        i3.style.visibility = "hidden";
+                    }
+                    divContainer.style.visibility = "hidden";
+                    showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
+                    
+                    clearTimeout(resizeId);
+                    resizeId = setTimeout(function () {
+                        setSize ();
+                        hideSplash ();
+                        if (env.showPic === "yes") {
+                            i1.style.visibility = "visible";
+                            i2.style.visibility = "visible";
+                            i3.style.visibility = "visible";
+                        }
+                        divContainer.style.visibility = "visible";
+
+                    }, 500);
+                });
+            }
+            
+            function createCanvasImg (img, scale, fill) {
+                var cnvim = document.createElement ("canvas");
+                cnvim.width = ~~(img.width * scale) + 2;
+                cnvim.height = ~~(img.height * scale) + 2;
+                var ctxim = cnvim.getContext ('2d');
+
+                ctxim.fillStyle = fill;
+                ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+                
+                ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
+
+                return cnvim
+            }            
+            
+            
+            var loader = function (data, scale, fill) {
+                var images = [];
+                var iframes = [];
+                var error = false;
+
+                (function loadImages (node) {
+                    images.push (node);
+                    
+                    var ifr = document.createElement ('iframe');
+
+                    ifr.onload = function () {
+                        if (node.type === "html") {
+                            if (ifr.contentWindow.document.body === null) {
+                                error = true
+                                hideSplash ();
+                                alert ('Error loading: "' + ifr.src + '"');
+                                return;
+                            }
+
+                            ifr.style.border = "none";
+                            ifr.style.margin = "0px";
+                            ifr.style.padding = "0px";
+                            ifr.style.overflow = "hidden";
+                            ifr.height = ifr.contentWindow.document.body.scrollHeight;
+                            ifr.width = ifr.contentWindow.document.body.scrollWidth;
+                        }
+                        
+                        var links = ifr.contentWindow.document.getElementsByTagName("a");
+                        for (var i = 0; i < links.length; i++) {
+                            var tg = links[i].getAttribute('target')
+                            var hr = links[i].getAttribute('href');
+                            if (!hr)
+                                hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                          
+                            if (hr) {
+                                if (!node.hyperlinks)
+                                    node.hyperlinks = [];
+                                
+                                var rects = links[i].getClientRects();
+                                
+                                for (var j in rects)
+                                    node.hyperlinks.push (
+                                        {
+                                            "type": "rect",
+                                            "target": tg,
+                                            "href": hr,
+                                            "left": rects[j].left,
+                                            "top": rects[j].top,
+                                            "right": rects[j].right,
+                                            "bottom": rects[j].bottom
+                                        }
+                                    )
+                            }
+                        }
+                        
+                        node.img = new Image ();
+                        
+                        node.img.crossOrigin = "anonymous";
+                        
+                        node.img.onload = function (e) {
+                            node.canvas = createCanvasImg (node.img, scaleimg > 0 ? scale * scaleimg : 1, fill);
+                        }
+                        
+                        node.img.onerror = function (e) {
+                            if (!error) {
+                                error = true
+                                hideSplash ();
+                                alert ('Error loading: "' + node.img.src + '"');
+                            }
+                        }
+                        
+                        var scaleimg;
+                        var scaleifr;
+                        if (node.type === "image") {
+                            if (window.devicePixelRatio === 1)
+                                scaleimg = 1;
+                            else
+                                scaleimg = 2;
+                            node.img.src = node.src;
+                            ifr.remove();
+                            
+                        } else if (node.type === "html") {
+                            var base = ifr.contentDocument.createElement('base');
+                            base.href = xhr.responseURL;
+                            
+                            var head = ifr.contentDocument.getElementsByTagName('head')[0];
+                            head.insertBefore(base, head.childNodes[0]);
+
+                            var scaleimg = 0;
+                            if (window.devicePixelRatio === 1)
+                                scaleifr = 1;
+                            else
+                                scaleifr = 2;
+                                
+                            html2canvas(ifr.contentDocument.body, {scale: scale * scaleifr, backgroundColor: null}).then(function(canvas) {
+                                node.img.src = canvas.toDataURL();
+                                ifr.remove();
+                            });
+                        }
+                        
+                        iframes.push (ifr);
+                    }
+                    
+                    ifr.style.visibility = "hidden";
+                    ifr.src = node.src + "?" +  Date.now();
+                    document.body.appendChild (ifr);
+
+                    /*
+                    if (node.hyperlinks) {
+                        for (var i = 0; i < node.hyperlinks.length; i++) {
+                            try {
+                                var target = node.target;
+                                var href = node.href;
+                                var l = parseFloat (node.left);
+                                var t = parseFloat (node.top);
+                                var r = parseFloat (node.right);
+                                var b = parseFloat (node.bottom);
+                                
+                            } catch (e) {
+                                hideSplash ();
+                                alert ('Error: hyperlink for "' + node.src + '" is not valid');
+                                throw e;
+                            }
+                        }
+                    }
+                    */
+                    
+                    if (node.children)
+                        for (var i = 0; i < node.children.length; i++)
+                            loadImages (node.children[i]);
+                })(data);
+                
+                return {images: images, iframes: iframes};
+            };
+            
+            function setupEnv (data) {
+                if (data["flat-area"])
+                    try {
+                        if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
+                        if (flatArea < 0 || flatArea > 100)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        hideSplash ();
+                        alert ('Contents.json error: "flat-area" hast to be a percent between "0%" and "100%"');
+                        throw new error ();
+                    }
+                else
+                    flatArea = 0;
+
+                if (data["scale"])
+                    try {
+                        if (data["scale"].substr(data["scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var scale = parseFloat (data["scale"].substr(0, data["scale"].length - 1));
+                        if (scale <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        hideSplash ();
+                        alert ('Contents.json error: "scale" hast to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    scale = 100;
+                
+                if (data["show-pictograms"]) {
+                    if (data["show-pictograms"] !== "yes" && data["show-pictograms"] !== "no") {
+                        hideSplash ();
+                        alert ('Contents.json error: "show-pictograms" can only be "yes" or "no"');
+                        throw new error ();
+                    }
+                    
+                } else {
+                    data["show-pictograms"] = "yes";
+                }
+                
+                if (data["show-pictograms"] === "yes") {
+                    if (data["pictogram-theme"]) {
+                        if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
+                            hideSplash ();
+                            alert ('Contents.json error: "pictogram-theme" can only be "light" or "dark"');
+                            throw new error ();
+                        }
+                        
+                    } else {
+                        data["pictogram-theme"] = "light";
+                    }
+                    
+                    if (data["pictogram-theme"] === "dark") {
+                        document.getElementById("i1").src="media/di1.svg";
+                        document.getElementById("i2").src="media/di2.svg";
+                        document.getElementById("i3").src="media/di3.svg";
+                        
+                    } else {
+                        document.getElementById("i1").src="media/li1.svg";
+                        document.getElementById("i2").src="media/li2.svg";
+                        document.getElementById("i3").src="media/li3.svg";
+                    }
+                }
+                
+                return {
+                    flatArea: flatArea,
+                    scale: scale,
+                    showPic: data["show-pictograms"],
+                    theme: data["pictogram-theme"],
+                    ovalColor: data["oval-color"],
+                    backColor: data["background-color"]
+                }
+            }
+            
+            var xhr;
+            var env;
+            function loadContents () {
+                var xhttp = new XMLHttpRequest ();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        try {
+                            init = JSON.parse (this.responseText);
+                        } catch (e) {
+                            alert ('Error:\n' + e.message);
+                            hideSplash ();
+                            throw e;
+                        }
+                        
+                        env = setupEnv (init);
+                        document.body.style.backgroundColor = env.backColor;
+                        
+                        xhr = new XMLHttpRequest();
+
+                        xhr.onload = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                function formArray (xmlNode, arr) {
+                                    var node;
+                                    for (var i = 0; i < xmlNode.children.length; i++) {
+                                        var url = new URL(xmlNode.children[i].attributes.getNamedItem("src").nodeValue, xhr.responseURL).href
+                                        var att = xmlNode.children[i].attributes.getNamedItem("type");
+                                        if (att)
+                                            var type = att.nodeValue;
+                                        else
+                                            var type = "html";
+                                        node = {type: type, src: url, children: []};
+                                        formArray (xmlNode.children[i], node.children);
+                                        if (arr)
+                                            arr.push (node);
+                                    }
+                                    if (!arr)
+                                        return node;
+                                }
+                                
+                                if (xhr.responseXML) {
+                                    var data = formArray (xhr.responseXML, null);
+                                    var ld = loader (data, env.scale / 100, env.ovalColor);
+                                    var images = ld.images;
+                                    var iframes = ld.iframes;
+                                    
+                                    var waitForImages = function () {
+                                        for (var i = 0; i < images.length; i++){
+                                            if (iframes.length < images.length || !images[i].canvas) {
+                                                setTimeout (waitForImages, 0);
+                                                return;
+                                            }                 
+                                        }
+                                        
+                                        //showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");            
+                                                                    
+                                        setTimeout (function () {
+                                            if (window.devicePixelRatio === 1)
+                                                var myscale = 1;
+                                            else
+                                                var myscale = 2;
+                                        
+                                            Orbital (divContainer, data, env.flatArea / 100, env.scale / 100 / myscale, env.ovalColor, env.backColor);
+                                            window.addEventListener("load", wonload ());
+                                        }, 50);
+                                    }
+                                    
+                                    waitForImages ();
+                                } else {
+                                    hideSplash ();
+                                    alert ("Error processing '" + init.contents + "'");
+                                }
+                            }
+                        }
+
+                        xhr.onerror = function() {
+                          alert ("Error while getting '" + init.contents + "'");
+                        }
+
+                        xhr.open("GET", init.contents + "?" + Date.now(), true);
+                        xhr.responseType = "document";
+                        xhr.send();
+                    }
+                };
+                xhttp.open("GET", "orbital.json?" + Date.now(), true);
+                xhttp.send();
+            }
+            
+            var divContainer = document.getElementById ("divContainer")
+            
+            setDesign();
+            showSplash ("...&nbsp;loading&nbsp;data&nbsp;...");            
+            loadContents ();
+            
+            
+        </script>
+      </section>
+    </body>
+</html>

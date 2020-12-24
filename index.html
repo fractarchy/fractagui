@@ -24,543 +24,104 @@
     <meta property="twitter:description" content="A fractal inspired experimental content management system">
     <meta property="twitter:image" content="media/socmedia.png">
 
-    <meta name="viewport" content="width=device-width, initial-scale = 0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
     <head>
-        <style media="screen">
-            section {
-                position: absolute; top:0; bottom:0; left:0; right:0;
-                overflow: hidden;
-            }
-            
+        <!--style media="screen">
             html, body
             {
-                overflow: hidden;
-                height: 100%;
-                width: 100%;
-                margin-top: 0px;
-                margin-left: 0px;
-                touch-action: none;
-                pointer-events: auto;
-                background-color: gray;
+               margin: 0;
+               padding: 0;
+               height: 100%;
             }
-            .fadeinfadeout {
-                animation: fadeIn 0.5s infinite alternate;
+            #container {
+               min-height: 100%;
+               position: relative;
+               font-weight: bold;
             }
-            @keyframes fadeIn { 
-              from { opacity: 0; } 
+            #header {
+               color: rgb(208, 208, 208);
+               background-color: rgb(48, 48, 48);
+               font-family: Arial, Helvetica, sans-serif;
+               font-size: 2.7em;
+               font-weight: bold;
+               padding: 0px;
             }
-            
-            .rotate {
-              animation: rotation 1s infinite linear;
+            #body {
+               padding: 0px;
+               width: 100%;
+               min-height: calc(100vh - 4em /* Height of the footer */);
+            }
+            #footer {
+               color: rgb(208, 208, 208);
+               background-color: rgb(48, 48, 48);
+               font-family: Arial, Helvetica, sans-serif;
+               font-size: 1em;
+               font-weight: normal;
+               position: absolute;
+               bottom: 0;
+               width: 100%;
+               max-height: 4em;   /* Height of the footer */
             }
 
-            @keyframes rotation {
-              from {
-                transform: rotate(-180deg);
-              }
-              to {
-                transform: rotate(180deg);
-              }
+            a {font-family: Arial, Helvetica, sans-serif; font-size: 0.8em;}
+            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:underline;}
+            a.exHover:hover, a.exHover:active {cursor: pointer; color:white; text-decoration:underline;}
+        </style-->
+        <style media="screen">
+            html, body
+            {
+               margin: 0;
+               padding: 0;
+               height: 100%;
+            }
+            #container {
+               min-height: 100%;
+               position: relative;
+               font-weight: bold;
+            }
+            #header {
+               color: rgb(208, 208, 208);
+               background-color: rgb(48, 48, 48);
+               font-family: Arial, Helvetica, sans-serif;
+               font-weight: bold;
+               font-size: 2.7em;
+               padding: 0px;
+               min-height: 3.2em; /* Height of header*/
+            }
+            #body {
+               padding: 0px;
+               width: 100%;
+               position: absolute;
+               top: 3.2em;
+               min-height: calc(100vh - 3.2em /* Height of header*/ - 2.5em /* Height of the footer */);
+            }
+            #footer {
+               color: rgb(208, 208, 208);
+               background-color: rgb(48, 48, 48);
+               font-family: Arial, Helvetica, sans-serif;
+               font-weight: normal;
+               font-size: 1em;
+               position: absolute;
+               bottom: 0;
+               width: 100%;
+               min-height: 2.5em; /* Height of the footer */
             }
 
-            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
-            a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
-            a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
-
-            a, img, div {
-              -webkit-user-select: none; /* Safari 3.1+ */
-              -moz-user-select: none; /* Firefox 2+ */
-              -ms-user-select: none; /* IE 10+ */
-              user-select: none; /* Standard syntax */
-            }
+            a {font-family: Arial, Helvetica, sans-serif; font-size: 0.8em;}
+            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:underline;}
+            a.exHover:hover, a.exHover:active {cursor: pointer; color:white; text-decoration:underline;}
         </style>
     </head>
     <body>
-      <noscript>E-Fun (Fractal inspired CMS)</noscript>
-      <section>
-        <div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
-            <svg id="circle" height="300" width="300"><circle cx="100" cy="270" r="30" fill="white" /></svg>
-        </div>
-        <div id="heading1" align="center" style="background-color: rgb(48, 48, 48); color: rgb(208, 208, 208); visibility: hidden; position: absolute; top: 0px; right: 0px; left: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 48px; font-weight: bold;">
-            <heading1>
+        <div id="container">
+            <div id="header" align="center">
                 E-Fun
-            </heading1>
+            </div>
+            <iframe id="body" src="orbital.html" style="border-style:none"></iframe>
+            <div id="footer" align="center">
+                keywords: content management system, fractal inspired, parent-child orbiting, zoomable, headless cms, flat file cms, light cms<br/>
+                <a class="exHover" href="https://github.com/contrast-zone" target="_new">powered with ❤ by e-fun</a>
+            </div>
         </div>
-        <div id="divContainer" style="position: absolute; top: 58px; bottom: 10px; left: 10px; right: 10px;">
-        </div>
-        <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i2" style="visibility: hidden; position: absolute; opacity: 1;">
-        <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;">
-        <script src="orbital.js"></script>
-        <script>
-            function isDesign(str) {
-                var design;
-                if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
-                    design = 'touch';
-                 } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
-                    design = 'tablet';
-                } else if (window.matchMedia('screen').matches) {
-                    design = 'desktop';
-                } else if (window.matchMedia('handheld').matches) {
-                    design = 'mobile';
-                }
-                return(str == design);
-            }
-            
-            function setDesign() {
-                var design;
-                var sc = 0.5;// document.body.clientWidth / 1920;
-                
-                if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
-                    design = 'touch, tablet';
-                    document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
-                } else if (window.matchMedia('screen').matches) {
-                    design = 'desktop';
-                    document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'initial-scale=1', 'maximum-scale=1', 'minimum-scale=1', 'user-scalable=no');
-                } else if (window.matchMedia('handheld').matches) {
-                    design = 'mobile';
-                    document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
-                }
-            }
-            
-            /*
-            function generateCanvasScape (r, index) {
-                if (!r) r = 0;
-                if (!index) index = 0;
-                
-                var data = {
-                    canvas: generateNumberCanvas (r + " - " + index),
-                    children: []
-                };
-                
-                if (r < 2)
-                    for (var i = 0; i < 5; i++)
-                        data.children.push (generateCanvasScape (r + 1, i));
-                
-                return data;
-            }
-            */
-
-            function showSplash(txt) {
-                var w = document.body.clientWidth;
-                var h = document.body.clientHeight;
-
-                if (w >= h) {
-                    var m = (document.body.clientHeight - 58) / 950;
-
-                } else {
-                    var m = document.body.clientWidth / 950;
-
-                }
-                
-                if (m > 0.7) m = 0.7;
-                if (m < 0) m = 0;
-                
-                var s0 = document.getElementById("circle");
-                s0.style.transform = "scale(" + (m / 2) + ")";
-
-                var spl = document.getElementById("splash");
-                //spl.innerHTML = txt;
-                spl.style.visibility = "visible";
-                spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
-                spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
-            }
-            
-            function hideSplash() {
-                document.getElementById("splash").style.visibility = "hidden";
-            }
-
-            function setSize () {
-                var ratio = 1;// / 1.61803398875;
-                
-                var w = document.body.clientWidth;
-                var h = document.body.clientHeight;
-                
-                var fs = Math.floor (h / 1080 * 48);
-                document.getElementById("heading1").style.fontSize = fs + "px";
-
-                i1.draggable = false;
-                i1.ondragstart = function () {return false};
-                i2.draggable = false;
-                i2.ondragstart = function () {return false};
-                i3.draggable = false;
-                i3.ondragstart = function () {return false};
-                
-                if (w >= h) {
-                    var m = (document.body.clientHeight - 58) / 950;
-                    var ratioX = ratio;
-                    var ratioY = 1;
-
-                } else {
-                    var m = document.body.clientWidth / 950;
-                    var ratioX = 1;
-                    var ratioY = ratio;
-
-                }
-                
-                if (m > 0.7) m = 0.7;
-                if (m < 0) m = 0;
-                
-                i1.style.width = m * 215 + "px";
-                i2.style.width = m * 215 + "px";
-                i3.style.width = m * 215 + "px";
-
-                i1.style.transform = " scale(" +
-                  ratioX + ", " +
-                  ratioY +
-                  ")";
-                i2.style.transform = " scale(" +
-                  ratioX + ", " +
-                  ratioY +
-                  ")";
-                i3.style.transform = " scale(" +
-                  ratioX + ", " +
-                  ratioY +
-                  ")";
-
-                if (w >= h) {
-                    var gap = (h - i1.clientHeight - i2.clientHeight - i3.clientHeight - fs - 10) / 4;
-                    if (gap < 1) gap = 1;
-
-                    i1.style.top = fs + gap + "px";
-                    i1.style.left = 10 + "px";
-                    i2.style.top = fs + gap + i1.clientHeight + gap + "px";
-                    i2.style.left = 10 + "px";
-                    i3.style.top = fs + gap + i1.clientHeight + gap + i2.clientHeight + gap + "px";
-                    i3.style.left = 10 + "px";
-                    
-                    divContainer.style.left = 20 + i1.clientWidth + "px";
-                    divContainer.style.top = (fs + 20) + "px";
-                } else {
-                    var gap = (w - i1.clientWidth - i2.clientWidth - i3.clientWidth) / 4;
-                    if (gap < 1) gap = 1;
-                    
-                    i1.style.left = gap + "px";
-                    i1.style.top = fs + 10 + 10 + "px";
-                    i2.style.left = gap + i1.clientWidth + gap + "px";
-                    i2.style.top = fs + 10 + 10 + "px";
-                    i3.style.left = gap + i1.clientWidth + gap + i2.clientWidth + gap + "px";
-                    i3.style.top = fs + 10 + 10 + "px";
-                    
-                    divContainer.style.left = "10px";
-                    divContainer.style.top = (fs + 10 + 20 + i1.clientHeight) + "px";
-                }
-                
-                var event1 = new CustomEvent('resize1', null);
-                divContainer.dispatchEvent(event1);
-            }
-            
-            var i1 = document.getElementById("i1");
-            var i2 = document.getElementById("i2");
-            var i3 = document.getElementById("i3");
-
-            wonload = function () {
-                document.getElementById("vis").onclick = (function () {
-                    window.open('https://github.com/contrast-zone/e-fun', '_new'); 
-                })
-                
-                document.getElementById("vis").ontouchstart = document.getElementById("vis").onclick;
-                
-                document.getElementById("splash").style.visibility = "hidden";
-                document.getElementById("heading1").style.visibility = "visible";
-                document.getElementById("vis").style.visibility = "visible";
-                i1.style.visibility = "visible";
-                i2.style.visibility = "visible";
-                i3.style.visibility = "visible";
-                divContainer.style.visibility = "visible";
-
-                setSize ();
-
-                var resizeId;
-                window.addEventListener('resize', function () {
-                    setDesign();
-                    
-                    document.getElementById("tooltip").style.visibility = "hidden"
-                    document.getElementById("heading1").style.visibility = "hidden";
-                    document.getElementById("vis").style.visibility = "hidden";
-                    i1.style.visibility = "hidden";
-                    i2.style.visibility = "hidden";
-                    i3.style.visibility = "hidden";
-                    divContainer.style.visibility = "hidden";
-                    showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
-                    
-                    clearTimeout(resizeId);
-                    resizeId = setTimeout(function () {
-                        setSize ();
-                        hideSplash ();
-                        document.getElementById("heading1").style.visibility = "visible";
-                        document.getElementById("vis").style.visibility = "visible";
-                        i1.style.visibility = "visible";
-                        i2.style.visibility = "visible";
-                        i3.style.visibility = "visible";
-                        divContainer.style.visibility = "visible";
-
-                    }, 500);
-                });
-            }
-            
-            function createCanvas (img, scale, fill) {
-                var cnvim = document.createElement ("canvas");
-                cnvim.width = ~~(img.width * scale) + 2;
-                cnvim.height = ~~(img.height * scale) + 2;
-                var ctxim = cnvim.getContext ('2d');
-
-                ctxim.fillStyle = fill;
-                ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
-                
-                ctxim.drawImage (img, 1, 1, cnvim.width - 2, cnvim.height - 2);
-
-                return cnvim
-            }            
-            
-            
-            var loader = function (data, scale, fill) {
-                var images = [];
-                var iframes = [];
-                var error = false;
-
-                (function loadImages (node) {
-                    node.img = new Image ();
-                    
-                    node.img.crossOrigin = "anonymous";
-                    
-                    node.img.onload = function (e) {
-                        node.canvas = createCanvas (node.img, scale, fill);
-                    }
-                    
-                    node.img.onerror = function (e) {
-                        if (!error) {
-                            error = true
-                            hideSplash ();
-                            alert ('Error loading: "' + node.image + '"');
-                        }
-                    }
-
-                    node.img.src = node.image;
-                    images.push (node);
-
-                    var ifr = document.createElement ('iframe');
-                    
-                    ifr.onload = function () {
-                        var links = ifr.contentWindow.document.getElementsByTagName("a");
-                        for (var i = 0; i < links.length; i++) {
-                            var tg = links[i].getAttribute('target')
-                            var hr = links[i].getAttribute('href');
-                            if (!hr)
-                                hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                          
-                            if (hr) {
-                                var rect = links[i].getBoundingClientRect()
-                                if (!node.hyperlinks)
-                                    node.hyperlinks = [];
-                                
-                                node.hyperlinks.push (
-                                    {
-                                        "type": "rect",
-                                        "target": tg,
-                                        "href": hr,
-                                        "left": rect.left,
-                                        "top": rect.top,
-                                        "right": rect.right,
-                                        "bottom": rect.bottom
-                                    }
-                                )
-                            }
-                        }
-                        ifr.remove();
-                        
-                        iframes.push (ifr);
-                    }
-                    
-                    ifr.src = node.image;
-                    ifr.style.visibility = "hidden";
-                    document.body.appendChild (ifr);
-
-
-                    if (node.hyperlinks) {
-                        for (var i = 0; i < node.hyperlinks.length; i++) {
-                            try {
-                                var target = node.target;
-                                var href = node.href;
-                                var l = parseFloat (node.left);
-                                var t = parseFloat (node.top);
-                                var r = parseFloat (node.right);
-                                var b = parseFloat (node.bottom);
-                                
-                            } catch (e) {
-                                hideSplash ();
-                                alert ('Error: hyperlink for "' + node.image + '" is not valid');
-                                throw e;
-                            }
-                        }
-                    }
-                    
-                    if (node.children)
-                        for (var i = 0; i < node.children.length; i++)
-                            loadImages (node.children[i]);
-                })(data);
-                
-                return {images: images, iframes: iframes};
-            };
-            
-            function setupEnv (data) {
-                if (data["flat-area"])
-                    try {
-                        if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
-                        if (flatArea < 0 || flatArea > 100)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        hideSplash ();
-                        alert ('Error: "flat-area" hast to be a percent between "0%" and "100%"');
-                        throw new error ();
-                    }
-                else
-                    flatArea = 0;
-
-                if (data["scale"])
-                    try {
-                        if (data["scale"].substr(data["scale"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var scale = parseFloat (data["scale"].substr(0, data["scale"].length - 1));
-                        if (scale <= 0)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        hideSplash ();
-                        alert ('Error: "scale" hast to be a percent greater than "0%"');
-                        throw new error ();
-                    }
-                else
-                    scale = 100;
-                
-                if (data["title"]) {
-                    document.getElementById("heading1").innerHTML = data["title"];
-                    document.getElementsByTagName("TITLE")[0].text = data["title"];
-                }
-                
-                if (data["theme"]) {
-                    if (data["theme"] !== "light" && data["theme"] !== "dark") {
-                        hideSplash ();
-                        alert ('Error: "theme" can only be "light" or "dark"');
-                        throw new error ();
-                    }
-                    
-                } else {
-                    data["theme"] = "light";
-                }
-                
-                if (data["theme"] === "dark") {
-                    document.getElementById("i1").src="media/di1.svg";
-                    document.getElementById("i2").src="media/di2.svg";
-                    document.getElementById("i3").src="media/di3.svg";
-                    
-                } else {
-                    document.getElementById("i1").src="media/li1.svg";
-                    document.getElementById("i2").src="media/li2.svg";
-                    document.getElementById("i3").src="media/li3.svg";
-                }
-                
-                return {
-                    title: data["title"],
-                    flatArea: flatArea,
-                    scale: scale,
-                    theme: data["theme"]
-                }
-            }
-            
-            function loadContents () {
-                var xhttp = new XMLHttpRequest ();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        try {
-                            init = JSON.parse (this.responseText);
-                        } catch (e) {
-                            alert ('Error:\n' + e.message);
-                            hideSplash ();
-                            throw e;
-                        }
-                        
-                        var env = setupEnv (init);
-                        
-                        var xhr = new XMLHttpRequest();
-
-                        xhr.onload = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                                function formArray (xmlNode, arr) {
-                                    var node;
-                                    for (var i = 0; i < xmlNode.children.length; i++) {
-                                        var url = new URL(xmlNode.children[i].attributes.getNamedItem("src").nodeValue, xhr.responseURL).href
-                                        node = {image: url, children: []};
-                                        formArray (xmlNode.children[i], node.children);
-                                        if (arr)
-                                            arr.push (node);
-                                    }
-                                    if (!arr)
-                                        return node;
-                                }
-                                    
-                                var data = formArray (xhr.responseXML, null);
-                                var ld = loader (data, env.scale / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
-                                var images = ld.images;
-                                var iframes = ld.iframes;
-                                
-                                var waitForImages = function () {
-                                    for (var i = 0; i < images.length; i++){
-                                        if (iframes.length < images.length || !images[i].canvas) {
-                                            setTimeout (waitForImages, 0);
-                                            return;
-                                        }                 
-                                    }
-                                    
-                                    //showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");            
-                                                                
-                                    setTimeout (function () {
-                                        Orbital (divContainer, data, env.flatArea / 100, env.scale / 100, env.theme === "dark"? "rgb(48, 48, 48)" : "rgb(255, 255, 255)");
-                                        window.addEventListener("load", wonload ());
-                                    }, 50);
-                                }
-                                
-                                waitForImages ();
-                                
-                            }
-                        }
-
-                        xhr.onerror = function() {
-                          alert ("Error while getting '" + init.contents + "'");
-                        }
-
-                        xhr.open("GET", init.contents, true);
-                        xhr.responseType = "document";
-                        xhr.send();
-                    }
-                };
-                xhttp.open("GET", "init.json", true);
-                xhttp.send();
-            }
-            
-            var divContainer = document.getElementById ("divContainer")
-            //Orbital(divContainer, generateCanvasScape ());
-
-            setDesign();
-            showSplash ("...&nbsp;loading&nbsp;data&nbsp;...");            
-            loadContents ();
-            
-            
-        </script>
-        <a id="vis" class="exHover" style="visibility: hidden; position: absolute; bottom: 2px; right: 5px; font-family: Arial, Helvetica, sans-serif; font-size: 8pt;">
-          powered with ❤ by e-fun
-        </a>
-      </section>
     </body>
 </html>

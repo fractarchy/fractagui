@@ -828,11 +828,11 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
     }
 }
 
-function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1) {
+function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less, and you are doomed */
 
     var hilight = fill1;//"white"
-    var stroke1 = "gray";
+    var stroke1 = str1;//"gray";
     var fill2 = stroke1;
     var stroke2 = fill1;
 
@@ -1290,7 +1290,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, flatArea, scale, theme) {
+function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -1339,6 +1339,7 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
     
     //var fill1 = "white"
     var fill1 = theme;
+    var back1 = backTheme;
     var orientation = 0;
     var curvature = 0.125;
     
@@ -2513,7 +2514,7 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
     
         fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature, flatArea);
 
-        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1);
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1);
         
         minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio;
 
@@ -2588,7 +2589,8 @@ function Orbital (divContainer, data, flatArea, scale, theme) {
     
     var device = "mouse";
 
-    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, curvature);
+    //var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, curvature);
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');

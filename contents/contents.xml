@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!-- e-fun contents file -->
-<!-- attribute 'type' accepts either "xhtml" or "image"-->
+<!-- attribute 'type' accepts either 'html' or 'image'-->
 <item src="c-0.html">
     <item type="html" src="c-0-1.xhtml">
         <item type="html" src="c-0-1-1.xhtml"/>

@@ -1,6 +1,17 @@
-body {
-    font-size: 1.2em;
-    width: 550px;
+@media (max-device-width:511px) or (max-device-height:511px) {
+    body {
+        width: 256px;
+        font-size: 1em;
+        font-family: Times New Roman, Georgia, Garamond;
+    }
+}
+
+@media (min-device-width:512px) and (min-device-height:512px) {
+    body {
+        width: 512px;
+        font-size: 1.2em;
+        font-family: Times New Roman, Georgia, Garamond;
+    }
 }
 
 h1 {

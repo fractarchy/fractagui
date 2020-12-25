@@ -1316,10 +1316,10 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     {
                         target: hl.target,
                         href: hl.href,
-                        left: hl.left * scale,
-                        top: hl.top * scale,
-                        right: hl.right * scale,
-                        bottom: hl.bottom * scale
+                        left: hl.left / scale,
+                        top: hl.top / scale,
+                        right: hl.right / scale,
+                        bottom: hl.bottom / scale
                     }
                 );
             }
@@ -1663,8 +1663,8 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
                     var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
 
-                    var hx = cursor.centerX + cursor.data.scaledBitmap.width / 2 + fishEye.data.array[tmp1] - fishEye.data.width ;
-                    var hy = cursor.centerY + cursor.data.scaledBitmap.height / 2 + fishEye.data.array[tmp1 + 1] - fishEye.data.height;
+                    var hx = cursor.centerX + (cursor.data.scaledBitmap.width / 2 + (fishEye.data.array[tmp1] - fishEye.data.width));
+                    var hy = cursor.centerY + (cursor.data.scaledBitmap.height / 2 + (fishEye.data.array[tmp1 + 1] - fishEye.data.height));
                     //document.getElementById("heading1").innerHTML = hx + "-" + hy;
                     
                     if (cursor.data.hyperlinks) {

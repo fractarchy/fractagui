@@ -76,7 +76,6 @@
         </style>
     </head>
     <body>
-      <noscript>E-Fun (Fractal inspired CMS)</noscript>
       <section>
         <div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
             <svg id="circle" height="300" width="300"><circle cx="100" cy="270" r="30" fill="white" /></svg>
@@ -124,24 +123,6 @@
                         .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
                 }
             }
-            
-            /*
-            function generateCanvasScape (r, index) {
-                if (!r) r = 0;
-                if (!index) index = 0;
-                
-                var data = {
-                    canvas: generateNumberCanvas (r + " - " + index),
-                    children: []
-                };
-                
-                if (r < 2)
-                    for (var i = 0; i < 5; i++)
-                        data.children.push (generateCanvasScape (r + 1, i));
-                
-                return data;
-            }
-            */
 
             function showSplash(txt) {
                 var w = document.body.clientWidth;
@@ -162,7 +143,6 @@
                 s0.style.transform = "scale(" + (m / 2) + ")";
 
                 var spl = document.getElementById("splash");
-                //spl.innerHTML = txt;
                 spl.style.visibility = "visible";
                 spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
                 spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
@@ -267,7 +247,6 @@
             var i3 = document.getElementById("i3");
 
             wonload = function () {
-                
                 document.getElementById("splash").style.visibility = "hidden";
                 if (env.showPic === "yes") {
                     i1.style.visibility = "visible";
@@ -360,7 +339,7 @@
                                     node.hyperlinks = [];
                                 
                                 var rects = links[i].getClientRects();
-                                
+
                                 for (var j in rects)
                                     node.hyperlinks.push (
                                         {
@@ -410,6 +389,7 @@
                             head.insertBefore(base, head.childNodes[0]);
 
                             var scaleimg = 0;
+                            
                             if (window.devicePixelRatio === 1)
                                 scaleifr = 1;
                             else
@@ -428,26 +408,6 @@
                     ifr.src = node.src + "?" +  Date.now();
                     document.body.appendChild (ifr);
 
-                    /*
-                    if (node.hyperlinks) {
-                        for (var i = 0; i < node.hyperlinks.length; i++) {
-                            try {
-                                var target = node.target;
-                                var href = node.href;
-                                var l = parseFloat (node.left);
-                                var t = parseFloat (node.top);
-                                var r = parseFloat (node.right);
-                                var b = parseFloat (node.bottom);
-                                
-                            } catch (e) {
-                                hideSplash ();
-                                alert ('Error: hyperlink for "' + node.src + '" is not valid');
-                                throw e;
-                            }
-                        }
-                    }
-                    */
-                    
                     if (node.children)
                         for (var i = 0; i < node.children.length; i++)
                             loadImages (node.children[i]);
@@ -589,8 +549,6 @@
                                             }                 
                                         }
                                         
-                                        //showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");            
-                                                                    
                                         setTimeout (function () {
                                             if (window.devicePixelRatio === 1)
                                                 var myscale = 1;
@@ -628,8 +586,6 @@
             setDesign();
             showSplash ("...&nbsp;loading&nbsp;data&nbsp;...");            
             loadContents ();
-            
-            
         </script>
       </section>
     </body>

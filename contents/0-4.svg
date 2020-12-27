@@ -14,17 +14,17 @@
    sodipodi:docname="0-4.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 132.29167 153.45836"
-   height="580"
+   viewBox="0 0 132.29167 158.48545"
+   height="599"
    width="500">
   <sodipodi:namedview
      inkscape:current-layer="layer1"
      inkscape:window-maximized="1"
      inkscape:window-y="27"
      inkscape:window-x="72"
-     inkscape:cy="386.05025"
-     inkscape:cx="360"
-     inkscape:zoom="0.70710678"
+     inkscape:cy="315.47276"
+     inkscape:cx="255.4499"
+     inkscape:zoom="1.2293376"
      showgrid="false"
      id="namedview32"
      inkscape:window-height="1016"
@@ -62,7 +62,7 @@
   <g
      id="layer1">
     <rect
-       y="105.5284"
+       y="117.17007"
        x="1.4989635"
        height="18.992674"
        width="128.99559"
@@ -74,9 +74,9 @@
        width="128.99559"
        height="13.439314"
        x="1.4989635"
-       y="88.859657" />
+       y="100.50131" />
     <rect
-       y="66.06514"
+       y="77.706802"
        x="1.4587531"
        height="19.201283"
        width="129.07602"
@@ -88,102 +88,116 @@
        width="129.07602"
        height="12.748801"
        x="1.4587531"
-       y="49.925556" />
+       y="61.782452" />
     <text
        transform="matrix(0.69993628,0,0,0.69993628,-7.1197909,-46.713164)"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
        id="text201"
-       xml:space="preserve"><tspan
+       xml:space="preserve"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
          x="12.470703"
-         y="83.296455"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif Bold'">4. licencing, </tspan></tspan><tspan
+         y="83.476239"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.1365px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif Bold'">4. licencing, </tspan></tspan><tspan
          x="12.470703"
-         y="104.46308"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif Bold'">owning a copy, and </tspan></tspan><tspan
+         y="104.89686"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.1365px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif Bold'">owning a copy, and </tspan></tspan><tspan
          x="12.470703"
-         y="125.62971"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif Bold'">joining mailing list</tspan><tspan
+         y="126.31749"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:17.1365px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif Bold'">joining mailing list</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.9333px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="137.43259"><tspan
+         y="138.19459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="145.37009"><tspan
+         y="146.13209"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">E-fun is created with a help of </tspan><tspan
+           style="font-style:italic">html2canvas</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> project.
+</tspan></tspan><tspan
+         x="12.470703"
+         y="154.06959"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
+</tspan></tspan><tspan
+         x="12.470703"
+         y="162.00709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">Apache HTTP Server Project is a trademark of their
+           style="font-style:italic">Apache HTTP Server Project</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> and </tspan><tspan
+           style="font-style:italic">html2canvas</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> are
 </tspan></tspan><tspan
          x="12.470703"
-         y="153.30759"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> respective owners.
+         y="169.94459"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> trademarks of their respective owners.
 </tspan></tspan><tspan
          x="12.470703"
-         y="161.24509"><tspan
+         y="177.88209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="169.18259"><tspan
+         y="185.81959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> E-fun is shared to public under conditional </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">Creative
 </tspan></tspan><tspan
          x="12.470703"
-         y="177.12009"><tspan
+         y="193.75709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff"> Commons Attribution 4.0 International License</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> by
 </tspan></tspan><tspan
          x="12.470703"
-         y="185.05759"><tspan
+         y="201.69459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">contrast-zone</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">Contrast Zone</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> productions.
 </tspan></tspan><tspan
          x="12.470703"
-         y="192.99509"><tspan
+         y="209.63209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="200.93259"><tspan
+         y="217.56959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> A copy of e-fun software bundle can be downloaded
 </tspan></tspan><tspan
          x="12.470703"
-         y="208.87009"><tspan
+         y="225.50709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> from </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">dedicated github pages</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">.
 </tspan></tspan><tspan
          x="12.470703"
-         y="216.80759"><tspan
+         y="233.44459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="224.74509"><tspan
+         y="241.38209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> To ask any questions about e-fun, to report a bug, or to
 </tspan></tspan><tspan
          x="12.470703"
-         y="232.68259"><tspan
+         y="249.31959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> track new releases, please refer to a </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">dedicated mailing 
 </tspan></tspan><tspan
          x="12.470703"
-         y="240.62009"><tspan
+         y="257.25709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff"> list</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">.
 </tspan></tspan><tspan
          x="12.470703"
-         y="248.55759"><tspan
+         y="265.19459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="256.49509"><tspan
+         y="273.13209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">With this section, we conclude E-fun instructions </tspan></tspan><tspan
          x="12.470703"
-         y="264.43259"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">exposure. In a hope to getting you interested, I wish you </tspan></tspan><tspan
+         y="281.06959"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">exposure. I wish you a creative and productive web </tspan></tspan><tspan
          x="12.470703"
-         y="272.37009"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">a </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">productive web knitting.</tspan><tspan>
+         y="289.00709"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">knitting.</tspan><tspan>
 </tspan></tspan></text>
   </g>
 </svg>

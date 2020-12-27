@@ -1,4 +1,4 @@
-@media (max-device-width:511px) or (max-device-height:511px) {
+@media not ((min-device-width:512px) and (min-device-height:512px)) {
     body {
         width: 256px;
         font-size: 1em;
@@ -46,3 +46,4 @@ pre {
     border-style: solid;
     border-width: 1px;
 }
+

@@ -8,9 +8,9 @@
         </h1>
         <div class="float-left">F</div>
         <p>
-            irst, we have to make sure we have installed a local web server like
+            irst, we need to make sure we have installed a local web server like
             <a href="https://en.wikipedia.org/wiki/Apache_HTTP_Server">Apache HTTP Server</a>
-            project or similar software. We also have to make sure to have an access to a file manager and
+            project or similar software. We also need to make sure to have an access to a file manager and
             a text editor which we will use to access and edit E-Fun files.
         </p>
         <p>        
@@ -22,26 +22,28 @@
         <p>
 <pre><code>
 └─┬ e-fun-home-folder
-├─┬ contents
-│ ├── contents.xml
-│ └── ... contents go here ...
-│
-├─┬ media
-│ └── ... internal ui files ...
-│
-├── changeslog.md
-├── html2canvas.js
-├── index.html
-├── orbital.html
-├── orbital.js 
-├── orbital.json
-├── README.md
-└── LICENSE
+  ├─┬ contents
+  │ ├── contents.xml
+  │ └── ... contents go here ...
+  │
+  ├─┬ media
+  │ └── ... internal ui files ...
+  │
+  ├─┬ include
+  │ └── ... *.js include files ...
+  │
+  ├── changeslog.md
+  ├── index.html
+  ├── orbital.html
+  ├── orbital.json
+  ├── README.md
+  └── LICENSE
+  
 </code></pre>
         </p>
         <p>
             Now that we have unpacked the archive, we can test it by entering the local HTTP server address
-            into a web browser.
+            into a web browser. We should be able to see the exact copy of these instructions in the browser.
         </p>
     </body>
 </html>

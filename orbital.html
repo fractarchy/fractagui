@@ -313,6 +313,8 @@
                     images.push (node);
                     
                     var ifr = document.createElement ('iframe');
+                    ifr.width = "0px";
+                    ifr.height = "0px";
 
                     ifr.onload = function () {
                         if (node.type === "html") {
@@ -393,7 +395,6 @@
                             head.insertBefore(base, head.childNodes[0]);
 
                             var scaleimg = 0;
-                            
                             if (window.devicePixelRatio === 1)
                                 scaleifr = 1;
                             else

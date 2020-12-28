@@ -1,27 +1,37 @@
-@media not ((min-device-width:512px) and (min-device-height:512px)) {
+@media (max-device-width: 512px), (max-device-height: 512px) {
     body {
-        width: 256px;
+        width: 232px;
         font-size: 1em;
         font-family: Times New Roman, Georgia, Garamond;
     }
+
+    h1 {
+        padding: 0.1em;
+        color: black;
+        background-color: lightgray;
+        font-size: 2.5em;
+        margin-top: -0.2em;
+        margin-bottom: 0.3em;
+        font-weight: bold;
+    }
 }
 
-@media (min-device-width:512px) and (min-device-height:512px) {
+@media (min-device-width: 512px) and (min-device-height: 512px) {
     body {
         width: 512px;
         font-size: 1.2em;
         font-family: Times New Roman, Georgia, Garamond;
     }
-}
 
-h1 {
-    padding: 0.1em;
-    color: black;
-    background-color: lightgray;
-    font-size: 3em;
-    margin-top: -0.2em;
-    margin-bottom: 0.3em;
-    font-weight: bold;
+    h1 {
+        padding: 0.1em;
+        color: black;
+        background-color: lightgray;
+        font-size: 3em;
+        margin-top: -0.2em;
+        margin-bottom: 0.3em;
+        font-weight: bold;
+    }
 }
 
 .float-left {

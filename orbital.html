@@ -43,12 +43,6 @@
                 pointer-events: auto;
                 background-color: gray;
             }
-            .fadeinfadeout {
-                animation: fadeIn 0.5s infinite alternate;
-            }
-            @keyframes fadeIn { 
-              from { opacity: 0; } 
-            }
             
             .rotate {
               animation: rotation 1s infinite linear;
@@ -62,6 +56,7 @@
                 transform: rotate(180deg);
               }
             }
+            
 
             a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
             a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
@@ -77,8 +72,15 @@
     </head>
     <body>
       <section>
-        <div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
-            <svg id="circle" height="300" width="300"><circle cx="100" cy="270" r="30" fill="white" /></svg>
+        <div id="splashContainer" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
+            <!--div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"-->
+            <div id="splash" class="rotate">
+                <svg id="circle" height="300" width="300"><circle cx="135" cy="30" r="30" fill="white"/></svg>
+            </div>
+            <svg id="loadPercentContainer" width="300" height="5" style="position: absolute; top: 230px;">
+                <rect id="" x="50" y="0" width="200" height="5" rx="2" ry="2" fill="darkgray"/>
+                <rect id="loadPercent" x="50" y="0" width="0" height="5" rx="2" ry="2" fill="white"/>
+            </svg>
         </div>
         
         <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
@@ -88,7 +90,7 @@
         <img id="i2" style="visibility: hidden; position: absolute; opacity: 1;"/>
         <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;"/>
         
-        <script src="include/html2canvas.min.js"></script>
+        <script src="include/html2canvas.js"></script>
         <script src="include/orbital.js"></script>
         
         <script>
@@ -146,14 +148,18 @@
                 var s0 = document.getElementById("circle");
                 s0.style.transform = "scale(" + (m / 2) + ")";
 
-                var spl = document.getElementById("splash");
+                var spl = document.getElementById("splashContainer");
                 spl.style.visibility = "visible";
                 spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
                 spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
+                
+                var ldp = document.getElementById("loadPercent");
+                ldp.style.left = ((spl.clientWidth / 2) - (ldp.clientWidth / 2)) + "px";
+                ldp.style.top = ((spl.clientHeight / 2) - (ldp.clientHeight / 2)) + "px";
             }
             
             function hideSplash() {
-                document.getElementById("splash").style.visibility = "hidden";
+                document.getElementById("splashContainer").style.visibility = "hidden";
             }
 
             function setSize () {
@@ -251,7 +257,7 @@
             var i3 = document.getElementById("i3");
 
             wonload = function () {
-                document.getElementById("splash").style.visibility = "hidden";
+                document.getElementById("splashContainer").style.visibility = "hidden";
                 if (env.showPic === "yes") {
                     i1.style.visibility = "visible";
                     i2.style.visibility = "visible";
@@ -361,12 +367,28 @@
                             }
                         }
                         
+                        function updateProgressBar() {
+                            var all = 0;
+                            var some = 0;
+                            for (var i = 0; i < images.length; i++){
+                                all++;
+                                if (images[i].canvas) {
+                                    some++;
+                                }                 
+                            }
+
+                            var ldp = document.getElementById("loadPercent");
+                            ldp.style.width = Math.round (200 * some / all) + "px";
+                        }
+                        
                         node.img = new Image ();
                         
                         node.img.crossOrigin = "anonymous";
                         
                         node.img.onload = function (e) {
                             node.canvas = createCanvasImg (node.img, scaleimg > 0 ? scale * scaleimg : 1, fill);
+
+                            updateProgressBar();
                         }
                         
                         node.img.onerror = function (e) {
@@ -385,6 +407,7 @@
                             else
                                 scaleimg = 2;
                             node.img.src = node.src;
+
                             ifr.remove();
                             
                         } else if (node.type === "html") {
@@ -560,7 +583,10 @@
                                             else
                                                 var myscale = 2;
                                         
-                                            Orbital (divContainer, data, env.flatArea / 100, env.scale / 100 / myscale, env.ovalColor, env.backColor);
+                                            document.getElementById("loadPercentContainer").style.visibility = "hidden";
+                                            
+                                            Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / myscale, env.ovalColor, env.backColor);
+
                                             window.addEventListener("load", wonload ());
                                         }, 50);
                                     }

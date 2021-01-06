@@ -160,11 +160,12 @@
             }
             
             function hideSplash() {
-                document.getElementById("splashContainer").style.visibility = "hidden";
+                if (document.getElementById("splashContainer"))
+                    document.getElementById("splashContainer").style.visibility = "hidden";
             }
 
             function setSize () {
-                setDesign();
+                //setDesign();
                 var ratio = 1;// / 1.61803398875;
                 var yzx = window.clientWidth;
                 var w = document.body.clientWidth;

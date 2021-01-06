@@ -73,13 +73,12 @@
     <body>
       <section>
         <div id="splashContainer" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
-            <!--div id="splash" class="rotate" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);"-->
             <div id="splash" class="rotate">
-                <svg id="circle" height="300" width="300"><circle cx="135" cy="30" r="30" fill="white"/></svg>
+                <svg id="circle" height="300" width="300"><circle id="rotator" cx="135" cy="30" r="30" fill="white"/></svg>
             </div>
-            <svg id="loadPercentContainer" width="300" height="5" style="position: absolute; top: 230px;">
-                <rect id="" x="50" y="0" width="200" height="5" rx="2" ry="2" fill="darkgray"/>
-                <rect id="loadPercent" x="50" y="0" width="0" height="5" rx="2" ry="2" fill="white"/>
+            <svg id="loadPercentContainer" width="300" height="8" style="position: absolute; top: 230px;">
+                <rect id="loadPercentBack" x="50" y="0" width="200" height="8" rx="3" ry="3" fill="darkgray"/>
+                <rect id="loadPercent" x="50" y="0" width="0" height="8" rx="3" ry="3" fill="white"/>
             </svg>
         </div>
         
@@ -94,7 +93,9 @@
         <script src="include/orbital.js"></script>
         
         <script>
-            function isDesign(str) {
+            var design = undefined;
+            
+            function getDesign() {
                 var design;
                 if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
                     design = 'touch';
@@ -105,32 +106,32 @@
                 } else if (window.matchMedia('handheld').matches) {
                     design = 'mobile';
                 }
-                return(str == design);
+                return design;
             }
             
             function setDesign() {
-                var design;
-                var sc = 0.5;// document.body.clientWidth / 1920;
+                var design1;
+                var sc = 0.5;
                 
                 if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
-                    design = 'touch, tablet';
+                    design1 = 'touch, tablet';
                     document
                         .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
+                        .setAttribute('content', 'width=device-width', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
                 } else if (window.matchMedia('screen').matches) {
-                    design = 'desktop';
+                    design1 = 'desktop';
                     document
                         .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'initial-scale=1', 'maximum-scale=1', 'minimum-scale=1', 'user-scalable=no');
+                        .setAttribute('content', 'width=device-width', 'initial-scale=1', 'maximum-scale=1', 'minimum-scale=1', 'user-scalable=no');
                 } else if (window.matchMedia('handheld').matches) {
-                    design = 'mobile';
+                    design1 = 'mobile';
                     document
                         .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
+                        .setAttribute('content', 'width=device-width', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
                 }
             }
 
-            function showSplash(txt) {
+            function showSplash () {
                 var w = document.body.clientWidth;
                 var h = document.body.clientHeight;
 
@@ -163,8 +164,9 @@
             }
 
             function setSize () {
+                setDesign();
                 var ratio = 1;// / 1.61803398875;
-                
+                var yzx = window.clientWidth;
                 var w = document.body.clientWidth;
                 var h = document.body.clientHeight;
                 
@@ -247,17 +249,22 @@
                         divContainer.style.top = (10) + "px";
                     }
                 }
-                
+            }
+
+            function dispatchSize () {
                 var event1 = new CustomEvent('resize1', null);
                 divContainer.dispatchEvent(event1);
             }
-            
+
             var i1 = document.getElementById("i1");
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
 
             wonload = function () {
-                document.getElementById("splashContainer").style.visibility = "hidden";
+                hideSplash ();
+                setSize ();
+                dispatchSize ();
+
                 if (env.showPic === "yes") {
                     i1.style.visibility = "visible";
                     i2.style.visibility = "visible";
@@ -265,12 +272,8 @@
                 }
                 divContainer.style.visibility = "visible";
 
-                setSize ();
-
                 var resizeId;
                 window.addEventListener('resize', function () {
-                    setDesign();
-                    
                     document.getElementById("tooltip").style.visibility = "hidden"
                     if (env.showPic === "yes") {
                         i1.style.visibility = "hidden";
@@ -278,19 +281,29 @@
                         i3.style.visibility = "hidden";
                     }
                     divContainer.style.visibility = "hidden";
-                    showSplash ("...&nbsp;computing&nbsp;bitmaps&nbsp;...");
+                    hideSplash ();
+
+                    if (design !== getDesign()) {
+                        window.top.document.body.innerHTML = "Please refresh the web page.";
+                        return;
+                    }
+                    
+                    setSize ();
+                    
+                    showSplash ();
                     
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
-                        setSize ();
                         hideSplash ();
+                        setSize ();
+                        dispatchSize ();
                         if (env.showPic === "yes") {
                             i1.style.visibility = "visible";
                             i2.style.visibility = "visible";
                             i3.style.visibility = "visible";
                         }
                         divContainer.style.visibility = "visible";
-
+                        
                     }, 500);
                 });
             }
@@ -314,13 +327,20 @@
                 var images = [];
                 var iframes = [];
                 var error = false;
+                
+                var div = document.createElement ('div');
 
                 (function loadImages (node) {
                     images.push (node);
                     
                     var ifr = document.createElement ('iframe');
+                    ifr.style.visibility = "hidden";
                     ifr.width = "0px";
                     ifr.height = "0px";
+                    ifr.style.border = "none";
+                    ifr.style.margin = "0px";
+                    ifr.style.padding = "0px";
+                    ifr.style.overflow = "hidden";
 
                     ifr.onload = function () {
                         if (node.type === "html") {
@@ -330,11 +350,6 @@
                                 alert ('Error loading: "' + ifr.src + '"');
                                 return;
                             }
-
-                            ifr.style.border = "none";
-                            ifr.style.margin = "0px";
-                            ifr.style.padding = "0px";
-                            ifr.style.overflow = "hidden";
                             ifr.height = ifr.contentWindow.document.body.scrollHeight;
                             ifr.width = ifr.contentWindow.document.body.scrollWidth;
                         }
@@ -373,6 +388,9 @@
                             for (var i = 0; i < images.length; i++){
                                 all++;
                                 if (images[i].canvas) {
+                                    if (!images[i].scaledBitmap)
+                                        images[i].scaledBitmap = Crisp.crispBitmapXY(images[i].canvas);
+                                    
                                     some++;
                                 }                 
                             }
@@ -408,8 +426,6 @@
                                 scaleimg = 2;
                             node.img.src = node.src;
 
-                            ifr.remove();
-                            
                         } else if (node.type === "html") {
                             var base = ifr.contentDocument.createElement('base');
                             base.href = xhr.responseURL;
@@ -425,23 +441,20 @@
                                 
                             html2canvas(ifr.contentDocument.body, {logging: false, scale: scale * scaleifr, backgroundColor: null}).then(function(canvas) {
                                 node.img.src = canvas.toDataURL();
-                                ifr.remove();
                             });
                         }
                         
                         iframes.push (ifr);
                     }
                     
-                    ifr.style.visibility = "hidden";
                     ifr.src = node.src + "?" +  Date.now();
-                    document.body.appendChild (ifr);
-
+                    div.appendChild (ifr);
+                    
                     if (node.children)
                         for (var i = 0; i < node.children.length; i++)
                             loadImages (node.children[i]);
                 })(data);
-                
-                return {images: images, iframes: iframes};
+                return {images: images, iframes: iframes, div: div};
             };
             
             function setupEnv (data) {
@@ -456,7 +469,7 @@
                         
                     } catch (e) {
                         hideSplash ();
-                        alert ('Contents.json error: "flat-area" hast to be a percent between "0%" and "100%"');
+                        alert ('Error in orbital.json: "flat-area" hast to be a percent between "0%" and "100%"');
                         throw new error ();
                     }
                 else
@@ -473,7 +486,7 @@
                         
                     } catch (e) {
                         hideSplash ();
-                        alert ('Contents.json error: "scale" hast to be a percent greater than "0%"');
+                        alert ('Error in orbital.json: "scale" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
                 else
@@ -482,7 +495,7 @@
                 if (data["show-pictograms"]) {
                     if (data["show-pictograms"] !== "yes" && data["show-pictograms"] !== "no") {
                         hideSplash ();
-                        alert ('Contents.json error: "show-pictograms" can only be "yes" or "no"');
+                        alert ('Error in orbital.json: "show-pictograms" can only be "yes" or "no"');
                         throw new error ();
                     }
                     
@@ -490,11 +503,11 @@
                     data["show-pictograms"] = "yes";
                 }
                 
-                if (data["show-pictograms"] === "yes") {
+                //if (data["show-pictograms"] === "yes") {
                     if (data["pictogram-theme"]) {
                         if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
                             hideSplash ();
-                            alert ('Contents.json error: "pictogram-theme" can only be "light" or "dark"');
+                            alert ('Error in orbital.json: "pictogram-theme" can only be "light" or "dark"');
                             throw new error ();
                         }
                         
@@ -503,16 +516,24 @@
                     }
                     
                     if (data["pictogram-theme"] === "dark") {
+                        document.getElementById("rotator").style.fill = "rgb(48, 48, 48)";
+                        document.getElementById("loadPercent").style.fill = "rgb(48, 48, 48)";
+                        document.getElementById("loadPercentBack").style.fill = "rgb(104, 104, 104)";
+
                         document.getElementById("i1").src="media/di1.svg";
                         document.getElementById("i2").src="media/di2.svg";
                         document.getElementById("i3").src="media/di3.svg";
                         
                     } else {
+                        document.getElementById("rotator").style.fill = "rgb(208, 208, 208)";
+                        document.getElementById("loadPercent").style.fill = "rgb(208, 208, 208)";
+                        document.getElementById("loadPercentBack").style.fill = "rgb(152, 152, 152)";
+
                         document.getElementById("i1").src="media/li1.svg";
                         document.getElementById("i2").src="media/li2.svg";
                         document.getElementById("i3").src="media/li3.svg";
                     }
-                }
+                //}
                 
                 return {
                     flatArea: flatArea,
@@ -539,7 +560,6 @@
                         }
                         
                         env = setupEnv (init);
-                        document.body.style.backgroundColor = env.backColor;
                         
                         xhr = new XMLHttpRequest();
 
@@ -568,30 +588,36 @@
                                     var ld = loader (data, env.scale / 100, env.ovalColor);
                                     var images = ld.images;
                                     var iframes = ld.iframes;
+                                    var div = ld.div;
+                                    
+                                    document.body.appendChild (div);
                                     
                                     var waitForImages = function () {
+                                        count = 0;
                                         for (var i = 0; i < images.length; i++){
                                             if (iframes.length < images.length || !images[i].canvas) {
-                                                setTimeout (waitForImages, 0);
+                                                setTimeout (waitForImages, 10);
                                                 return;
-                                            }                 
+                                            } 
                                         }
-                                        
-                                        setTimeout (function () {
-                                            if (window.devicePixelRatio === 1)
-                                                var myscale = 1;
-                                            else
-                                                var myscale = 2;
-                                        
-                                            document.getElementById("loadPercentContainer").style.visibility = "hidden";
-                                            
-                                            Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / myscale, env.ovalColor, env.backColor);
 
-                                            window.addEventListener("load", wonload ());
-                                        }, 50);
+                                        if (window.devicePixelRatio === 1)
+                                            var myscale = 1;
+                                        else
+                                            var myscale = 2;
+                                    
+                                        document.getElementById("loadPercentContainer").style.visibility = "hidden";
+                                        div.remove ();
+                                        
+                                        document.body.style.backgroundColor = env.backColor;
+                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / myscale, env.ovalColor, env.backColor);
+
+                                        window.addEventListener("load", wonload ());
                                     }
                                     
                                     waitForImages ();
+                                    showSplash ();
+
                                 } else {
                                     hideSplash ();
                                     alert ("Error processing '" + init.contents + "'");
@@ -614,8 +640,7 @@
             
             var divContainer = document.getElementById ("divContainer")
             
-            setDesign();
-            showSplash ("...&nbsp;loading&nbsp;data&nbsp;...");            
+            design = getDesign(); 
             loadContents ();
         </script>
       </section>

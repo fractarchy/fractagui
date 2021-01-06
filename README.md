@@ -6,7 +6,7 @@
 
 ## about e-fun
 
-E-fun is a fractal inspired, parent-child orbiting, zoomable, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. E-fun is a kind of headless, flat-file, and light CMS. Composing contents in E-fun is consisted of importing external content pages and arranging them using parent-children structure described in an initial XML file. The final result brings all the imported content pages shown in orbitable and zoomable ovals that form a seamless dynamic fractal. We navigate the entire fractal only by dragging ovals.
+E-fun is a fractal-structure inspired, parent-child orbiting, zooming-elements based, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. E-fun is a kind of headless, flat-file, and light CMS. Composing contents in E-fun is consisted of importing external content pages and arranging them using parent-children structure described in an initial XML file. The final result brings all the imported content pages shown in orbitable and zoomable ovals that form a seamless dynamic fractal. We navigate the entire fractal only by dragging ovals.
 
 ## user experience
 
@@ -19,4 +19,3 @@ E-fun is made as a helper to organize, emphasize, and publish your web pages. E-
 ## giving it a try
 
 Overview an example site containing use instructions [**here**](https://contrast-zone.github.io/e-fun/).
-

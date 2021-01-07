@@ -165,7 +165,6 @@
             }
 
             function setSize () {
-                //setDesign();
                 var ratio = 1;// / 1.61803398875;
                 var yzx = window.clientWidth;
                 var w = document.body.clientWidth;
@@ -504,37 +503,35 @@
                     data["show-pictograms"] = "yes";
                 }
                 
-                //if (data["show-pictograms"] === "yes") {
-                    if (data["pictogram-theme"]) {
-                        if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
-                            hideSplash ();
-                            alert ('Error in orbital.json: "pictogram-theme" can only be "light" or "dark"');
-                            throw new error ();
-                        }
-                        
-                    } else {
-                        data["pictogram-theme"] = "light";
+                if (data["pictogram-theme"]) {
+                    if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
+                        hideSplash ();
+                        alert ('Error in orbital.json: "pictogram-theme" can only be "light" or "dark"');
+                        throw new error ();
                     }
                     
-                    if (data["pictogram-theme"] === "dark") {
-                        document.getElementById("rotator").style.fill = "rgb(48, 48, 48)";
-                        document.getElementById("loadPercent").style.fill = "rgb(48, 48, 48)";
-                        document.getElementById("loadPercentBack").style.fill = "rgb(104, 104, 104)";
+                } else {
+                    data["pictogram-theme"] = "light";
+                }
+                
+                if (data["pictogram-theme"] === "dark") {
+                    document.getElementById("rotator").style.fill = "rgb(48, 48, 48)";
+                    document.getElementById("loadPercent").style.fill = "rgb(48, 48, 48)";
+                    document.getElementById("loadPercentBack").style.fill = "rgb(104, 104, 104)";
 
-                        document.getElementById("i1").src="media/di1.svg";
-                        document.getElementById("i2").src="media/di2.svg";
-                        document.getElementById("i3").src="media/di3.svg";
-                        
-                    } else {
-                        document.getElementById("rotator").style.fill = "rgb(208, 208, 208)";
-                        document.getElementById("loadPercent").style.fill = "rgb(208, 208, 208)";
-                        document.getElementById("loadPercentBack").style.fill = "rgb(152, 152, 152)";
+                    document.getElementById("i1").src="media/di1.svg";
+                    document.getElementById("i2").src="media/di2.svg";
+                    document.getElementById("i3").src="media/di3.svg";
+                    
+                } else {
+                    document.getElementById("rotator").style.fill = "rgb(208, 208, 208)";
+                    document.getElementById("loadPercent").style.fill = "rgb(208, 208, 208)";
+                    document.getElementById("loadPercentBack").style.fill = "rgb(152, 152, 152)";
 
-                        document.getElementById("i1").src="media/li1.svg";
-                        document.getElementById("i2").src="media/li2.svg";
-                        document.getElementById("i3").src="media/li3.svg";
-                    }
-                //}
+                    document.getElementById("i1").src="media/li1.svg";
+                    document.getElementById("i2").src="media/li2.svg";
+                    document.getElementById("i3").src="media/li3.svg";
+                }
                 
                 return {
                     flatArea: flatArea,

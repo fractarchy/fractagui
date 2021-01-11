@@ -2195,7 +2195,12 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
             c = c.parent;
             
         updateCursor (c);
-        updateCache (data);
+
+        var d = data;
+        while (d.parent)
+            d = d.parent;
+
+        updateCache (d.children[0]);
         
         redraw ();
     }

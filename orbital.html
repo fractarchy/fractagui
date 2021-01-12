@@ -356,8 +356,10 @@
                         
                         var links = ifr.contentWindow.document.getElementsByTagName("a");
                         for (var i = 0; i < links.length; i++) {
-                            var tg = links[i].getAttribute('target')
+                            var tg = links[i].getAttribute('target');
                             var hr = links[i].href;
+                            if (hr.baseVal) hr = hr.baseVal;
+
                             if (!hr)
                                 hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
                           
@@ -462,7 +464,7 @@
 
                         } else if (node.type === "html") {
                             var base = ifr.contentDocument.createElement('base');
-                            base.href = node.src;
+                            base.href = node.src;//xhr.responseURL;
                             
                             var head = ifr.contentDocument.getElementsByTagName('head')[0];
                             head.insertBefore(base, head.childNodes[0]);

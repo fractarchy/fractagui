@@ -357,7 +357,7 @@
                         var links = ifr.contentWindow.document.getElementsByTagName("a");
                         for (var i = 0; i < links.length; i++) {
                             var tg = links[i].getAttribute('target')
-                            var hr = links[i].getAttribute('href');
+                            var hr = links[i].href;
                             if (!hr)
                                 hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
                           
@@ -365,20 +365,37 @@
                                 if (!node.hyperlinks)
                                     node.hyperlinks = [];
                                 
-                                var rects = links[i].getClientRects();
-
-                                for (var j in rects)
-                                    node.hyperlinks.push (
-                                        {
-                                            "type": "rect",
-                                            "target": tg,
-                                            "href": hr,
-                                            "left": rects[j].left,
-                                            "top": rects[j].top,
-                                            "right": rects[j].right,
-                                            "bottom": rects[j].bottom
+                                for (var k = 0; k < links[i].children.length; k++) {
+                                    if (links[i].children[k].tagName === "IMG") {
+                                        var rect = links[i].children[k].getBoundingClientRect();
+                                        node.hyperlinks.push (
+                                            {
+                                                "type": "rect",
+                                                "target": tg,
+                                                "href": hr,
+                                                "left": rect.left,
+                                                "top": rect.top,
+                                                "right": rect.right,
+                                                "bottom": rect.bottom
+                                            }
+                                        );
+                                    } else {
+                                        var rects = links[i].getClientRects();
+                                        for (var j in rects) {
+                                            node.hyperlinks.push (
+                                                {
+                                                    "type": "rect",
+                                                    "target": tg,
+                                                    "href": hr,
+                                                    "left": rects[j].left,
+                                                    "top": rects[j].top,
+                                                    "right": rects[j].right,
+                                                    "bottom": rects[j].bottom
+                                                }
+                                            );
                                         }
-                                    )
+                                    }
+                                }
                             }
                         }
                         
@@ -447,7 +464,7 @@
                         iframes.push (ifr);
                     }
                     
-                    ifr.src = node.src + "?" +  Date.now();
+                    ifr.src = node.src;
                     div.appendChild (ifr);
                     
                     if (node.children)

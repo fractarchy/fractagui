@@ -428,7 +428,7 @@
 
                         } else if (node.type === "html") {
                             var base = ifr.contentDocument.createElement('base');
-                            base.href = xhr.responseURL;
+                            base.href = node.src;
                             
                             var head = ifr.contentDocument.getElementsByTagName('head')[0];
                             head.insertBefore(base, head.childNodes[0]);

@@ -365,35 +365,52 @@
                                 if (!node.hyperlinks)
                                     node.hyperlinks = [];
                                 
-                                for (var k = 0; k < links[i].children.length; k++) {
-                                    if (links[i].children[k].tagName === "IMG") {
-                                        var rect = links[i].children[k].getBoundingClientRect();
-                                        node.hyperlinks.push (
-                                            {
-                                                "type": "rect",
-                                                "target": tg,
-                                                "href": hr,
-                                                "left": rect.left,
-                                                "top": rect.top,
-                                                "right": rect.right,
-                                                "bottom": rect.bottom
-                                            }
-                                        );
-                                    } else {
-                                        var rects = links[i].getClientRects();
-                                        for (var j in rects) {
+                                if (links[i].children.length > 0) {
+                                    for (var k = 0; k < links[i].children.length; k++) {
+                                        if (links[i].children[k].tagName === "IMG") {
+                                            var rect = links[i].children[k].getBoundingClientRect();
                                             node.hyperlinks.push (
                                                 {
                                                     "type": "rect",
                                                     "target": tg,
                                                     "href": hr,
-                                                    "left": rects[j].left,
-                                                    "top": rects[j].top,
-                                                    "right": rects[j].right,
-                                                    "bottom": rects[j].bottom
+                                                    "left": rect.left,
+                                                    "top": rect.top,
+                                                    "right": rect.right,
+                                                    "bottom": rect.bottom
                                                 }
                                             );
+                                        } else {
+                                            var rects = links[i].getClientRects();
+                                            for (var j in rects) {
+                                                node.hyperlinks.push (
+                                                    {
+                                                        "type": "rect",
+                                                        "target": tg,
+                                                        "href": hr,
+                                                        "left": rects[j].left,
+                                                        "top": rects[j].top,
+                                                        "right": rects[j].right,
+                                                        "bottom": rects[j].bottom
+                                                    }
+                                                );
+                                            }
                                         }
+                                    }
+                                } else {
+                                    var rects = links[i].getClientRects();
+                                    for (var j in rects) {
+                                        node.hyperlinks.push (
+                                            {
+                                                "type": "rect",
+                                                "target": tg,
+                                                "href": hr,
+                                                "left": rects[j].left,
+                                                "top": rects[j].top,
+                                                "right": rects[j].right,
+                                                "bottom": rects[j].bottom
+                                            }
+                                        );
                                     }
                                 }
                             }

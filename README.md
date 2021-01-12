@@ -1,6 +1,6 @@
 # e-fun
 
-(v 0.1 - update)  
+(experimental v 0.1 - update)  
 
 ![](media/socmedia.png)  
 

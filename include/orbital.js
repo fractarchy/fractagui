@@ -741,7 +741,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                 ctx.clip ();
 
                 clear ();
-                
+                /*
                 ctx.lineWidth = 0;
                 ctx.beginPath();
                 ctx.ellipse (
@@ -758,6 +758,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
 
                 ctx.fillStyle = fill1;
                 ctx.fill ();
+                */
 
             } else {
                 clear ();
@@ -1194,6 +1195,8 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     
     function drawCircle (data, x, y, r, fill, stroke, cursor, renderHint, level) {
         if (r * squashX > 0.5 && r * squashY > 0.5) {
+
+            ctx.globalAlpha = 1;
             
             ctx.beginPath ();
             ctx.ellipse (
@@ -1213,7 +1216,10 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
             ctx.fillStyle = fill;
             ctx.fill ();
             
-            if (r > 5) {
+            ctx.globalAlpha = r / (rr * ratio * ratio * ratio);
+            ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2);
+            
+            //if (r > 5) {
                 var magn = r / (rr * ratio);
                 
                 var xo = x * squashX - r * squashX;
@@ -1230,7 +1236,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     cy = cursor.centerY;
                 } else {
                     cx = 0;
-                    cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + squashY * rr / 3, data.scaledBitmap.height / 2);
+                    cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
                 }
                 
                 if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
@@ -1263,7 +1269,30 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
                 
                 }
-            }
+            //}
+            
+            ctx.globalAlpha = 1 - ctx.globalAlpha;
+            
+            ctx.beginPath ();
+            ctx.ellipse (
+                x * squashX,
+                y * squashY,
+                r * squashX,
+                r * squashY,
+                0,
+                0,
+                2 * Math.PI,
+                false
+            );
+            ctx.closePath ();
+
+            ctx.lineWidth = 0;
+
+            ctx.fillStyle = back1;
+            ctx.fill ();
+
+            ctx.globalAlpha = 1;
+
         }
     }
     
@@ -1277,7 +1306,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                 select = select.child;
                 
                 if (!sc.children[select.index]) {
-                    var cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + squashY * rr / 3, select.data.scaledBitmap.height / 2);
+                    var cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + alignY, select.data.scaledBitmap.height / 2);
                     sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: cy, angle: Math.PI, children: []};
                 }
                 
@@ -1367,7 +1396,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
             } else {
                 select.cursor.centerX = 0;
                 //select.cursor.centerY = 0;
-                select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + squashY * rr / 3, select.cursor.data.scaledBitmap.height / 2);
+                select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + alignY, select.cursor.data.scaledBitmap.height / 2);
 
             }
             
@@ -1669,7 +1698,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                     inert = [];
 
                                     if (!cursor.children[cursor.index]) {
-                                        var cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + squashY * rr / 3, topc.child.data.scaledBitmap.height / 2);
+                                        var cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + alignY, topc.child.data.scaledBitmap.height / 2);
                                         cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: cy, index: 0, angle: Math.PI, children: []};
                                     }
                                         
@@ -1815,7 +1844,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 animating = "level";
                                 cursor.centerX = 0;
                                 //cursor.centerY = 0;
-                                cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + squashY * rr / 3, cursor.data.scaledBitmap.height / 2);
+                                cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
 
                                 aEnsmall();
                             }
@@ -1842,40 +1871,42 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     
 
     function mousedown (e) {
-        mouse = getMouse (e);
+        if (animating !== "level") {
+            mouse = getMouse (e);
+                    
+            globalt0 = (new Date()).getTime();
+
+            if (e.which === 1) {
+                preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
                 
-        globalt0 = (new Date()).getTime();
-
-        if (e.which === 1) {
-            preSelect = redraw ({x: mouse.x, y: mouse.y, button: e.which});
-            
-            if (animating) {
-                animating = false;
-            }
-
-            mouseDown = 1;
-            
-            dragX = mouse.x;
-            dragY = mouse.y;
-            
-            oldCenterX = cursor.centerX;
-            oldCenterY = cursor.centerY;
-
-            var r0 = r1 * ratio;
-            var x0 = Math.floor (x1 * squashX);
-            var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
-            
-            if (Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
-                if (panning) {
-                    panning = false;
+                if (animating) {
+                    animating = false;
                 }
-            }
-            
-            setMouseHyperlink (mouse.x, mouse.y);
-            onHyperlink = tooltip.innerText;
-            
-            if (preSelect) {
-                cnv.style.cursor = "grabbing";
+
+                mouseDown = 1;
+                
+                dragX = mouse.x;
+                dragY = mouse.y;
+                
+                oldCenterX = cursor.centerX;
+                oldCenterY = cursor.centerY;
+
+                var r0 = r1 * ratio;
+                var x0 = Math.floor (x1 * squashX);
+                var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+                
+                if (Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
+                    if (panning) {
+                        panning = false;
+                    }
+                }
+                
+                setMouseHyperlink (mouse.x, mouse.y);
+                onHyperlink = tooltip.innerText;
+                
+                if (preSelect) {
+                    cnv.style.cursor = "grabbing";
+                }
             }
         }
     }
@@ -2144,6 +2175,8 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
 
     function resize(width, height) {
         setDimensions (width, height);
+        alignX = 0;
+        alignY = squashY * rr * 1 / 2;
     
         fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature, flatArea);
 
@@ -2164,7 +2197,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
         cnv.style.clipPath = "url(#clip128)";
         
         function updateCache (data) {
-            var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + squashY * rr / 3, data.scaledBitmap.height / 2);
+            var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
             data.centerX = 0;
             data.centerY = cy;
             
@@ -2179,7 +2212,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
         function updateCursor (c) {
             if (c) {
                 if (c.data) {
-                    var cy = ~~Math.min (/*center*/ -c.data.scaledBitmap.height / 2 + squashY * rr / 3, c.data.scaledBitmap.height / 2);
+                    var cy = ~~Math.min (/*center*/ -c.data.scaledBitmap.height / 2 + alignY, c.data.scaledBitmap.height / 2);
                     c.centerX = 0;
                     c.centerY = cy;
                 }
@@ -2209,6 +2242,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     var mouse = {};
     var tt, ll, ww, hh, rr, ferr, xx, yy, w0, h0, squashX, squashY;
     var r1, x1, y1;
+    var alignX, alignY
     var path = [], cursor, select, preSelect, animating, panning;
     var fishEye;
     cursor = {parent: null, index: 0, data: data, centerX: 0, centerY: 0, angle: Math.PI, children: []}
@@ -2217,7 +2251,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     var level, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
     var lastMouseEvent, globalt0;
 
-    var mouseDown = false;
+    var mouseDown = 0;
     var dragX, dragY, dragging = false, oldCenterX, oldCenterY;
     var inert, inertIdx = 0;
     var inertPan, inertIdxPan = 0;

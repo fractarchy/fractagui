@@ -69,6 +69,9 @@
               user-select: none; /* Standard syntax */
             }
         </style>
+        
+        <script src="include/html2canvas.update.js"></script>
+        <script src="include/orbital.js"></script>
     </head>
     <body>
       <section>
@@ -88,9 +91,6 @@
         <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;"/>
         <img id="i2" style="visibility: hidden; position: absolute; opacity: 1;"/>
         <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;"/>
-        
-        <script src="include/html2canvas.js"></script>
-        <script src="include/orbital.js"></script>
         
         <script>
             var design = undefined;
@@ -335,11 +335,7 @@
                     
                     var ifr = document.createElement ('iframe');
                     ifr.style.visibility = "hidden";
-                    ifr.width = "0px";
-                    ifr.height = "0px";
                     ifr.style.border = "none";
-                    ifr.style.margin = "0px";
-                    ifr.style.padding = "0px";
                     ifr.style.overflow = "hidden";
 
                     ifr.onload = function () {
@@ -350,85 +346,17 @@
                                 alert ('Error loading: "' + ifr.src + '"');
                                 return;
                             }
-                            ifr.height = ifr.contentWindow.document.body.scrollHeight;
-                            ifr.width = ifr.contentWindow.document.body.scrollWidth;
+                            ifr.style.width = "0px";
+                            ifr.style.height = "0px";
                         }
-                        
-                        var links = ifr.contentWindow.document.getElementsByTagName("a");
-                        for (var i = 0; i < links.length; i++) {
-                            var tg = links[i].getAttribute('target');
-                            var hr = links[i].href;
-                            if (hr.baseVal) hr = hr.baseVal;
 
-                            if (!hr)
-                                hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                          
-                            if (hr) {
-                                if (!node.hyperlinks)
-                                    node.hyperlinks = [];
-                                
-                                if (links[i].children.length > 0) {
-                                    for (var k = 0; k < links[i].children.length; k++) {
-                                        if (links[i].children[k].tagName === "IMG") {
-                                            var rect = links[i].children[k].getBoundingClientRect();
-                                            node.hyperlinks.push (
-                                                {
-                                                    "type": "rect",
-                                                    "target": tg,
-                                                    "href": hr,
-                                                    "left": rect.left,
-                                                    "top": rect.top,
-                                                    "right": rect.right,
-                                                    "bottom": rect.bottom
-                                                }
-                                            );
-                                        } else {
-                                            var rects = links[i].getClientRects();
-                                            for (var j in rects) {
-                                                node.hyperlinks.push (
-                                                    {
-                                                        "type": "rect",
-                                                        "target": tg,
-                                                        "href": hr,
-                                                        "left": rects[j].left,
-                                                        "top": rects[j].top,
-                                                        "right": rects[j].right,
-                                                        "bottom": rects[j].bottom
-                                                    }
-                                                );
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    var rects = links[i].getClientRects();
-                                    for (var j in rects) {
-                                        node.hyperlinks.push (
-                                            {
-                                                "type": "rect",
-                                                "target": tg,
-                                                "href": hr,
-                                                "left": rects[j].left,
-                                                "top": rects[j].top,
-                                                "right": rects[j].right,
-                                                "bottom": rects[j].bottom
-                                            }
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                        
                         function updateProgressBar() {
                             var all = 0;
                             var some = 0;
                             for (var i = 0; i < images.length; i++){
                                 all++;
-                                if (images[i].canvas) {
-                                    if (!images[i].scaledBitmap)
-                                        images[i].scaledBitmap = Crisp.crispBitmapXY(images[i].canvas);
-                                    
+                                if (images[i].canvas)
                                     some++;
-                                }                 
                             }
 
                             var ldp = document.getElementById("loadPercent");
@@ -441,6 +369,7 @@
                         
                         node.img.onload = function (e) {
                             node.canvas = createCanvasImg (node.img, scaleimg > 0 ? scale * scaleimg : 1, fill);
+                            node.scaledBitmap = Crisp.crispBitmapXY(node.canvas);
 
                             updateProgressBar();
                         }
@@ -462,6 +391,38 @@
                                 scaleimg = 2;
                             node.img.src = node.src;
 
+                            var links = ifr.contentWindow.document.getElementsByTagName("a");
+                            for (var i = 0; i < links.length; i++) {
+                                var tg = links[i].getAttribute('target');
+                                var hr = links[i].href;
+                                if (hr.baseVal) hr = hr.baseVal;
+
+                                if (!hr)
+                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                              
+                                if (hr) {
+                                    if (!node.hyperlinks)
+                                        node.hyperlinks = [];
+
+                                    if (links[i].children.length > 0) {
+                                        var rects = links[i].getClientRects();
+                                        for (var j in rects) {
+                                            node.hyperlinks.push (
+                                                {
+                                                    "type": "rect",
+                                                    "target": tg,
+                                                    "href": hr,
+                                                    "left": rects[j].left,
+                                                    "top": rects[j].top,
+                                                    "right": rects[j].right,
+                                                    "bottom": rects[j].bottom
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+
                         } else if (node.type === "html") {
                             var base = ifr.contentDocument.createElement('base');
                             base.href = node.src;//xhr.responseURL;
@@ -475,11 +436,13 @@
                             else
                                 scaleifr = 2;
                                 
-                            html2canvas(ifr.contentDocument.body, {logging: false, scale: scale * scaleifr, backgroundColor: null}).then(function(canvas) {
-                                node.img.src = canvas.toDataURL();
+                            html2canvas(ifr.contentDocument.body, {logging: false, scale: scale * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0}).then(function(ret) {
+                                node.hyperlinks = ret.hyperlinks;
+                                node.img.src = ret.canvas.toDataURL();
                             });
-                        }
-                        
+
+                       }
+
                         iframes.push (ifr);
                     }
                     

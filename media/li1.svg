@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -14,8 +12,8 @@
    viewBox="0 0 63.764581 63.764585"
    version="1.1"
    id="svg6201"
-   inkscape:version="0.92.4 (fd57863, 2020-04-02)"
-   sodipodi:docname="i1.svg">
+   inkscape:version="1.0.1 (0767f8302a, 2020-10-17)"
+   sodipodi:docname="li1.svg">
   <defs
      id="defs6195">
     <marker
@@ -228,17 +226,18 @@
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="721"
-     inkscape:window-height="417"
-     inkscape:window-x="940"
-     inkscape:window-y="451"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
      inkscape:snap-global="false"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-to-guides="true"
      inkscape:snap-bbox="true"
-     inkscape:bbox-nodes="true">
+     inkscape:bbox-nodes="true"
+     inkscape:document-rotation="0">
     <sodipodi:guide
        position="34.178002,41.295163"
        orientation="0,1"
@@ -258,7 +257,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -268,16 +267,7 @@
      id="layer1"
      transform="translate(0,-233.2354)">
     <rect
-       ry="1.8520712"
-       rx="1.8520712"
-       y="233.71448"
-       x="0.47908357"
-       height="62.806416"
-       width="62.806416"
-       id="rect5191"
-       style="fill:#7f7f7f;fill-opacity:1;stroke:#7f7f7f;stroke-width:0.95816714;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <rect
-       style="fill:#7f7f7f;fill-opacity:1;stroke:#ffffff;stroke-width:0.264819;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.264819;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3744"
        width="62.970596"
        height="62.970596"

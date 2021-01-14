@@ -6,6 +6,7 @@
     
 - v 0.1 - update  
     - SEO friendly implementation  
+    - gradual oval transparency  
     - changed responsive mode scaling policy  
     - HTML pages rendering support  
     - user defined foreground/background color  

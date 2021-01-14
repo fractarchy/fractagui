@@ -1217,7 +1217,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
             ctx.fill ();
             
             ctx.globalAlpha = r / (rr * ratio * ratio * ratio);
-            ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2);
+            ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2); // change this and you are doomed
             
             //if (r > 5) {
                 var magn = r / (rr * ratio);

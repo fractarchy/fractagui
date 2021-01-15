@@ -1954,7 +1954,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                             avgt = (avgt + dt) / 2;
                         }
 
-                        var dang = (inert[i].angle - inert[j].angle) / (inert[i].time - inert[j].time)
+                        var dang = (inert[i].angle - inert[j].angle) // (inert[i].time - inert[j].time)
                         
                         if (!avgAng)
                             avgAng = dang;
@@ -1980,10 +1980,10 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                             t0 = (new Date()).getTime();
                             if (dt === 0) dt = 1;
 
-                            di = di - Math.pow (dt / Math.abs (avgAng) / Math.pow(250, 4), 0.25);
+                            di = di - dt / 512;
                             var sindi = Math.sin (di * Math.PI / 2);
                             if (di > 0){
-                                ang0 += avgAng * sindi * 20 * (c.getCircle(ang0).r / c1/*(rr * (1 - ratio))*/);
+                                ang0 += avgAng * sindi * (c.getCircle(ang0).r / c1);
                                 if (inertIdx === 0) inertIdx = 1;
                                 var a0 = ang0 - dang0;
                                 a0 = Math.max (a0, select.getAngMin());

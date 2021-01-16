@@ -1386,9 +1386,11 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
 
             }
             
-            setTimeout(function () {
+            globalt0 = (new Date()).getTime();
+            window.requestAnimationFrame(function () {
                 redraw ({x: mouse.x, y: mouse.y}, "1");
-            }, 0);
+            });
+
         }
     }
     
@@ -1522,11 +1524,11 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     if (inertIdx === 20) inertIdx = 0;
 
                     //clear ();
-                    var sel = select;                                
-                    setTimeout(function () {
+                    var sel = select;
+                    window.requestAnimationFrame(function () {
                         if (!panning)
                             setupSelect (n.render (minRadius, x1, y1, r1, orientation, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+"));
-                    }, 0);
+                    });
 
                 //} else {
                 //    select.parent.revertAngle ();
@@ -1677,9 +1679,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                     if (i > 1) i = 1
                                     t0 = t1;
                                     
-                                    setTimeout(function () {
-                                        aEnlarge ();
-                                    }, 0);
+                                    window.requestAnimationFrame(aEnlarge)
                                 } else {
                                     level = gettingLevel;
                                     inertIdx = 0;
@@ -1702,28 +1702,22 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                         if (dragging) {
                                             setupSelect (atCur.child)
                                             redraw (null, "1", select.cursor);
-                                            setTimeout(function () {
-                                                mousemove (lastMouseEvent);
-                                            }, 0);
+                                            mousemove (lastMouseEvent);
                                         } else {
                                             redraw ({x: mouse.x, y: mouse.y}, "1");
-                                            setTimeout(function () {
-                                                mouseup (lastMouseEvent);
-                                            }, 0);
+                                            mouseup (lastMouseEvent);
                                         }
                                         //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                     } else {
                                         redraw ({x: mouse.x, y: mouse.y}, "1");
-                                        setTimeout(function () {
-                                            mouseup (lastMouseEvent);
-                                        }, 0);
+                                        mouseup (lastMouseEvent);
                                     }
                                 }
                             }
                             
                             animating = "level";
-                            aEnlarge();
+                            window.requestAnimationFrame(aEnlarge);
                         }    
                     } else if (mouseDistance > maxR + 1) {
                         //alert ("level up");
@@ -1793,9 +1787,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                         if (i > 1) i = 1
                                         t0 = t1;
                                         
-                                        setTimeout(function () {
-                                            aEnsmall ();
-                                        }, 0);
+                                        window.requestAnimationFrame(aEnsmall);
                                     } else {
                                         level = gettingLevel;
                                         inertIdx = 0;
@@ -1810,22 +1802,16 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                             if (dragging) {
                                                 setupSelect (atCur);
                                                 redraw (null, "1", select.cursor);
-                                                setTimeout(function () {
-                                                    mousemove (lastMouseEvent);
-                                                }, 0);
+                                                mousemove (lastMouseEvent);
                                             } else {
                                                 redraw ({x: mouse.x, y: mouse.y}, "1");
-                                                setTimeout(function () {
-                                                    mouseup (lastMouseEvent);
-                                                }, 0);
+                                                mouseup (lastMouseEvent);
                                             }
                                             //drawCircle (select.smallX,  select.smallY, select.smallR, "green", "white", "yxz");
 
                                         } else {
                                             redraw ({x: mouse.x, y: mouse.y}, "1");
-                                            setTimeout(function () {
-                                                mouseup (lastMouseEvent);
-                                            }, 0);
+                                            mouseup (lastMouseEvent);
                                         }                                            
                                     }
                                 }
@@ -1836,7 +1822,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 //cursor.centerY = 0;
                                 cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
 
-                                aEnsmall();
+                                window.requestAnimationFrame(aEnsmall);
                             }
                         }
                     }
@@ -1982,9 +1968,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
 
                                 redraw (null, "1+", (select)?select.cursor:null);
                                 
-                                setTimeout(function () {
-                                    aInert ();
-                                }, 0);
+                                window.requestAnimationFrame(aInert);
                             } else {
                                 animating = false;
                                 redraw ({x: mouse.x, y: mouse.y});
@@ -1996,7 +1980,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     }
 
                     animating = true;
-                    aInert();
+                    window.requestAnimationFrame(aInert);
                 }
             
                 if (!animating) {
@@ -2054,7 +2038,8 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     if (avgt < 250) {
                         var t0 = globalt0;
                         var di = 1;
-                        function dInert (select) {
+                        var globalSel = select;
+                        function dInert () {
                             if (animating === true) {
                                 var dt = (new Date()).getTime() - t0;
                                 t0 = (new Date()).getTime();
@@ -2065,13 +2050,10 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 if (di > 0){
                                     var oldx = cursor.centerX;
                                     var oldy = cursor.centerY;
-                                    setCenter (select, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
+                                    setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
                                     if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                        redraw (null, "1", select.cursor);
-                                        var sel = select;
-                                        setTimeout(function () {
-                                            dInert (sel);
-                                        }, 0);
+                                        redraw (null, "1", globalSel.cursor);
+                                        window.requestAnimationFrame(dInert);
                                     } else {
                                         panning = false;
                                         animating = false;
@@ -2103,7 +2085,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                             }
                         }
                         animating = true;
-                        dInert(select);
+                        window.requestAnimationFrame(dInert);
                     }
                 }
                 
@@ -2239,7 +2221,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     cursor.parent = {index: 0, children: [cursor]};
 
     var level, levelrr, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
-    var lastMouseEvent, globalt0;
+    var lastMouseEvent, globalt0, globalSel;
 
     var mouseDown = 0;
     var dragX, dragY, dragging = false, oldCenterX, oldCenterY;

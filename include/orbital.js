@@ -1954,7 +1954,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                             avgt = (avgt + dt) / 2;
                         }
 
-                        var dang = (inert[i].angle - inert[j].angle) // (inert[i].time - inert[j].time)
+                        var dang = (inert[i].angle - inert[j].angle);
                         
                         if (!avgAng)
                             avgAng = dang;
@@ -1981,7 +1981,6 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                             if (dt === 0) dt = 1;
 
                             di = di - dt / 384;
-                            var sindi = Math.sin (di * Math.PI / 2);
                             var sindi = Math.pow(di, 2);
                             if (di > 0){
                                 ang0 += avgAng * sindi * (c.getCircle(ang0).r / c1);
@@ -1989,7 +1988,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 var a0 = ang0 - dang0;
                                 a0 = Math.max (a0, select.getAngMin());
                                 a0 = Math.min (a0, select.getAngMax());
-                                c.setAngle (a0, inert[inertIdx - 1].percentRawAngle);
+                                c.setAngle (a0, 0/*inert[inertIdx - 1].percentRawAngle*/);
 
                                 redraw (null, "1+", (select)?select.cursor:null);
                                 
@@ -2045,14 +2044,14 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                             avgt = (avgt + dt) / 2;
                         }
 
-                        var dx = (inertPan[i].centerX - inertPan[j].centerX) / (inertPan[i].time - inertPan[j].time);
+                        var dx = (inertPan[i].centerX - inertPan[j].centerX);
                         if (!avgX) {
                             avgX = dx;
                         } else {
                             avgX = (avgX + dx) / 2
                         }
 
-                        var dy = (inertPan[i].centerY - inertPan[j].centerY) / (inertPan[i].time - inertPan[j].time);
+                        var dy = (inertPan[i].centerY - inertPan[j].centerY);
                         if (!avgY) {
                             avgY = dy;
                         } else {
@@ -2071,12 +2070,12 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 t0 = (new Date()).getTime();
                                 if (dt === 0) dt = 1;
 
-                                var dd = Math.sqrt (avgX * avgX + avgY * avgY);
-                                di = di - Math.pow (dt / dd / Math.pow(2000, 2), 0.25);
+                                di = di - dt / 384;
+                                var sindi = Math.pow(di, 2);
                                 if (di > 0){
                                     var oldx = cursor.centerX;
                                     var oldy = cursor.centerY;
-                                    setCenter (select, cursor.centerX + avgX * di * 25, cursor.centerY + avgY * di * 25);
+                                    setCenter (select, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
                                     if (oldx != cursor.centerX || oldy != cursor.centerY) {
                                         redraw (null, "1", select.cursor);
                                         var sel = select;

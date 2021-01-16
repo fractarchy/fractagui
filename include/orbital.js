@@ -741,24 +741,6 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                 ctx.clip ();
 
                 clear ();
-                /*
-                ctx.lineWidth = 0;
-                ctx.beginPath();
-                ctx.ellipse (
-                    x0 * squashX,
-                    y0 * squashY,
-                    r0 * squashX - 0.5,
-                    r0 * squashY - 0.5,
-                    0,
-                    0,
-                    2 * Math.PI,
-                    false
-                );
-                ctx.closePath ();
-
-                ctx.fillStyle = fill1;
-                ctx.fill ();
-                */
 
             } else {
                 clear ();
@@ -775,7 +757,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                 var colorFill = fill1;
                 
                 if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
-                    drawCircle(data, x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec);
+                    drawCircle (data, x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec);
                 }
                 
                 if (data.children.length > 0 && renderHint !== "1") {                   
@@ -798,7 +780,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
                     ci = (cursor?cursor.index:0);
                     if (c0.r * squashX * squashY >= minRadius) {
-                        got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                        got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null);
                         if (got) {
                             idx = ci;
                             alp = alpha;
@@ -815,7 +797,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci++;
                         
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -840,7 +822,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci--;
 
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor);
+                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -1216,7 +1198,11 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
             ctx.fillStyle = fill;
             ctx.fill ();
             
-            ctx.globalAlpha = r / (rr * ratio * ratio * ratio);
+            if (animating === "level")
+                ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
+            else
+                ctx.globalAlpha = r / (rr * ratio * Math.pow(1 - ratio, level - 1));
+
             ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2); // change this and you are doomed
             
             //if (r > 5) {
@@ -1680,6 +1666,8 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 var x = x1 + (x2 - x1) * i;
                                 var y = y1 + (y2 - y1) * i;
                                 var r = r1 + (r2 - r1) * i;
+                                
+                                levelrr = r;
 
                                 var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0");
 
@@ -1794,6 +1782,8 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                     var x = x1 + (x2 - x1) * (1 - i);
                                     var y = y1 + (y2 - y1) * (1 - i);
                                     var r = r1 + (r2 - r1) * (1 - i);
+
+                                    levelrr = r;
 
                                     var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0");
 
@@ -2248,7 +2238,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
     cursor = {parent: null, index: 0, data: data, centerX: 0, centerY: 0, angle: Math.PI, children: []}
     cursor.parent = {index: 0, children: [cursor]};
 
-    var level, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
+    var level, levelrr, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
     var lastMouseEvent, globalt0;
 
     var mouseDown = 0;

@@ -1526,10 +1526,13 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     //clear ();
                     var sel = select;
                     window.requestAnimationFrame(function () {
-                        if (!panning)
+                        if (!panning) {
                             setupSelect (n.render (minRadius, x1, y1, r1, orientation, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+"));
+                            if (!select)
+                                mouseup (lastMouseEvent);
+                        }
                     });
-
+                    
                 //} else {
                 //    select.parent.revertAngle ();
                 //}
@@ -1941,7 +1944,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                     }
                 }
                 
-                if (avgt < 250) {
+                if (select && avgt < 250) {
                     var c = select.parent;
                     if (inertIdx === 0) inertIdx = 1;
                     var ang0 = inert[inertIdx - 1].angle;
@@ -1988,72 +1991,86 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                 }
 
             } else if (panning && inertPan.length > 1) {
-                var avgX = 0;
-                var avgY = 0;
-                var avgt = 0;
-                var i = inertIdxPan - 1
-                var j = i - 1;
-                var k = 2;
-                if ((new Date()).getTime() - (inertIdxPan === 0? inertPan[inertPan.length - 1].time: inertPan[inertIdxPan - 1].time) < 250) {
-                    while (i !== inertIdxPan && k > 0) {
-                        if (i === 0)
-                            j = inertPan.length - 1;
-                        else
-                            j = i - 1
+                var r0 = r1 * ratio;
 
-                        if (!inertPan[i] || !inertPan[j])
-                            break;
-                            
-                        if (inertPan[i].time - inertPan[j].time > 250) {
-                            break;
+                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
+
+                if (Math.ceil (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY)) < Math.floor (r0)) {
+                    var avgX = 0;
+                    var avgY = 0;
+                    var avgt = 0;
+                    var i = inertIdxPan - 1
+                    var j = i - 1;
+                    var k = 2;
+                    if ((new Date()).getTime() - (inertIdxPan === 0? inertPan[inertPan.length - 1].time: inertPan[inertIdxPan - 1].time) < 250) {
+                        while (i !== inertIdxPan && k > 0) {
+                            if (i === 0)
+                                j = inertPan.length - 1;
+                            else
+                                j = i - 1
+
+                            if (!inertPan[i] || !inertPan[j])
+                                break;
+                                
+                            if (inertPan[i].time - inertPan[j].time > 250) {
+                                break;
+                            }
+
+                            if (inertPan[i].time < inertPan[j].time)
+                                break;
+
+                            var dt = inertPan[i].time - inertPan[j].time;
+                            if (!avgt) {
+                                avgt = dt;
+                            } else {
+                                avgt = (avgt + dt) / 2;
+                            }
+
+                            var dx = (inertPan[i].centerX - inertPan[j].centerX);
+                            if (!avgX) {
+                                avgX = dx;
+                            } else {
+                                avgX = (avgX + dx) / 2
+                            }
+
+                            var dy = (inertPan[i].centerY - inertPan[j].centerY);
+                            if (!avgY) {
+                                avgY = dy;
+                            } else {
+                                avgY = (avgY + dy) / 2
+                            }
+
+                            i -= 1; j -= 1; k -= 1;
                         }
+                        
+                        if (avgt < 250) {
+                            var t0 = globalt0;
+                            var di = 1;
+                            var globalSel = select;
+                            function dInert () {
+                                if (animating === true) {
+                                    var dt = (new Date()).getTime() - t0;
+                                    t0 = (new Date()).getTime();
+                                    if (dt === 0) dt = 1;
 
-                        if (inertPan[i].time < inertPan[j].time)
-                            break;
+                                    di = di - dt / 384;
+                                    var sindi = Math.pow(di, 2);
+                                    if (di > 0){
+                                        var oldx = cursor.centerX;
+                                        var oldy = cursor.centerY;
+                                        setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
+                                        if (oldx != cursor.centerX || oldy != cursor.centerY) {
+                                            redraw (null, "1", globalSel.cursor);
+                                            window.requestAnimationFrame(dInert);
+                                        } else {
+                                            panning = false;
+                                            animating = false;
+                                            redraw ({x: mouse.x, y: mouse.y});
+                                            if (cnv.style.cursor !== "grabbing")
+                                                setMouseHyperlink (mouse.x, mouse.y);
+                                        }
 
-                        var dt = inertPan[i].time - inertPan[j].time;
-                        if (!avgt) {
-                            avgt = dt;
-                        } else {
-                            avgt = (avgt + dt) / 2;
-                        }
-
-                        var dx = (inertPan[i].centerX - inertPan[j].centerX);
-                        if (!avgX) {
-                            avgX = dx;
-                        } else {
-                            avgX = (avgX + dx) / 2
-                        }
-
-                        var dy = (inertPan[i].centerY - inertPan[j].centerY);
-                        if (!avgY) {
-                            avgY = dy;
-                        } else {
-                            avgY = (avgY + dy) / 2
-                        }
-
-                        i -= 1; j -= 1; k -= 1;
-                    }
-                    
-                    if (avgt < 250) {
-                        var t0 = globalt0;
-                        var di = 1;
-                        var globalSel = select;
-                        function dInert () {
-                            if (animating === true) {
-                                var dt = (new Date()).getTime() - t0;
-                                t0 = (new Date()).getTime();
-                                if (dt === 0) dt = 1;
-
-                                di = di - dt / 384;
-                                var sindi = Math.pow(di, 2);
-                                if (di > 0){
-                                    var oldx = cursor.centerX;
-                                    var oldy = cursor.centerY;
-                                    setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
-                                    if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                        redraw (null, "1", globalSel.cursor);
-                                        window.requestAnimationFrame(dInert);
                                     } else {
                                         panning = false;
                                         animating = false;
@@ -2061,34 +2078,27 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                         if (cnv.style.cursor !== "grabbing")
                                             setMouseHyperlink (mouse.x, mouse.y);
                                     }
-
-                                } else {
-                                    panning = false;
-                                    animating = false;
-                                    redraw ({x: mouse.x, y: mouse.y});
+                                } else if (mouseDown === 1) {
+                                    var r0 = r1 * ratio;
+                                    var x0 = Math.floor (x1 * squashX);
+                                    var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+                                    
+                                    if (!(Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) < r0)) {
+                                        panning = false;
+                                        animating = false;
+                                        cursor.cachedCnv = false;
+                                        preSelect = redraw ({x: mouse.x, y: mouse.y});
+                                    }
                                     if (cnv.style.cursor !== "grabbing")
                                         setMouseHyperlink (mouse.x, mouse.y);
                                 }
-                            } else if (mouseDown === 1) {
-                                var r0 = r1 * ratio;
-                                var x0 = Math.floor (x1 * squashX);
-                                var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
-                                
-                                if (!(Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) < r0)) {
-                                    panning = false;
-                                    animating = false;
-                                    cursor.cachedCnv = false;
-                                    preSelect = redraw ({x: mouse.x, y: mouse.y});
-                                }
-                                if (cnv.style.cursor !== "grabbing")
-                                    setMouseHyperlink (mouse.x, mouse.y);
                             }
+                            animating = true;
+                            window.requestAnimationFrame(dInert);
                         }
-                        animating = true;
-                        window.requestAnimationFrame(dInert);
                     }
                 }
-                
+                    
                 if (!animating){
                     panning = false;
                     redraw ({x: mouse.x, y: mouse.y});

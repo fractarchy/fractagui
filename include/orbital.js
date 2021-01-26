@@ -1972,6 +1972,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                 redraw (null, "1+", (select)?select.cursor:null);
                                 
                                 window.requestAnimationFrame(aInert);
+                                
                             } else {
                                 animating = false;
                                 redraw ({x: mouse.x, y: mouse.y});
@@ -2063,6 +2064,7 @@ function Orbital (divContainer, data, flatArea, scale, theme, backTheme) {
                                         if (oldx != cursor.centerX || oldy != cursor.centerY) {
                                             redraw (null, "1", globalSel.cursor);
                                             window.requestAnimationFrame(dInert);
+                                            
                                         } else {
                                             panning = false;
                                             animating = false;

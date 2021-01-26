@@ -1,8 +1,9 @@
-@media (max-device-width: 512px), (max-device-height: 512px) {
+@media (max-device-width: 640px), (max-device-height: 640px) {
     body {
         width: 232px;
         font-size: 1em;
         font-family: Times New Roman, Georgia, Garamond;
+        margin: 0;
     }
 
     h1 {
@@ -10,13 +11,13 @@
         color: black;
         background-color: lightgray;
         font-size: 2.2em;
-        margin-top: -0.2em;
+        margin-top: -0.1em;
         margin-bottom: 0.3em;
         font-weight: bold;
     }
 }
 
-@media (min-device-width: 512px) and (min-device-height: 512px) {
+@media (min-device-width: 640px) and (min-device-height: 640px) {
     body {
         width: 512px;
         font-size: 1.2em;
@@ -28,7 +29,7 @@
         color: black;
         background-color: lightgray;
         font-size: 3.4em;
-        margin-top: -0.2em;
+        margin-top: -0.1em;
         margin-bottom: 0.3em;
         font-weight: bold;
     }

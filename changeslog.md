@@ -12,4 +12,8 @@
     - user defined foreground/background color  
     - optional hiding help pictograms  
 
+- - -
+
+- v 0.3 - beta
+    - improved device-pixel-ratio consistency for mobile platforms  
 

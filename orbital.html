@@ -2,29 +2,7 @@
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <title>E-Fun</title>
-    <link rel="icon" type="image/png" href="./media/favicon32.png"/>
 
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="E-Fun">
-    <meta name="description" content="A fractal inspired experimental content management system">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://contrast-zone.github.io/e-fun">
-    <meta property="og:title" content="E-Fun">
-    <meta property="og:description" content="A fractal inspired experimental content management system">
-    <meta property="og:image" content="media/socmedia.png">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://contrast-zone.github.io/e-fun">
-    <meta property="twitter:title" content="E-Fun">
-    <meta property="twitter:description" content="A fractal inspired experimental content management system">
-    <meta property="twitter:image" content="media/socmedia.png">
-
-    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
     <head>
         <style media="screen">
             section {
@@ -70,6 +48,21 @@
             }
         </style>
         
+        <script>
+            function setDesign(pr) {
+                var viewport = document.querySelector("meta[name=viewport]");
+                if (!viewport){
+                    viewport=document.createElement('meta');
+                    viewport.name = "viewport";
+                    document.getElementsByTagName('head')[0].appendChild(viewport);
+                }
+                var sc = 1 / pr;
+                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
+            }
+            
+            setDesign(window.devicePixelRatio);
+        </script>
+
         <script src="include/html2canvas.update.js"></script>
         <script src="include/orbital.js"></script>
     </head>
@@ -109,28 +102,6 @@
                 return design;
             }
             
-            function setDesign() {
-                var design1;
-                var sc = 0.5;
-                
-                if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
-                    design1 = 'touch, tablet';
-                    document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'width=device-width', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
-                } else if (window.matchMedia('screen').matches) {
-                    design1 = 'desktop';
-                    document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'width=device-width', 'initial-scale=1', 'maximum-scale=1', 'minimum-scale=1', 'user-scalable=no');
-                } else if (window.matchMedia('handheld').matches) {
-                    design1 = 'mobile';
-                    document
-                        .querySelector("meta[name=viewport]")
-                        .setAttribute('content', 'width=device-width', 'initial-scale=' + sc, 'maximum-scale=' + sc, 'minimum-scale=' + sc, 'user-scalable=no');
-                }
-            }
-
             function showSplash () {
                 var w = document.body.clientWidth;
                 var h = document.body.clientHeight;
@@ -368,7 +339,7 @@
                         node.img.crossOrigin = "anonymous";
                         
                         node.img.onload = function (e) {
-                            node.canvas = createCanvasImg (node.img, scaleimg > 0 ? scale * scaleimg : 1, fill);
+                            node.canvas = createCanvasImg (node.img, node.type === "image" ? scale * scaleimg : 1, fill);
                             node.scaledBitmap = Crisp.crispBitmapXY(node.canvas);
 
                             updateProgressBar();
@@ -385,10 +356,8 @@
                         var scaleimg;
                         var scaleifr;
                         if (node.type === "image") {
-                            if (window.devicePixelRatio === 1)
-                                scaleimg = 1;
-                            else
-                                scaleimg = 2;
+                            scaleimg = window.devicePixelRatio;
+
                             node.img.src = node.src;
 
                             var links = ifr.contentWindow.document.getElementsByTagName("a");
@@ -430,11 +399,7 @@
                             var head = ifr.contentDocument.getElementsByTagName('head')[0];
                             head.insertBefore(base, head.childNodes[0]);
 
-                            var scaleimg = 0;
-                            if (window.devicePixelRatio === 1)
-                                scaleifr = 1;
-                            else
-                                scaleifr = 2;
+                            scaleifr = window.devicePixelRatio;
                                 
                             html2canvas(ifr.contentDocument.body, {logging: false, scale: scale * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0}).then(function(ret) {
                                 node.hyperlinks = ret.hyperlinks;
@@ -598,10 +563,7 @@
                                             } 
                                         }
 
-                                        if (window.devicePixelRatio === 1)
-                                            var myscale = 1;
-                                        else
-                                            var myscale = 2;
+                                        var myscale = window.devicePixelRatio;
                                     
                                         document.getElementById("loadPercentContainer").style.visibility = "hidden";
                                         div.remove ();

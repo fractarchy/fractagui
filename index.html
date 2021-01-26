@@ -24,7 +24,6 @@
     <meta property="twitter:description" content="A fractal inspired experimental content management system">
     <meta property="twitter:image" content="media/socmedia.png">
 
-    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
     <head>
         <style media="screen">
             html, body
@@ -68,6 +67,19 @@
             a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:underline;}
             a.exHover:hover, a.exHover:active {cursor: pointer; color:white; text-decoration:underline;}
         </style>
+        <script>
+            function setDesign(pr) {
+                var viewport = document.querySelector("meta[name=viewport]");
+                if (!viewport){
+                    viewport=document.createElement('meta');
+                    viewport.name = "viewport";
+                    document.getElementsByTagName('head')[0].appendChild(viewport);
+                }
+                var sc = 1 / pr;
+                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
+            }
+            setDesign(window.devicePixelRatio);
+        </script>
     </head>
     <body>
         <div id="container">

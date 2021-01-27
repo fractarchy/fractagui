@@ -78,12 +78,12 @@
                 var sc = 1 / pr;
                 viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
             }
-            setDesign(1/*window.devicePixelRatio*/);
+            setDesign(window.devicePixelRatio);
         </script>
     </head>
     <body>
         <script>
-            /*document.body.style.fontSize = Math.sqrt(window.devicePixelRatio) + "em"*/
+            document.body.style.fontSize = Math.sqrt(window.devicePixelRatio) + "em"
         </script>
         <div id="container">
             <div id="header" align="center">

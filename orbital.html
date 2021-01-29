@@ -312,6 +312,7 @@
                     ifr.style.overflow = "hidden";
 
                     ifr.onload = function () {
+                        var node = ifr._node;
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
                                 error = true
@@ -355,6 +356,36 @@
                             }
                         }
                         
+                        var links = ifr.contentWindow.document.getElementsByTagName("a");
+                        for (var i = 0; i < links.length; i++) {
+                            var tg = links[i].getAttribute('target');
+                            var hr = links[i].href;
+                            if (hr.baseVal) hr = hr.baseVal;
+
+                            if (!hr)
+                                hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                          
+                            if (hr) {
+                                if (!node.hyperlinks)
+                                    node.hyperlinks = [];
+
+                                var rects = links[i].getClientRects();
+                                for (var j in rects) {
+                                    node.hyperlinks.push (
+                                        {
+                                            "type": "rect",
+                                            "target": tg,
+                                            "href": hr,
+                                            "left": rects[j].left,
+                                            "top": rects[j].top,
+                                            "right": rects[j].right,
+                                            "bottom": rects[j].bottom
+                                        }
+                                    );
+                                }
+                            }
+                        }
+
                         //var scaleimg = 0;
                         var scaleifr;
                         if (node.type === "image") {
@@ -363,6 +394,7 @@
                             node.img.src = node.src;
                             node.src = node.src;
 
+                            /*
                             var links = ifr.contentWindow.document.getElementsByTagName("a");
                             for (var i = 0; i < links.length; i++) {
                                 var tg = links[i].getAttribute('target');
@@ -376,7 +408,7 @@
                                     if (!node.hyperlinks)
                                         node.hyperlinks = [];
 
-                                    if (links[i].children.length > 0) {
+                                    //if (links[i].children.length > 0) {
                                         var rects = links[i].getClientRects();
                                         for (var j in rects) {
                                             node.hyperlinks.push (
@@ -391,9 +423,10 @@
                                                 }
                                             );
                                         }
-                                    }
+                                    //}
                                 }
                             }
+                            */
 
                         } else if (node.type === "html") {
                             /*
@@ -410,8 +443,40 @@
                                 node.img.src = ret.canvas.toDataURL();
                             });
                             */
-                            
-                            node.hyperlinks = [];
+
+                            /*                            
+                            var links = ifr.contentWindow.document.getElementsByTagName("a");
+                            for (var i = 0; i < links.length; i++) {
+                                var tg = links[i].getAttribute('target');
+                                var hr = links[i].href;
+                                if (hr.baseVal) hr = hr.baseVal;
+
+                                if (!hr)
+                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                              
+                                if (hr) {
+                                    if (!node.hyperlinks)
+                                        node.hyperlinks = [];
+
+                                    //if (links[i].children.length > 0) {
+                                        var rects = links[i].getClientRects();
+                                        for (var j in rects) {
+                                            node.hyperlinks.push (
+                                                {
+                                                    "type": "rect",
+                                                    "target": tg,
+                                                    "href": hr,
+                                                    "left": rects[j].left,
+                                                    "top": rects[j].top,
+                                                    "right": rects[j].right,
+                                                    "bottom": rects[j].bottom
+                                                }
+                                            );
+                                        }
+                                    //}
+                                }
+                            }
+                            */
                             
                             node.scaleImg = window.devicePixelRatio;
                             //var xhr = new XMLHttpRequest ();
@@ -420,9 +485,9 @@
                             //    if(xhr.readyState === 4 && xhr.status === 200) {
                                     var renderer = new iframetoimage (ifr);
                                     //renderer.buildSvgDataUri (xhr.response, ifr.contentDocument.body.scrollWidth, ifr.contentDocument.body.scrollHeight).then(function(ret) {
-                                    var body = ifr.contentDocument.body;
-                                    var width = body.scrollLeft + body.scrollWidth;
-                                    var height = body.scrollTop + body.scrollHeight;
+                                    //var body = ifr.contentDocument.body;
+                                    //var width = body.scrollLeft + body.scrollWidth;
+                                    //var height = body.scrollTop + body.scrollHeight;
                                     //renderer.renderToSvg (ifr.contentDocument.body.innerHTML, width, height).then(function(ret) {
                                     renderer.renderToSvg ().then (function (ret) {
                                         node.img.src = ret;
@@ -449,6 +514,7 @@
                         iframes.push (ifr);
                     }
                     
+                    ifr._node = node;
                     ifr.src = node.src;
                     div.appendChild (ifr);
                     

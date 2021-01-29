@@ -255,10 +255,10 @@
                     divContainer.style.visibility = "hidden";
                     hideSplash ();
 
-                    if (design !== getDesign()) {
-                        window.top.document.body.innerHTML = "Please refresh the web page.";
-                        return;
-                    }
+                    //if (design !== getDesign()) {
+                    //    window.top.document.body.innerHTML = "Please refresh the web page.";
+                    //    return;
+                    //}
                     
                     setSize ();
                     
@@ -703,7 +703,15 @@
             
             var divContainer = document.getElementById ("divContainer")
             
-            design = getDesign(); 
+            //design = getDesign(); 
+            
+            let pixelRatioBox = document.querySelector(".pixel-ratio");
+            let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+
+            matchMedia(mqString).addListener(() => {
+                window.top.document.body.innerHTML = "Please refresh the web page.";
+                return;
+            });
             loadContents ();
         </script>
       </section>

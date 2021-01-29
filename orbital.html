@@ -87,8 +87,6 @@
         <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;"/>
         
         <script>
-            var design = undefined;
-            
             function getDesign() {
                 var design;
                 if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
@@ -317,7 +315,7 @@
                             if (ifr.contentWindow.document.body === null) {
                                 error = true
                                 hideSplash ();
-                                alert ('Error loading: "' + ifr.src + '"');
+                                alert (`Error loading: '${ifr.src}'`);
                                 return;
                             }
                             ifr.style.width = "0px";
@@ -352,7 +350,7 @@
                             if (!error) {
                                 error = true
                                 hideSplash ();
-                                alert ('Error loading: "' + node.src + '"');
+                                alert (`Error loading: '${node.src}'`);
                             }
                         }
                         
@@ -368,6 +366,8 @@
                             if (hr) {
                                 if (!node.hyperlinks)
                                     node.hyperlinks = [];
+
+//                                if (links[i].children.length > 0)
 
                                 var rects = links[i].getClientRects();
                                 for (var j in rects) {
@@ -386,47 +386,11 @@
                             }
                         }
 
-                        //var scaleimg = 0;
-                        var scaleifr;
                         if (node.type === "image") {
                             node.scaleImg = window.devicePixelRatio;
 
                             node.img.src = node.src;
                             node.src = node.src;
-
-                            /*
-                            var links = ifr.contentWindow.document.getElementsByTagName("a");
-                            for (var i = 0; i < links.length; i++) {
-                                var tg = links[i].getAttribute('target');
-                                var hr = links[i].href;
-                                if (hr.baseVal) hr = hr.baseVal;
-
-                                if (!hr)
-                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                              
-                                if (hr) {
-                                    if (!node.hyperlinks)
-                                        node.hyperlinks = [];
-
-                                    //if (links[i].children.length > 0) {
-                                        var rects = links[i].getClientRects();
-                                        for (var j in rects) {
-                                            node.hyperlinks.push (
-                                                {
-                                                    "type": "rect",
-                                                    "target": tg,
-                                                    "href": hr,
-                                                    "left": rects[j].left,
-                                                    "top": rects[j].top,
-                                                    "right": rects[j].right,
-                                                    "bottom": rects[j].bottom
-                                                }
-                                            );
-                                        }
-                                    //}
-                                }
-                            }
-                            */
 
                         } else if (node.type === "html") {
                             /*
@@ -444,63 +408,13 @@
                             });
                             */
 
-                            /*                            
-                            var links = ifr.contentWindow.document.getElementsByTagName("a");
-                            for (var i = 0; i < links.length; i++) {
-                                var tg = links[i].getAttribute('target');
-                                var hr = links[i].href;
-                                if (hr.baseVal) hr = hr.baseVal;
-
-                                if (!hr)
-                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                              
-                                if (hr) {
-                                    if (!node.hyperlinks)
-                                        node.hyperlinks = [];
-
-                                    //if (links[i].children.length > 0) {
-                                        var rects = links[i].getClientRects();
-                                        for (var j in rects) {
-                                            node.hyperlinks.push (
-                                                {
-                                                    "type": "rect",
-                                                    "target": tg,
-                                                    "href": hr,
-                                                    "left": rects[j].left,
-                                                    "top": rects[j].top,
-                                                    "right": rects[j].right,
-                                                    "bottom": rects[j].bottom
-                                                }
-                                            );
-                                        }
-                                    //}
-                                }
-                            }
-                            */
-                            
                             node.scaleImg = window.devicePixelRatio;
-                            //var xhr = new XMLHttpRequest ();
-                            //xhr.open ("GET", ifr.src);
-                            //xhr.onreadystatechange = async function() {
-                            //    if(xhr.readyState === 4 && xhr.status === 200) {
-                                    var renderer = new iframetoimage (ifr);
-                                    //renderer.buildSvgDataUri (xhr.response, ifr.contentDocument.body.scrollWidth, ifr.contentDocument.body.scrollHeight).then(function(ret) {
-                                    //var body = ifr.contentDocument.body;
-                                    //var width = body.scrollLeft + body.scrollWidth;
-                                    //var height = body.scrollTop + body.scrollHeight;
-                                    //renderer.renderToSvg (ifr.contentDocument.body.innerHTML, width, height).then(function(ret) {
-                                    renderer.renderToSvg ().then (function (ret) {
-                                        node.img.src = ret;
-                                        node.src = ifr.src;
-                                    });
-                            //    }
-                            //};
+                            new iframetoimage (ifr).renderToSvg ().then (function (ret) {
+                                node.img.src = ret;
+                                node.src = ifr.src;
+                            });                            
 
-                            //xhr.send (null);
-                            //xhrs.push (xhr);
-                            
-
-/*
+                            /*
                             domtoimage.toSvg(ifr.contentDocument.body)
                                 .then(function (dataUrl) {
                                     node.img.src = dataUrl;
@@ -508,7 +422,7 @@
                                 .catch(function (error) {
                                     console.error('oops, something went wrong!', error);
                                 });
-*/
+                            */
                         }
 
                         iframes.push (ifr);
@@ -683,13 +597,13 @@
 
                                 } else {
                                     hideSplash ();
-                                    alert ("Error processing '" + init.contents + "'");
+                                    alert (`Error processing '${init.contents}'`);
                                 }
                             }
                         }
 
                         xhr.onerror = function() {
-                          alert ("Error while getting '" + init.contents + "'");
+                          alert (`Error while getting '${init.contents}'`);
                         }
 
                         xhr.open("GET", init.contents + "?" + Date.now(), true);
@@ -703,15 +617,13 @@
             
             var divContainer = document.getElementById ("divContainer")
             
-            //design = getDesign(); 
-            
-            let pixelRatioBox = document.querySelector(".pixel-ratio");
-            let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-
+            var pixelRatioBox = document.querySelector(".pixel-ratio");
+            var mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
             matchMedia(mqString).addListener(() => {
                 window.top.document.body.innerHTML = "Please refresh the web page.";
                 return;
             });
+            
             loadContents ();
         </script>
       </section>

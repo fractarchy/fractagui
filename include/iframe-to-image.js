@@ -211,7 +211,7 @@ const iframetoimage = function(iframe) {
                 cssStyles = cssStyles.replace(new RegExp(escapeRegExp(r.resourceUrl),"g"), r.resourceBase64);
             }
 
-            let urlsFoundInHtml = getImageUrlsFromFromHtml(contentHtml);//.concat(getUrlsFromCssString(contentHtml));
+            let urlsFoundInHtml = getImageUrlsFromFromHtml(contentHtml).concat(getUrlsFromCssString(contentHtml));
             const fetchedResources = await getMultipleResourcesAsBase64(urlsFoundInHtml);
             for(let i=0; i<fetchedResources.length; i++) {
                 const r = fetchedResources[i];
@@ -220,15 +220,16 @@ const iframetoimage = function(iframe) {
 
             base.remove();
 
+            // create DOM element string that encapsulates style
             const styleElem = document.createElement("style");
             styleElem.innerHTML = cssStyles;
 
             const styleElemString = new XMLSerializer().serializeToString(styleElem);
 
-            // create DOM element string that encapsulates style,s + content
+            // create DOM element string that encapsulates body
             const contentRootElem = document.createElement("body");
             contentRootElem.innerHTML = contentHtml // styleElemString + contentHtml;
-            contentRootElem.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+            //contentRootElem.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
 
             const contentRootElemString = new XMLSerializer().serializeToString(contentRootElem);
 

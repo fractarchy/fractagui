@@ -1,8 +1,13 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Light.ttf');
+}
+
 @media (max-device-width: 640px), (max-device-height: 640px) {
     body {
         width: 232px;
         font-size: 1em;
-        font-family: Times New Roman, Georgia, Garamond;
+        font-family: Roboto;
         margin: 0;
         padding: 0;
     }
@@ -23,12 +28,9 @@
         body {
             width: 512px;
             font-size: 1.2em;
-            font-family: Times New Roman, Georgia, Garamond;
-            /*font-family: Arial, Helvetica, sans-serif;*/
+            font-family: Roboto;
             margin: 0;
             padding: 0;
-            /*background: url('../media/socmedia.png')  center center repeat-x;*/
-            /*background-size: 100% 100%;*/
         }
 
         h1 {

@@ -2,7 +2,6 @@
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
     <head>
         <style media="screen">
             section {
@@ -63,7 +62,9 @@
             setDesign(window.devicePixelRatio);
         </script>
 
-        <script src="include/html2canvas.update.js"></script>
+        <!--script src="include/html2canvas.update.js"></script-->
+        <script src="include/iframe-to-image.js"></script>
+        <!--script src="include/dom-to-image-more.js"></script-->
         <script src="include/orbital.js"></script>
     </head>
     <body>
@@ -297,6 +298,7 @@
             var loader = function (data, scale, fill) {
                 var images = [];
                 var iframes = [];
+                var xhrs = [];
                 var error = false;
                 
                 var div = document.createElement ('div');
@@ -339,7 +341,7 @@
                         node.img.crossOrigin = "anonymous";
                         
                         node.img.onload = function (e) {
-                            node.canvas = createCanvasImg (node.img, node.type === "image" ? scale * scaleimg : 1, fill);
+                            node.canvas = createCanvasImg (node.img, node.scaleImg? scale * node.scaleImg : 1, fill);
                             node.scaledBitmap = Crisp.crispBitmapXY(node.canvas);
 
                             updateProgressBar();
@@ -349,16 +351,17 @@
                             if (!error) {
                                 error = true
                                 hideSplash ();
-                                alert ('Error loading: "' + node.img.src + '"');
+                                alert ('Error loading: "' + node.src + '"');
                             }
                         }
                         
-                        var scaleimg;
+                        //var scaleimg = 0;
                         var scaleifr;
                         if (node.type === "image") {
-                            scaleimg = window.devicePixelRatio;
+                            node.scaleImg = window.devicePixelRatio;
 
                             node.img.src = node.src;
+                            node.src = node.src;
 
                             var links = ifr.contentWindow.document.getElementsByTagName("a");
                             for (var i = 0; i < links.length; i++) {
@@ -393,6 +396,7 @@
                             }
 
                         } else if (node.type === "html") {
+                            /*
                             var base = ifr.contentDocument.createElement('base');
                             base.href = node.src;//xhr.responseURL;
                             
@@ -405,8 +409,42 @@
                                 node.hyperlinks = ret.hyperlinks;
                                 node.img.src = ret.canvas.toDataURL();
                             });
+                            */
+                            
+                            node.hyperlinks = [];
+                            
+                            node.scaleImg = window.devicePixelRatio;
+                            //var xhr = new XMLHttpRequest ();
+                            //xhr.open ("GET", ifr.src);
+                            //xhr.onreadystatechange = async function() {
+                            //    if(xhr.readyState === 4 && xhr.status === 200) {
+                                    var renderer = new iframetoimage (ifr);
+                                    //renderer.buildSvgDataUri (xhr.response, ifr.contentDocument.body.scrollWidth, ifr.contentDocument.body.scrollHeight).then(function(ret) {
+                                    var body = ifr.contentDocument.body;
+                                    var width = body.scrollLeft + body.scrollWidth;
+                                    var height = body.scrollTop + body.scrollHeight;
+                                    //renderer.renderToSvg (ifr.contentDocument.body.innerHTML, width, height).then(function(ret) {
+                                    renderer.renderToSvg ().then (function (ret) {
+                                        node.img.src = ret;
+                                        node.src = ifr.src;
+                                    });
+                            //    }
+                            //};
 
-                       }
+                            //xhr.send (null);
+                            //xhrs.push (xhr);
+                            
+
+/*
+                            domtoimage.toSvg(ifr.contentDocument.body)
+                                .then(function (dataUrl) {
+                                    node.img.src = dataUrl;
+                                })
+                                .catch(function (error) {
+                                    console.error('oops, something went wrong!', error);
+                                });
+*/
+                        }
 
                         iframes.push (ifr);
                     }

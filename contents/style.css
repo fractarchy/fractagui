@@ -1,13 +1,8 @@
-@font-face {
-    font-family: 'Roboto';
-    src: url('Roboto-Light.ttf');
-}
-
 @media (max-device-width: 640px), (max-device-height: 640px) {
     body {
         width: 232px;
         font-size: 1em;
-        font-family: Roboto;
+        font-family: Times New Roman, Georgia, Garamond;
         margin: 0;
         padding: 0;
     }
@@ -28,7 +23,7 @@
         body {
             width: 512px;
             font-size: 1.2em;
-            font-family: Roboto;
+            font-family: Times New Roman, Georgia, Garamond;
             margin: 0;
             padding: 0;
         }
@@ -75,6 +70,7 @@ a {
 
 .t {
     background: url('../media/socmedia.png') center center;
+    background-size: 100% 100%;
 }
 
 table {

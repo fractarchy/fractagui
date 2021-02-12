@@ -368,21 +368,21 @@
                                         node.hyperlinks = [];
 
                                     if (links[i].children.length > 0) {
-                                    } else {
-                                        var rects = links[i].getClientRects();
-                                        for (var j in rects) {
-                                            node.hyperlinks.push (
-                                                {
-                                                    "type": "rect",
-                                                    "target": tg,
-                                                    "href": hr,
-                                                    "left": rects[j].left,
-                                                    "top": rects[j].top,
-                                                    "right": rects[j].right,
-                                                    "bottom": rects[j].bottom
-                                                }
-                                            );
-                                        }
+                                    }
+                                
+                                    var rects = links[i].getClientRects();
+                                    for (var j in rects) {
+                                        node.hyperlinks.push (
+                                            {
+                                                "type": "rect",
+                                                "target": tg,
+                                                "href": hr,
+                                                "left": rects[j].left,
+                                                "top": rects[j].top,
+                                                "right": rects[j].right,
+                                                "bottom": rects[j].bottom
+                                            }
+                                        );
                                     }
                                 }
                             }

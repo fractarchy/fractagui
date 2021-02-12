@@ -62,9 +62,8 @@
             setDesign(window.devicePixelRatio);
         </script>
 
-        <!--script src="include/html2canvas.update.js"></script-->
-        <script src="include/iframe-to-image.js"></script>
-        <!--script src="include/dom-to-image-more.js"></script-->
+        <script src="include/html2canvas.edit.js"></script>
+        <script src="include/render-html.js"></script>
         <script src="include/orbital.js"></script>
     </head>
     <body>
@@ -354,34 +353,37 @@
                             }
                         }
                         
-                        var links = ifr.contentWindow.document.getElementsByTagName("a");
-                        for (var i = 0; i < links.length; i++) {
-                            var tg = links[i].getAttribute('target');
-                            var hr = links[i].href;
-                            if (hr.baseVal) hr = hr.baseVal;
+                        if (node.type === "image" || env.htmlRenderer === "latest") {
+                            var links = ifr.contentWindow.document.getElementsByTagName("a");
+                            for (var i = 0; i < links.length; i++) {
+                                var tg = links[i].getAttribute('target');
+                                var hr = links[i].href;
+                                if (hr.baseVal) hr = hr.baseVal;
 
-                            if (!hr)
-                                hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                          
-                            if (hr) {
-                                if (!node.hyperlinks)
-                                    node.hyperlinks = [];
+                                if (!hr)
+                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                              
+                                if (hr) {
+                                    if (!node.hyperlinks)
+                                        node.hyperlinks = [];
 
-//                                if (links[i].children.length > 0)
-
-                                var rects = links[i].getClientRects();
-                                for (var j in rects) {
-                                    node.hyperlinks.push (
-                                        {
-                                            "type": "rect",
-                                            "target": tg,
-                                            "href": hr,
-                                            "left": rects[j].left,
-                                            "top": rects[j].top,
-                                            "right": rects[j].right,
-                                            "bottom": rects[j].bottom
+                                    if (links[i].children.length > 0) {
+                                    } else {
+                                        var rects = links[i].getClientRects();
+                                        for (var j in rects) {
+                                            node.hyperlinks.push (
+                                                {
+                                                    "type": "rect",
+                                                    "target": tg,
+                                                    "href": hr,
+                                                    "left": rects[j].left,
+                                                    "top": rects[j].top,
+                                                    "right": rects[j].right,
+                                                    "bottom": rects[j].bottom
+                                                }
+                                            );
                                         }
-                                    );
+                                    }
                                 }
                             }
                         }
@@ -393,26 +395,29 @@
                             node.src = node.src;
 
                         } else if (node.type === "html") {
-                            /*
-                            var base = ifr.contentDocument.createElement('base');
-                            base.href = node.src;//xhr.responseURL;
-                            
-                            var head = ifr.contentDocument.getElementsByTagName('head')[0];
-                            head.insertBefore(base, head.childNodes[0]);
-
-                            scaleifr = window.devicePixelRatio;
+                            if (env.htmlRenderer === "legacy") {
+                                var base = ifr.contentDocument.createElement('base');
+                                base.href = node.src;//xhr.responseURL;
                                 
-                            html2canvas(ifr.contentDocument.body, {logging: false, scale: scale * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0}).then(function(ret) {
-                                node.hyperlinks = ret.hyperlinks;
-                                node.img.src = ret.canvas.toDataURL();
-                            });
-                            */
+                                var head = ifr.contentDocument.getElementsByTagName('head')[0];
+                                head.insertBefore(base, head.childNodes[0]);
 
-                            node.scaleImg = window.devicePixelRatio;
-                            new iframetoimage (ifr).renderToSvg ().then (function (ret) {
-                                node.img.src = ret;
-                                node.src = ifr.src;
-                            });                            
+                                scaleifr = window.devicePixelRatio;
+                                    
+                                html2canvas(ifr.contentDocument.body, {logging: false, scale: scale * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0}).then(function(ret) {
+                                    node.hyperlinks = ret.hyperlinks;
+                                    node.img.src = ret.canvas.toDataURL();
+                                });
+
+                            } else if (env.htmlRenderer === "latest") {
+                                node.scaleImg = window.devicePixelRatio;
+
+                                renderHtml.fromIframe(ifr).toBase64Svg()
+                                    .then (function (ret) {
+                                        node.img.src = ret;
+                                        node.src = ifr.src;
+                                    });
+                            }
 
                             /*
                             domtoimage.toSvg(ifr.contentDocument.body)
@@ -423,6 +428,7 @@
                                     console.error('oops, something went wrong!', error);
                                 });
                             */
+                            
                         }
 
                         iframes.push (ifr);
@@ -440,6 +446,16 @@
             };
             
             function setupEnv (data) {
+                if (data["html-renderer"]) {
+                    if (data["html-renderer"] !== "legacy" && data["html-renderer"] !== "latest") {
+                        hideSplash ();
+                        alert ('Error in orbital.json: "html-renderer" can only be "legacy" or "latest"');
+                        throw new error ();
+                    }
+                } else {
+                    data["html-renderer"] = "latest";
+                }
+
                 if (data["flat-area"])
                     try {
                         if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
@@ -451,7 +467,7 @@
                         
                     } catch (e) {
                         hideSplash ();
-                        alert ('Error in orbital.json: "flat-area" hast to be a percent between "0%" and "100%"');
+                        alert ('Error in orbital.json: "flat-area" has to be a percent between "0%" and "100%"');
                         throw new error ();
                     }
                 else
@@ -516,6 +532,7 @@
                 }
                 
                 return {
+                    htmlRenderer: data["html-renderer"],
                     flatArea: flatArea,
                     scale: scale,
                     showPic: data["show-pictograms"],

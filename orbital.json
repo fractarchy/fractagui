@@ -1,4 +1,5 @@
 {
+    "html-renderer": "latest",
     "show-pictograms": "yes",
     "pictogram-theme": "dark",
     "oval-color": "white",

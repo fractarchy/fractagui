@@ -286,6 +286,7 @@
                 ctxim.fillStyle = fill;
                 ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
                 
+                // safari bug fix - draw twice
                 ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
                 ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
 

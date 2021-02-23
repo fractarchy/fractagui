@@ -18,5 +18,5 @@ Fract-exp is made as a helper to organize, emphasize, and publish your web pages
 
 ## giving it a try
 
-Overview an example site containing use instructions [**here**](https://contrast-zone.github.io/Fract-exp/).
+Overview an example site containing use instructions [**here**](https://contrast-zone.github.io/fract-exp/).
 

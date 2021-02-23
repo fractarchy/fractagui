@@ -9,7 +9,7 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:export-ydpi="96"
    inkscape:export-xdpi="96"
-   inkscape:export-filename="/home/ivanv/workspace/contrast-zone/e-fun/v0.1-update/contents/0-4.png"
+   inkscape:export-filename="/home/ivanv/workspace/contrast-zone/e-fun/v0.3-beta/checkpoint 3/contents/0-4.png"
    inkscape:version="1.0.1 (0767f8302a, 2020-10-17)"
    sodipodi:docname="0-4.svg"
    id="svg8"
@@ -90,7 +90,7 @@
        x="1.4587531"
        y="61.782452" />
     <text
-       transform="matrix(0.69993628,0,0,0.69993628,-7.1197909,-46.713164)"
+       transform="matrix(0.69993628,0,0,0.69993628,-7.0447338,-46.933821)"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
        id="text201"
        xml:space="preserve"
@@ -113,7 +113,7 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="146.13209"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">E-fun is created with a help of </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">Fract-exp is created with a help of </tspan><tspan
            style="font-style:italic">html2canvas</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> project.
 </tspan></tspan><tspan
@@ -139,7 +139,7 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="185.81959"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> E-fun is shared to public under conditional </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> Fract-exp is shared to public under conditional </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">Creative
 </tspan></tspan><tspan
          x="12.470703"
@@ -159,7 +159,7 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="217.56959"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> A copy of e-fun software bundle can be downloaded
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> A copy of Fract-exp software bundle can be downloaded
 </tspan></tspan><tspan
          x="12.470703"
          y="225.50709"><tspan
@@ -173,16 +173,16 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="241.38209"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> To ask any questions about e-fun, to report a bug, or to
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> To ask any questions about Fract-exp, to report a bug,
 </tspan></tspan><tspan
          x="12.470703"
          y="249.31959"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> track new releases, please refer to a </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">dedicated mailing 
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> or to track new releases, please refer to a </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">dedicated 
 </tspan></tspan><tspan
          x="12.470703"
          y="257.25709"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff"> list</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff"> mailing list</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">.
 </tspan></tspan><tspan
          x="12.470703"
@@ -191,7 +191,7 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="273.13209"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">With this section, we conclude E-fun instructions </tspan></tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">With this section, we conclude Fract-exp instructions </tspan></tspan><tspan
          x="12.470703"
          y="281.06959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">exposure. I wish you a creative and productive web </tspan></tspan><tspan

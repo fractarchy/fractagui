@@ -16,4 +16,5 @@
 
 - v 0.3 - beta
     - improved device-pixel-ratio consistency for mobile platforms  
-    - new html renderer
+    - new HTML renderer
+

@@ -287,6 +287,7 @@
                 ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
                 
                 ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
+                ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
 
                 return cnvim
             }            
@@ -368,8 +369,23 @@
                                         node.hyperlinks = [];
 
                                     if (links[i].children.length > 0) {
+                                        for (var j in links[i].children) {
+                                            var rect = links[i].children[j];
+                                            if (rect.offsetLeft)
+                                                node.hyperlinks.push (
+                                                    {
+                                                        "type": "rect",
+                                                        "target": tg,
+                                                        "href": hr,
+                                                        "left": rect.offsetLeft,
+                                                        "top": rect.offsetTop,
+                                                        "right": rect.offsetLeft + rect.offsetWidth,
+                                                        "bottom": rect.offsetTop + rect.offsetHeight
+                                                    }
+                                                );
+                                        }
                                     }
-                                
+                                    
                                     var rects = links[i].getClientRects();
                                     for (var j in rects) {
                                         node.hyperlinks.push (
@@ -384,6 +400,7 @@
                                             }
                                         );
                                     }
+                                    
                                 }
                             }
                         }

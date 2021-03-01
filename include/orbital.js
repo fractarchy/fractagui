@@ -2221,6 +2221,16 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
         cnv.setAttribute ("height", hh);
         cnv.style.clipPath = "url(#clip128)";
         
+        function clearData (data) {
+            data.scaledBitmap = undefined;
+            data.centerX = 0;
+            data.centerY = NaN;
+            
+            for (var i = 0; i < data.children.length; i++)
+                clearData (data.children[i]);
+
+        }
+        
         function updateCache (data) {
             if (data.scaledBitmap) {
                 var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
@@ -2259,9 +2269,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
         while (d.parent)
             d = d.parent;
 
-        updateCache (d.children[0]);
-        
+        clearData (d.children[0]);
         redraw ();
+        idle ();
+        //updateCache (d.children[0]);
     }
     
     function busy () {

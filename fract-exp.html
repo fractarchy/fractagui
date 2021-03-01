@@ -384,17 +384,17 @@
                 pauseLoading = true;
             }
 
-            async function onIdle (ovals, scale) {
+            async function onIdle (ovals) {
                 pauseLoading = false;
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
                 for (i = 0; i < ovals.length && !pauseLoading; i++) {
                     if (!ovals[i].data.scaledBitmap) {
-                        await loadOval (ovals[i].data, scale);
+                        await loadOval (ovals[i].data);
                     }
                 }
             }
             
-            async function loadOval(data, scale) {
+            async function loadOval(data) {
                 return new Promise(async function(resolve, reject) {
                     var ifr = document.createElement ('iframe');
                     ifr.style.visibility = "hidden";
@@ -432,7 +432,7 @@
                         
                         node.img.onload = function (e) {
                             if (!pauseLoading) {
-                                var canvas = createCanvasImg (node.img, node.scaleImg? scale * node.scaleImg : 1, env.ovalColor);
+                                var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
                                 node.scaledBitmap = Crisp.crispBitmapXY(canvas);
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
                             }
@@ -459,6 +459,7 @@
                                     hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
                               
                                 if (hr) {
+                                    var myScale = 100 / env.scale / window.devicePixelRatio
                                     if (!node.hyperlinks)
                                         node.hyperlinks = [];
 
@@ -471,10 +472,10 @@
                                                         "type": "rect",
                                                         "target": tg,
                                                         "href": hr,
-                                                        "left": rect.offsetLeft / scale,
-                                                        "top": rect.offsetTop / scale,
-                                                        "right": rect.offsetLeft + rect.offsetWidth / scale,
-                                                        "bottom": rect.offsetTop + rect.offsetHeight / scale
+                                                        "left": rect.offsetLeft / myScale,
+                                                        "top": rect.offsetTop / myScale,
+                                                        "right": rect.offsetLeft + rect.offsetWidth / myScale,
+                                                        "bottom": rect.offsetTop + rect.offsetHeight / myScale
                                                     }
                                                 );
                                         }
@@ -487,10 +488,10 @@
                                                 "type": "rect",
                                                 "target": tg,
                                                 "href": hr,
-                                                "left": rects[j].left / scale,
-                                                "top": rects[j].top / scale,
-                                                "right": rects[j].right / scale,
-                                                "bottom": rects[j].bottom / scale
+                                                "left": rects[j].left / myScale,
+                                                "top": rects[j].top / myScale,
+                                                "right": rects[j].right / myScale,
+                                                "bottom": rects[j].bottom / myScale
                                             }
                                         );
                                     }
@@ -632,7 +633,7 @@
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
-                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / myscale, env.ovalColor, env.backColor, onIdle, onBusy);
+                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, onIdle, onBusy);
                                         window.addEventListener("load", wonload ());
                                     }
                                     

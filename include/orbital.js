@@ -2271,7 +2271,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
     
     function idle () {
         if (onIdle)
-            onIdle (renderData, scale);
+            onIdle (renderData);
     }
     
     var renderData;

@@ -1,0 +1,11 @@
+{
+    "html-renderer": "latest",
+    "show-pictograms": "yes",
+    "pictogram-theme": "dark",
+    "oval-color": "white",
+    "background-color": "rgb(128, 128, 128)",
+    "scale": "100%",
+    "flat-area": "0%",
+    "contents": "contents/contents.feml"
+}
+

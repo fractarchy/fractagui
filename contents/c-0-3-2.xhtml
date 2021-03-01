@@ -1,6 +1,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <link rel="stylesheet" href="style.css"/>
+        <style>
+            li {
+                margin-bottom: 1em;
+            }
+        </style>
     </head>
     <body>
         <h1>
@@ -16,25 +21,25 @@
         <p>
             <ul>
                 <li>
-                    <code class="c1" >index.html</code> - this is the main file containing social media
-                    promotional informations, visible project title and a list of SEO keywords.
+                    <code class="c1" >index.html</code> - this is the main file containing visible project
+                    title, a list of SEO keywords, and social media promotional informations.
                 </li>
                 <li>
-                    <code class="c1" >orbital.html</code> - this file usually won't need to be referenced
-                    unless we want override the default <code class="c1" >index.html</code> interface and
-                    use our own layout, placing the <code class="c1" >orbital.html</code> reference
-                    inside custom <code class="c1" >iframe</code> structures as a part of user defined
+                    <code class="c1" >fract-exp.html</code> - this file usually won't need to be referenced
+                    unless we want override the default <code class="c1" >index.html</code> interface. However,
+                    if we want to use use our own layout, we may place the <code class="c1" >fract-exp.html</code>
+                    reference inside custom <code class="c1" >iframe</code> structures as a part of user defined
                     <code class="c1" >index.html</code>.
                 </li>
                 <li>
-                    <code class="c1" >orbital.json</code> - in this file we can setup exposed Fract-exp rendering
+                    <code class="c1" >fract-exp.json</code> - in this file we can setup various Fract-exp rendering
                     parameters.
                 </li>
                 <li>
                     <code class="c1" >contents/</code> - this is a folder where we keep our site content files.
-                    <code class="c1" >contents/contents.xml</code> is the main XML file where we structure the
+                    <code class="c1" >contents/contents.feml</code> is the main XML file where we structure the
                     site contents. The site content files (HTML, CSS, images, ...) should all be copied under
-                    the same folder and referred from <code class="c1" >contents/contents.xml</code> file.
+                    the same folder and referred from <code class="c1" >contents/contents.feml</code> file.
                     Actually, the content files may be structured in any folders, but it is recommended to place
                     the entire structure under <code class="c1" >contents/</code> folder. That would keep our
                     site clean and tidy.
@@ -48,8 +53,8 @@
             and
             <a href="https://en.wikipedia.org/wiki/Text_editor">text editor</a>
             to arrange and edit files of our interst. Please refer to provided links if you need to get more
-            familiar with mentioned notions. This procedure is what makes Fract-exp site creating experience "slack",
-            and requires some more advanced knowledge from the site creators.
+            familiar with mentioned notions. This procedure is what makes Fract-exp site creating experience
+            "slack", and requires a bit more advanced knowledge from the site creators.
         </p>
         <p>
             Upon each edit, we would want to test if changes we made reflect what we want them to be. Again, we

@@ -17,4 +17,5 @@
 - v 0.3 - beta
     - improved device-pixel-ratio consistency for mobile platforms  
     - new HTML renderer
+    - progressive page loading supporting bigger sites
 

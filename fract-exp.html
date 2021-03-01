@@ -268,7 +268,7 @@
             function setupEnv (data) {
                 if (data["html-renderer"]) {
                     if (data["html-renderer"] !== "legacy" && data["html-renderer"] !== "latest") {
-                        hideSplash ();
+                        //hideSplash ();
                         alert ('Error in orbital.json: "html-renderer" can only be "legacy" or "latest"');
                         throw new error ();
                     }
@@ -286,7 +286,7 @@
                             throw new error ();
                         
                     } catch (e) {
-                        hideSplash ();
+                        //hideSplash ();
                         alert ('Error in orbital.json: "flat-area" has to be a percent between "0%" and "100%"');
                         throw new error ();
                     }
@@ -303,7 +303,7 @@
                             throw new error ();
                         
                     } catch (e) {
-                        hideSplash ();
+                        //hideSplash ();
                         alert ('Error in orbital.json: "scale" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
@@ -312,7 +312,7 @@
                 
                 if (data["show-pictograms"]) {
                     if (data["show-pictograms"] !== "yes" && data["show-pictograms"] !== "no") {
-                        hideSplash ();
+                        //hideSplash ();
                         alert ('Error in orbital.json: "show-pictograms" can only be "yes" or "no"');
                         throw new error ();
                     }
@@ -323,7 +323,7 @@
                 
                 if (data["pictogram-theme"]) {
                     if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
-                        hideSplash ();
+                        //hideSplash ();
                         alert ('Error in orbital.json: "pictogram-theme" can only be "light" or "dark"');
                         throw new error ();
                     }
@@ -565,7 +565,7 @@
                             init = JSON.parse (this.responseText);
                         } catch (e) {
                             alert ('Error:\n' + e.message);
-                            hideSplash ();
+                            //hideSplash ();
                             throw e;
                         }
                         
@@ -639,7 +639,7 @@
                                     waitForImages ();                                    
 
                                 } else {
-                                    hideSplash ();
+                                    //hideSplash ();
                                     alert (`Error processing '${init.contents}'`);
                                 }
                             }

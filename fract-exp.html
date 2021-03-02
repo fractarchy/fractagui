@@ -402,7 +402,6 @@
                     ifr.style.overflow = "hidden";
 
                     ifr.onload = function () {
-    //                    var node = ifr._node;
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
                                 error = true
@@ -462,40 +461,46 @@
                                     var myScale = 100 / env.scale / window.devicePixelRatio
                                     if (!node.hyperlinks)
                                         node.hyperlinks = [];
-
-                                    if (links[i].children.length > 0) {
-                                        for (var j in links[i].children) {
-                                            var rect = links[i].children[j];
-                                            if (rect.offsetLeft)
-                                                node.hyperlinks.push (
-                                                    {
-                                                        "type": "rect",
-                                                        "target": tg,
-                                                        "href": hr,
-                                                        "left": rect.offsetLeft / myScale,
-                                                        "top": rect.offsetTop / myScale,
-                                                        "right": rect.offsetLeft + rect.offsetWidth / myScale,
-                                                        "bottom": rect.offsetTop + rect.offsetHeight / myScale
-                                                    }
-                                                );
+                                    
+                                    if (links[i].children && links[i].children.length > 0) {
+                                        (function traverseChildren(link, node) {
+                                            if (link.children && link.children.length > 0) {
+                                                for (var j = 0; j < link.children.length; j++) {
+                                                    traverseChildren(link.children[j], node)
+                                                }
+                                            }
+                                                var rects = link.getClientRects();
+                                                for (var j in rects) {
+                                                    node.hyperlinks.push (
+                                                        {
+                                                            "type": "rect",
+                                                            "target": tg,
+                                                            "href": hr,
+                                                            "left": rects[j].left / myScale,
+                                                            "top": rects[j].top / myScale,
+                                                            "right": rects[j].right / myScale,
+                                                            "bottom": rects[j].bottom / myScale
+                                                        }
+                                                    );
+                                                }
+                                            
+                                        }) (links[i], node);
+                                    } else {
+                                        var rects = links[i].getClientRects();
+                                        for (var j in rects) {
+                                            node.hyperlinks.push (
+                                                {
+                                                    "type": "rect",
+                                                    "target": tg,
+                                                    "href": hr,
+                                                    "left": rects[j].left / myScale,
+                                                    "top": rects[j].top / myScale,
+                                                    "right": rects[j].right / myScale,
+                                                    "bottom": rects[j].bottom / myScale
+                                                }
+                                            );
                                         }
                                     }
-                                    
-                                    var rects = links[i].getClientRects();
-                                    for (var j in rects) {
-                                        node.hyperlinks.push (
-                                            {
-                                                "type": "rect",
-                                                "target": tg,
-                                                "href": hr,
-                                                "left": rects[j].left / myScale,
-                                                "top": rects[j].top / myScale,
-                                                "right": rects[j].right / myScale,
-                                                "bottom": rects[j].bottom / myScale
-                                            }
-                                        );
-                                    }
-                                    
                                 }
                             }
                         }
@@ -542,14 +547,9 @@
                                     console.debug('oops, something went wrong!', error);
                                 });
                             */
-                            
                         }
-
-                        //iframes.push (ifr);
-                        //ifr.remove();
                     }
                     
-                    //ifr._node = data.data;
                     var node = data;
                     ifr.src = data.src;
                     document.body.appendChild (ifr);
@@ -596,35 +596,6 @@
                                 
                                 if (xhr.responseXML) {
                                     var data = formArray (xhr.responseXML, null);
-                                    //var ld = loader (data, env.scale / 100, env.ovalColor);
-                                    //var images = ld.images;
-                                    //var iframes = ld.iframes;
-                                    //var div = ld.div;
-                                    /*
-                                    document.body.appendChild (div);
-                                    var waitForImages = function () {
-                                        count = 0;
-                                        for (var i = 0; i < images.length; i++){
-                                            if (iframes.length < images.length || !images[i].canvas) {
-                                                setTimeout (waitForImages, 10);
-                                                return;
-                                            } 
-                                        }
-
-                                        var myscale = window.devicePixelRatio;
-                                    
-                                        document.getElementById("loadPercentContainer").style.visibility = "hidden";
-                                        div.remove ();
-                                        
-                                        document.body.style.backgroundColor = env.backColor;
-                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / myscale, env.ovalColor, env.backColor);
-
-                                        window.addEventListener("load", wonload ());
-                                    }
-                                    
-                                    waitForImages ();
-                                    showSplash ();
-                                    */
                                     var waitForImages = function () {
                                         if (!(i1.complete && i2.complete && i3.complete)) {
                                             setTimeout (waitForImages, 5);

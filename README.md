@@ -1,6 +1,6 @@
 # Fract-exp
 
-(v 0.3 - beta)
+(v 0.3 - release candidate)
 
 ![](media/socmedia.png)  
 

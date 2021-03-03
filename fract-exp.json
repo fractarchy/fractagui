@@ -3,6 +3,7 @@
     "show-pictograms": "yes",
     "pictogram-theme": "dark",
     "oval-color": "white",
+    "intermediate-color": "darkgray",
     "background-color": "rgb(128, 128, 128)",
     "scale": "100%",
     "flat-area": "0%",

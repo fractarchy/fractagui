@@ -1214,10 +1214,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
                 //if (r > 5) {
                     var magn = r / (rr * ratio);
                     
-                    var xo = x * squashX - (r - 1) * squashX;
-                    var yo = y * squashY - (r - 1) * squashY;
-                    var xi = x * squashX + (r - 1) * squashX;
-                    var yi = y * squashY + (r - 1) * squashY;
+                    var xo = x * squashX - r * squashX + 1;
+                    var yo = y * squashY - r * squashY + 1;
+                    var xi = x * squashX + r * squashX - 1;
+                    var yi = y * squashY + r * squashY - 1;
                     
                     var w = xi - xo;
                     var h = yi - yo;

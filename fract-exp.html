@@ -72,7 +72,7 @@
             </svg>
         </div>
         
-        <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
+        <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px; filter: drop-shadow( 0px 0px 10px rgba(0, 0, 0, 1));">
         </div>
         
         <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;"/>
@@ -407,6 +407,7 @@
                                 error = true
                                 //hideSplash ();
                                 console.debug (`Error loading: '${ifr.src}'`);
+                                resolve ();
                                 return;
                             }
                             ifr.style.width = "0px";
@@ -445,6 +446,7 @@
                                 //hideSplash ();
                                 console.debug (`Error loading: '${node.src}'`);
                             }
+                            resolve ();
                         }
                         
                         if (node.type === "image" || env.htmlRenderer === "latest") {

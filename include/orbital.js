@@ -608,8 +608,19 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     var stroke1 = str1;
     var fill2 = stroke1;
     var stroke2 = fill1;
+    
+    var shadow;
 
     var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
+        if (renderHint !== "1") {
+            shadow = true;
+            render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
+            shadow = false;
+        }
+        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
+    }
+    
+    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
         function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
             var beta = angle + alpha - Math.PI / 2;
             
@@ -707,48 +718,54 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
         var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
         var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
         
-        if (rec === 1) {
-            ctx.save ();
-            if (renderHint === "1") {
-                ctx.beginPath();
-                ctx.ellipse (
-                    x0 * squashX,
-                    y0 * squashY,
-                    r0 * squashX,
-                    r0 * squashY,
-                    0,
-                    0,
-                    2 * Math.PI,
-                    false
-                );
-                ctx.closePath ();
-                ctx.clip ();
-                
-                clear ();
+        if (shadow) {
+            if (rec === 1 && renderHint !== "1") {
+                /*
+                ctx.save ();
+                if (renderHint === "1") {
+                    ctx.beginPath();
+                    ctx.ellipse (
+                        x0 * squashX,
+                        y0 * squashY,
+                        r0 * squashX,
+                        r0 * squashY,
+                        0,
+                        0,
+                        2 * Math.PI,
+                        false
+                    );
+                    ctx.closePath ();
+                    ctx.clip ();
+                    
+                    clear ();
 
-            } else if (renderHint === "1+") {                   
-                ctx.beginPath ();
-                
-                ctx.moveTo ((x1     ) * squashX, (y1 - r1) * squashY);
-                ctx.lineTo ((x1 - r1) * squashX, (y1 - r1) * squashY);
-                ctx.lineTo ((x1 - r1) * squashX, (y1 + r1) * squashY);
-                ctx.lineTo ((x1 + r1) * squashX, (y1 + r1) * squashY);
-                ctx.lineTo ((x1 + r1) * squashX, (y1 - r1) * squashY);
-                ctx.lineTo ((x1     ) * squashX, (y1 - r1) * squashY);
-                
-                ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
-                ctx.closePath();
-                ctx.clip ();
+                } else if (renderHint === "1+") {
+                    ctx.beginPath ();
+                    
+                    ctx.moveTo ((x1     ) * squashX, (y1 - r1) * squashY);
+                    ctx.lineTo ((x1 - r1) * squashX, (y1 - r1) * squashY);
+                    ctx.lineTo ((x1 - r1) * squashX, (y1 + r1) * squashY);
+                    ctx.lineTo ((x1 + r1) * squashX, (y1 + r1) * squashY);
+                    ctx.lineTo ((x1 + r1) * squashX, (y1 - r1) * squashY);
+                    ctx.lineTo ((x1     ) * squashX, (y1 - r1) * squashY);
+                    
+                    ellipse(ctx, x0 * squashX, y0 * squashY, r0 * squashX, r0 * squashY);
+                    ctx.closePath();
+                    ctx.clip ();
 
-                clear ();
+                    clear ();
 
-            } else {
-                clear ();
+                } else {
+                    clear ();
+                    
+                }
                 
+                ctx.restore ();
+                */
+                clear();
             }
-            
-            ctx.restore ();
         }
+        
             
         if (
             Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr
@@ -756,10 +773,12 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
             if ((r1 * squashY * squashX) >= minRadius) {
                 var colorFill = fill1;
                 
-                if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
-                    drawCircle (data, x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec);
-                    renderData.push({radius: r0, data: data});
-                }
+                //if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
+                    drawCircle (data, x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec, shadow);
+                    if (!shadow) {
+                        renderData.push({radius: r0, data: data});
+                    }
+                //}
                 
                 if (data.children.length > 0 && renderHint !== "1") {                   
                     var ret, idx, alp;
@@ -781,7 +800,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
                     ci = (cursor?cursor.index:0);
                     if (c0.r * squashX * squashY >= minRadius) {
-                        got = render (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
+                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
                         if (got) {
                             idx = ci;
                             alp = alpha;
@@ -798,7 +817,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci++;
                         
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -823,7 +842,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci--;
 
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -1031,7 +1050,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onIdle, onBusy) {
+function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor,  onIdle, onBusy) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -1139,6 +1158,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
     var ratio = 1 / 1.61803398875; //0.7;//575;
 
     var minRadius;
+    var shadowr = shadowRadius;
     var recCount = 4;
 
     var dragPrecision = Math.pow (2, 8);
@@ -1180,113 +1200,150 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
         return cnvCache;
     }
     
-    function drawCircle (data, x, y, r, fill, stroke, cursor, renderHint, level) {
+    function drawCircle (data, x, y, r, fill, stroke, cursor, renderHint, level, shadow) {
         if (r * squashX > 0.5 && r * squashY > 0.5) {
 
             ctx.globalAlpha = 1;
             
-            ctx.beginPath ();
-            ctx.ellipse (
-                x * squashX,
-                y * squashY,
-                r * squashX - 1,
-                r * squashY - 1,
-                0,
-                0,
-                2 * Math.PI,
-                false
-            );
-            ctx.closePath ();
 
-            ctx.lineWidth = 0;
+            if (shadow) {
+                if (shadowColor) {
+                    // Fill with gradient
+                    var grd = ctx.createRadialGradient(x, y, r, x, y, r + shadowr);
+                    grd.addColorStop(0, shadowColor);
+                    grd.addColorStop(1, "rgb(0, 0, 0, 0)");
+                    ctx.fillStyle = grd;
 
-            ctx.fillStyle = fill;
-            ctx.fill ();
-            
-            if (animating === "level")
-                ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
-            else
-                ctx.globalAlpha = r / (rr * ratio * Math.pow(1 - ratio, level - 1));
+                    ctx.setTransform(squashX,0,0,squashY,0,0);
+                    ctx.beginPath ();
+                    ctx.ellipse (
+                        x,
+                        y,
+                        r + shadowr,
+                        r + shadowr,
+                        0,
+                        0,
+                        2 * Math.PI,
+                        false
+                    );
+                    ctx.closePath ();
+                    ctx.lineWidth = 0;
+                    ctx.globalCompositeOperation = 'source-atop'
+                    ctx.fill ();
+                    ctx.resetTransform();
+                    ctx.globalCompositeOperation = 'source-over'
+                }
+            } else {
 
-            ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2); // change this and you are doomed
-
-            if (data.scaledBitmap) {
-                //if (r > 5) {
-                    var magn = r / (rr * ratio);
+                var diff;
+                if (renderHint === "1")
+                    diff = 2;
+                else
+                    diff = 1;
                     
-                    var xo = x * squashX - r * squashX + 1;
-                    var yo = y * squashY - r * squashY + 1;
-                    var xi = x * squashX + r * squashX - 1;
-                    var yi = y * squashY + r * squashY - 1;
-                    
-                    var w = xi - xo;
-                    var h = yi - yo;
 
-                    var cx, cy;
-                    if (cursor) {
-                        if (isNaN(cursor.centerY))
-                            cursor.centerY = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
-                        cx = cursor.centerX;
-                        cy = cursor.centerY;
-                    } else {
-                        cx = 0;
-                        cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
-                    }
-                    
-                    if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
-                        data.cachedCnv = getCnvCache (data, cx, cy, rr);
-                        data.centerX = cx;
-                        data.centerY = cy;
-                        data.cachedData = null;
-                    }
+                ctx.beginPath ();
+                ctx.ellipse (
+                    x * squashX,
+                    y * squashY,
+                    r * squashX - diff,
+                    r * squashY - diff,
+                    0,
+                    0,
+                    2 * Math.PI,
+                    false
+                );
+                ctx.closePath ();
+                ctx.lineWidth = 0;
+                ctx.fillStyle = fill;
+                ctx.fill ();
+                
+                if (animating === "level")
+                    ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
+                else
+                    ctx.globalAlpha = r / (rr * ratio * Math.pow(1 - ratio, level - 1));
 
-                    if (renderHint === "0") {
-                        ctx.drawImage(data.cachedCnv, xo, yo, w, h);
+                ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2); // change this and you are doomed
+
+                if (data.scaledBitmap) {
+                    //if (r > 5) {
+                        var magn = r / (rr * ratio);
                         
-                    } else if (level === 1) {
-                        ctx.drawImage(data.cachedCnv, Math.round (xo), Math.round (yo));
+                        var xo = x * squashX - r * squashX + 1;
+                        var yo = y * squashY - r * squashY + 1;
+                        var xi = x * squashX + r * squashX - 1;
+                        var yi = y * squashY + r * squashY - 1;
+                        
+                        var w = xi - xo;
+                        var h = yi - yo;
+
+                        var cx, cy;
+                        if (cursor) {
+                            if (isNaN(cursor.centerY))
+                                cursor.centerY = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                            cx = cursor.centerX;
+                            cy = cursor.centerY;
+                        } else {
+                            cx = 0;
+                            cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                        }
+                        
+                        if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
+                            data.cachedCnv = getCnvCache (data, cx, cy, rr);
+                            data.centerX = cx;
+                            data.centerY = cy;
+                            data.cachedData = null;
+                        }
+
+                        if (renderHint === "0") {
+                            ctx.drawImage(data.cachedCnv, xo, yo, w, h);
+                            
+                        } else if (level === 1) {
+                            ctx.drawImage(data.cachedCnv, Math.round (xo), Math.round (yo));
+                        
+                        } else {
+                            if (!data.cachedData)
+                                data.cachedData = Crisp.crispBitmap (data.cachedCnv);
+
+                            var tmp = Math.ceil (data.cachedCnv.width / w * 0.5); //remove 0.5 and you are doomed
+                            if (tmp >= Crisp.log.length)
+                                var bmpscale = Crisp.log[Crisp.log.length - 1];
+                            else
+                                var bmpscale = Crisp.log[tmp] - 1;
+
+                            bmpscale = Math.max (0, bmpscale);
+                            bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
+
+                            ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
+                        
+                        }
+                    //}
+                }
+                
+                if (renderHint !== "0") {
+                    ctx.globalAlpha = 1 - ctx.globalAlpha;
                     
-                    } else {
-                        if (!data.cachedData)
-                            data.cachedData = Crisp.crispBitmap (data.cachedCnv);
+                    ctx.beginPath ();
+                    ctx.ellipse (
+                        x * squashX,
+                        y * squashY,
+                        r * squashX - 1,
+                        r * squashY - 1,
+                        0,
+                        0,
+                        2 * Math.PI,
+                        false
+                    );
+                    ctx.closePath ();
 
-                        var tmp = Math.ceil (data.cachedCnv.width / w * 0.5); //remove 0.5 and you are doomed
-                        if (tmp >= Crisp.log.length)
-                            var bmpscale = Crisp.log[Crisp.log.length - 1];
-                        else
-                            var bmpscale = Crisp.log[tmp] - 1;
+                    ctx.lineWidth = 0;
 
-                        bmpscale = Math.max (0, bmpscale);
-                        bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
-
-                        ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
-                    
-                    }
-                //}
+                    ctx.fillStyle = back1;
+                    ctx.fill ();
+                }
             }
-            
-            ctx.globalAlpha = 1 - ctx.globalAlpha;
-            
-            ctx.beginPath ();
-            ctx.ellipse (
-                x * squashX,
-                y * squashY,
-                r * squashX - 1,
-                r * squashY - 1,
-                0,
-                0,
-                2 * Math.PI,
-                false
-            );
-            ctx.closePath ();
-
-            ctx.lineWidth = 0;
-
-            ctx.fillStyle = back1;
-            ctx.fill ();
 
             ctx.globalAlpha = 1;
-
         }
     }
     
@@ -2187,6 +2244,9 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
                 squashY = 1 / ratio;
             }
         }
+        
+        rr = rr - shadowr;
+        ferr = ferr - shadowr;
 
         r1 = rr;
         x1 = ww / squashX / 2;
@@ -2211,8 +2271,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, onI
 
         clip.setAttribute('cx', x1 * squashX);
         clip.setAttribute('cy', y1 * squashY);
-        clip.setAttribute('rx', r1 * squashX);
-        clip.setAttribute('ry', r1 * squashY);
+        clip.setAttribute('rx', (r1 + shadowr) * squashX);
+        clip.setAttribute('ry', (r1 + shadowr) * squashY);
         clip.setAttribute('stroke-width',  1);
         
         cnv.width = ww;

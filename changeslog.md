@@ -16,6 +16,8 @@
 
 - v 0.3 - beta
     - improved device-pixel-ratio consistency for mobile platforms  
-    - new HTML renderer
-    - progressive page loading supporting bigger sites
+    - new HTML renderer  
+    - progressive page loading for supporting bigger sites  
 
+- v 0.3 - release
+    - cast shadow effect

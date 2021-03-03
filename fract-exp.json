@@ -2,9 +2,10 @@
     "html-renderer": "latest",
     "show-pictograms": "yes",
     "pictogram-theme": "dark",
+    "background-color": "gray",
     "oval-color": "white",
-    "intermediate-color": "darkgray",
-    "background-color": "rgb(128, 128, 128)",
+    "shadow-radius": "20",
+    "shadow-color": "rgb(0, 0, 0, 0.3)",
     "scale": "100%",
     "flat-area": "0%",
     "contents": "contents/contents.xml"

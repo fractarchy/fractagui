@@ -321,6 +321,13 @@
                     data["show-pictograms"] = "yes";
                 }
                 
+                if (data["shadow-radius"]) {
+                    var sradius = parseFloat (data["shadow-radius"]);
+                    
+                } else {
+                    sradius = 0;
+                }
+                
                 if (data["pictogram-theme"]) {
                     if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
                         //hideSplash ();
@@ -358,8 +365,9 @@
                     showPic: data["show-pictograms"],
                     theme: data["pictogram-theme"],
                     ovalColor: data["oval-color"],
-                    intermediateColor: data["intermediate-color"],
-                    backColor: data["background-color"]
+                    backColor: data["background-color"],
+                    shadowRadius: sradius,
+                    shadowColor: data["shadow-color"],
                 }
             }
             
@@ -607,7 +615,7 @@
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
-                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.intermediateColor, onIdle, onBusy);
+                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
                                         window.addEventListener("load", wonload ());
                                     }
                                     

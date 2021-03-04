@@ -2221,33 +2221,30 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         hh = height;
 
         if (ww > hh / ratio) {
-            rr = hh / 2;
+            rr = hh / 2 - shadowr;
             ferr = rr;
             squashX = 1 / ratio;
             squashY = 1;
             
         } else if (hh > ww / ratio){
-            rr = ww / 2;
+            rr = ww / 2 - shadowr;
             ferr = rr;
             squashX = 1;
             squashY = 1 / ratio;
         } else {
             if (ww > hh) {
-                rr = ww / 2 * ratio;
-                ferr = hh / 2;
+                rr = (ww / 2) * ratio - shadowr;
                 squashX = 1 / ratio;
                 squashY = hh / ww / ratio;
+                ferr = rr * squashY;
             } else {
-                rr = hh / 2 * ratio;
-                ferr = ww / 2;
+                rr = (hh / 2) * ratio - shadowr;
                 squashX = ww / hh / ratio;
                 squashY = 1 / ratio;
+                ferr = rr * squashX;
             }
         }
         
-        rr = rr - shadowr;
-        ferr = ferr - shadowr;
-
         r1 = rr;
         x1 = ww / squashX / 2;
         y1 = hh / squashY / 2;

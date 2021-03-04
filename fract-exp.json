@@ -5,7 +5,7 @@
     "background-color": "gray",
     "oval-color": "white",
     "shadow-radius": "20",
-    "shadow-color": "rgb(0, 0, 0, 0.3)",
+    "shadow-color": "rgb(0, 0, 0, 1)",
     "scale": "100%",
     "flat-area": "0%",
     "contents": "contents/contents.xml"

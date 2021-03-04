@@ -18,6 +18,5 @@
     - improved device-pixel-ratio consistency for mobile platforms  
     - new HTML renderer  
     - progressive page loading for supporting bigger sites  
+    - cast shadow effect  
 
-- v 0.3 - release
-    - cast shadow effect

@@ -1,10 +1,10 @@
-# Fract-exp
+# fract-exp
 
-(v 0.3 - release candidate 1)
+(v 0.3 - beta 2)
 
 ![](media/socmedia.png)  
 
-## about Fract-exp
+## about fract-exp
 
 Fract-exp (fractal expression) is a fractal-structure inspired, parent-child orbiting, zooming-elements based, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. Fract-exp is a kind of headless, flat-file, and light CMS. Composing contents in Fract-exp is consisted of importing external content pages and arranging them using parent-children structure described in an initial XML file. The final result brings all the imported content pages shown in orbitable and zoomable ovals that form a seamless dynamic fractal. We navigate the entire fractal only by dragging the ovals.
 

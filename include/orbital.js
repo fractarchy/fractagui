@@ -1208,19 +1208,15 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
             if (shadow) {
                 if (shadowColor) {
-                    // Fill with gradient
-                    var grd = ctx.createRadialGradient(x, y, r, x, y, r + shadowr);
-                    grd.addColorStop(0, shadowColor);
-                    grd.addColorStop(1, "rgb(0, 0, 0, 0)");
-                    ctx.fillStyle = grd;
+                    ctx.shadowBlur = shadowr;
+                    ctx.shadowColor = shadowColor;
 
-                    ctx.setTransform(squashX,0,0,squashY,0,0);
                     ctx.beginPath ();
                     ctx.ellipse (
-                        x,
-                        y,
-                        r + shadowr,
-                        r + shadowr,
+                        x * squashX,
+                        y * squashY,
+                        r * squashX - 1,
+                        r * squashY - 1,
                         0,
                         0,
                         2 * Math.PI,
@@ -1228,10 +1224,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     );
                     ctx.closePath ();
                     ctx.lineWidth = 0;
-                    ctx.globalCompositeOperation = 'source-atop'
+                    ctx.fillStyle = fill;
                     ctx.fill ();
-                    ctx.resetTransform();
-                    ctx.globalCompositeOperation = 'source-over'
+
+                    ctx.shadowBlur = 0;
                 }
             } else {
 
@@ -1241,7 +1237,6 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                 else
                     diff = 1;
                     
-
                 ctx.beginPath ();
                 ctx.ellipse (
                     x * squashX,

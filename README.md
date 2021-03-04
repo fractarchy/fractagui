@@ -1,6 +1,6 @@
 # fract-exp
 
-(v 0.3 - beta 2)
+(v 0.3 - beta)
 
 ![](media/socmedia.png)  
 

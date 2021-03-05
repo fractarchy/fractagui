@@ -72,7 +72,7 @@
             </svg>
         </div>
         
-        <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;"> <!--filter: drop-shadow( 0px 0px 10px rgba(0, 0, 0, 1));-->
+        <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
         </div>
         
         <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;"/>
@@ -80,6 +80,7 @@
         <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;"/>
         
         <script>
+            var error;
             function getDesign() {
                 var design;
                 if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
@@ -227,6 +228,7 @@
             wonload = function () {
                 //hideSplash ();
                 setSize ();
+                Orbital (divContainer, nodeTree, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
                 dispatchSize ();
                 if (env.showPic === "yes") {
                     i1.style.visibility = "visible";
@@ -411,12 +413,19 @@
                     ifr.style.overflow = "hidden";
 
                     ifr.onload = function () {
+                        /*
+                        if (ifr.contentDocument.readyState !== "complete") {
+                            setTimeout(ifr.onload, 10);
+                            return;
+                        }
+                        */
+                        
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
                                 error = true
                                 //hideSplash ();
                                 console.debug (`Error loading: '${ifr.src}'`);
-                                resolve ();
+                                reject ();
                                 return;
                             }
                             ifr.style.width = "0px";
@@ -440,7 +449,7 @@
                         node.img.crossOrigin = "anonymous";
                         
                         node.img.onload = function (e) {
-                            if (!pauseLoading) {
+                            if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
                                 var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
                                 node.scaledBitmap = Crisp.crispBitmapXY(canvas);
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
@@ -455,7 +464,7 @@
                                 //hideSplash ();
                                 console.debug (`Error loading: '${node.src}'`);
                             }
-                            resolve ();
+                            reject ();
                         }
                         
                         if (node.type === "image" || env.htmlRenderer === "latest") {
@@ -480,8 +489,10 @@
                                                     traverseChildren(link.children[j], node)
                                                 }
                                             }
-                                                var rects = link.getClientRects();
-                                                for (var j in rects) {
+                                            
+                                            var rects = link.getClientRects();
+                                            for (var j in rects) {
+                                                if (rects[j].right)
                                                     node.hyperlinks.push (
                                                         {
                                                             "type": "rect",
@@ -493,8 +504,7 @@
                                                             "bottom": rects[j].bottom / myScale
                                                         }
                                                     );
-                                                }
-                                            
+                                            }
                                         }) (links[i], node);
                                     } else {
                                         var rects = links[i].getClientRects();
@@ -606,16 +616,16 @@
                                 }
                                 
                                 if (xhr.responseXML) {
-                                    var data = formArray (xhr.responseXML, null);
+                                    nodeTree = formArray (xhr.responseXML, null);
                                     var waitForImages = function () {
                                         if (!(i1.complete && i2.complete && i3.complete)) {
-                                            setTimeout (waitForImages, 5);
+                                            setTimeout (waitForImages, 10);
                                             return;
                                         }
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
-                                        Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
+                                        //Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
                                         window.addEventListener("load", wonload ());
                                     }
                                     
@@ -640,6 +650,8 @@
                 xhttp.open("GET", "fract-exp.json?" + Date.now(), true);
                 xhttp.send();
             }
+            
+            var nodeTree;
             
             var divContainer = document.getElementById ("divContainer")
             

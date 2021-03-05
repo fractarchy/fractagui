@@ -775,9 +775,6 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                 
                 //if (!renderHint || (rec > 1 && renderHint === "1+") || renderHint === "1" || renderHint === "0") {
                     drawCircle (data, x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec, shadow);
-                    if (!shadow) {
-                        renderData.push({radius: r0, data: data});
-                    }
                 //}
                 
                 if (data.children.length > 0 && renderHint !== "1") {                   
@@ -1066,6 +1063,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
             type: canvasScape.type,
             parent: parent,
             index: index,
+            scaledBitmap: null,
             children: []
         };
         
@@ -1228,9 +1226,34 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     ctx.fill ();
 
                     ctx.shadowBlur = 0;
-                }
-            } else {
+/*
+                    // Fill with gradient
+                    var grd = ctx.createRadialGradient(x, y, r + 1, x, y, r + shadowr);
+                    grd.addColorStop(0, shadowColor);
+                    grd.addColorStop(1, "rgb(0, 0, 0, 0)");
+                    ctx.fillStyle = grd;
 
+                    ctx.setTransform(squashX,0,0,squashY,0,0);
+                    ctx.beginPath ();
+                    ctx.ellipse (
+                        x,
+                        y,
+                        r + shadowr,
+                        r + shadowr,
+                        0,
+                        0,
+                        2 * Math.PI,
+                        false
+                    );
+                    ctx.closePath ();
+                    ctx.lineWidth = 0;
+                    ctx.globalCompositeOperation = 'source-atop'
+                    ctx.fill ();
+                    ctx.resetTransform();
+                    ctx.globalCompositeOperation = 'source-over'
+*/
+                }
+            } else {                
                 var diff;
                 if (renderHint === "1")
                     diff = 2;
@@ -1336,9 +1359,11 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     ctx.fillStyle = back1;
                     ctx.fill ();
                 }
-            }
 
-            ctx.globalAlpha = 1;
+                ctx.globalAlpha = 1;
+                
+                renderData.push({radius: r, data: data});
+            }
         }
     }
     
@@ -2274,7 +2299,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         cnv.style.clipPath = "url(#clip128)";
         
         function clearData (data) {
-            data.scaledBitmap = undefined;
+            data.scaledBitmap = null;
             data.centerX = 0;
             data.centerY = NaN;
             

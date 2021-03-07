@@ -9,13 +9,13 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:export-ydpi="96"
    inkscape:export-xdpi="96"
-   inkscape:export-filename="/home/ivanv/workspace/contrast-zone/e-fun/v0.3-beta/checkpoint 3/contents/0-4.png"
+   inkscape:export-filename="/home/ivanv/workspace/contrast-zone/fract-exp/v0.3-beta/checkpoint 4/contents/0-4.png"
    inkscape:version="1.0.1 (0767f8302a, 2020-10-17)"
    sodipodi:docname="0-4.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 132.29167 158.48545"
-   height="599"
+   viewBox="0 0 132.29167 132.29169"
+   height="500"
    width="500">
   <sodipodi:namedview
      inkscape:current-layer="layer1"
@@ -62,7 +62,7 @@
   <g
      id="layer1">
     <rect
-       y="117.17007"
+       y="89.124229"
        x="1.4989635"
        height="18.992674"
        width="128.99559"
@@ -74,21 +74,14 @@
        width="128.99559"
        height="13.439314"
        x="1.4989635"
-       y="100.50131" />
+       y="72.455452" />
     <rect
-       y="77.706802"
+       y="49.660942"
        x="1.4587531"
        height="19.201283"
        width="129.07602"
        id="rect1141"
        style="opacity:0.98;fill:#ececec;stroke:#000000;stroke-width:0.367766" />
-    <rect
-       style="opacity:0.98;fill:#ececec;stroke:#000000;stroke-width:0.367768"
-       id="rect1139"
-       width="129.07602"
-       height="12.748801"
-       x="1.4587531"
-       y="61.782452" />
     <text
        transform="matrix(0.69993628,0,0,0.69993628,-7.0447338,-46.933821)"
        style="font-style:normal;font-weight:normal;font-size:6.35px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect203);fill:#000000;fill-opacity:1;stroke:none;"
@@ -113,90 +106,64 @@
 </tspan></tspan><tspan
          x="12.470703"
          y="146.13209"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">Fract-exp is created with a help of </tspan><tspan
-           style="font-style:italic">html2canvas</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> project.
-</tspan></tspan><tspan
-         x="12.470703"
-         y="154.06959"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
-</tspan></tspan><tspan
-         x="12.470703"
-         y="162.00709"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> </tspan><tspan
-           style="font-style:italic">Apache HTTP Server Project</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> and </tspan><tspan
-           style="font-style:italic">html2canvas</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> are
-</tspan></tspan><tspan
-         x="12.470703"
-         y="169.94459"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> trademarks of their respective owners.
-</tspan></tspan><tspan
-         x="12.470703"
-         y="177.88209"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
-</tspan></tspan><tspan
-         x="12.470703"
-         y="185.81959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> Fract-exp is shared to public under conditional </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">Creative
 </tspan></tspan><tspan
          x="12.470703"
-         y="193.75709"><tspan
+         y="154.06959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff"> Commons Attribution 4.0 International License</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> by
 </tspan></tspan><tspan
          x="12.470703"
-         y="201.69459"><tspan
+         y="162.00709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">Contrast Zone</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> productions.
 </tspan></tspan><tspan
          x="12.470703"
-         y="209.63209"><tspan
+         y="169.94459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="217.56959"><tspan
+         y="177.88209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> A copy of Fract-exp software bundle can be downloaded
 </tspan></tspan><tspan
          x="12.470703"
-         y="225.50709"><tspan
+         y="185.81959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> from </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">dedicated github pages</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">.
 </tspan></tspan><tspan
          x="12.470703"
-         y="233.44459"><tspan
+         y="193.75709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="241.38209"><tspan
+         y="201.69459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> To ask any questions about Fract-exp, to report a bug,
 </tspan></tspan><tspan
          x="12.470703"
-         y="249.31959"><tspan
+         y="209.63209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'"> or to track new releases, please refer to a </tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff">dedicated 
 </tspan></tspan><tspan
          x="12.470703"
-         y="257.25709"><tspan
+         y="217.56959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif';fill:#0000ff"> mailing list</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">.
 </tspan></tspan><tspan
          x="12.470703"
-         y="265.19459"><tspan
+         y="225.50709"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">
 </tspan></tspan><tspan
          x="12.470703"
-         y="273.13209"><tspan
+         y="233.44459"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">With this section, we conclude Fract-exp instructions </tspan></tspan><tspan
          x="12.470703"
-         y="281.06959"><tspan
+         y="241.38209"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">exposure. I wish you a creative and productive web </tspan></tspan><tspan
          x="12.470703"
-         y="289.00709"><tspan
+         y="249.31959"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Serif';-inkscape-font-specification:'DejaVu Serif'">knitting.</tspan><tspan>
 </tspan></tspan></text>
   </g>

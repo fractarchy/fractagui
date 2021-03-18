@@ -1,5 +1,5 @@
 {
-    "html-renderer": "latest",
+    "html-renderer": "legacy",
     "show-pictograms": "yes",
     "pictogram-theme": "dark",
     "background-color": "gray",

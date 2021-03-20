@@ -4509,10 +4509,10 @@ if (childNode.tagName === "A") {
                     "type": "rect",
                     "target": tg,
                     "href": hr,
-                    "left": eb.left,
-                    "top": eb.top,
-                    "right": eb.left + eb.width,
-                    "bottom": eb.top + eb.height
+                    "left": eb.left * window.devicePixelRatio,
+                    "top": eb.top * window.devicePixelRatio,
+                    "right": (eb.left + eb.width) * window.devicePixelRatio,
+                    "bottom": (eb.top + eb.height) * window.devicePixelRatio
                 }
             );
         }
@@ -4524,10 +4524,10 @@ if (childNode.tagName === "A") {
                         "type": "rect",
                         "target": tg,
                         "href": hr,
-                        "left": tb.left,
-                        "top": tb.top,
-                        "right": tb.left + tb.width,
-                        "bottom": tb.top + tb.height
+                        "left": tb.left * window.devicePixelRatio,
+                        "top": tb.top * window.devicePixelRatio,
+                        "right": (tb.left + tb.width) * window.devicePixelRatio,
+                        "bottom": (tb.top + tb.height) * window.devicePixelRatio
                     }
                 );
             }

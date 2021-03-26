@@ -400,26 +400,31 @@
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
                 for (i = 0; i < ovals.length && !pauseLoading; i++) {
                     if (!ovals[i].data.scaledBitmap) {
-                        await loadOval (ovals[i].data);
+                        try {
+                            await loadOval (ovals[i].data);
+                        } catch (e) {
+                        }
                     }
                 }
             }
             
             async function loadOval(data) {
                 return new Promise(async function(resolve, reject) {
+                    /*
+                    var imaga = false;
+                    for (var rndr = 0; rndr < renderData.length; rndr++) {
+                        if (data === renderData[rndr].data) {
+                            imaga = true;
+                            break;
+                        }
+                    }
+                    */
                     var ifr = document.createElement ('iframe');
                     ifr.style.visibility = "hidden";
                     ifr.style.border = "none";
                     ifr.style.overflow = "hidden";
 
                     ifr.onload = function () {
-                        /*
-                        if (ifr.contentDocument.readyState !== "complete") {
-                            setTimeout(ifr.onload, 10);
-                            return;
-                        }
-                        */
-                        
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
                                 error = true
@@ -453,8 +458,10 @@
                                 var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
                                 node.scaledBitmap = Crisp.crispBitmapXY(canvas);
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                                resolve ();
+                            } else {
+                                reject ();
                             }
-                            resolve ();
                             //updateProgressBar();
                         }
                         
@@ -478,7 +485,11 @@
                                     hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
                               
                                 if (hr) {
-                                    var myScale = 100 / env.scale / window.devicePixelRatio
+                                    if (env.htmlRenderer === "legacy")
+                                        var myScale = 1;
+                                    else
+                                        var myScale = 100 / env.scale / window.devicePixelRatio;
+                                    
                                     if (!node.hyperlinks)
                                         node.hyperlinks = [];
                                     

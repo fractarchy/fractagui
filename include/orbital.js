@@ -1152,7 +1152,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     }
     
     function setCenter (select, x, y) {
-        if (select.cursor.data.scaledBitmap) {
+        if (select.cursor.data && select.cursor.data.scaledBitmap) {
             select.cursor.centerX = x;
             var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
             if (select.cursor.centerX > minmaxW)
@@ -1189,7 +1189,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
             } else {
                 select.cursor.centerX = 0;
                 select.cursor.centerY = NaN;
-                if (select.cursor.data.scaledBitmap)
+                if (select.cursor.data && select.cursor.data.scaledBitmap)
                     select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + alignY, select.cursor.data.scaledBitmap.height / 2);
 
             }
@@ -1411,6 +1411,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     if (!animateAng2Start)
                         animateAng2Start = Math.PI;
                 }
+                
+                var aa0 = animateAng0;
                 
                 animateAng0 = Math.min (animateAng0, angMax);
                 animateAng0 = Math.max (animateAng0, angMin);
@@ -1637,14 +1639,16 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     }
                                 }
                                 
-                                panning = false;
-                                animating = "level";
-                                cursor.centerX = 0;
-                                cursor.centerY = NaN;
-                                if (cursor.data.scaledBitmap)
-                                    cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
+                                if (aa0 < 3 * Math.PI / 2 && aa0 > Math.PI / 2) {
+                                    panning = false;
+                                    animating = "level";
+                                    cursor.centerX = 0;
+                                    cursor.centerY = NaN;
+                                    if (cursor.data.scaledBitmap)
+                                        cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
 
-                                window.requestAnimationFrame (aEnsmall);
+                                    window.requestAnimationFrame (aEnsmall);
+                                }
                             }
                         }
                     }

@@ -56,13 +56,13 @@
             setDesign(window.devicePixelRatio);
         </script>
 
-        <script src="include/html2canvas.edit.js"></script>
-        <script src="include/render-html.js"></script>
-        <script src="include/orbital.js"></script>
+        <script src="src/html2canvas.edit.js"></script>
+        <script src="src/render-html.js"></script>
+        <script src="src/fract-exp.js"></script>
     </head>
     <body>
       <section>
-        <div id="splashContainer" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
+        <!--div id="splashContainer" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
             <div id="splash" class="rotate">
                 <svg id="circle" height="300" width="300"><circle id="rotator" cx="135" cy="30" r="30" fill="white"/></svg>
             </div>
@@ -70,7 +70,7 @@
                 <rect id="loadPercentBack" x="50" y="0" width="200" height="8" rx="3" ry="3" fill="darkgray"/>
                 <rect id="loadPercent" x="50" y="0" width="0" height="8" rx="3" ry="3" fill="white"/>
             </svg>
-        </div>
+        </div-->
         
         <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
         </div>
@@ -342,18 +342,22 @@
                 }
                 
                 if (data["pictogram-theme"] === "dark") {
+                    /*
                     document.getElementById("rotator").style.fill = "rgb(48, 48, 48)";
                     document.getElementById("loadPercent").style.fill = "rgb(48, 48, 48)";
                     document.getElementById("loadPercentBack").style.fill = "rgb(104, 104, 104)";
+                    */
 
                     document.getElementById("i1").src="media/di1.svg";
                     document.getElementById("i2").src="media/di2.svg";
                     document.getElementById("i3").src="media/di3.svg";
                     
                 } else {
+                    /*
                     document.getElementById("rotator").style.fill = "rgb(208, 208, 208)";
                     document.getElementById("loadPercent").style.fill = "rgb(208, 208, 208)";
                     document.getElementById("loadPercentBack").style.fill = "rgb(152, 152, 152)";
+                    */
 
                     document.getElementById("i1").src="media/li1.svg";
                     document.getElementById("i2").src="media/li2.svg";
@@ -460,6 +464,7 @@
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 resolve ();
                             } else {
+                                divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 reject ();
                             }
                             //updateProgressBar();
@@ -471,6 +476,7 @@
                                 //hideSplash ();
                                 console.debug (`Error loading: '${node.src}'`);
                             }
+                            divContainer.dispatchEvent(new CustomEvent('redraw', null));
                             reject ();
                         }
                         

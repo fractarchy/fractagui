@@ -20,3 +20,5 @@
     - progressive page loading for supporting bigger sites  
     - cast shadow effect  
 
+- v 0.3 - release candidate 1  
+    - bug fixes  

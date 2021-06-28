@@ -1,6 +1,6 @@
 # fract-exp
 
-(v 0.3 - RC1)
+(v 0.3 - release)
 
 tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
 
@@ -30,7 +30,7 @@ Fract-exp is made as a helper to organize, emphasize, and publish your web pages
 
 ### 4.1. licencing
 
-This software is released under [conditional Creative Commons Attribution 4.0 International License](../LICENSE).
+This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE).
 
 ### 4.3. giving it a try
 

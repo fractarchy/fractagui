@@ -20,5 +20,8 @@
     - progressive page loading for supporting bigger sites  
     - cast shadow effect  
 
-- v 0.3 - release  
+- v 0.3 - release
     - bug fixes  
+
+- v 0.3 - update
+    - eightifying possible sixes

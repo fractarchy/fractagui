@@ -1,6 +1,6 @@
 # fract-exp
 
-(v 0.3 - release)
+(v 0.3 - update candidate)
 
 tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
 
@@ -35,3 +35,4 @@ This software is released under [conditional Creative Commons Attribution 4.0 In
 ### 4.3. giving it a try
 
 To get started with site creation using Fract-exp, please refer to an [example site](https://contrast-zone.github.io/fract-exp/) containing use instructions.
+

@@ -387,6 +387,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
 
 function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less, and you are doomed */
+    var qang = 0.025 * Math.PI;
 
     var hilight = fill1;
     var stroke1 = str1;
@@ -395,16 +396,16 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     
     var shadow;
 
-    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
+    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog) {
         if (renderHint !== "1") {
             shadow = true;
-            render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
+            render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog);
             shadow = false;
         }
-        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
+        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog);
     }
     
-    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
+    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog) {
         function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
             var beta = angle + alpha - Math.PI / 2;
             
@@ -533,13 +534,16 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     if (alpha === -Infinity || alpha === Infinity)
                         alpha = Math.PI;
                     
+                    if (!analog)
+                        alpha = Math.PI + Math.round ((alpha - Math.PI) / qang) * qang;
+                    
                     var ci;
                     var oldr, delta;
         
                     c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
                     ci = (cursor?cursor.index:0);
                     if (c0.r * squashX * squashY >= minRadius) {
-                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
+                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, analog);
                         if (got) {
                             idx = ci;
                             alp = alpha;
@@ -556,7 +560,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci++;
                         
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, analog);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -581,7 +585,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci--;
 
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, analog);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -851,6 +855,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     var orientation = 0;
     var curvature = 0.125;
     
+    var qang = 0.0125 * Math.PI;             // touch it and you're doomed
+    var qpan = 20 * window.devicePixelRatio; // touch it and you're doomed
+    var qlevel = 8;                          // touch it and you're doomed
+    
     var svgns = "http://www.w3.org/2000/svg";
     
     divContainer.innerHTML = "";
@@ -933,6 +941,9 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         cnvCache.height = cacheH;
         var ctxCache = cnvCache.getContext('2d');
         var imgCache = ctxCache.createImageData(cacheW, cacheH);
+        
+        cx = Math.round (cx / qpan) * qpan;
+        cy = Math.round (cy / qpan) * qpan;
         
         fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
         ctxCache.putImageData (imgCache, 0, 0);
@@ -1413,7 +1424,13 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                 }
                 
                 var aa0 = animateAng0;
-                
+                /*
+                animateAng0 = Math.round ((animateAng0) / qang) * qang;
+                animateAng0Start = Math.PI + Math.round ((animateAng0Start - Math.PI) / qang) * qang;
+                animateAng2 = Math.round ((animateAng2) / qang) * qang;
+                animateAng2Start = Math.PI + Math.round ((animateAng2Start - Math.PI) / qang) * qang;
+                */
+
                 animateAng0 = Math.min (animateAng0, angMax);
                 animateAng0 = Math.max (animateAng0, angMin);
                 animateAng2 = Math.min (animateAng2, angMax);
@@ -1424,13 +1441,14 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     while (topc.parent)
                         topc = topc.parent;
 
-                    var i, t0;
+                    var i, t0, tmpi;
                 
                     if (isOnParent) {
                         //alert ("level down");
                         if (level !== gettingLevel) {
                             t0 = (new Date()).getTime();
                             i = 0;
+                            tmpi = 0;
                             
                             var angles = [];
                             var cc = select.parent.cursor;
@@ -1479,19 +1497,25 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                 var x2 = xo + r2 * Math.cos(mang);
                                 var y2 = yo + r2 * Math.sin(mang);
 
-                                var x = x1 + (x2 - x1) * i;
-                                var y = y1 + (y2 - y1) * i;
-                                var r = r1 + (r2 - r1) * i;
+                                var i1 = Math.round (i * qlevel) / qlevel;
+                                
+                                var x = x1 + (x2 - x1) * i1;
+                                var y = y1 + (y2 - y1) * i1;
+                                var r = r1 + (r2 - r1) * i1;
                                 
                                 levelrr = r;
 
                                 renderData = [];
-                                var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData);
+                                if (tmpi !== i1 || i1 === 1)
+                                    var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData, "analog");
+
+                                tmpi = i1;
 
                                 if (i < 1) {
                                     var t1 = (new Date()).getTime();
-                                    i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
-                                    if (i > 1) i = 1
+                                    //i += 0.005 + (0.5 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
+                                    i += (t1 - t0) / 384;
+                                    if (i > 1) i = 1;
                                     t0 = t1;
                                     
                                     window.requestAnimationFrame(aEnlarge)
@@ -1545,6 +1569,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                             if (level !== gettingLevel) {
                                 i = 0;
                                 t0 = (new Date()).getTime();
+                                tmpi = 0;
                                 
                                 var angles = [];
                                 var cc = select.cursor.parent;
@@ -1578,6 +1603,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     };
 
                                     var m = topc.getCircle (lastAngle);
+                                    //var la = Math.PI + Math.round ((lastAngle - Math.PI) / qang) * qang;
+                                    //var m = topc.getCircle (la);
                                     
                                     var x0 = topc.smallX + m.x;
                                     var y0 = topc.smallY + m.y;
@@ -1593,18 +1620,24 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     var x2 = xo + r2 * Math.cos(mang);
                                     var y2 = yo + r2 * Math.sin(mang);
 
-                                    var x = x1 + (x2 - x1) * (1 - i);
-                                    var y = y1 + (y2 - y1) * (1 - i);
-                                    var r = r1 + (r2 - r1) * (1 - i);
+                                    var i1 = Math.round (i * qlevel) / qlevel;
+
+                                    var x = x1 + (x2 - x1) * (1 - i1);
+                                    var y = y1 + (y2 - y1) * (1 - i1);
+                                    var r = r1 + (r2 - r1) * (1 - i1);
 
                                     levelrr = r;
 
                                     renderData = [];
-                                    var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData);
+                                    if (tmpi !== i1 || i1 === 1)
+                                        var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData, "analog");
+
+                                    tmpi = i1;
 
                                     if (i < 1) {
                                         var t1 = (new Date()).getTime();
-                                        i += (0.51 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
+                                        //i += 0.005 + (0.5 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
+                                        i += (t1 - t0) / 384;
                                         if (i > 1) i = 1
                                         t0 = t1;
                                         

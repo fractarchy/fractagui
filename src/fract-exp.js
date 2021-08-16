@@ -534,8 +534,8 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     if (alpha === -Infinity || alpha === Infinity)
                         alpha = Math.PI;
                     
-                    if (!analog)
-                        alpha = Math.PI + Math.round ((alpha - Math.PI) / qang) * qang;
+                    //if (!analog)
+                    //    alpha = Math.PI + Math.round ((alpha - Math.PI) / qang) * qang;
                     
                     var ci;
                     var oldr, delta;
@@ -855,8 +855,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     var orientation = 0;
     var curvature = 0.125;
     
-    var qang = 0.0125 * Math.PI;             // touch it and you're doomed
-    var qpan = 20 * window.devicePixelRatio; // touch it and you're doomed
+    var qang = 0.0192 * Math.PI;             // touch it and you're doomed
+    var qpan = 15 * window.devicePixelRatio; // touch it and you're doomed
     var qlevel = 8;                          // touch it and you're doomed
     
     var svgns = "http://www.w3.org/2000/svg";
@@ -933,20 +933,26 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         invalidateCursor (c);
     }
     
+    var oldcx, oldcy;
+    
     function getCnvCache (data, cx, cy, rr) {        
-        var cnvCache = document.createElement ("canvas");
-        var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
-        var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
-        cnvCache.width = cacheW;
-        cnvCache.height = cacheH;
-        var ctxCache = cnvCache.getContext('2d');
-        var imgCache = ctxCache.createImageData(cacheW, cacheH);
-        
         cx = Math.round (cx / qpan) * qpan;
         cy = Math.round (cy / qpan) * qpan;
+
+        if (!data.cachedData || oldcx !== cx || oldcy !== cy) {
+            var cnvCache = document.createElement ("canvas");
+            var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
+            var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
+            cnvCache.width = cacheW;
+            cnvCache.height = cacheH;
+            var ctxCache = cnvCache.getContext('2d');
+            var imgCache = ctxCache.createImageData(cacheW, cacheH);
         
-        fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
-        ctxCache.putImageData (imgCache, 0, 0);
+            fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
+            ctxCache.putImageData (imgCache, 0, 0);
+            oldcx = cx;
+            oldcy = cy;
+        }
         
         return cnvCache;
     }
@@ -1306,7 +1312,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     
                 while (ang1 > 2 * Math.PI) ang1 = ang1 - 2 * Math.PI;
                 while (ang1 < 0) ang1 = ang1 + 2 * Math.PI;
-
+                
                 ang1 = Math.min (select.getAngMax (), ang1);
                 ang1 = Math.max (select.getAngMin (), ang1);
             }
@@ -1335,7 +1341,18 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
             if (!animating && dragging && select.parent && !isOnParent && mouseDistance < maxR) {
                 //select.parent.setAngle (ang[1], dr);
-                select.parent.setAngle (ang1, 0);
+                var myang = 0;
+                var myangadd = 0;
+                while (Math.abs (myang) < Math.abs (ang1 - Math.PI)) {
+                    myangadd = qang * Math.sign(ang1 - Math.PI) * select.parent.getCircle(myang + Math.PI).r / (select.parent.largeR * (1 - ratio));
+                    myang += myangadd;
+                }
+                myang -= myangadd;
+                if (ang1 <= select.getAngMin () || ang1 >= select.getAngMax ())
+                    myang += myangadd;
+                
+                var qang1 = Math.PI + myang;
+                select.parent.setAngle (qang1, 0);
                 //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {
                     //inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: dr, time: (new Date()).getTime()};
                     inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang1, percentRawAngle: 0, centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
@@ -1543,7 +1560,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     if (atCur) {
                                         if (dragging) {
                                             setupSelect (atCur.child)
-                                            redraw (null, "1", select.cursor);
+                                            redraw (null, "1+", select.cursor);
                                             mousemove (lastMouseEvent);
                                         } else {
                                             redraw ({x: mouse.x, y: mouse.y}, "1");
@@ -1655,7 +1672,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                         if (atCur) {
                                             if (dragging) {
                                                 setupSelect (atCur);
-                                                redraw (null, "1", select.cursor);
+                                                redraw (null, "1+", select.cursor);
                                                 mousemove (lastMouseEvent);
                                             } else {
                                                 redraw ({x: mouse.x, y: mouse.y}, "1");
@@ -1810,6 +1827,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     var t0 = globalt0;
                     var i = 1;
                     var di = 1;
+                    var tmpa0 = 0;
                     function aInert () {
                         if (animating === true) {
                             var dt = (new Date()).getTime() - t0;
@@ -1824,10 +1842,29 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                 var a0 = ang0 - dang0;
                                 a0 = Math.max (a0, select.getAngMin());
                                 a0 = Math.min (a0, select.getAngMax());
-                                c.setAngle (a0, 0/*inert[inertIdx - 1].percentRawAngle*/);
+
+                                var myang = 0;
+                                var myangadd = 0;
+                                while (Math.abs (myang) < Math.abs (a0 - Math.PI)) {
+                                    myangadd = qang * Math.sign(a0 - Math.PI) * select.parent.getCircle(myang + Math.PI).r / (select.parent.largeR * (1 - ratio));
+                                    myang += myangadd;
+                                }
+                                myang -= myangadd;
+                                if (a0 <= select.getAngMin () || a0 >= select.getAngMax ())
+                                    myang += myangadd;
+                                
+                                var qang1 = Math.PI + myang;
+                                if (tmpa0 !== qang1) {
+                                    tmpa0 = qang1;
+                                    c.setAngle (qang1, 0);
+                                    redraw (null, "1+", (select)?select.cursor:null);
+                                }
+
+                                /*
+                                c.setAngle (a0, 0);//inert[inertIdx - 1].percentRawAngle);
 
                                 redraw (null, "1+", (select)?select.cursor:null);
-                                
+                                */
                                 window.requestAnimationFrame(aInert);
                                 
                             } else {

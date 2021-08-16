@@ -1958,9 +1958,13 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     if (di > 0){
                                         var oldx = cursor.centerX;
                                         var oldy = cursor.centerY;
+                                        var px = globalSel.px;
+                                        var py = globalSel.py;
                                         setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
                                         if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                            redraw (null, "1", globalSel.cursor);
+                                            if (px !== globalSel.px || py !== globalSel.py)
+                                                redraw (null, "1", globalSel.cursor);
+                                                
                                             window.requestAnimationFrame(dInert);
                                             
                                         } else {

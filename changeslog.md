@@ -24,4 +24,4 @@
     - bug fixes  
 
 - v 0.3 - update
-    - eightifying possible sixes
+    - slower processor friendly implementation

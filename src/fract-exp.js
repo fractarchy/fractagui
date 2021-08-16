@@ -936,6 +936,9 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     //var oldcx, oldcy;
     
     function getCnvCache (data, cx, cy, rr) {
+        cx = Math.round (cx / qpan) * qpan;
+        cy = Math.round (cy / qpan) * qpan;
+
         var cnvCache = document.createElement ("canvas");
         var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
         var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
@@ -1163,11 +1166,11 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     
     function setCenter (select, x, y) {
         if (select.cursor.data && select.cursor.data.scaledBitmap) {
-            var px = Math.round (x / qpan) * qpan;
-            var py = Math.round (y / qpan) * qpan;
+            //var px = Math.round (x / qpan) * qpan;
+            //var py = Math.round (y / qpan) * qpan;
             //if (select.px !== px || select.py !== py) {
 
-                select.cursor.centerX = px;
+                select.cursor.centerX = x;
                 var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
                 if (select.cursor.centerX > minmaxW)
                     select.cursor.centerX = minmaxW;
@@ -1176,7 +1179,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
                 select.cursor.centerX = Math.floor (select.cursor.centerX)
 
-                select.cursor.centerY = py;
+                select.cursor.centerY = y;
                 var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
                 if (select.cursor.centerY > minmaxH)
                     select.cursor.centerY = minmaxH;
@@ -1959,12 +1962,16 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     if (di > 0){
                                         var oldx = cursor.centerX;
                                         var oldy = cursor.centerY;
-                                        //var px = globalSel.px;
-                                        //var py = globalSel.py;
+                                        var px = Math.round (cursor.centerX / qpan) * qpan;
+                                        var py = Math.round (cursor.centerY / qpan) * qpan;
                                         setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
+                                        //setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
                                         if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                            //if (px !== globalSel.px || py !== globalSel.py)
+                                            if (px !== globalSel.px || py !== globalSel.py) {
                                                 redraw (null, "1", globalSel.cursor);
+                                                globalSel.px = px;
+                                                globalSel.py = py;
+                                            }
                                                 
                                             window.requestAnimationFrame(dInert);
                                             

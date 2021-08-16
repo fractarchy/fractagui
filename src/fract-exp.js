@@ -933,26 +933,19 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         invalidateCursor (c);
     }
     
-    var oldcx, oldcy;
+    //var oldcx, oldcy;
     
-    function getCnvCache (data, cx, cy, rr) {        
-        cx = Math.round (cx / qpan) * qpan;
-        cy = Math.round (cy / qpan) * qpan;
-
-        if (!data.cachedData || oldcx !== cx || oldcy !== cy) {
-            var cnvCache = document.createElement ("canvas");
-            var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
-            var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
-            cnvCache.width = cacheW;
-            cnvCache.height = cacheH;
-            var ctxCache = cnvCache.getContext('2d');
-            var imgCache = ctxCache.createImageData(cacheW, cacheH);
-        
-            fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
-            ctxCache.putImageData (imgCache, 0, 0);
-            oldcx = cx;
-            oldcy = cy;
-        }
+    function getCnvCache (data, cx, cy, rr) {
+        var cnvCache = document.createElement ("canvas");
+        var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
+        var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
+        cnvCache.width = cacheW;
+        cnvCache.height = cacheH;
+        var ctxCache = cnvCache.getContext('2d');
+        var imgCache = ctxCache.createImageData(cacheW, cacheH);
+    
+        fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
+        ctxCache.putImageData (imgCache, 0, 0);
         
         return cnvCache;
     }
@@ -1170,23 +1163,30 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     
     function setCenter (select, x, y) {
         if (select.cursor.data && select.cursor.data.scaledBitmap) {
-            select.cursor.centerX = x;
-            var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
-            if (select.cursor.centerX > minmaxW)
-                select.cursor.centerX = minmaxW;
-            if (select.cursor.centerX < -minmaxW)
-                select.cursor.centerX = -minmaxW;
+            var px = Math.round (x / qpan) * qpan;
+            var py = Math.round (y / qpan) * qpan;
+            if (select.px !== px || select.py !== py) {
 
-            select.cursor.centerX = Math.floor (select.cursor.centerX)
+                select.cursor.centerX = px;
+                var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
+                if (select.cursor.centerX > minmaxW)
+                    select.cursor.centerX = minmaxW;
+                if (select.cursor.centerX < -minmaxW)
+                    select.cursor.centerX = -minmaxW;
 
-            select.cursor.centerY = y;
-            var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
-            if (select.cursor.centerY > minmaxH)
-                select.cursor.centerY = minmaxH;
-            if (select.cursor.centerY < -minmaxH)
-                select.cursor.centerY = -minmaxH;
+                select.cursor.centerX = Math.floor (select.cursor.centerX)
 
-            select.cursor.centerY = Math.floor (select.cursor.centerY)
+                select.cursor.centerY = py;
+                var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
+                if (select.cursor.centerY > minmaxH)
+                    select.cursor.centerY = minmaxH;
+                if (select.cursor.centerY < -minmaxH)
+                    select.cursor.centerY = -minmaxH;
+
+                select.cursor.centerY = Math.floor (select.cursor.centerY)
+                select.px = px;
+                select.py = py;
+            }
         }
     }
     

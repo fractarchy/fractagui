@@ -1165,7 +1165,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         if (select.cursor.data && select.cursor.data.scaledBitmap) {
             var px = Math.round (x / qpan) * qpan;
             var py = Math.round (y / qpan) * qpan;
-            if (select.px !== px || select.py !== py) {
+            //if (select.px !== px || select.py !== py) {
 
                 select.cursor.centerX = px;
                 var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
@@ -1184,9 +1184,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     select.cursor.centerY = -minmaxH;
 
                 select.cursor.centerY = Math.floor (select.cursor.centerY)
-                select.px = px;
-                select.py = py;
-            }
+                
+                //select.px = px;
+                //select.py = py;
+            //}
         }
     }
     
@@ -1958,11 +1959,11 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     if (di > 0){
                                         var oldx = cursor.centerX;
                                         var oldy = cursor.centerY;
-                                        var px = globalSel.px;
-                                        var py = globalSel.py;
+                                        //var px = globalSel.px;
+                                        //var py = globalSel.py;
                                         setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
                                         if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                                            if (px !== globalSel.px || py !== globalSel.py)
+                                            //if (px !== globalSel.px || py !== globalSel.py)
                                                 redraw (null, "1", globalSel.cursor);
                                                 
                                             window.requestAnimationFrame(dInert);

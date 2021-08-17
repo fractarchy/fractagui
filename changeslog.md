@@ -25,3 +25,4 @@
 
 - v 0.3 - update
     - slower processor friendly implementation
+    - less energy consumption

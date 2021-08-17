@@ -398,10 +398,21 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
 
     var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog) {
         if (renderHint !== "1") {
+            //ctx1.beginPath ();
             shadow = true;
             render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog);
             shadow = false;
+            /*
+            ctx1.closePath ();
+            ctx1.shadowBlur = shadowr1;
+            ctx1.shadowColor = shadowColor1;
+            ctx1.lineWidth = 0;
+            ctx1.fillStyle = shadowColor1;
+            ctx1.fill ();
+            ctx.shadowBlur = 0;
+            */
         }
+        
         return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog);
     }
     
@@ -793,6 +804,8 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
+// var ctx1, shadowr1, shadowColor1, fillo1;
+
 function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor,  onIdle, onBusy) {
     "use strict";
     
@@ -856,7 +869,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     var curvature = 0.125;
     
     var qang = 0.0192 * Math.PI;             // touch it and you're doomed
-    var qpan = 15 * window.devicePixelRatio; // touch it and you're doomed
+    var qpan = 12 * window.devicePixelRatio; // touch it and you're doomed
     var qlevel = 8;                          // touch it and you're doomed
     
     var svgns = "http://www.w3.org/2000/svg";
@@ -913,6 +926,13 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
     var MAX_INT32 = Math.pow (2, 31) - 1;
 
+    /*
+    ctx1 = ctx;
+    shadowr1 = shadowr;
+    shadowColor1 = shadowColor;
+    fillo1 = fill1;
+    */
+    
     function invalidateCache () {
         //fishEye.clearRenderMap();
         
@@ -932,8 +952,6 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
         invalidateCursor (c);
     }
-    
-    //var oldcx, oldcy;
     
     function getCnvCache (data, cx, cy, rr) {
         cx = Math.round (cx / qpan) * qpan;
@@ -961,10 +979,9 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
             if (shadow) {
                 if (shadowColor) {
-                    ctx.shadowBlur = shadowr;
-                    ctx.shadowColor = shadowColor;
 
                     ctx.beginPath ();
+                    ctx.moveTo (x * squashX, y * squashY);
                     ctx.ellipse (
                         x * squashX,
                         y * squashY,
@@ -976,13 +993,17 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                         false
                     );
                     ctx.closePath ();
+
+                    ctx.shadowBlur = shadowr;
+                    ctx.shadowColor = shadowColor;
                     ctx.lineWidth = 0;
                     ctx.fillStyle = fill;
                     ctx.fill ();
 
                     ctx.shadowBlur = 0;
                 }
-            } else {                
+            } else {
+                                
                 var diff;
                 if (renderHint === "1")
                     diff = 2;
@@ -1004,6 +1025,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                 ctx.lineWidth = 0;
                 ctx.fillStyle = fill;
                 ctx.fill ();
+                
                 
                 if (animating === "level")
                     ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
@@ -1166,34 +1188,27 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     
     function setCenter (select, x, y) {
         if (select.cursor.data && select.cursor.data.scaledBitmap) {
-            //var px = Math.round (x / qpan) * qpan;
-            //var py = Math.round (y / qpan) * qpan;
-            //if (select.px !== px || select.py !== py) {
+            select.cursor.centerX = x;
+            var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
+            if (select.cursor.centerX > minmaxW)
+                select.cursor.centerX = minmaxW;
+            if (select.cursor.centerX < -minmaxW)
+                select.cursor.centerX = -minmaxW;
 
-                select.cursor.centerX = x;
-                var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
-                if (select.cursor.centerX > minmaxW)
-                    select.cursor.centerX = minmaxW;
-                if (select.cursor.centerX < -minmaxW)
-                    select.cursor.centerX = -minmaxW;
+            select.cursor.centerX = Math.floor (select.cursor.centerX)
 
-                select.cursor.centerX = Math.floor (select.cursor.centerX)
+            select.cursor.centerY = y;
+            var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
+            if (select.cursor.centerY > minmaxH)
+                select.cursor.centerY = minmaxH;
+            if (select.cursor.centerY < -minmaxH)
+                select.cursor.centerY = -minmaxH;
 
-                select.cursor.centerY = y;
-                var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
-                if (select.cursor.centerY > minmaxH)
-                    select.cursor.centerY = minmaxH;
-                if (select.cursor.centerY < -minmaxH)
-                    select.cursor.centerY = -minmaxH;
-
-                select.cursor.centerY = Math.floor (select.cursor.centerY)
-                
-                //select.px = px;
-                //select.py = py;
-            //}
+            select.cursor.centerY = Math.floor (select.cursor.centerY)
         }
     }
     
+    var qpx1, qpy1;
     function mousemovePan(x, y) {
         if (select && !animating) {
             var r0 = r1 * ratio;
@@ -1217,7 +1232,13 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
             
             globalt0 = (new Date()).getTime();
             window.requestAnimationFrame(function () {
-                redraw ({x: mouse.x, y: mouse.y}, "1");
+                var qpx = Math.round (select.cursor.centerX / qpan) * qpan;
+                var qpy = Math.round (select.cursor.centerY / qpan) * qpan;
+                if (qpx !== qpx1 || qpy !== qpy1) {
+                    redraw ({x: mouse.x, y: mouse.y}, "1");
+                    qpx1 = qpx;
+                    qpy1 = qpy;
+                }
             });
 
         }
@@ -1261,6 +1282,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         }
     }
     
+    var qang2;
     function mousemove (e) {
         "use strict";
         
@@ -1368,7 +1390,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     window.requestAnimationFrame(function () {
                         if (!panning) {
                             renderData = [];
-                            setupSelect (n.render (minRadius, x1, y1, r1, orientation, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+", renderData));
+                            if (qang1 !== qang2) {
+                                setupSelect (n.render (minRadius, x1, y1, r1, orientation, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+", renderData));
+                                qang2 = qang1;
+                            }
                             if (!select)
                                 mouseup (lastMouseEvent);
                         }
@@ -1536,6 +1561,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     var t1 = (new Date()).getTime();
                                     //i += 0.005 + (0.5 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
                                     i += (t1 - t0) / 384;
+                                    if (t1 - t0 === 0) i += 1 / 384;
                                     if (i > 1) i = 1;
                                     t0 = t1;
                                     
@@ -1659,6 +1685,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                         var t1 = (new Date()).getTime();
                                         //i += 0.005 + (0.5 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
                                         i += (t1 - t0) / 384;
+                                        if (t1 - t0 === 0) i += 1 / 384;
                                         if (i > 1) i = 1
                                         t0 = t1;
                                         

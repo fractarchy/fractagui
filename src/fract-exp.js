@@ -868,9 +868,10 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     var orientation = 0;
     var curvature = 0.125;
     
-    var qang = 0.0192 * Math.PI;             // touch it and you're doomed
-    var qpan = 12 * window.devicePixelRatio; // touch it and you're doomed
-    var qlevel = 8;                          // touch it and you're doomed
+    var quant = 0.8;                                  // touch it and you're doomed
+    var qang = quant * 0.0192 * Math.PI;              
+    var qpan = quant * 16 * window.devicePixelRatio;  
+    var qlevel = 8 / quant;                           
     
     var svgns = "http://www.w3.org/2000/svg";
     
@@ -1089,7 +1090,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                     //}
                 }
                 
-                if (renderHint !== "0") {
+                if (renderHint !== "0" && renderHint !== "1") {
                     ctx.globalAlpha = 1 - ctx.globalAlpha;
                     
                     ctx.beginPath ();
@@ -1544,6 +1545,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                 var y2 = yo + r2 * Math.sin(mang);
 
                                 var i1 = Math.round (i * qlevel) / qlevel;
+                                if (i1 > 1) i1 = 1;
                                 
                                 var x = x1 + (x2 - x1) * i1;
                                 var y = y1 + (y2 - y1) * i1;
@@ -1552,7 +1554,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                 levelrr = r;
 
                                 renderData = [];
-                                if (tmpi !== i1 || i1 === 1)
+                                if (tmpi !== i1 || i === 1)
                                     var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData, "analog");
 
                                 tmpi = i1;
@@ -1603,7 +1605,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                         mouseup (lastMouseEvent);
                                     }
                                     
-                                    idle ();
+                                    if (!dragging)
+                                        idle ();
                                 }
                             }
                             
@@ -1668,6 +1671,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     var y2 = yo + r2 * Math.sin(mang);
 
                                     var i1 = Math.round (i * qlevel) / qlevel;
+                                    if (i1 > 1) i1 = 1;
 
                                     var x = x1 + (x2 - x1) * (1 - i1);
                                     var y = y1 + (y2 - y1) * (1 - i1);
@@ -1676,7 +1680,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                     levelrr = r;
 
                                     renderData = [];
-                                    if (tmpi !== i1 || i1 === 1)
+                                    if (tmpi !== i1 || i === 1)
                                         var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData, "analog");
 
                                     tmpi = i1;
@@ -1715,8 +1719,9 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
                                             redraw ({x: mouse.x, y: mouse.y}, "1");
                                             mouseup (lastMouseEvent);
                                         }                                            
-                                    
-                                        idle ();
+                                        
+                                        if (!dragging)
+                                            idle ();
                                     }
                                 }
                                 

@@ -2344,7 +2344,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     });
     
     divContainer.addEventListener('redraw', function (e) {
-        redraw ();
+        if (!animating && !dragging && !panning)
+            redraw ();
     });
     
 }

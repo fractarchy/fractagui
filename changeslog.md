@@ -24,5 +24,5 @@
     - bug fixes  
 
 - v 0.3 - update
-    - slower processor friendly implementation
-    - less energy consumption
+    - slower processor friendly implementation  
+    - lighter energy consumption  

@@ -148,23 +148,45 @@
         <script>
             document.body.style.fontSize = Math.sqrt(window.devicePixelRatio) + "em"
 
-            var setSize = function () {
+            var setSize = function (orientation) {
                 var h = document.getElementById("header");
                 var b = document.getElementById("body1");
                 var f = document.getElementById("footer");
-
-                document.getElementById("fullscrbtn").style.right = "0em";
-                document.getElementById("fullscrbtn").style.top = b.offsetTop + "px";
-                document.getElementById("fullscrbtn").style.visibility = "visible";
-                
-                document.getElementById("helpbtn").style.right = "0em";
-                document.getElementById("helpbtn").style.bottom = f.clientHeight + "px";
-                document.getElementById("helpbtn").style.visibility = "visible";
-
-                b.style.height = document.body.clientHeight - b.offsetTop - f.clientHeight + "px";
-                
                 var hlp = document.getElementById("help");
-                hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
+                if (orientation === "portrait-primary") {
+                    h.style.visibility = "visible";
+                    f.style.visibility = "visible";
+                    h.style.zIndex = "-1";
+                    f.style.zIndex = "-1";
+                    b.style.zIndex = "0";
+
+                    b.style.top = "3.5em";
+                    b.style.height = document.body.clientHeight - b.offsetTop - f.clientHeight + "px";
+                    
+                    document.getElementById("fullscrbtn").style.right = "0em";
+                    document.getElementById("fullscrbtn").style.top = b.offsetTop + "px";
+                    document.getElementById("fullscrbtn").style.visibility = "visible";
+                    
+                    document.getElementById("helpbtn").style.right = "0em";
+                    document.getElementById("helpbtn").style.bottom = f.clientHeight + "px";
+                    document.getElementById("helpbtn").style.visibility = "visible";
+
+                    hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
+                } else {
+                    h.style.visibility = "hidden";
+                    f.style.visibility = "hidden";
+                    
+                    b.style.top = "0px";
+                    b.style.height = document.body.clientHeight + "px";
+
+                    document.getElementById("fullscrbtn").style.right = "0em";
+                    document.getElementById("fullscrbtn").style.top = "0em";
+                    document.getElementById("fullscrbtn").style.visibility = "visible";
+                    
+                    document.getElementById("helpbtn").style.right = "0em";
+                    document.getElementById("helpbtn").style.bottom = "0em";
+                    document.getElementById("helpbtn").style.visibility = "visible";
+                }
             };
 
             var toggleFullScreen = function () {
@@ -215,12 +237,19 @@
                 setTimeout(fun, 50);
             }
             
-            window.addEventListener('resize', setSize);
+            window.addEventListener('resize', function () {
+                setSize (screen.orientation.type);
+            });
+
+            window.addEventListener("orientationchange", function () {
+                setSize (screen.orientation.type);
+            });
+
             document.getElementById("fullscrbtn").addEventListener('click', toggleFullScreen);
             document.getElementById("helpbtn").addEventListener('click', showHelp);
             document.getElementById("helpcontainer").addEventListener('click', hideHelp);
-
-            setSize ();
+            
+            setSize (screen.orientation.type);
         </script>
     </body>
 </html>

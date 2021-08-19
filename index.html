@@ -153,7 +153,8 @@
                 var b = document.getElementById("body1");
                 var f = document.getElementById("footer");
                 var hlp = document.getElementById("help");
-                if (orientation === "portrait-primary") {
+                
+                //if (orientation === "portrait-primary") {
                     h.style.visibility = "visible";
                     f.style.visibility = "visible";
                     h.style.zIndex = "-1";
@@ -172,6 +173,7 @@
                     document.getElementById("helpbtn").style.visibility = "visible";
 
                     hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
+                /*
                 } else {
                     h.style.visibility = "hidden";
                     f.style.visibility = "hidden";
@@ -187,6 +189,7 @@
                     document.getElementById("helpbtn").style.bottom = "0em";
                     document.getElementById("helpbtn").style.visibility = "visible";
                 }
+                */
             };
 
             var toggleFullScreen = function () {

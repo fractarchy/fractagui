@@ -1,11 +1,10 @@
 {
     "html-renderer": "legacy",
-    "show-pictograms": "yes",
-    "pictogram-theme": "dark",
     "background-color": "gray",
     "oval-color": "white",
     "shadow-radius": "20",
     "shadow-color": "rgb(0, 0, 0, 1)",
+    "power-consumption-optimisation": "80%",
     "scale": "100%",
     "flat-area": "0%",
     "contents": "contents/contents.xml"

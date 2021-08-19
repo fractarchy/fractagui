@@ -18,7 +18,7 @@
                 margin-left: 0px;
                 touch-action: none;
                 pointer-events: auto;
-                background-color: gray;
+                background-color: rgb(48, 48, 48);
                 user-select: none;
             }
             
@@ -62,22 +62,12 @@
     </head>
     <body>
       <section>
-        <!--div id="splashContainer" style="position: absolute; visibility: hidden; font-family: Arial, Helvetica, sans-serif; color: rgb(255, 255, 255);">
-            <div id="splash" class="rotate">
-                <svg id="circle" height="300" width="300"><circle id="rotator" cx="135" cy="30" r="30" fill="white"/></svg>
-            </div>
-            <svg id="loadPercentContainer" width="300" height="8" style="position: absolute; top: 230px;">
-                <rect id="loadPercentBack" x="50" y="0" width="200" height="8" rx="3" ry="3" fill="darkgray"/>
-                <rect id="loadPercent" x="50" y="0" width="0" height="8" rx="3" ry="3" fill="white"/>
-            </svg>
-        </div-->
-        
-        <div id="divContainer" style="position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">
+        <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;">
         </div>
         
-        <img id="i1" style="visibility: hidden; position: absolute; opacity: 1;"/>
-        <img id="i2" style="visibility: hidden; position: absolute; opacity: 1;"/>
-        <img id="i3" style="visibility: hidden; position: absolute; opacity: 1;"/>
+        <!--img id="i1" style="visibility: hidden; position: absolute; opacity: 1;" hidden/-->
+        <!--img id="i2" style="visibility: hidden; position: absolute; opacity: 1;" hidden/-->
+        <!--img id="i3" style="visibility: hidden; position: absolute; opacity: 1;" hidden/-->
         
         <script>
             var error;
@@ -94,42 +84,9 @@
                 }
                 return design;
             }
-            /*
-            function showSplash () {
-                var w = document.body.clientWidth;
-                var h = document.body.clientHeight;
-
-                if (w >= h) {
-                    var m = (document.body.clientHeight - 58) / 950;
-
-                } else {
-                    var m = document.body.clientWidth / 950;
-
-                }
-                
-                if (m > 0.7) m = 0.7;
-                if (m < 0) m = 0;
-                
-                var s0 = document.getElementById("circle");
-                s0.style.transform = "scale(" + (m / 2) + ")";
-
-                var spl = document.getElementById("splashContainer");
-                spl.style.visibility = "visible";
-                spl.style.left = (window.innerWidth / 2 - spl.clientWidth / 2) + "px";
-                spl.style.top = (window.innerHeight / 2 - spl.clientHeight / 2) + "px";
-                
-                var ldp = document.getElementById("loadPercent");
-                ldp.style.left = ((spl.clientWidth / 2) - (ldp.clientWidth / 2)) + "px";
-                ldp.style.top = ((spl.clientHeight / 2) - (ldp.clientHeight / 2)) + "px";
-            }
-            
-            function hideSplash() {
-                if (document.getElementById("splashContainer"))
-                    document.getElementById("splashContainer").style.visibility = "hidden";
-            }
-            */
 
             function setSize () {
+                /*
                 var ratio = 1;// / 1.61803398875;
                 var yzx = window.clientWidth;
                 var w = document.body.clientWidth;
@@ -214,6 +171,7 @@
                         divContainer.style.top = (10) + "px";
                     }
                 }
+                */
             }
 
             function dispatchSize () {
@@ -221,31 +179,36 @@
                 divContainer.dispatchEvent(event1);
             }
 
+            /*
             var i1 = document.getElementById("i1");
             var i2 = document.getElementById("i2");
             var i3 = document.getElementById("i3");
+            */
 
             wonload = function () {
                 //hideSplash ();
                 setSize ();
-                Orbital (divContainer, nodeTree, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
                 dispatchSize ();
+                /*
                 if (env.showPic === "yes") {
                     i1.style.visibility = "visible";
                     i2.style.visibility = "visible";
                     i3.style.visibility = "visible";
                 }
+                */
                 divContainer.style.visibility = "visible";
 
                 var resizeId;
                 window.addEventListener('resize', function () {
                     document.getElementById("tooltip").style.visibility = "hidden"
+                    /*
                     if (env.showPic === "yes") {
                         i1.style.visibility = "hidden";
                         i2.style.visibility = "hidden";
                         i3.style.visibility = "hidden";
                     }
-                    
+                    */
                     divContainer.style.visibility = "hidden";
                     //hideSplash ();
                     //setSize ();
@@ -256,11 +219,13 @@
                         //hideSplash ();
                         setSize ();
                         dispatchSize ();
+                        /*
                         if (env.showPic === "yes") {
                             i1.style.visibility = "visible";
                             i2.style.visibility = "visible";
                             i3.style.visibility = "visible";
                         }
+                        */
                         divContainer.style.visibility = "visible";
                         
                     }, 500);
@@ -312,6 +277,31 @@
                 else
                     scale = 100;
                 
+                if (data["power-consumption-optimisation"])
+                    try {
+                        if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
+                        if (quant <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        //hideSplash ();
+                        alert ('Error in orbital.json: "power-consumption-optimisation" hast to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    quant = 80;
+                
+                if (data["shadow-radius"]) {
+                    var sradius = parseFloat (data["shadow-radius"]);
+                    
+                } else {
+                    sradius = 0;
+                }
+                
+                /*
                 if (data["show-pictograms"]) {
                     if (data["show-pictograms"] !== "yes" && data["show-pictograms"] !== "no") {
                         //hideSplash ();
@@ -321,13 +311,6 @@
                     
                 } else {
                     data["show-pictograms"] = "yes";
-                }
-                
-                if (data["shadow-radius"]) {
-                    var sradius = parseFloat (data["shadow-radius"]);
-                    
-                } else {
-                    sradius = 0;
                 }
                 
                 if (data["pictogram-theme"]) {
@@ -342,38 +325,28 @@
                 }
                 
                 if (data["pictogram-theme"] === "dark") {
-                    /*
-                    document.getElementById("rotator").style.fill = "rgb(48, 48, 48)";
-                    document.getElementById("loadPercent").style.fill = "rgb(48, 48, 48)";
-                    document.getElementById("loadPercentBack").style.fill = "rgb(104, 104, 104)";
-                    */
-
                     document.getElementById("i1").src="media/di1.svg";
                     document.getElementById("i2").src="media/di2.svg";
                     document.getElementById("i3").src="media/di3.svg";
                     
                 } else {
-                    /*
-                    document.getElementById("rotator").style.fill = "rgb(208, 208, 208)";
-                    document.getElementById("loadPercent").style.fill = "rgb(208, 208, 208)";
-                    document.getElementById("loadPercentBack").style.fill = "rgb(152, 152, 152)";
-                    */
-
                     document.getElementById("i1").src="media/li1.svg";
                     document.getElementById("i2").src="media/li2.svg";
                     document.getElementById("i3").src="media/li3.svg";
                 }
+                */
                 
                 return {
                     htmlRenderer: data["html-renderer"],
-                    flatArea: flatArea,
-                    scale: scale,
-                    showPic: data["show-pictograms"],
-                    theme: data["pictogram-theme"],
                     ovalColor: data["oval-color"],
                     backColor: data["background-color"],
                     shadowRadius: sradius,
                     shadowColor: data["shadow-color"],
+                    flatArea: flatArea,
+                    scale: scale,
+                    quant: quant,
+                    //showPic: data["show-pictograms"],
+                    //theme: data["pictogram-theme"],
                 }
             }
             
@@ -388,7 +361,7 @@
                 
                 // safari bug fix - draw twice
                 ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
-                ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
+                //ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
 
                 return cnvim
             }            
@@ -441,6 +414,7 @@
                             ifr.style.height = "0px";
                         }
 
+                        /*
                         function updateProgressBar() {
                             var all = 0;
                             var some = 0;
@@ -453,6 +427,7 @@
                             var ldp = document.getElementById("loadPercent");
                             ldp.style.width = Math.round (200 * some / all) + "px";
                         }
+                        */
                         
                         node.img = new Image ();
                         node.img.crossOrigin = "anonymous";
@@ -549,7 +524,7 @@
                             node.img.src = node.src;
                             ifr.remove();
 
-                        } else if (node.type === "html") {
+                        } else if (node.type === "html" && !pauseLoading) {
                             if (env.htmlRenderer === "legacy") {
                                 var base = ifr.contentDocument.createElement('base');
                                 base.href = node.src;//xhr.responseURL;
@@ -585,6 +560,8 @@
                                     console.debug('oops, something went wrong!', error);
                                 });
                             */
+                        } else {
+                            ifr.remove();
                         }
                     }
                     
@@ -635,10 +612,12 @@
                                 if (xhr.responseXML) {
                                     nodeTree = formArray (xhr.responseXML, null);
                                     var waitForImages = function () {
+                                        /*
                                         if (!(i1.complete && i2.complete && i3.complete)) {
                                             setTimeout (waitForImages, 10);
                                             return;
                                         }
+                                        */
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;

@@ -396,11 +396,11 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     
     var shadow;
 
-    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog) {
+    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
         if (renderHint !== "1") {
             //ctx1.beginPath ();
             shadow = true;
-            render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog);
+            render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
             shadow = false;
             /*
             ctx1.closePath ();
@@ -413,10 +413,10 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
             */
         }
         
-        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog);
+        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
     }
     
-    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, analog) {
+    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
         function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
             var beta = angle + alpha - Math.PI / 2;
             
@@ -545,16 +545,13 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     if (alpha === -Infinity || alpha === Infinity)
                         alpha = Math.PI;
                     
-                    //if (!analog)
-                    //    alpha = Math.PI + Math.round ((alpha - Math.PI) / qang) * qang;
-                    
                     var ci;
                     var oldr, delta;
         
                     c0 = getCircle (alpha, x0, y0, r0, x1, y1, r1);
                     ci = (cursor?cursor.index:0);
                     if (c0.r * squashX * squashY >= minRadius) {
-                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, analog);
+                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
                         if (got) {
                             idx = ci;
                             alp = alpha;
@@ -571,7 +568,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci++;
                         
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, analog);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -596,7 +593,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                         ci--;
 
                         if (c1.r * squashX * squashY >= minRadius) {
-                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, analog);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData);
                             if (!ret && got) {
                                 idx = ci;
                                 alp = alpha;
@@ -806,7 +803,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
 
 // var ctx1, shadowr1, shadowColor1, fillo1;
 
-function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor,  onIdle, onBusy) {
+function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor,  onIdle, onBusy) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -868,9 +865,9 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
     var orientation = 0;
     var curvature = 0.125;
     
-    var quant = 0.8;                                  // touch it and you're doomed
+    //var quant = 0.8;                                  // touch it and you're doomed
     var qang = quant * 0.0192 * Math.PI;              
-    var qpan = quant * 16 * window.devicePixelRatio;  
+    var qpan = quant * 12 * window.devicePixelRatio;  
     var qlevel = 8 / quant;                           
     
     var svgns = "http://www.w3.org/2000/svg";
@@ -1555,7 +1552,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
                                 renderData = [];
                                 if (tmpi !== i1 || i === 1)
-                                    var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData, "analog");
+                                    var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData);
 
                                 tmpi = i1;
 
@@ -1681,7 +1678,7 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
                                     renderData = [];
                                     if (tmpi !== i1 || i === 1)
-                                        var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData, "analog");
+                                        var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData);
 
                                     tmpi = i1;
 
@@ -2075,33 +2072,34 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
         hh = height;
 
         if (ww > hh / ratio) {
-            rr = hh / 2 - shadowr;
-            ferr = rr;
             squashX = 1 / ratio;
             squashY = 1;
+            rr = hh / 2 - shadowr;
+            ferr = rr;
             
         } else if (hh > ww / ratio){
-            rr = ww / 2 - shadowr;
-            ferr = rr;
             squashX = 1;
             squashY = 1 / ratio;
+            rr = ww / 2 - shadowr;
+            ferr = rr;
+
         } else {
             if (ww > hh) {
-                rr = (ww / 2) * ratio - shadowr;
                 squashX = 1 / ratio;
-                squashY = hh / ww / ratio;
+                squashY = (hh - shadowr * 2) / (ww - shadowr * 2) / ratio;
+                rr = (ww / 2 - shadowr) * ratio;
                 ferr = rr * squashY;
             } else {
-                rr = (hh / 2) * ratio - shadowr;
-                squashX = ww / hh / ratio;
+                squashX = (ww - shadowr * 2) / (hh - shadowr * 2) / ratio;
                 squashY = 1 / ratio;
+                rr = (hh / 2 - shadowr) * ratio;
                 ferr = rr * squashX;
             }
         }
         
         r1 = rr;
-        x1 = ww / squashX / 2;
-        y1 = hh / squashY / 2;
+        x1 = (ww) / squashX / 2;
+        y1 = (hh) / squashY / 2;
         
         xx = x1;
         yy = y1;
@@ -2122,8 +2120,8 @@ function Orbital (divContainer, data, flatArea, scale, ovalColor, backColor, sha
 
         clip.setAttribute('cx', x1 * squashX);
         clip.setAttribute('cy', y1 * squashY);
-        clip.setAttribute('rx', (r1 + shadowr) * squashX);
-        clip.setAttribute('ry', (r1 + shadowr) * squashY);
+        clip.setAttribute('rx', (r1) * squashX + shadowr);
+        clip.setAttribute('ry', (r1) * squashY + shadowr);
         clip.setAttribute('stroke-width',  1);
         
         cnv.width = ww;

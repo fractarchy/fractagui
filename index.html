@@ -33,6 +33,7 @@
                margin: 0;
                padding: 0;
                height: 100%;
+               touch-action: none;
                user-select: none;
             }
             #container {
@@ -92,6 +93,7 @@
                 var sc = 1 / pr;
                 viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
             }
+            
             setDesign(window.devicePixelRatio);
         </script>
     </head>
@@ -108,7 +110,7 @@
                 <a class="exHover" href="https://contrast-zone.github.io/fract-exp/" target="_new">powered with ❤ by fract-exp</a>
             </div>
         </div>
-        <a id="fullscrbtn" class="btn" style="position: absolute; visibility: hidden; top: 0; text-shadow: 0px 0px 10px black;">
+        <a id="fullscrbtn" class="btn" style="position: absolute; visibility: hidden; top: 0; text-shadow: 0px 0px 10px black;" hidden>
             <i class="material-icons" style="font-size: 8em;">fullscreen</i>
         </a>
         <a id="helpbtn" class="btn" style="position: absolute; visibility: hidden; bottom: 0; text-shadow: 0px 0px 10px black;">
@@ -164,7 +166,7 @@
                 var hlp = document.getElementById("help");
                 hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
             };
-            
+
             var toggleFullScreen = function () {
                 if (!document.fullscreenElement) {
                     document.documentElement.requestFullscreen();
@@ -174,7 +176,7 @@
                     }
                 }
             }
-            
+
             var showHelp = function () {
                 var h = document.getElementById("helpcontainer");
                 var f = 0.95;

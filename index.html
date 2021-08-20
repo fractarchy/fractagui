@@ -30,57 +30,26 @@
         <style media="screen">
             html, body
             {
-               margin: 0;
-               padding: 0;
-               height: 100%;
-               touch-action: none;
-               user-select: none;
-            }
-            #container {
-               min-height: 100%;
-               position: relative;
-            }
-            #header {
-               color: rgb(208, 208, 208);
-               background-color: rgb(48, 48, 48);
-               font-family: Arial, Helvetica, sans-serif;
-               font-weight: bold;
-               font-size: 2.7em;
-               min-height: 3.5em; /* Height of header*/
-            }
-            #body1 {
-               width: 100%;
-               position: absolute;
-               top: 3.5em; /* Height of header*/
-               height: calc(100% - 3.5em - 2.5em);
-               /*min-height: calc(100% - 3.5em Height of header - 2.5em Height of footer  - 4px);*/
-               background-color: rgb(48, 48, 48);
-            }
-            #footer {
-               color: rgb(208, 208, 208);
-               background-color: rgb(48, 48, 48);
-               font-family: Arial, Helvetica, sans-serif;
-               font-weight: normal;
-               font-size: 1.1em;
-               position: absolute;
-               bottom: 0;
-               width: 100%;
-               min-height: 2.5em; /* Height of footer */
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+                margin-top: 0px;
+                margin-left: 0px;
+                pointer-events: auto;
+                background-color: rgb(48, 48, 48);
+                touch-action: none;
+                user-select: none;
             }
 
-            a {font-size: 0.8em;}
-            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:underline;}
-            a.exHover:hover, a.exHover:active {cursor: pointer; color:white; text-decoration:underline;}
-
-            a, a.btn:visited, a.btn:link {cursor: pointer; color: rgb(226, 226, 226); text-decoration:underline;}
-            a.btn:hover, a.btn:active {cursor: pointer; color:white; text-decoration:underline;}
-            
             .center {
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
             }
+            
+            a, a.btn:visited, a.btn:link {cursor: pointer; color: rgb(226, 226, 226); text-decoration:underline;}
+            a.btn:hover, a.btn:active {cursor: pointer; color:white; text-decoration:underline;}
         </style>
         <script>
             function setDesign(pr) {
@@ -99,22 +68,16 @@
     </head>
     <body>
         <noscript>
+            fract-exp
+            tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
+            powered with ❤ by fract-exp
         </noscript>
-        <div id="container">
-            <div id="header" align="center">
-                fract-exp
-            </div>
-            <iframe id="body1" src="fract-exp.html" style="border-style:none"></iframe>
-            <div id="footer" align="center">
-                tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms<br/>
-                <a class="exHover" href="https://contrast-zone.github.io/fract-exp/" target="_new">powered with ❤ by fract-exp</a>
-            </div>
-        </div>
-        <a id="fullscrbtn" class="btn" style="position: absolute; visibility: hidden; top: 0; text-shadow: 0px 0px 10px black;" hidden>
-            <i class="material-icons" style="font-size: 8em;">fullscreen</i>
+        <iframe src="fract-exp.html" style="border-style:none; position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; background-color: rgb(48, 48, 48);"></iframe>
+        <a id="fullscrbtn" class="btn" style="position: absolute; top: 0; rifht: 0; text-shadow: 0px 0px 10px black;" hidden>
+            <i class="material-icons" style="font-size: 7em;">fullscreen</i>
         </a>
-        <a id="helpbtn" class="btn" style="position: absolute; visibility: hidden; bottom: 0; text-shadow: 0px 0px 10px black;">
-            <i class="material-icons" style="font-size: 8em;">help_outline</i>
+        <a id="helpbtn" class="btn" style="position: absolute; bottom: 0; right: 0; text-shadow: 0px 0px 10px black;">
+            <i class="material-icons" style="font-size: 7em;">help_outline</i>
         </a>
         <div id="helpcontainer" class="center" style="position: absolute; visibility: hidden; left: 0; top: 0; right: 0; bottom: 0; background-color: rgb(48, 48, 48, 0.95);">
             <div style="position: absolute; top: 0em; right: 0.5em; font-size: 2.7em; color: lightgray;">×</div>
@@ -149,47 +112,8 @@
             document.body.style.fontSize = Math.sqrt(window.devicePixelRatio) + "em"
 
             var setSize = function (orientation) {
-                var h = document.getElementById("header");
-                var b = document.getElementById("body1");
-                var f = document.getElementById("footer");
-                var hlp = document.getElementById("help");
-                
-                //if (orientation === "portrait-primary") {
-                    h.style.visibility = "visible";
-                    f.style.visibility = "visible";
-                    h.style.zIndex = "-1";
-                    f.style.zIndex = "-1";
-                    b.style.zIndex = "0";
-
-                    b.style.top = "3.5em";
-                    b.style.height = document.body.clientHeight - b.offsetTop - f.clientHeight + "px";
-                    
-                    document.getElementById("fullscrbtn").style.right = "0em";
-                    document.getElementById("fullscrbtn").style.top = b.offsetTop + "px";
-                    document.getElementById("fullscrbtn").style.visibility = "visible";
-                    
-                    document.getElementById("helpbtn").style.right = "0em";
-                    document.getElementById("helpbtn").style.bottom = f.clientHeight + "px";
-                    document.getElementById("helpbtn").style.visibility = "visible";
-
-                    hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
-                /*
-                } else {
-                    h.style.visibility = "hidden";
-                    f.style.visibility = "hidden";
-                    
-                    b.style.top = "0px";
-                    b.style.height = document.body.clientHeight + "px";
-
-                    document.getElementById("fullscrbtn").style.right = "0em";
-                    document.getElementById("fullscrbtn").style.top = "0em";
-                    document.getElementById("fullscrbtn").style.visibility = "visible";
-                    
-                    document.getElementById("helpbtn").style.right = "0em";
-                    document.getElementById("helpbtn").style.bottom = "0em";
-                    document.getElementById("helpbtn").style.visibility = "visible";
-                }
-                */
+                var hlp = document.getElementById("help");                
+                hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
             };
 
             var toggleFullScreen = function () {
@@ -251,8 +175,6 @@
             document.getElementById("fullscrbtn").addEventListener('click', toggleFullScreen);
             document.getElementById("helpbtn").addEventListener('click', showHelp);
             document.getElementById("helpcontainer").addEventListener('click', hideHelp);
-            
-            setSize (screen.orientation.type);
         </script>
     </body>
 </html>

@@ -116,12 +116,12 @@
                 var f = document.getElementById("fullscrbtn");
                 var h = document.getElementById("helpbtn");
                 
-                hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
-                
                 bd.style.top = "0px";
                 bd.style.left = "0px";
                 bd.style.width = document.body.clientWidth + "px";
                 bd.style.height = document.body.clientHeight + "px";
+                
+                hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
 
                 f.style.right = "0px";
                 f.style.top = "0px";
@@ -191,6 +191,7 @@
             document.getElementById("helpcontainer").addEventListener('click', hideHelp);
             
             setSize();
+            window.scrollTo(0,1);
         </script>
     </body>
 </html>

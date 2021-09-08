@@ -30,7 +30,11 @@ Fract-exp is made as a helper to organize, emphasize, and publish your web pages
 
 ### 4.1. licencing
 
-This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE).
+This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free to try, but if you plan to publish sites based on Fract-exp, please refer to the licence file for details about pricing.
+
+### 4.2. case study
+
+We built a independent commercial web site using Fract-exp. To get info about this particular case study, please refer to [this document](case-study.md).
 
 ### 4.3. giving it a try
 

@@ -25,4 +25,5 @@
 
 - v 0.3 - update
     - slower processor friendly implementation  
-    - lighter energy consumption  
+    - energy consumption optimisation  
+    - minimalistic visual design  

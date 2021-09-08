@@ -16,9 +16,9 @@
                 width: 100%;
                 margin-top: 0px;
                 margin-left: 0px;
-                touch-action: none;
                 pointer-events: auto;
                 background-color: rgb(48, 48, 48);
+                touch-action: none;
                 user-select: none;
             }
             
@@ -65,10 +65,6 @@
         <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;">
         </div>
         
-        <!--img id="i1" style="visibility: hidden; position: absolute; opacity: 1;" hidden/-->
-        <!--img id="i2" style="visibility: hidden; position: absolute; opacity: 1;" hidden/-->
-        <!--img id="i3" style="visibility: hidden; position: absolute; opacity: 1;" hidden/-->
-        
         <script>
             var error;
             function getDesign() {
@@ -86,92 +82,6 @@
             }
 
             function setSize () {
-                /*
-                var ratio = 1;// / 1.61803398875;
-                var yzx = window.clientWidth;
-                var w = document.body.clientWidth;
-                var h = document.body.clientHeight;
-                
-                var fs = Math.floor (h / 1080 * 48);
-
-                i1.draggable = false;
-                i1.ondragstart = function () {return false};
-                i2.draggable = false;
-                i2.ondragstart = function () {return false};
-                i3.draggable = false;
-                i3.ondragstart = function () {return false};
-                
-                if (w >= h) {
-                    var m = (document.body.clientHeight - 58) / 950;
-                    var ratioX = ratio;
-                    var ratioY = 1;
-
-                } else {
-                    var m = document.body.clientWidth / 950;
-                    var ratioX = 1;
-                    var ratioY = ratio;
-
-                }
-                
-                if (m > 0.7) m = 0.7;
-                if (m < 0) m = 0;
-                
-                i1.style.width = m * 215 + "px";
-                i2.style.width = m * 215 + "px";
-                i3.style.width = m * 215 + "px";
-
-                i1.style.transform = " scale(" +
-                  ratioX + ", " +
-                  ratioY +
-                  ")";
-                i2.style.transform = " scale(" +
-                  ratioX + ", " +
-                  ratioY +
-                  ")";
-                i3.style.transform = " scale(" +
-                  ratioX + ", " +
-                  ratioY +
-                  ")";
-
-                if (w >= h) {
-                    var gap = (h - i1.clientHeight - i2.clientHeight - i3.clientHeight - fs - 10) / 4;
-                    if (gap < 1) gap = 1;
-
-                    if (env.showPic === "yes") {
-                        i1.style.top = fs + gap + "px";
-                        i1.style.left = 10 + "px";
-                        i2.style.top = fs + gap + i1.clientHeight + gap + "px";
-                        i2.style.left = 10 + "px";
-                        i3.style.top = fs + gap + i1.clientHeight + gap + i2.clientHeight + gap + "px";
-                        i3.style.left = 10 + "px";
-                    
-                        divContainer.style.left = 20 + i1.clientWidth + "px";
-                        divContainer.style.top = (10) + "px";
-                    } else {
-                        divContainer.style.left = (10) + "px";
-                        divContainer.style.top = (10) + "px";
-                    }
-                    
-                } else {
-                    var gap = (w - i1.clientWidth - i2.clientWidth - i3.clientWidth) / 4;
-                    if (gap < 1) gap = 1;
-                    
-                    if (env.showPic === "yes") {
-                        i1.style.left = gap + "px";
-                        i1.style.top = 10 + "px";
-                        i2.style.left = gap + i1.clientWidth + gap + "px";
-                        i2.style.top = 10 + "px";
-                        i3.style.left = gap + i1.clientWidth + gap + i2.clientWidth + gap + "px";
-                        i3.style.top = 10 + "px";
-                    
-                        divContainer.style.left = "10px";
-                        divContainer.style.top = (10 + 10 + i1.clientHeight) + "px";
-                    } else {
-                        divContainer.style.left = "10px";
-                        divContainer.style.top = (10) + "px";
-                    }
-                }
-                */
             }
 
             function dispatchSize () {
@@ -179,53 +89,21 @@
                 divContainer.dispatchEvent(event1);
             }
 
-            /*
-            var i1 = document.getElementById("i1");
-            var i2 = document.getElementById("i2");
-            var i3 = document.getElementById("i3");
-            */
-
             wonload = function () {
-                //hideSplash ();
                 setSize ();
                 Orbital (divContainer, nodeTree, env.quant / 100, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
                 dispatchSize ();
-                /*
-                if (env.showPic === "yes") {
-                    i1.style.visibility = "visible";
-                    i2.style.visibility = "visible";
-                    i3.style.visibility = "visible";
-                }
-                */
                 divContainer.style.visibility = "visible";
 
                 var resizeId;
                 window.addEventListener('resize', function () {
                     document.getElementById("tooltip").style.visibility = "hidden"
-                    /*
-                    if (env.showPic === "yes") {
-                        i1.style.visibility = "hidden";
-                        i2.style.visibility = "hidden";
-                        i3.style.visibility = "hidden";
-                    }
-                    */
                     divContainer.style.visibility = "hidden";
-                    //hideSplash ();
-                    //setSize ();
-                    //showSplash ();
                     
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
-                        //hideSplash ();
                         setSize ();
                         dispatchSize ();
-                        /*
-                        if (env.showPic === "yes") {
-                            i1.style.visibility = "visible";
-                            i2.style.visibility = "visible";
-                            i3.style.visibility = "visible";
-                        }
-                        */
                         divContainer.style.visibility = "visible";
                         
                     }, 500);
@@ -235,7 +113,6 @@
             function setupEnv (data) {
                 if (data["html-renderer"]) {
                     if (data["html-renderer"] !== "legacy" && data["html-renderer"] !== "latest") {
-                        //hideSplash ();
                         alert ('Error in orbital.json: "html-renderer" can only be "legacy" or "latest"');
                         throw new error ();
                     }
@@ -253,7 +130,6 @@
                             throw new error ();
                         
                     } catch (e) {
-                        //hideSplash ();
                         alert ('Error in orbital.json: "flat-area" has to be a percent between "0%" and "100%"');
                         throw new error ();
                     }
@@ -270,7 +146,6 @@
                             throw new error ();
                         
                     } catch (e) {
-                        //hideSplash ();
                         alert ('Error in orbital.json: "scale" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
@@ -287,7 +162,6 @@
                             throw new error ();
                         
                     } catch (e) {
-                        //hideSplash ();
                         alert ('Error in orbital.json: "power-consumption-optimisation" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
@@ -301,41 +175,6 @@
                     sradius = 0;
                 }
                 
-                /*
-                if (data["show-pictograms"]) {
-                    if (data["show-pictograms"] !== "yes" && data["show-pictograms"] !== "no") {
-                        //hideSplash ();
-                        alert ('Error in orbital.json: "show-pictograms" can only be "yes" or "no"');
-                        throw new error ();
-                    }
-                    
-                } else {
-                    data["show-pictograms"] = "yes";
-                }
-                
-                if (data["pictogram-theme"]) {
-                    if (data["pictogram-theme"] !== "light" && data["pictogram-theme"] !== "dark") {
-                        //hideSplash ();
-                        alert ('Error in orbital.json: "pictogram-theme" can only be "light" or "dark"');
-                        throw new error ();
-                    }
-                    
-                } else {
-                    data["pictogram-theme"] = "light";
-                }
-                
-                if (data["pictogram-theme"] === "dark") {
-                    document.getElementById("i1").src="media/di1.svg";
-                    document.getElementById("i2").src="media/di2.svg";
-                    document.getElementById("i3").src="media/di3.svg";
-                    
-                } else {
-                    document.getElementById("i1").src="media/li1.svg";
-                    document.getElementById("i2").src="media/li2.svg";
-                    document.getElementById("i3").src="media/li3.svg";
-                }
-                */
-                
                 return {
                     htmlRenderer: data["html-renderer"],
                     ovalColor: data["oval-color"],
@@ -345,8 +184,6 @@
                     flatArea: flatArea,
                     scale: scale,
                     quant: quant,
-                    //showPic: data["show-pictograms"],
-                    //theme: data["pictogram-theme"],
                 }
             }
             
@@ -387,15 +224,6 @@
             
             async function loadOval(data) {
                 return new Promise(async function(resolve, reject) {
-                    /*
-                    var imaga = false;
-                    for (var rndr = 0; rndr < renderData.length; rndr++) {
-                        if (data === renderData[rndr].data) {
-                            imaga = true;
-                            break;
-                        }
-                    }
-                    */
                     var ifr = document.createElement ('iframe');
                     ifr.style.visibility = "hidden";
                     ifr.style.border = "none";
@@ -405,7 +233,6 @@
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
                                 error = true
-                                //hideSplash ();
                                 console.debug (`Error loading: '${ifr.src}'`);
                                 reject ();
                                 return;
@@ -413,21 +240,6 @@
                             ifr.style.width = "0px";
                             ifr.style.height = "0px";
                         }
-
-                        /*
-                        function updateProgressBar() {
-                            var all = 0;
-                            var some = 0;
-                            for (var i = 0; i < images.length; i++){
-                                all++;
-                                if (images[i].canvas)
-                                    some++;
-                            }
-
-                            var ldp = document.getElementById("loadPercent");
-                            ldp.style.width = Math.round (200 * some / all) + "px";
-                        }
-                        */
                         
                         node.img = new Image ();
                         node.img.crossOrigin = "anonymous";
@@ -442,13 +254,11 @@
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 reject ();
                             }
-                            //updateProgressBar();
                         }
                         
                         node.img.onerror = function (e) {
                             if (!error) {
                                 error = true
-                                //hideSplash ();
                                 console.debug (`Error loading: '${node.src}'`);
                             }
                             divContainer.dispatchEvent(new CustomEvent('redraw', null));
@@ -581,7 +391,6 @@
                             init = JSON.parse (this.responseText);
                         } catch (e) {
                             alert ('Error:\n' + e.message);
-                            //hideSplash ();
                             throw e;
                         }
                         
@@ -612,23 +421,15 @@
                                 if (xhr.responseXML) {
                                     nodeTree = formArray (xhr.responseXML, null);
                                     var waitForImages = function () {
-                                        /*
-                                        if (!(i1.complete && i2.complete && i3.complete)) {
-                                            setTimeout (waitForImages, 10);
-                                            return;
-                                        }
-                                        */
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
-                                        //Orbital (divContainer, data, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
                                         window.addEventListener("load", wonload ());
                                     }
                                     
                                     waitForImages ();                                    
 
                                 } else {
-                                    //hideSplash ();
                                     alert (`Error processing '${init.contents}'`);
                                 }
                             }
@@ -640,6 +441,7 @@
 
                         xhr.open("GET", init.contents + "?" + Date.now(), true);
                         xhr.responseType = "document";
+                        xhr.overrideMimeType('text/xml');
                         xhr.send();
                     }
                 };

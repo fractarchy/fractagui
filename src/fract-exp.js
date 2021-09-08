@@ -94,7 +94,7 @@ Crisp = (function () {
 }) ();
 
 function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) {
-    if (!curvature) curvature = 0.125;
+    if (!curvature && curvature !== 0) curvature = 0.125;
     var curvatureFrontier = Math.pow (1, curvature);
     if (!flatArea) flatArea = 0;
 
@@ -863,7 +863,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     var fill1 = ovalColor;
     var back1 = backColor;
     var orientation = 0;
-    var curvature = 0.125;
+    var curvature = 1 / 8;
     
     //var quant = 0.8;                                  // touch it and you're doomed
     var qang = quant * 0.0192 * Math.PI;              
@@ -952,8 +952,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     }
     
     function getCnvCache (data, cx, cy, rr) {
-        cx = Math.round (cx / qpan) * qpan;
-        cy = Math.round (cy / qpan) * qpan;
+        cx = Math.round (Math.round (cx / qpan) * qpan);
+        cy = Math.round (Math.round (cy / qpan) * qpan);
 
         var cnvCache = document.createElement ("canvas");
         var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;

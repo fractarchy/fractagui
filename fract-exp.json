@@ -6,6 +6,7 @@
     "shadow-color": "rgb(0, 0, 0, 1)",
     "scale": "100%",
     "flat-area": "0%",
+    "power-consumption-optimisation": "80%",
     "contents": "contents/contents.xml"
 }
 

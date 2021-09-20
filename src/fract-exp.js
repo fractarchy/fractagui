@@ -803,7 +803,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
 
 // var ctx1, shadowr1, shadowColor1, fillo1;
 
-function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor,  onIdle, onBusy) {
+function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -2075,32 +2075,35 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             squashX = 1 / ratio;
             squashY = 1;
             rr = hh / 2 - shadowr;
-            ferr = rr;
+            ferr = rr * uiscale;
+
             
         } else if (hh > ww / ratio){
             squashX = 1;
             squashY = 1 / ratio;
             rr = ww / 2 - shadowr;
-            ferr = rr;
+            ferr = rr * uiscale;
 
         } else {
             if (ww > hh) {
                 squashX = 1 / ratio;
                 squashY = (hh - shadowr * 2) / (ww - shadowr * 2) / ratio;
                 rr = (ww / 2 - shadowr) * ratio;
-                ferr = rr * squashY;
+                ferr = rr * squashY * uiscale;
             } else {
                 squashX = (ww - shadowr * 2) / (hh - shadowr * 2) / ratio;
                 squashY = 1 / ratio;
                 rr = (hh / 2 - shadowr) * ratio;
-                ferr = rr * squashX;
+                ferr = rr * squashX * uiscale;
             }
         }
         
-        r1 = rr;
         x1 = (ww) / squashX / 2;
-        y1 = (hh) / squashY / 2;
+        y1 = (hh) / squashY / 2;// + rr * (uiscale - 1);
         
+        rr = rr * uiscale;
+        r1 = rr;
+
         xx = x1;
         yy = y1;
         

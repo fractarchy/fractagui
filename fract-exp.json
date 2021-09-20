@@ -4,9 +4,10 @@
     "oval-color": "white",
     "shadow-radius": "20",
     "shadow-color": "rgb(0, 0, 0, 1)",
-    "scale": "100%",
-    "flat-area": "0%",
+    "contents-scale": "100%",
+    "contents-flat-area": "0%",
     "power-consumption-optimisation": "80%",
+    "ui-scale": "128%",
     "contents": "contents/contents.xml"
 }
 

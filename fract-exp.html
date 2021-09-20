@@ -91,7 +91,7 @@
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, onIdle, onBusy);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
 
@@ -113,45 +113,61 @@
             function setupEnv (data) {
                 if (data["html-renderer"]) {
                     if (data["html-renderer"] !== "legacy" && data["html-renderer"] !== "latest") {
-                        alert ('Error in orbital.json: "html-renderer" can only be "legacy" or "latest"');
+                        alert ('Error in fract-exp.json: "html-renderer" can only be "legacy" or "latest"');
                         throw new error ();
                     }
                 } else {
                     data["html-renderer"] = "latest";
                 }
 
-                if (data["flat-area"])
+                if (data["contents-flat-area"])
                     try {
-                        if (data["flat-area"].substr(data["flat-area"].length - 1, 1) !== "%")
+                        if (data["contents-flat-area"].substr(data["contents-flat-area"].length - 1, 1) !== "%")
                             throw new error ();
                         
-                        var flatArea = parseFloat (data["flat-area"].substr(0, data["flat-area"].length - 1));
+                        var flatArea = parseFloat (data["contents-flat-area"].substr(0, data["contents-flat-area"].length - 1));
                         if (flatArea < 0 || flatArea > 100)
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in orbital.json: "flat-area" has to be a percent between "0%" and "100%"');
+                        alert ('Error in fract-exp.json: "contents-flat-area" has to be a percent between "0%" and "100%"');
                         throw new error ();
                     }
                 else
                     flatArea = 0;
 
-                if (data["scale"])
+                if (data["contents-scale"])
                     try {
-                        if (data["scale"].substr(data["scale"].length - 1, 1) !== "%")
+                        if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
                             throw new error ();
                         
-                        var scale = parseFloat (data["scale"].substr(0, data["scale"].length - 1));
+                        var scale = parseFloat (data["contents-scale"].substr(0, data["contents-scale"].length - 1));
                         if (scale <= 0)
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in orbital.json: "scale" hast to be a percent greater than "0%"');
+                        alert ('Error in fract-exp.json: "contents-scale" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
                 else
                     scale = 100;
                 
+                if (data["ui-scale"])
+                    try {
+                        if (data["ui-scale"].substr(data["ui-scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var uiscale = parseFloat (data["ui-scale"].substr(0, data["ui-scale"].length - 1));
+                        if (uiscale <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in fract-exp.json: "ui-scale" hast to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    uiscale = 100;
+
                 if (data["power-consumption-optimisation"])
                     try {
                         if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
@@ -162,7 +178,7 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in orbital.json: "power-consumption-optimisation" hast to be a percent greater than "0%"');
+                        alert ('Error in fract-exp.json: "power-consumption-optimisation" hast to be a percent greater than "0%"');
                         throw new error ();
                     }
                 else
@@ -183,6 +199,7 @@
                     shadowColor: data["shadow-color"],
                     flatArea: flatArea,
                     scale: scale,
+                    uiscale: uiscale,
                     quant: quant,
                 }
             }

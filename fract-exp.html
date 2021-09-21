@@ -17,7 +17,7 @@
                 margin-top: 0px;
                 margin-left: 0px;
                 pointer-events: auto;
-                background-color: rgb(48, 48, 48);
+                background-color: gray;
                 touch-action: none;
                 user-select: none;
             }
@@ -364,6 +364,12 @@
                                 html2canvas(ifr.contentDocument.body, {logging: false, scale: env.scale / 100 * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0})
                                     .then(function(ret) {
                                         node.hyperlinks = ret.hyperlinks;
+                                        for (var j in node.hyperlinks) {
+                                            node.hyperlinks[j].top *= env.scale / 100;
+                                            node.hyperlinks[j].left *= env.scale / 100;
+                                            node.hyperlinks[j].bottom *= env.scale / 100;
+                                            node.hyperlinks[j].right *= env.scale / 100;
+                                        }
                                         node.img.src = ret.canvas.toDataURL();
                                         ifr.remove();
                                     });

@@ -2099,7 +2099,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }
         
         x1 = (ww) / squashX / 2;
-        y1 = (hh) / squashY / 2;// + rr * (uiscale - 1);
+        y1 = (hh) / squashY / 2 + rr * (uiscale - 1) / 4;
         
         rr = rr * uiscale;
         r1 = rr;

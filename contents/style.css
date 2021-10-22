@@ -68,11 +68,6 @@ a {
     text-decoration:underline;
 }
 
-.t {
-    background: url('../media/socmedia.png') center center;
-    background-size: 100% 100%;
-}
-
 table {
     border: 1px solid blue;
 }

@@ -469,6 +469,7 @@
                     }
                 };
                 xhttp.open("GET", "fract-exp.json?" + Date.now(), true);
+                xhttp.overrideMimeType("text/plain");
                 xhttp.send();
             }
             

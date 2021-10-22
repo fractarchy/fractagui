@@ -4,7 +4,7 @@
 
 tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
 
-> Want to bring a touch of adventurous spirit to your web site? An arbitrary web site made by Fract-Exp (fractal expression) is not designed so that a visitor comes, sees, leaves, and forgets about it. It is conceived as a brave adventure that the visitor embarks on from the first moment of the visit. Of course, if she wants to, the visitor can also take a look at the very short instructions for navigating the content, but this way your site does not lose its charm. On the contrary, a carefully balanced ratio of fun to visit and ease of discovering useful information on your site (prevailing on the entertainment side) provides the visitor with an exceptional experience that leaves a strong impression on your content.
+> Want to bring a touch of adventurous spirit to your web site? An arbitrary web site made by Fract-exp (fractal expression) is not designed so that a visitor comes, sees, leaves, and forgets about it. It is conceived as a brave adventure that the visitor embarks on from the first moment of the visit. Of course, if she wants to, the visitor can also take a look at the very short instructions for navigating the content, but this way your site does not lose its charm. On the contrary, a carefully balanced ratio of fun to visit and ease of discovering useful information on your site (prevailing on the entertainment side) provides the visitor with an exceptional experience that leaves a strong impression on your content.
 > 
 > ![](media/socmedia.png)
 > 
@@ -14,9 +14,9 @@ tags: content-management-system, fractal-structure-inspired, parent-child-orbiti
 
 Fract-exp is an attractive, minimalistic, and progressive web content management system [CMS]. You can say many things about Fract-exp, but one thing is for sure: it will not leave you indifferent. Fract-exp is made for experienced web designers who dare to stand out. These are some general hints about Fract-exp:
 
-- *motivation:* you want your insights, messages, and ideas to be shared, seen, and accented  
-- *target audience:* you feel distinctive, progressive, and adventurous  
-- *prerequisites:* you have knowledge, experience, and a courage to be different  
+- *motivation:* you want your insights, messages, and ideas to be shared, seen, and accented
+- *target audience:* you feel distinctive, progressive, and adventurous
+- *prerequisites:* you have knowledge, experience, and a courage to be different
 
 
 ## 2. fract-exp specifics
@@ -39,7 +39,9 @@ This software is released under [conditional Creative Commons Attribution 4.0 In
 
 ### 5.2. case study
 
-We built a independent commercial web site using Fract-exp. To get info about this particular case study, please refer to [this document](case-study.md).
+![](media/ssh-320-apv.png) ![](media/ssh-320-atomizer.png)
+
+We built a couple of independent web sites using Fract-exp. To get info about these particular case studies, please refer to [this document](case-study.md).
 
 ### 5.3. giving it a try
 

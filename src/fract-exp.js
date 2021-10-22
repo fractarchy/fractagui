@@ -386,7 +386,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
 }
 
 function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1) {
-    var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less, and you are doomed */
+    var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
     var qang = 0.025 * Math.PI;
 
     var hilight = fill1;
@@ -865,7 +865,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     var orientation = 0;
     var curvature = 1 / 8;
     
-    //var quant = 0.8;                                  // touch it and you're doomed
     var qang = quant * 0.0192 * Math.PI;              
     var qpan = quant * 12 * window.devicePixelRatio;  
     var qlevel = 8 / quant;                           
@@ -970,6 +969,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     }
     
     function drawCircle (data, x, y, r, fill, stroke, cursor, renderHint, level, shadow) {
+    //////////////////////
+    var diff;
+    if (renderHint === "1") diff = 2; else diff = 1;
+    if (r * squashX - diff <= 0 || r * squashY - diff <= 0) return;
+    //////////////////////
         if (r * squashX > 0.5 && r * squashY > 0.5) {
 
             ctx.globalAlpha = 1;
@@ -2099,7 +2103,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }
         
         x1 = (ww) / squashX / 2;
-        y1 = (hh) / squashY / 2 + rr * (uiscale - 1) / 4;
+        y1 = (hh) / squashY / 2 /* + rr * (uiscale - 1) / 4*/; // touch it and you're doomed
         
         rr = rr * uiscale;
         r1 = rr;

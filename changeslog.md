@@ -14,17 +14,16 @@
 
 - - -
 
-- v 0.3 - beta
+- v 0.3 - beta  
     - improved device-pixel-ratio consistency for mobile platforms  
     - new HTML renderer  
     - progressive page loading for supporting bigger sites  
     - cast shadow effect  
 
-- v 0.3 - release
+- v 0.3 - release  
     - bug fixes  
 
-- v 0.3 - update
-    - slower processor friendly implementation  
-    - energy consumption optimisation  
+- v 0.3 - update  
+    - slower processor friendly implementation & energy consumption optimisation  
     - minimalistic visual design  
     - user interface scaling

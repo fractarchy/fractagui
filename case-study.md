@@ -1,4 +1,4 @@
-## case study
+## case studies
 
 - We built a promotional site for an accommodation facility:
     - The site includes detailed accommodation object description, featuring three accommodation units. Top page includes the photo of the entire object and a short description of the object. Descendent pages include each apartment unit description, unit plan, and unit inerior photos - roughly about ten photos per each unit.
@@ -7,6 +7,15 @@
     - The site also contains a screenshot of Google Maps accommodation facility position, which links to the external Google Maps web page able to calculate the shortest arrival path between journey starting location and the actual accommodation facility location.
     - The entire site is built on top of PHP pages system, extrapolating roughly to about 40 individual pages promoting the entire facility. Individual pages are dynamically loaded from the web as users progressively browse the site, while the first user interaction with the site browsing interface may happen within as little as a few seconds. The entire site is adjusted to use *responsive design modes* relevant to three different screen sizes, from desktop computer screen size, to tablet screen size, to mobile phone screen size. Responsive modes are implemented in a single separate CSS file.
     - The site has been tested with desktop Chrommium, Edge, Firefox, Opera, mobile Chrome and mobile Samsung web browsers.
-    - Web address of this site is: [www.apartments-vodisek-tribunj.com](https://www.apartments-vodisek-tribunj.com).
+    - Online web address of this site is: [www.apartments-vodisek-tribunj.com](https://www.apartments-vodisek-tribunj.com).
 
-- We are looking for exposure of other case studies, also. If you would like your example to appear in this file, please send us a GitHub pull request.
+- We built a simple s-expression visualization tool:
+    - The HTML application is consisted of two panes: left pane includes input prompt; right pane includes visualization area.
+    - Input prompt resembles usual terminal input built of `textarea` elements, while visualization pane resembles Fract-exp system waiting for data. Input prompt accepts possibly multiline s-expressions.
+    - We implemented accessing history of input by pressing up and down arrows. After hitting `enter` at the input prompt, inputted s-expression is checked for validity. Valid s-expressions are fed to visualization pane. In a case of unmatching braces, an s-expression error is reported.
+    - We implemented a custom oval renderer to paint s-expression substructures in designated ovals.
+    - Messages between the two `iframe` panes - from input prompt to visualization section - are sent using `postMessage` javascript functionality. We updated Fract-exp source code by `redefineData` event message to restructure the oval system on the fly, when new input arrives.
+    - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. The application works straight from the local file system without need for installing a web server.
+    - Online web address of this application is: [contrast-zone.github.io/atomizer](https://contrast-zone.github.io/atomizer). Follow the GitHub forking link at the top right corner to download the application.
+    
+*(We are looking for exposure of other case studies, also. If you would like your example to appear in this file, please send us a GitHub pull request.)*

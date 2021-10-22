@@ -16,6 +16,6 @@
     - We implemented a custom oval renderer to paint s-expression substructures in designated ovals.
     - Messages between the two `iframe` panes - from input prompt to visualization section - are sent using `postMessage` javascript functionality. We updated Fract-exp source code by `redefineData` event message to restructure the oval system on the fly, when new input arrives.
     - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. The application works straight from the local file system without need for installing a web server.
-    - Online web address of this application is: [contrast-zone.github.io/atomizer](https://contrast-zone.github.io/atomizer). Follow the GitHub forking link at the top right corner to download the application.
+    - Online web address of this application is: [contrast-zone.github.io/atomizer](https://contrast-zone.github.io/atomizer).
     
 *(We are looking for exposure of other case studies, also. If you would like your example to appear in this file, please send us a GitHub pull request.)*

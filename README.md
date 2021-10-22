@@ -37,7 +37,7 @@ Fract-exp is made as a helper to organize, emphasize, and publish your web pages
 
 This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free to try, but if your plans meet publishing sites based on Fract-exp, please refer to the licence file for details about pricing.
 
-### 5.2. case study
+### 5.2. case studies
 
 ![](media/ssh-320-apv.png) ![](media/ssh-320-atomizer.png)
 

@@ -8,7 +8,7 @@ tags: content-management-system, fractal-structure-inspired, parent-child-orbiti
 > 
 > ![](media/socmedia.png)
 > 
-> To overview an example site made with Fract-exp CMS, please follow [this link](https://contrast-zone.github.io/fract-exp/). We hope you are already interested in Fract-exp. If so, please continue reading for more information on this project.
+> To overview an example site made with Fract-exp CMS, please follow [this link](https://contrast-zone.github.io/fract-exp/).
 
 ## 1. usage overview
 

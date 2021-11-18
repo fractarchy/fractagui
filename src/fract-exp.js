@@ -2248,6 +2248,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
     function setupTouchEvents () {
         var ongoingTouches = [];
+        var maxTouches = 0;
 
         function copyTouch(touch) {
           return {identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY, which: 1};
@@ -2265,9 +2266,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }
 
         window.addEventListener("touchstart", function (evt) {
-            evt.preventDefault ();
+            //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
+            
+            maxTouches = Math.max (maxTouches, touches.length);
             
             for (var i = 0; i < touches.length; i++) {
                 if (ongoingTouches.length === 0) {
@@ -2282,25 +2285,28 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }, false);
 
         window.addEventListener("touchmove", function (evt) {
-            evt.preventDefault ();
+            //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
 
-            for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById(touches[i].identifier);
+            if (maxTouches === 1)
+                for (var i = 0; i < touches.length; i++) {
+                    var idx = ongoingTouchIndexById(touches[i].identifier);
 
-                if (idx >= 0) {
-                    ongoingTouches[idx].pageX = touches[i].pageX;
-                    ongoingTouches[idx].pageY = touches[i].pageY;
-                    
-                    mousemove (ongoingTouches[idx]);
+                    if (idx >= 0) {
+                        ongoingTouches[idx].pageX = touches[i].pageX;
+                        ongoingTouches[idx].pageY = touches[i].pageY;
+                        
+                        mousemove (ongoingTouches[idx]);
+                    }
                 }
-            }
         }, false);
 
         window.addEventListener("touchcancel", function (evt) {
             device = "touch";
             var touches = evt.changedTouches;
+            
+            maxTouches = 0;
 
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
@@ -2317,10 +2323,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }, false);
 
         window.addEventListener("touchend", function (evt) {
-            evt.preventDefault ();
+            //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
-
+            
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
@@ -2331,6 +2337,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     mouseup (ongoingTouches[idx]);
 
                     ongoingTouches.splice(idx, 1);
+
+                    if (touches.length === 1)
+                        maxTouches = 0;
+
                 }
             }
         }, false);

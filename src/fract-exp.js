@@ -2305,8 +2305,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         window.addEventListener("touchcancel", function (evt) {
             device = "touch";
             var touches = evt.changedTouches;
-            
-            maxTouches = 0;
 
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
@@ -2318,6 +2316,9 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     mouseup (ongoingTouches[idx]);
 
                     ongoingTouches.splice(idx, 1);
+
+                    if (ongoingTouches.length === 0)
+                        maxTouches = 0;
                 }
             }
         }, false);
@@ -2338,7 +2339,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                     ongoingTouches.splice(idx, 1);
 
-                    if (touches.length === 1)
+                    if (ongoingTouches.length === 0)
                         maxTouches = 0;
 
                 }

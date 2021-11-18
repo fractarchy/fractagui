@@ -18,7 +18,8 @@
                 margin-left: 0px;
                 pointer-events: auto;
                 background-color: gray;
-                touch-action: none;
+                touch-action: pinch-zoom;
+                /*touch-action: none;*/
                 user-select: none;
             }
             
@@ -50,7 +51,8 @@
                     document.getElementsByTagName('head')[0].appendChild(viewport);
                 }
                 var sc = 1 / pr;
-                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
+                //viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
+                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", minimum-scale=" + sc);
             }
             
             setDesign(window.devicePixelRatio);

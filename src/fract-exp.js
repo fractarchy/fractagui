@@ -2270,7 +2270,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             device = "touch";
             var touches = evt.changedTouches;
             
-            maxTouches = Math.max (maxTouches, touches.length);
+            maxTouches = Math.max (touches.length, maxTouches);
             
             for (var i = 0; i < touches.length; i++) {
                 if (ongoingTouches.length === 0) {
@@ -2289,17 +2289,16 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             device = "touch";
             var touches = evt.changedTouches;
 
-            if (maxTouches === 1)
-                for (var i = 0; i < touches.length; i++) {
-                    var idx = ongoingTouchIndexById(touches[i].identifier);
+            for (var i = 0; i < touches.length; i++) {
+                var idx = ongoingTouchIndexById(touches[i].identifier);
 
-                    if (idx >= 0) {
-                        ongoingTouches[idx].pageX = touches[i].pageX;
-                        ongoingTouches[idx].pageY = touches[i].pageY;
-                        
-                        mousemove (ongoingTouches[idx]);
-                    }
+                if (idx >= 0 && maxTouches === 1) {
+                    ongoingTouches[idx].pageX = touches[i].pageX;
+                    ongoingTouches[idx].pageY = touches[i].pageY;
+                    
+                    mousemove (ongoingTouches[idx]);
                 }
+            }
         }, false);
 
         window.addEventListener("touchcancel", function (evt) {
@@ -2317,8 +2316,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                     ongoingTouches.splice(idx, 1);
 
-                    if (ongoingTouches.length === 0)
-                        maxTouches = 0;
+                    maxTouches = 0;
                 }
             }
         }, false);
@@ -2327,7 +2325,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
-            
+
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
@@ -2338,10 +2336,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     mouseup (ongoingTouches[idx]);
 
                     ongoingTouches.splice(idx, 1);
-
-                    if (ongoingTouches.length === 0)
-                        maxTouches = 0;
-
+                    
+                    maxTouches = 0;
                 }
             }
         }, false);

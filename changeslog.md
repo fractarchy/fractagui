@@ -27,3 +27,4 @@
     - slower processor friendly implementation & energy consumption optimisation  
     - minimalistic visual design  
     - user interface scaling
+    - pinch-zoom support

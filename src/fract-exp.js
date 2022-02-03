@@ -2357,7 +2357,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
-                    tchs.push {pageX: touches[i].pageX, pageY: touches[i].pageY};
+                    tchs.push ({pageX: touches[i].pageX, pageY: touches[i].pageY});
                     
                     ongoingTouches[idx].pageX = touches[i].pageX;
                     ongoingTouches[idx].pageY = touches[i].pageY;

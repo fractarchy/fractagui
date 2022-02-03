@@ -2367,7 +2367,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             }
 
             if (tchs.length === 2) {
-                if (scaleD == 0)
+                if (scaleD == 0) {
                     var tx = tchs[0].pageX - tchs[1].pageX;
                     var ty = tchs[0].pageY - tchs[1].pageY;
                     scaleD0 = Math.sqrt(tx * tx + ty * ty);
@@ -2386,6 +2386,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         
                     rescale (magn);
                     redraw();
+                }
             }
         }, false);
 

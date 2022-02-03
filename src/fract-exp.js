@@ -2351,19 +2351,33 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
+            
+            var tchs = [];
+            for (var i = 0; i < touches.length; i++) {
+                var idx = ongoingTouchIndexById(touches[i].identifier);
 
-            if (touches.length === 2) {
+                if (idx >= 0) {
+                    tchs.push {pageX: touches[i].pageX, pageY: touches[i].pageY};
+                    
+                    ongoingTouches[idx].pageX = touches[i].pageX;
+                    ongoingTouches[idx].pageY = touches[i].pageY;
+                    
+                    mousemove (ongoingTouches[idx]);
+                }
+            }
+
+            if (tchs.length === 2) {
                 if (scaleD == 0)
-                    var tx = touches[0].pageX - touches[1].pageX;
-                    var ty = touches[0].pageY - touches[1].pageY;
+                    var tx = tchs[0].pageX - tch[1].pageX;
+                    var ty = tchs[0].pageY - tch[1].pageY;
                     scaleD0 = Math.sqrt(tx * tx + ty * ty);
                 } else {
-                    var tx = touches[0].pageX - touches[1].pageX;
-                    var ty = touches[0].pageY - touches[1].pageY;
+                    var tx = tchs[0].pageX - tchs[1].pageX;
+                    var ty = tchs[0].pageY - tchs[1].pageY;
                     scaleD1 = Math.sqrt(tx * tx + ty * ty);
 
                     magn = magn * scaleD1 / scaleD0;
-                    
+                    alert(magn);
                     if (magn < 1)
                         magn = 1;
                         
@@ -2372,19 +2386,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         
                     rescale (magn);
                     redraw();
-            }
-            
-            if (touches.length === 1) {
-                for (var i = 0; i < touches.length; i++) {
-                    var idx = ongoingTouchIndexById(touches[i].identifier);
-
-                    if (idx >= 0 && maxTouches === 1) {
-                        ongoingTouches[idx].pageX = touches[i].pageX;
-                        ongoingTouches[idx].pageY = touches[i].pageY;
-                        
-                        mousemove (ongoingTouches[idx]);
-                    }
-                }
             }
         }, false);
 

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<!--?xml version="1.0"?-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <style media="screen">
+            section {
+                position: absolute; top:0; bottom:0; left:0; right:0;
+                overflow: hidden;
+            }
+            
+            html, body
+            {
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+                margin-top: 0px;
+                margin-left: 0px;
+                pointer-events: auto;
+                background-color: gray;
+                touch-action: pinch-zoom;
+                /*touch-action: none;*/
+                user-select: none;
+            }
+            
+            .rotate {
+              animation: rotation 1s infinite linear;
+            }
+
+            @keyframes rotation {
+              from {
+                transform: rotate(-180deg);
+              }
+              to {
+                transform: rotate(180deg);
+              }
+            }
+            
+
+            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
+            a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
+            a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
+        </style>
+        
+        <script>
+            function setDesign(pr) {
+                var viewport = document.querySelector("meta[name=viewport]");
+                if (!viewport){
+                    viewport=document.createElement('meta');
+                    viewport.name = "viewport";
+                    document.getElementsByTagName('head')[0].appendChild(viewport);
+                }
+                var sc = 1 / pr;
+                var sc = 1.6 / pr;
+                //viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
+                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", minimum-scale=" + sc + ", maximum-scale=" + sc);
+            }
+            
+            setDesign(window.devicePixelRatio);
+        </script>
+
+        <script src="src/html2canvas.edit.js"></script>
+        <script src="src/render-html.js"></script>
+        <script src="src/fract-exp.js"></script>
+    </head>
+    <body>
+      <section>
+        <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; /*filter: drop-shadow(0px 0px 20px black);*/">
+        </div>
+        
+        <script>
+            var error;
+            function getDesign() {
+                var design;
+                if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
+                    design = 'touch';
+                 } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
+                    design = 'tablet';
+                } else if (window.matchMedia('screen').matches) {
+                    design = 'desktop';
+                } else if (window.matchMedia('handheld').matches) {
+                    design = 'mobile';
+                }
+                return design;
+            }
+
+            function setSize () {
+            }
+
+            function dispatchSize () {
+                var event1 = new CustomEvent('resize1', null);
+                divContainer.dispatchEvent(event1);
+            }
+
+            wonload = function () {
+                setSize ();
+                Orbital (divContainer, nodeTree, env.quant / 100, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy);
+                dispatchSize ();
+                divContainer.style.visibility = "visible";
+
+                var resizeId;
+                window.addEventListener('resize', function () {
+                    document.getElementById("tooltip").style.visibility = "hidden"
+                    divContainer.style.visibility = "hidden";
+                    
+                    clearTimeout(resizeId);
+                    resizeId = setTimeout(function () {
+                        setSize ();
+                        dispatchSize ();
+                        divContainer.style.visibility = "visible";
+                        
+                    }, 500);
+                });
+            }
+            
+            function setupEnv (data) {
+                if (data["html-renderer"]) {
+                    if (data["html-renderer"] !== "legacy" && data["html-renderer"] !== "latest") {
+                        alert ('Error in fract-exp.json: "html-renderer" can only be "legacy" or "latest"');
+                        throw new error ();
+                    }
+                } else {
+                    data["html-renderer"] = "latest";
+                }
+
+                if (data["contents-flat-area"])
+                    try {
+                        if (data["contents-flat-area"].substr(data["contents-flat-area"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var flatArea = parseFloat (data["contents-flat-area"].substr(0, data["contents-flat-area"].length - 1));
+                        if (flatArea < 0 || flatArea > 100)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in fract-exp.json: "contents-flat-area" has to be a percent between "0%" and "100%"');
+                        throw new error ();
+                    }
+                else
+                    flatArea = 0;
+
+                if (data["contents-scale"])
+                    try {
+                        if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var scale = parseFloat (data["contents-scale"].substr(0, data["contents-scale"].length - 1));
+                        if (scale <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in fract-exp.json: "contents-scale" hast to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    scale = 100;
+                
+                if (data["ui-scale"])
+                    try {
+                        if (data["ui-scale"].substr(data["ui-scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var uiscale = parseFloat (data["ui-scale"].substr(0, data["ui-scale"].length - 1));
+                        if (uiscale <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in fract-exp.json: "ui-scale" hast to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    uiscale = 100;
+
+                if (data["power-consumption-optimisation"])
+                    try {
+                        if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
+                        if (quant <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in fract-exp.json: "power-consumption-optimisation" hast to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    quant = 80;
+                
+                if (data["shadow-radius"]) {
+                    var sradius = parseFloat (data["shadow-radius"]);
+                    
+                } else {
+                    sradius = 0;
+                }
+                
+                return {
+                    htmlRenderer: data["html-renderer"],
+                    ovalColor: data["oval-color"],
+                    backColor: data["background-color"],
+                    shadowRadius: sradius,
+                    shadowColor: data["shadow-color"],
+                    flatArea: flatArea,
+                    scale: scale,
+                    uiscale: uiscale,
+                    quant: quant,
+                }
+            }
+            
+            function createCanvasImg (img, scale, fill) {
+                var cnvim = document.createElement ("canvas");
+                cnvim.width = ~~(img.width * scale) + 2;
+                cnvim.height = ~~(img.height * scale) + 2;
+                var ctxim = cnvim.getContext ('2d');
+
+                ctxim.fillStyle = fill;
+                ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
+                
+                // safari bug fix - draw twice
+                ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
+                //ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
+
+                return cnvim
+            }            
+
+            var pauseLoading = false;
+            
+            function onBusy () {
+                pauseLoading = true;
+            }
+
+            async function onIdle (ovals) {
+                pauseLoading = false;
+                ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
+                for (i = 0; i < ovals.length && !pauseLoading; i++) {
+                    if (!ovals[i].data.scaledBitmap) {
+                        try {
+                            await loadOval (ovals[i].data);
+                        } catch (e) {
+                        }
+                    }
+                }
+            }
+            
+            async function loadOval(data) {
+                return new Promise(async function(resolve, reject) {
+                    var ifr = document.createElement ('iframe');
+                    ifr.style.visibility = "hidden";
+                    ifr.style.border = "none";
+                    ifr.style.overflow = "hidden";
+
+                    ifr.onload = function () {
+                        if (node.type === "html") {
+                            if (ifr.contentWindow.document.body === null) {
+                                error = true
+                                console.debug (`Error loading: '${ifr.src}'`);
+                                reject ();
+                                return;
+                            }
+                            ifr.style.width = "0px";
+                            ifr.style.height = "0px";
+                        }
+                        
+                        node.img = new Image ();
+                        node.img.crossOrigin = "anonymous";
+                        
+                        node.img.onload = function (e) {
+                            if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
+                                var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
+                                node.scaledBitmap = Crisp.crispBitmapXY(canvas);
+                                divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                                resolve ();
+                            } else {
+                                divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                                reject ();
+                            }
+                        }
+                        
+                        node.img.onerror = function (e) {
+                            if (!error) {
+                                error = true
+                                console.debug (`Error loading: '${node.src}'`);
+                            }
+                            divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                            reject ();
+                        }
+                        
+                        if (node.type === "image" || env.htmlRenderer === "latest") {
+                            var links = ifr.contentWindow.document.getElementsByTagName("a");
+                            for (var i = 0; i < links.length; i++) {
+                                var tg = links[i].getAttribute('target');
+                                var hr = links[i].href;
+                                if (hr.baseVal) hr = hr.baseVal;
+
+                                if (!hr)
+                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                              
+                                if (hr) {
+                                    if (env.htmlRenderer === "legacy")
+                                        var myScale = 1;
+                                    else
+                                        var myScale = 100 / env.scale / window.devicePixelRatio;
+                                    
+                                    if (!node.hyperlinks)
+                                        node.hyperlinks = [];
+                                    
+                                    if (links[i].children && links[i].children.length > 0) {
+                                        (function traverseChildren(link, node) {
+                                            if (link.children && link.children.length > 0) {
+                                                for (var j = 0; j < link.children.length; j++) {
+                                                    traverseChildren(link.children[j], node)
+                                                }
+                                            }
+                                            
+                                            var rects = link.getClientRects();
+                                            for (var j in rects) {
+                                                if (rects[j].right)
+                                                    node.hyperlinks.push (
+                                                        {
+                                                            "type": "rect",
+                                                            "target": tg,
+                                                            "href": hr,
+                                                            "left": rects[j].left / myScale,
+                                                            "top": rects[j].top / myScale,
+                                                            "right": rects[j].right / myScale,
+                                                            "bottom": rects[j].bottom / myScale
+                                                        }
+                                                    );
+                                            }
+                                        }) (links[i], node);
+                                    } else {
+                                        var rects = links[i].getClientRects();
+                                        for (var j in rects) {
+                                            node.hyperlinks.push (
+                                                {
+                                                    "type": "rect",
+                                                    "target": tg,
+                                                    "href": hr,
+                                                    "left": rects[j].left / myScale,
+                                                    "top": rects[j].top / myScale,
+                                                    "right": rects[j].right / myScale,
+                                                    "bottom": rects[j].bottom / myScale
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (node.type === "image") {
+                            node.scaleImg = window.devicePixelRatio;
+
+                            node.img.src = node.src;
+                            ifr.remove();
+
+                        } else if (node.type === "html" && !pauseLoading) {
+                            if (env.htmlRenderer === "legacy") {
+                                var base = ifr.contentDocument.createElement('base');
+                                base.href = node.src;//xhr.responseURL;
+                                
+                                var head = ifr.contentDocument.getElementsByTagName('head')[0];
+                                head.insertBefore(base, head.childNodes[0]);
+
+                                scaleifr = window.devicePixelRatio;
+                                    
+                                html2canvas(ifr.contentDocument.body, {logging: false, scale: env.scale / 100 * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0})
+                                    .then(function(ret) {
+                                        node.hyperlinks = ret.hyperlinks;
+                                        for (var j in node.hyperlinks) {
+                                            node.hyperlinks[j].top *= env.scale / 100;
+                                            node.hyperlinks[j].left *= env.scale / 100;
+                                            node.hyperlinks[j].bottom *= env.scale / 100;
+                                            node.hyperlinks[j].right *= env.scale / 100;
+                                        }
+                                        node.img.src = ret.canvas.toDataURL();
+                                        ifr.remove();
+                                    });
+
+                            } else if (env.htmlRenderer === "latest") {
+                                node.scaleImg = window.devicePixelRatio;
+
+                                renderHtml.fromIframe(ifr).toBase64Svg()
+                                    .then (function (ret) {
+                                        node.img.src = ret;
+                                        ifr.remove();
+                                    });
+                            }
+
+                            /*
+                            domtoimage.toSvg(ifr.contentDocument.body)
+                                .then(function (dataUrl) {
+                                    node.img.src = dataUrl;
+                                })
+                                .catch(function (error) {
+                                    console.debug('oops, something went wrong!', error);
+                                });
+                            */
+                        } else {
+                            ifr.remove();
+                        }
+                    }
+                    
+                    var node = data;
+                    ifr.src = data.src;
+                    document.body.appendChild (ifr);
+                });
+            }
+            
+            var xhr;
+            var env;
+            function loadContents () {
+                var xhttp = new XMLHttpRequest ();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        try {
+                            init = JSON.parse (this.responseText);
+                        } catch (e) {
+                            alert ('Error:\n' + e.message);
+                            throw e;
+                        }
+                        
+                        env = setupEnv (init);
+                        
+                        xhr = new XMLHttpRequest();
+
+                        xhr.onload = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                function formArray (xmlNode, arr) {
+                                    var node;
+                                    for (var i = 0; i < xmlNode.children.length; i++) {
+                                        var url = new URL(xmlNode.children[i].attributes.getNamedItem("src").nodeValue, xhr.responseURL).href
+                                        var att = xmlNode.children[i].attributes.getNamedItem("type");
+                                        if (att)
+                                            var type = att.nodeValue;
+                                        else
+                                            var type = "html";
+                                        node = {type: type, src: url, children: []};
+                                        formArray (xmlNode.children[i], node.children);
+                                        if (arr)
+                                            arr.push (node);
+                                    }
+                                    if (!arr)
+                                        return node;
+                                }
+                                
+                                if (xhr.responseXML) {
+                                    nodeTree = formArray (xhr.responseXML, null);
+                                    var waitForImages = function () {
+
+                                        var myscale = window.devicePixelRatio;
+                                        document.body.style.backgroundColor = env.backColor;
+                                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")"
+                                        window.addEventListener("load", wonload ());
+                                    }
+                                    
+                                    waitForImages ();                                    
+
+                                } else {
+                                    alert (`Error processing '${init.contents}'`);
+                                }
+                            }
+                        }
+
+                        xhr.onerror = function() {
+                          alert (`Error while getting '${init.contents}'`);
+                        }
+
+                        xhr.open("GET", init.contents + "?" + Date.now(), true);
+                        xhr.responseType = "document";
+                        xhr.overrideMimeType('text/xml');
+                        xhr.send();
+                    }
+                };
+                xhttp.open("GET", "fract-exp.json?" + Date.now(), true);
+                xhttp.overrideMimeType("text/plain");
+                xhttp.send();
+            }
+            
+            var nodeTree;
+            
+            var divContainer = document.getElementById ("divContainer")
+            
+            var pixelRatioBox = document.querySelector(".pixel-ratio");
+            var mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+            matchMedia(mqString).addListener(() => {
+                window.top.document.body.innerHTML = "Please refresh the web page.";
+                return;
+            });
+            
+            loadContents ();
+        </script>
+      </section>
+    </body>
+</html>

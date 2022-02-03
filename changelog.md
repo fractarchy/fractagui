@@ -28,3 +28,7 @@
     - minimalistic visual design  
     - user interface scaling
     - pinch-zoom support
+
+- - -
+
+- UX update

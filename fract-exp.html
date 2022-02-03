@@ -452,7 +452,7 @@
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
                                         //document.body.style.backgroundImage = "url('a.jpg')";
-                                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")"
+                                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius * window.devicePixelRatio + "px " + env.shadowColor + ")"
                                         window.addEventListener("load", wonload ());
                                     }
                                     

@@ -2335,18 +2335,19 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             maxTouches = Math.max (touches.length, maxTouches);
             
             for (var i = 0; i < touches.length; i++) {
-                if (ongoingTouches.length === 0) {
+                //if (ongoingTouches.length === 0) {
                     ongoingTouches.push(copyTouch(touches[i]));
                     var idx = ongoingTouchIndexById(touches[i].identifier);
                     
                     if (idx >= 0) {
                         mousedown (ongoingTouches[idx]);
                     }
-                }
+                //}
             }
         }, false);
         
         var scaleD0 = 0;
+        var curMagn = 1;
         window.addEventListener("touchmove", function (evt) {
             //evt.preventDefault ();
             device = "touch";
@@ -2358,31 +2359,33 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 if (idx >= 0) {
                     ongoingTouches[idx].pageX = touches[i].pageX;
                     ongoingTouches[idx].pageY = touches[i].pageY;
-                    
-                    mousemove (ongoingTouches[idx]);
                 }
             }
 
             var tchs = ongoingTouches;
+
+            if (tchs.length === 1) {
+                mousemove (ongoingTouches[idx]);
+            }
+            
             if (tchs.length === 2) {
-alert (tchs.length);
                 if (scaleD0 === 0) {
                     var tx = tchs[0].pageX - tchs[1].pageX;
                     var ty = tchs[0].pageY - tchs[1].pageY;
                     scaleD0 = Math.sqrt(tx * tx + ty * ty);
+
                 } else {
                     var tx = tchs[0].pageX - tchs[1].pageX;
                     var ty = tchs[0].pageY - tchs[1].pageY;
-                    scaleD1 = Math.sqrt(tx * tx + ty * ty);
+                    var scaleD1 = Math.sqrt(tx * tx + ty * ty);
 
-                    magn = magn * scaleD1 / scaleD0;
-                    alert(magn);
+                    magn = curMagn * scaleD1 / scaleD0;
                     if (magn < 1)
                         magn = 1;
                         
                     else if (magn > 1 / ratio)
                         magn = 1 / ratio;
-                        
+                            
                     rescale (magn);
                     redraw();
                 }
@@ -2409,6 +2412,7 @@ alert (tchs.length);
             }
 
             scaleD0 = 0;
+            curMagn = magn;
         }, false);
 
         window.addEventListener("touchend", function (evt) {
@@ -2426,12 +2430,13 @@ alert (tchs.length);
                     mouseup (ongoingTouches[idx]);
 
                     ongoingTouches.splice(idx, 1);
-                    
+
                     maxTouches = 0;
                 }
             }
 
             scaleD0 = 0;
+            curMagn = magn;
         }, false);
     }
     

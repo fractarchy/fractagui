@@ -2365,6 +2365,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     mousemove (ongoingTouches[idx]);
                 }
             }
+            alert (tchs.length);
 
             if (tchs.length === 2) {
                 if (scaleD == 0) {

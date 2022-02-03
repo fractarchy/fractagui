@@ -1,7 +1,7 @@
 @media (max-device-width: 640px), (max-device-height: 640px) {
     body {
         width: 180px;
-        font-size: 0.9em;
+        font-size: 1em;
         font-family: Times New Roman, Georgia, Garamond;
         margin: 0;
         padding: 0;

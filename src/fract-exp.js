@@ -19,10 +19,10 @@ Crisp = (function () {
         cnvScaled.images.push ({width: iWidth, height: iHeight, imageData: dataWH.im, canvas: dataWH.cnv});
 
         while (true) {
-            iWidth = Math.ceil (iWidth / cnvScaled.step);
-            iHeight = Math.ceil (iHeight / cnvScaled.step);
+            iWidth = iWidth / cnvScaled.step;
+            iHeight = iHeight / cnvScaled.step;
 
-            if (iWidth <= 64 || iHeight <= 64) break;
+            if (iWidth <= 16 || iHeight <= 16) break;
             
             var data = dataWH.im;
             var cnv = document.createElement ("canvas")
@@ -39,7 +39,7 @@ Crisp = (function () {
         
         return cnvScaled;
     }
-
+    
     function crispBitmapXY (cnvim) {
         "use strict";
         var ctxim = cnvim.getContext('2d');
@@ -84,7 +84,7 @@ Crisp = (function () {
 
         return {cnv: cnv1, im: imData};
     }
-
+    
     return {
         crispBitmap: crispBitmap,
         crispBitmapXY: crispBitmapXY,
@@ -92,6 +92,7 @@ Crisp = (function () {
         step: step
     }
 }) ();
+
 
 function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) {
     if (!curvature && curvature !== 0) curvature = 0.125;
@@ -385,7 +386,7 @@ function FishEye (radius, squashX, squashY, superSampling, curvature, flatArea) 
     }
 }
 
-function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1) {
+function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1, shadowr, shadowColor) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
     var qang = 0.025 * Math.PI;
 
@@ -397,20 +398,23 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     var shadow;
 
     var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
+        
         if (renderHint !== "1") {
-            //ctx1.beginPath ();
+            /*
+            ctx.beginPath ();
             shadow = true;
             render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
             shadow = false;
-            /*
-            ctx1.closePath ();
-            ctx1.shadowBlur = shadowr1;
-            ctx1.shadowColor = shadowColor1;
-            ctx1.lineWidth = 0;
-            ctx1.fillStyle = shadowColor1;
-            ctx1.fill ();
+            
+            ctx.closePath ();
+            ctx.shadowBlur = shadowr;
+            ctx.shadowColor = shadowColor;
+            ctx.lineWidth = 0;
+            ctx.fillStyle = shadowColor;
+            ctx.fill ();
             ctx.shadowBlur = 0;
             */
+            
         }
         
         return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
@@ -491,7 +495,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
         function clear (fill) {
             if (!fill) fill = fill2
             ctx.fillStyle = fill2;
-            ctx.fillRect(0, 0, ww, hh);
+            ctx.clearRect(0, 0, ww, hh);
         }
         
         function ellipse(ctx, x, y, xDis, yDis) {
@@ -514,11 +518,11 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
         var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
         var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
         
-        if (shadow) {
+        //if (shadow) {
             if (rec === 1 && renderHint !== "1") {
                 clear();
             }
-        }
+        //}
         
             
         if (
@@ -908,7 +912,12 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     ctx.msImageSmoothingEnabled     = true
     ctx.imageSmoothingEnabled       = true
     ctx.imageSmoothingQuality       = "high"
-    
+    /*
+    ctx.webkitImageSmoothingEnabled = false
+    ctx.msImageSmoothingEnabled     = false
+    ctx.imageSmoothingEnabled       = false
+    ctx.imageSmoothingQuality       = "low"
+    */
     
     var superSampling = 1;
 
@@ -955,15 +964,31 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         cy = Math.round (Math.round (cy / qpan) * qpan);
 
         var cnvCache = document.createElement ("canvas");
-        var cacheW = 2 * Math.floor (rr * ratio * squashX) * fishEye.superSampling;
-        var cacheH = 2 * Math.floor (rr * ratio * squashY) * fishEye.superSampling;
+        var cacheW = 2 * Math.floor (rr * ratio * squashX);// * fishEye.superSampling;
+        var cacheH = 2 * Math.floor (rr * ratio * squashY);// * fishEye.superSampling;
         cnvCache.width = cacheW;
         cnvCache.height = cacheH;
         var ctxCache = cnvCache.getContext('2d');
-        var imgCache = ctxCache.createImageData(cacheW, cacheH);
+        //var imgCache = ctxCache.createImageData(cacheW, cacheH);
     
-        fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
-        ctxCache.putImageData (imgCache, 0, 0);
+        //fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
+        ctxCache.beginPath ();
+        ctxCache.ellipse (
+            (cacheW / 2) - 1,
+            (cacheH / 2) - 1,
+            rr * ratio * squashX - 3 * window.devicePixelRatio,
+            rr * ratio * squashY - 3 * window.devicePixelRatio,
+            0,
+            0,
+            2 * Math.PI,
+            false
+        );
+        ctxCache.closePath ();
+        ctxCache.clip();
+        
+        ctxCache.drawImage (data.img, ~~(cacheW / 2 - data.img.width / 2 - cx), ~~(cacheH / 2 - data.img.height / 2 - cy));
+        
+        //ctxCache.putImageData (imgCache, 0, 0);
         
         return cnvCache;
     }
@@ -982,7 +1007,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             if (shadow) {
                 if (shadowColor) {
 
-                    ctx.beginPath ();
+                    //ctx.beginPath ();
                     ctx.moveTo (x * squashX, y * squashY);
                     ctx.ellipse (
                         x * squashX,
@@ -994,8 +1019,9 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         2 * Math.PI,
                         false
                     );
-                    ctx.closePath ();
+                    //ctx.closePath ();
 
+                    /*
                     ctx.shadowBlur = shadowr;
                     ctx.shadowColor = shadowColor;
                     ctx.lineWidth = 0;
@@ -1003,6 +1029,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     ctx.fill ();
 
                     ctx.shadowBlur = 0;
+                    */
                 }
             } else {
                                 
@@ -1067,7 +1094,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         }
 
                         if (renderHint === "0") {
-                            ctx.drawImage(data.cachedCnv, xo, yo, w, h);
+                            ctx.drawImage(data.cachedCnv, ~~xo, ~~yo, ~~w, ~~h);
                             
                         } else if (level === 1) {
                             ctx.drawImage(data.cachedCnv, Math.round (xo), Math.round (yo));
@@ -1085,7 +1112,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             bmpscale = Math.max (0, bmpscale);
                             bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
 
-                            ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
+                            ctx.drawImage (data.cachedData.images[bmpscale].canvas, ~~xo, ~~yo, ~~w, ~~h);
                         
                         }
                     //}
@@ -1146,7 +1173,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     function clear (fill) {
         if (!fill) fill = fill2
         ctx.fillStyle = fill2;
-        ctx.fillRect(0, 0, ww, hh);
+        ctx.clearRect(0, 0, ww, hh);
     }
 
     function redraw (m, renderHint, selectedCursor) {
@@ -1218,12 +1245,18 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
             var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
 
+            /*
             if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
                 var tmp0 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((dragY - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((dragX - x0) * fishEye.superSampling)) * 4;
                 var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
                 
                 setCenter (select, oldCenterX + fishEye.data.array[tmp0] - fishEye.data.array[tmp1], oldCenterY + fishEye.data.array[tmp0 + 1] - fishEye.data.array[tmp1 + 1]);
-            
+            */
+            if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
+                //var tmp0 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((dragY - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((dragX - x0) * fishEye.superSampling)) * 4;
+                //var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
+                
+                setCenter (select, oldCenterX + (dragX - x0) - (x - x0), oldCenterY + (dragY - y0) - (y - y0));
             } else {
                 select.cursor.centerX = 0;
                 select.cursor.centerY = NaN;
@@ -1254,13 +1287,19 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                 var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
                 var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
-
+                /*
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
                     var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
 
                     var hx = cursor.centerX + (cursor.data.scaledBitmap.width / 2 + (fishEye.data.array[tmp1] - fishEye.data.width));
                     var hy = cursor.centerY + (cursor.data.scaledBitmap.height / 2 + (fishEye.data.array[tmp1 + 1] - fishEye.data.height));
-                    
+                */
+                if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
+                    //var tmp1 = (2 * fishEye.data.width * (fishEye.data.height + Math.floor ((y - y0) * fishEye.superSampling)) + fishEye.data.width + Math.floor ((x - x0) * fishEye.superSampling)) * 4;
+
+                    var hx = cursor.centerX + cursor.data.scaledBitmap.width / 2 + (x - x0);//+ (cursor.data.scaledBitmap.width / 2);// + (fishEye.data.array[tmp1] - fishEye.data.width));
+                    var hy = cursor.centerY  + cursor.data.scaledBitmap.height / 2 + (y - y0);//+ (cursor.data.scaledBitmap.height / 2);// + (fishEye.data.array[tmp1 + 1] - fishEye.data.height));
+
                     if (cursor.data.hyperlinks) {
                         for (var i = 0; i < cursor.data.hyperlinks.length; i++) {
                             var hl = cursor.data.hyperlinks[i];
@@ -2117,11 +2156,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     function resize(width, height) {
         setDimensions (width, height);
         alignX = 0;
-        alignY = squashY * rr * 1 / 2;
+        alignY = squashY * rr * 1 / 2.5;
     
-        fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature, flatArea);
+        //fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature, flatArea);
 
-        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1);
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
         
         minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio;
 
@@ -2221,7 +2260,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     
     var device = "mouse";
 
-    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1);
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');

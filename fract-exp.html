@@ -64,7 +64,7 @@
     </head>
     <body>
       <section>
-        <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;">
+        <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; /*filter: drop-shadow(0px 0px 20px black);*/">
         </div>
         
         <script>
@@ -449,6 +449,7 @@
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
+                                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")"
                                         window.addEventListener("load", wonload ());
                                     }
                                     

@@ -1,6 +1,6 @@
 # fract-exp
 
-(v 0.3 - update)
+(v 0.5 - pre-release)
 
 tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
 

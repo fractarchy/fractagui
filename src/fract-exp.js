@@ -1211,6 +1211,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
       
       xpos -= obj_left;
       ypos -= obj_top;
+//        divContainer.style.transform = "scale(" + magn + ") translateY(" + (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn) + "px)";
+      var cw2 = divContainer.clientWidth / 2;
+      var ch2 = divContainer.clientHeight / 2;
+        xpos = cw2 + (xpos - cw2) / magn;
+        ypos = ch2 + (ypos - ch2) / magn - transformY();
       
       return {x: Math.floor (xpos), y: Math.floor (ypos)};
     }
@@ -2225,9 +2230,21 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             d = d.parent;
 
         clearData (d.children[0]);
+        rescale (magn);
         redraw ();
         idle ();
         //updateCache (d.children[0]);
+        //divContainer.style.transform = "scale(" + magn + ") translateY(" + (hh - 2 * shadowRadius)/ 2 * (1 - 1 / magn) + "px)";
+        //ctx.setTransform(magn, 0, 0, magn, - rr * squashX / magn, /*- rr * squashY / magn +*/ (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn));
+    }
+    
+    function rescale (m) {
+        magn = m;
+        if (m === 1)
+            divContainer.style.transform = "";
+        
+        else
+            divContainer.style.transform = "scale(" + magn + ") translateY(" + transformY() + "px)";
     }
     
     function busy () {
@@ -2240,6 +2257,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             onIdle (renderData);
     }
     
+    var magn = 1;
     var renderData;
     var mouse = {};
     var tt, ll, ww, hh, rr, ferr, xx, yy, w0, h0, squashX, squashY;
@@ -2269,6 +2287,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
     var clip = document.createElementNS(svgns, 'ellipse');
     clipPath.appendChild(clip);
+    
+    
+    function transformY () {
+        return (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn);
+    }
 
     function setupMouseEvents () {
         window.addEventListener('mousemove', function (evt) {
@@ -2322,20 +2345,45 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 }
             }
         }, false);
-
+        
+        var scaleD0 = 0;
         window.addEventListener("touchmove", function (evt) {
             //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
 
-            for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById(touches[i].identifier);
+            if (touches.length === 2) {
+                if (scaleD == 0)
+                    var tx = touches[0].pageX - touches[1].pageX;
+                    var ty = touches[0].pageY - touches[1].pageY;
+                    scaleD0 = Math.sqrt(tx * tx + ty * ty);
+                } else {
+                    var tx = touches[0].pageX - touches[1].pageX;
+                    var ty = touches[0].pageY - touches[1].pageY;
+                    scaleD1 = Math.sqrt(tx * tx + ty * ty);
 
-                if (idx >= 0 && maxTouches === 1) {
-                    ongoingTouches[idx].pageX = touches[i].pageX;
-                    ongoingTouches[idx].pageY = touches[i].pageY;
+                    magn = magn * scaleD1 / scaleD0;
                     
-                    mousemove (ongoingTouches[idx]);
+                    if (magn < 1)
+                        magn = 1;
+                        
+                    else if (magn > 1 / ratio)
+                        magn = 1 / ratio;
+                        
+                    rescale (magn);
+                    redraw();
+            }
+            
+            if (touches.length === 1) {
+                for (var i = 0; i < touches.length; i++) {
+                    var idx = ongoingTouchIndexById(touches[i].identifier);
+
+                    if (idx >= 0 && maxTouches === 1) {
+                        ongoingTouches[idx].pageX = touches[i].pageX;
+                        ongoingTouches[idx].pageY = touches[i].pageY;
+                        
+                        mousemove (ongoingTouches[idx]);
+                    }
                 }
             }
         }, false);
@@ -2398,5 +2446,4 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         if (!animating && !dragging && !panning)
             redraw ();
     });
-    
 }

@@ -2352,13 +2352,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             device = "touch";
             var touches = evt.changedTouches;
             
-            var tchs = [];
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
 
                 if (idx >= 0) {
-                    tchs.push ({pageX: touches[i].pageX, pageY: touches[i].pageY});
-                    
                     ongoingTouches[idx].pageX = touches[i].pageX;
                     ongoingTouches[idx].pageY = touches[i].pageY;
                     
@@ -2366,9 +2363,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 }
             }
 
+            var tchs = ongoingTouches;
             if (tchs.length === 2) {
 alert (tchs.length);
-                if (scaleD == 0) {
+                if (scaleD0 === 0) {
                     var tx = tchs[0].pageX - tchs[1].pageX;
                     var ty = tchs[0].pageY - tchs[1].pageY;
                     scaleD0 = Math.sqrt(tx * tx + ty * ty);
@@ -2409,6 +2407,8 @@ alert (tchs.length);
                     maxTouches = 0;
                 }
             }
+
+            scaleD0 = 0;
         }, false);
 
         window.addEventListener("touchend", function (evt) {
@@ -2430,6 +2430,8 @@ alert (tchs.length);
                     maxTouches = 0;
                 }
             }
+
+            scaleD0 = 0;
         }, false);
     }
     

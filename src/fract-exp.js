@@ -2144,6 +2144,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         
         function clearData (data) {
             data.scaledBitmap = null;
+            data.cachedCnv = null;
+            data.cachedData = null;
             //data.centerX = 0;
             //data.centerY = NaN;
             alignOval(data, data);

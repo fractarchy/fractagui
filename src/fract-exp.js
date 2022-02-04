@@ -1354,14 +1354,16 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         oldCenterX = select.cursor.centerX;
                         oldCenterY = select.cursor.centerY;
                         
-                        inertPan = [];
-                        inertIdxPan = 0;
+                        //inertPan = [];
+                        //inertIdxPan = 0;
+                        oldPan = null;
                         
                     } else {
                         dragging = true;
                         
-                        inert = [];
-                        inertIdx = 0;
+                        //inert = [];
+                        //inertIdx = 0;
+                        oldAng = null;
                     }
                 }
             } else if (mouseDown === 0)
@@ -1426,10 +1428,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 var qang1 = Math.PI + myang;
                 select.parent.setAngle (qang1, 0);
                 //if (select.parent.getCircle(select.parent.angle1).r * squashX * squashY > minRadius) {
-                    //inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang[1], percentRawAngle: dr, time: (new Date()).getTime()};
-                    inert[inertIdx] = {angle: select.parent.angle1, rawAngle: ang1, percentRawAngle: 0, centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
-                    inertIdx++;
-                    if (inertIdx === 20) inertIdx = 0;
+                    oldAng = newAng;
+                    newAng = {angle: select.parent.angle1, rawAngle: ang1, percentRawAngle: 0, centerX: select.cursor.centerX, centerY: select.cursor.centerY, time: (new Date()).getTime()};
 
                     //clear ();
                     var sel = select;
@@ -1615,8 +1615,9 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                                     window.requestAnimationFrame(aEnlarge)
                                 } else {
                                     level = gettingLevel;
-                                    inertIdx = 0;
-                                    inert = [];
+                                    //inertIdx = 0;
+                                    //inert = [];
+                                    oldAng = null;
 
                                     if (!cursor.children[cursor.index]) {
                                         var cy = NaN;
@@ -1741,8 +1742,9 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                                         window.requestAnimationFrame(aEnsmall);
                                     } else {
                                         level = gettingLevel;
-                                        inertIdx = 0;
-                                        inert = [];
+                                        //inertIdx = 0;
+                                        //inert = [];
+                                        oldAng = null;
 
                                         cursor = cursor.parent;
                                         data = path.pop();
@@ -1788,9 +1790,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }        
         if (!animating && panning) {
             mousemovePan(mouse.x, mouse.y);
-            inertPan[inertIdxPan] = {centerX: cursor.centerX, centerY: cursor.centerY, time: (new Date()).getTime()};
-            inertIdxPan++;
-            if (inertIdxPan === 20) inertIdxPan = 0;
+            oldPan = newPan;
+            newPan = {centerX: cursor.centerX, centerY: cursor.centerY, time: (new Date()).getTime()};
         }
 
         /*
@@ -1856,55 +1857,15 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }
 
         if (!animating) {
-            if (dragging && inert.length > 1) {
+            if (dragging && oldAng) {
                 dragging = false;
-                
-                var sum = 0;
-                var avgt = 0;
-                var avgAng = 0;
-                var i = inertIdx - 1
-                var j = i - 1;
-                var k = 2;
-                if ((new Date()).getTime() - (inertIdx === 0? inert[inert.length - 1].time: inert[inertIdx - 1].time) < 250) {
-                    while (i !== inertIdx && k > 0) {
-                        if (i === 0)
-                            j = inert.length - 1;
-                        else
-                            j = i - 1
-
-                        if (!inert[i] || !inert[j])
-                            break;
-                            
-                        if (inert[i].time - inert[j].time > 250)
-                            break;
-                            
-                        if (inert[i].time < inert[j].time)
-                            break;
-
-                        var dt = inert[i].time - inert[j].time;
-                        if (!avgt) {
-                            avgt = dt;
-                        } else {
-                            avgt = (avgt + dt) / 2;
-                        }
-
-                        var dang = (inert[i].angle - inert[j].angle);
-                        
-                        if (!avgAng)
-                            avgAng = dang;
-                        else
-                            avgAng = (avgAng + dang) / 2
-                        
-                        i -= 1; j -= 1; k -= 1;
-                    }
-                }
-                
+                var avgt = newAng.time - oldAng.time;
+                var avgAng = newAng.angle - oldAng.angle
                 if (select && avgt < 250) {
                     var c = select.parent;
-                    if (inertIdx === 0) inertIdx = 1;
-                    var ang0 = inert[inertIdx - 1].angle;
+                    var ang0 = oldAng.angle;
                     var c1 = c.getCircle(ang0).r;
-                    var dang0 = inert[inertIdx - 1].angle - inert[inertIdx - 1].rawAngle;
+                    var dang0 = oldAng.angle - oldAng.rawAngle;
                     var t0 = globalt0;
                     var i = 1;
                     var di = 1;
@@ -1919,7 +1880,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             var sindi = Math.pow(di, 2);
                             if (di > 0){
                                 ang0 += avgAng * sindi * (c.getCircle(ang0).r / c1);
-                                if (inertIdx === 0) inertIdx = 1;
+                                //if (inertIdx === 0) inertIdx = 1;
                                 var a0 = ang0 - dang0;
                                 a0 = Math.max (a0, select.getAngMin());
                                 a0 = Math.min (a0, select.getAngMax());
@@ -1970,60 +1931,17 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     redraw ({x: mouse.x, y: mouse.y});
                 }
 
-            } else if (panning && inertPan.length > 1) {
+            } else if (panning && oldPan) {
                 var r0 = r1 * ratio;
 
                 var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
                 var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
 
                 if (Math.ceil (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY)) < Math.floor (r0)) {
-                    var avgX = 0;
-                    var avgY = 0;
-                    var avgt = 0;
-                    var i = inertIdxPan - 1
-                    var j = i - 1;
-                    var k = 2;
-                    if ((new Date()).getTime() - (inertIdxPan === 0? inertPan[inertPan.length - 1].time: inertPan[inertIdxPan - 1].time) < 250) {
-                        while (i !== inertIdxPan && k > 0) {
-                            if (i === 0)
-                                j = inertPan.length - 1;
-                            else
-                                j = i - 1
-
-                            if (!inertPan[i] || !inertPan[j])
-                                break;
-                                
-                            if (inertPan[i].time - inertPan[j].time > 250) {
-                                break;
-                            }
-
-                            if (inertPan[i].time < inertPan[j].time)
-                                break;
-
-                            var dt = inertPan[i].time - inertPan[j].time;
-                            if (!avgt) {
-                                avgt = dt;
-                            } else {
-                                avgt = (avgt + dt) / 2;
-                            }
-
-                            var dx = (inertPan[i].centerX - inertPan[j].centerX);
-                            if (!avgX) {
-                                avgX = dx;
-                            } else {
-                                avgX = (avgX + dx) / 2
-                            }
-
-                            var dy = (inertPan[i].centerY - inertPan[j].centerY);
-                            if (!avgY) {
-                                avgY = dy;
-                            } else {
-                                avgY = (avgY + dy) / 2
-                            }
-
-                            i -= 1; j -= 1; k -= 1;
-                        }
-                        
+                    if ((new Date()).getTime() - newPan.time < 250) {
+                        var avgX = newPan.centerX - oldPan.centerX;
+                        var avgY = newPan.centerY - oldPan.centerY;
+                        var avgt = newPan.time - oldPan.time;
                         if (avgt < 250) {
                             var t0 = globalt0;
                             var di = 1;
@@ -2234,8 +2152,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         redraw ();
         idle ();
         //updateCache (d.children[0]);
-        //divContainer.style.transform = "scale(" + magn + ") translateY(" + (hh - 2 * shadowRadius)/ 2 * (1 - 1 / magn) + "px)";
-        //ctx.setTransform(magn, 0, 0, magn, - rr * squashX / magn, /*- rr * squashY / magn +*/ (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn));
     }
     
     function rescale (m) {
@@ -2258,6 +2174,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     }
     
     var magn = 1;
+    var oldAng, newAng, oldPan, newPan;
     var renderData;
     var mouse = {};
     var tt, ll, ww, hh, rr, ferr, xx, yy, w0, h0, squashX, squashY;
@@ -2273,8 +2190,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
     var mouseDown = 0;
     var dragX, dragY, dragging = false, oldCenterX, oldCenterY;
-    var inert, inertIdx = 0;
-    var inertPan, inertIdxPan = 0;
     
     var device = "mouse";
 
@@ -2310,7 +2225,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
     function setupTouchEvents () {
         var ongoingTouches = [];
-        var maxTouches = 0;
+        //var maxTouches = 0;
 
         function copyTouch(touch) {
           return {identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY, which: 1};
@@ -2332,7 +2247,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             device = "touch";
             var touches = evt.changedTouches;
             
-            maxTouches = Math.max (touches.length, maxTouches);
+            //maxTouches = Math.max (touches.length, maxTouches);
             
             for (var i = 0; i < touches.length; i++) {
                 //if (ongoingTouches.length === 0) {
@@ -2407,7 +2322,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                     ongoingTouches.splice(idx, 1);
 
-                    maxTouches = 0;
+                    //maxTouches = 0;
                 }
             }
 
@@ -2431,7 +2346,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                     ongoingTouches.splice(idx, 1);
 
-                    maxTouches = 0;
+                    //maxTouches = 0;
                 }
             }
 

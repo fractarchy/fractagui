@@ -26,9 +26,10 @@
 - v 0.3 - update  
     - slower processor friendly implementation & energy consumption optimisation  
     - minimalistic visual design  
-    - user interface scaling
-    - pinch-zoom support
+    - user interface scaling  
+    - pinch-zoom support  
 
 - - -
 
-- UX update
+- UX update  
+

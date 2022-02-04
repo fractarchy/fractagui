@@ -32,4 +32,5 @@
 - - -
 
 - UX update  
+- background image support  
 

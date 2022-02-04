@@ -199,6 +199,7 @@
                     htmlRenderer: data["html-renderer"],
                     ovalColor: data["oval-color"],
                     backColor: data["background-color"],
+                    backImage: data["background-image"],
                     shadowRadius: sradius,
                     shadowColor: data["shadow-color"],
                     flatArea: flatArea,
@@ -451,7 +452,8 @@
 
                                         var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
-                                        //document.body.style.backgroundImage = "url('a.jpg')";
+                                        document.body.style.backgroundImage = env.backImage;
+                                        document.body.style.backgroundSize = "cover";
                                         divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius * window.devicePixelRatio + "px " + env.shadowColor + ")"
                                         window.addEventListener("load", wonload ());
                                     }

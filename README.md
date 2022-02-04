@@ -4,7 +4,7 @@
 
 tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
 
-> Want to bring a touch of adventurous spirit to your web site? An arbitrary web site made by Fract-exp (fractal expression) is not designed so that a visitor comes, sees, leaves, and forgets about it. It is conceived as a brave adventure that the visitor embarks on from the first moment of the visit. Of course, if she wants to, the visitor can also take a look at the very short instructions for navigating the content, but this way your site does not lose its charm. On the contrary, a carefully balanced ratio of fun to visit and ease of discovering useful information on your site (prevailing on the entertainment side) provides the visitor with an exceptional experience that leaves a strong impression on your content.
+> Want to bring a touch of adventurous spirit to your web site? An arbitrary web site made by Fract-exp (fractal expression) is not designed so that a visitor comes, sees, leaves, and forgets about it. It is conceived as a brave adventure that the visitor embarks on from the first moment of the visit. Of course, if she wants to, the visitor can also take a look at the very short instructions for navigating the content, but this way your site does not lose its charm. On the contrary, a carefully balanced ratio of fun to visit and ease of discovering useful information on your site (prevailing on the entertainment side) provides the visitor with an exceptional experience that leaves a strong impression about your content.
 > 
 > ![](media/socmedia.png)
 > 

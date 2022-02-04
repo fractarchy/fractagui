@@ -824,7 +824,12 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             parent: parent,
             index: index,
             scaledBitmap: null,
-            children: []
+            children: [],
+            hLock: canvasScape.hLock,
+            vLock: canvasScape.vLock,
+            hAlign: canvasScape.hAlign,
+            vAlign: canvasScape.vAlign,
+            backColor: canvasScape.backColor,
         };
         
         /*
@@ -969,9 +974,13 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         cnvCache.width = cacheW;
         cnvCache.height = cacheH;
         var ctxCache = cnvCache.getContext('2d');
-        //var imgCache = ctxCache.createImageData(cacheW, cacheH);
-    
-        //fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
+        
+        /*
+            // DANGER - DO NOT TOUCH!!!
+            var imgCache = ctxCache.createImageData(cacheW, cacheH);    
+            fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
+        */
+        
         ctxCache.beginPath ();
         ctxCache.ellipse (
             (cacheW / 2) - 1,
@@ -988,7 +997,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         
         ctxCache.drawImage (data.img, ~~(cacheW / 2 - data.img.width / 2 - cx), ~~(cacheH / 2 - data.img.height / 2 - cy));
         
-        //ctxCache.putImageData (imgCache, 0, 0);
+        /*
+            // DANGER - DO NOT TOUCH!!!
+            ctxCache.putImageData (imgCache, 0, 0);
+        */
         
         return cnvCache;
     }
@@ -1007,6 +1019,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             if (shadow) {
                 if (shadowColor) {
 
+                    /*
                     //ctx.beginPath ();
                     ctx.moveTo (x * squashX, y * squashY);
                     ctx.ellipse (
@@ -1020,6 +1033,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         false
                     );
                     //ctx.closePath ();
+                    */
 
                     /*
                     ctx.shadowBlur = shadowr;
@@ -1052,7 +1066,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 );
                 ctx.closePath ();
                 ctx.lineWidth = 0;
-                ctx.fillStyle = fill;
+                if (data.backColor)
+                    ctx.fillStyle = data.backColor;
+                else
+                    ctx.fillStyle = fill;
                 ctx.fill ();
                 
                 
@@ -1077,13 +1094,15 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                         var cx, cy;
                         if (cursor) {
-                            if (isNaN(cursor.centerY))
-                                cursor.centerY = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                            //if (isNaN(cursor.centerY))
+                            //    cursor.centerY = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
                             cx = cursor.centerX;
                             cy = cursor.centerY;
                         } else {
-                            cx = 0;
-                            cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                            //cx = 0;
+                            //cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                            cx = data.centerX;
+                            cy = data.centerY;
                         }
                         
                         if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
@@ -1097,7 +1116,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             ctx.drawImage(data.cachedCnv, ~~xo, ~~yo, ~~w, ~~h);
                             
                         } else if (level === 1) {
-                            ctx.drawImage(data.cachedCnv, Math.round (xo), Math.round (yo));
+                            ctx.drawImage(data.cachedCnv, ~~xo + 1, ~~yo);
                         
                         } else {
                             if (!data.cachedData)
@@ -1112,7 +1131,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             bmpscale = Math.max (0, bmpscale);
                             bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
 
-                            ctx.drawImage (data.cachedData.images[bmpscale].canvas, ~~xo, ~~yo, ~~w, ~~h);
+                            ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
                         
                         }
                     //}
@@ -1157,11 +1176,17 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 select = select.child;
                 
                 if (!sc.children[select.index]) {
-                    var cy = NaN;
-                    if (select.data.scaledBitmap)
-                        cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + alignY, select.data.scaledBitmap.height / 2);
+                    //var cy = NaN;
+                    //if (select.data.scaledBitmap)
+                    //    cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + alignY, select.data.scaledBitmap.height / 2);
+                    //sc.children[select.index] = {parent: sc, index: 0, centerX: cx, centerY: cy, angle: Math.PI, children: []};
+                    
+                    sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: 0, angle: Math.PI, children: []};
+                    var cx = 0, cy = 0;
+                    if (select.data.scaledBitmap) {
+                        alignOval (select.data, sc.children[select.index])
+                    }
                         
-                    sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: cy, angle: Math.PI, children: []};
                 }
                 
                 sc = sc.children[select.index];
@@ -1179,7 +1204,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     function redraw (m, renderHint, selectedCursor) {
         //clear ();
         renderData = [];
-        var ret = n.render (minRadius, x1, y1, r1, orientation/*0*/, 1, m, data, cursor.parent.index, cursor, selectedCursor, renderHint, renderData);
+        var ret = n.render (minRadius, x1, y1, r1, orientation/*0*/, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData);
         return ret;
     }
 
@@ -1222,23 +1247,27 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     
     function setCenter (select, x, y) {
         if (select.cursor.data && select.cursor.data.scaledBitmap) {
-            select.cursor.centerX = x;
-            var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
-            if (select.cursor.centerX > minmaxW)
-                select.cursor.centerX = minmaxW;
-            if (select.cursor.centerX < -minmaxW)
-                select.cursor.centerX = -minmaxW;
+            if (select.cursor.data.hLock !== "true") {
+                select.cursor.centerX = x;
+                var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
+                if (select.cursor.centerX > minmaxW)
+                    select.cursor.centerX = minmaxW;
+                if (select.cursor.centerX < -minmaxW)
+                    select.cursor.centerX = -minmaxW;
 
-            select.cursor.centerX = Math.floor (select.cursor.centerX)
+                select.cursor.centerX = Math.floor (select.cursor.centerX)
+            }
+            
+            if (select.cursor.data.vLock !== "true") {
+                select.cursor.centerY = y;
+                var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
+                if (select.cursor.centerY > minmaxH)
+                    select.cursor.centerY = minmaxH;
+                if (select.cursor.centerY < -minmaxH)
+                    select.cursor.centerY = -minmaxH;
 
-            select.cursor.centerY = y;
-            var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
-            if (select.cursor.centerY > minmaxH)
-                select.cursor.centerY = minmaxH;
-            if (select.cursor.centerY < -minmaxH)
-                select.cursor.centerY = -minmaxH;
-
-            select.cursor.centerY = Math.floor (select.cursor.centerY)
+                select.cursor.centerY = Math.floor (select.cursor.centerY)
+            }
         }
     }
     
@@ -1263,10 +1292,16 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 
                 setCenter (select, oldCenterX + (dragX - x0) - (x - x0), oldCenterY + (dragY - y0) - (y - y0));
             } else {
-                select.cursor.centerX = 0;
-                select.cursor.centerY = NaN;
-                if (select.cursor.data && select.cursor.data.scaledBitmap)
-                    select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + alignY, select.cursor.data.scaledBitmap.height / 2);
+                //select.cursor.centerX = 0;
+                //select.cursor.centerY = NaN;
+                //if (select.cursor.data && select.cursor.data.scaledBitmap)
+                //    select.cursor.centerY = ~~Math.min (/*center*/ -select.cursor.data.scaledBitmap.height / 2 + alignY, select.cursor.data.scaledBitmap.height / 2);
+                
+                if (select.cursor.data && select.cursor.data.scaledBitmap) {
+                    alignOval (select.cursor.data, select.cursor)
+                    //select.cursor.centerX = select.cursor.data.centerX;
+                    //select.cursor.centerY = select.cursor.data.centerY;
+                }
 
             }
             
@@ -1620,11 +1655,14 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                                     oldAng = null;
 
                                     if (!cursor.children[cursor.index]) {
-                                        var cy = NaN;
-                                        if (topc.child.data.scaledBitmap)
-                                            cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + alignY, topc.child.data.scaledBitmap.height / 2);
+                                        //var cy = NaN;
+                                        //if (topc.child.data.scaledBitmap)
+                                        //    cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + alignY, topc.child.data.scaledBitmap.height / 2);
+                                        cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: 0, index: 0, angle: Math.PI, children: []};
+                                        if (topc.child.data.scaledBitmap) {
+                                            alignOval (topc.child.data, cursor.children[cursor.index])
+                                        }
                                             
-                                        cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: cy, index: 0, angle: Math.PI, children: []};
                                     }
                                         
                                     cursor = cursor.children[cursor.index];
@@ -1775,10 +1813,15 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                                 if (aa0 < 3 * Math.PI / 2 && aa0 > Math.PI / 2) {
                                     panning = false;
                                     animating = "level";
-                                    cursor.centerX = 0;
-                                    cursor.centerY = NaN;
-                                    if (cursor.data.scaledBitmap)
-                                        cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
+                                    //cursor.centerX = 0;
+                                    //cursor.centerY = NaN;
+                                    //if (cursor.data.scaledBitmap)
+                                    //    cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
+                                    if (cursor.data.scaledBitmap) {
+                                        alignOval (cursor.data, cursor)
+                                        //cursor.centerX = cursor.data.centerX;
+                                        //cursor.centerY = cursor.data.centerY;
+                                    }
 
                                     window.requestAnimationFrame (aEnsmall);
                                 }
@@ -2078,14 +2121,14 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
     function resize(width, height) {
         setDimensions (width, height);
-        alignX = 0;
+        alignX = squashX * rr * 1 / 2.5;;
         alignY = squashY * rr * 1 / 2.5;
     
         //fishEye = FishEye (ferr, squashX, squashY, superSampling, curvature, flatArea);
 
         n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
         
-        minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio;
+        minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
 
         clip.setAttribute('cx', x1 * squashX);
         clip.setAttribute('cy', y1 * squashY);
@@ -2101,8 +2144,9 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         
         function clearData (data) {
             data.scaledBitmap = null;
-            data.centerX = 0;
-            data.centerY = NaN;
+            //data.centerX = 0;
+            //data.centerY = NaN;
+            alignOval(data, data);
             
             for (var i = 0; i < data.children.length; i++)
                 clearData (data.children[i]);
@@ -2111,9 +2155,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         
         function updateCache (data) {
             if (data.scaledBitmap) {
-                var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
-                data.centerX = 0;
-                data.centerY = cy;
+                //var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                //data.centerX = 0;
+                //data.centerY = cy;
+                alignOval (data, data);
                 
                 data.cachedCnv = getCnvCache (data, data.centerX, data.centerY, rr);
                 data.cachedData = Crisp.crispBitmap (data.cachedCnv);
@@ -2126,11 +2171,14 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         
         function updateCursor (c) {
             if (c) {
-                c.centerX = 0;
-                c.centerY = NaN;
-                if (c.data && c.data.scaledBitmap)
-                    c.centerY = ~~Math.min (/*center*/ -c.data.scaledBitmap.height / 2 + alignY, c.data.scaledBitmap.height / 2);
-                
+                //c.centerX = 0;
+                //c.centerY = NaN;
+                //if (c.data && c.data.scaledBitmap)
+                //    c.centerY = ~~Math.min (/*center*/ -c.data.scaledBitmap.height / 2 + alignY, c.data.scaledBitmap.height / 2);
+                if (c.data && c.data.scaledBitmap) {
+                    alignOval (c.data, c)
+                }
+                                
                 for (var i = 0; i < c.children.length; i++)
                     updateCursor (c.children[i]);
                     
@@ -2152,6 +2200,31 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         redraw ();
         idle ();
         //updateCache (d.children[0]);
+    }
+    
+    function alignOval (o, c) {
+        if (o.scaledBitmap) {
+            if (o.hAlign === "left")
+                c.centerX = ~~Math.min (/*center*/ -o.scaledBitmap.width / 2 + alignX, o.scaledBitmap.width / 2);
+                
+            else if (o.hAlign === "right")
+                c.centerX = ~~Math.min (/*center*/ +o.scaledBitmap.width / 2 - alignX, o.scaledBitmap.width / 2);
+                
+            else
+                c.centerX = 0;
+                
+            if (o.vAlign === "bottom")
+                c.centerY = ~~Math.min (/*center*/ +o.scaledBitmap.height / 2 - alignY, o.scaledBitmap.height / 2);
+
+            else if (o.vAlign === "middle")
+                c.centerY = 0;
+
+            else
+                c.centerY = ~~Math.min (/*center*/ -o.scaledBitmap.height / 2 + alignY, o.scaledBitmap.height / 2);
+        } else {
+            c.centerX = 0;
+            c.centerY = 0;
+        }
     }
     
     function rescale (m) {
@@ -2368,7 +2441,15 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     });
     
     divContainer.addEventListener('redraw', function (e) {
-        if (!animating && !dragging && !panning)
+        if (!animating && !dragging && !panning) {
             redraw ();
+        }
+    });
+
+    divContainer.addEventListener('updateOvalAlign', function (e) {
+        alignOval(e.detail, e.detail);
+        if (cursor.data === e.detail) {
+            alignOval(e.detail, cursor);
+        }
     });
 }

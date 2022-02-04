@@ -270,6 +270,8 @@
                             if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
                                 var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
                                 node.scaledBitmap = Crisp.crispBitmapXY(canvas);
+
+                                divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 resolve ();
                             } else {
@@ -437,7 +439,29 @@
                                             var type = att.nodeValue;
                                         else
                                             var type = "html";
+
                                         node = {type: type, src: url, children: []};
+
+                                        att = xmlNode.children[i].attributes.getNamedItem("vlock");
+                                        if (att)
+                                            node.vLock = att.nodeValue;
+
+                                        att = xmlNode.children[i].attributes.getNamedItem("hlock");
+                                        if (att)
+                                            node.hLock = att.nodeValue;
+
+                                        att = xmlNode.children[i].attributes.getNamedItem("valign");
+                                        if (att)
+                                            node.vAlign = att.nodeValue;
+
+                                        att = xmlNode.children[i].attributes.getNamedItem("halign");
+                                        if (att)
+                                            node.hAlign = att.nodeValue;
+
+                                        att = xmlNode.children[i].attributes.getNamedItem("backcolor");
+                                        if (att)
+                                            node.backColor = att.nodeValue;
+
                                         formArray (xmlNode.children[i], node.children);
                                         if (arr)
                                             arr.push (node);

@@ -819,6 +819,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }
         
         var data = {
+            img: canvasScape.img,
             src: canvasScape.src,
             type: canvasScape.type,
             parent: parent,
@@ -2256,7 +2257,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     var r1, x1, y1;
     var alignX, alignY
     var path = [], cursor, select, preSelect, animating, panning;
-    var fishEye;
+    //var fishEye;
     cursor = {parent: null, index: 0, data: data, centerX: 0, centerY: 0, angle: Math.PI, children: []}
     cursor.parent = {index: 0, children: [cursor]};
 

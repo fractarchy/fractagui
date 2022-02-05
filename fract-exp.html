@@ -110,7 +110,7 @@
                         dispatchSize ();
                         divContainer.style.visibility = "visible";
                         
-                    }, 500);
+                    }, 100);
                 });
             }
             
@@ -231,14 +231,31 @@
                 pauseLoading = true;
             }
 
+            async function prepareOval(node) {
+                return new Promise(async function(resolve, reject) {
+                    var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
+                    node.scaledBitmap = Crisp.crispBitmapXY(canvas);
+
+                    divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+                    divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                    
+                    resolve();
+                });
+            }
+            
             async function onIdle (ovals) {
                 pauseLoading = false;
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
                 for (i = 0; i < ovals.length && !pauseLoading; i++) {
                     if (!ovals[i].data.scaledBitmap) {
-                        try {
-                            await loadOval (ovals[i].data);
-                        } catch (e) {
+                        var node = ovals[i].data;
+                        if (node.img) {
+                            await prepareOval (node);
+                        } else {
+                            try {
+                                await loadOval (ovals[i].data);
+                            } catch (e) {
+                            }
                         }
                     }
                 }
@@ -268,11 +285,7 @@
                         
                         node.img.onload = function (e) {
                             if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
-                                var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
-                                node.scaledBitmap = Crisp.crispBitmapXY(canvas);
-
-                                divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
-                                divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                                prepareOval (node);
                                 resolve ();
                             } else {
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));

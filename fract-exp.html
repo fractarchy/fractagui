@@ -225,42 +225,60 @@
                 return cnvim
             }            
 
-            var pauseLoading = false;
+            function prepareOval(node) {
+                var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
+                node.scaledBitmap = Crisp.crispBitmapXY(canvas);
+
+                divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+            }
+
+            var pauseLoading;
+            var onIdleRunning;
+            var idleAgain;
+            var interval;
             
             function onBusy () {
                 pauseLoading = true;
-            }
-
-            function prepareOval(node) {
-            //    return new Promise(async function(resolve, reject) {
-                    var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
-                    node.scaledBitmap = Crisp.crispBitmapXY(canvas);
-
-                    divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
-                    divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                    
-//                    resolve();
-            //    });
+                idleAgain = false;
+                clearInterval (interval);
             }
             
-            async function onIdle (ovals) {
+            function onIdle (ovals) {
                 pauseLoading = false;
+                idleAgain = ovals;
+
+                clearInterval (interval);
+                interval = setInterval (async function () {
+                    if (!pauseLoading && !onIdleRunning && idleAgain) {
+                        await refresh (idleAgain);
+                        clearInterval (interval);
+                    }
+                }, 250);
+            }
+
+            async function refresh (ovals) {
+                idleAgain = false;
+                onIdleRunning = true;
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
                 for (i = 0; i < ovals.length && !pauseLoading; i++) {
                     if (!ovals[i].data.scaledBitmap) {
                         var node = ovals[i].data;
                         if (!node.img) {
                             try {
-                                await loadOval (ovals[i].data);
-                                    
+                                await loadOval (node);
                             } catch (e) {
                                 break;
                             }
                         }
 
-                        prepareOval (node);
+                        if (node.img) {
+                            prepareOval (node);
+                            divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                        }
                     }
                 }
+                
+                onIdleRunning = false;
             }
             
             async function loadOval(data) {
@@ -294,7 +312,7 @@
                                 resolve ();
 
                             } else {
-                                divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                                //divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 reject ();
                             }
                         }
@@ -423,8 +441,8 @@
                             ifr.remove();
                         }
                         
-                        if (pauseLoading)
-                            reject();
+//                        if (pauseLoading)
+//                            reject();
                     }
                     
                     var node = data;

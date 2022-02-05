@@ -2200,11 +2200,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         while (d.parent)
             d = d.parent;
 
-        clearData (d.children[0]);
+        //clearData (d.children[0]);
+        updateCache (d.children[0]);
         rescale (magn);
         redraw ();
         idle ();
-        //updateCache (d.children[0]);
     }
     
     function alignOval (o, c) {

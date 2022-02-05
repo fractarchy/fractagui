@@ -519,9 +519,11 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
         var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
         
         //if (shadow) {
-            if (rec === 1 && renderHint !== "1") {
+//            if (rec === 1 && renderHint !== "1") {
+            if (rec === 1) {
                 clear();
             }
+//            }
         //}
         
             
@@ -535,7 +537,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     drawCircle (data, x0, y0, r0, colorFill, stroke1, cursor, renderHint, rec, shadow);
                 //}
                 
-                if (data.children.length > 0 && renderHint !== "1") {                   
+                if (data.children.length > 0 /*&& renderHint !== "1"*/) {
                     var ret, idx, alp;
                     var got;
                     var c0, c1;
@@ -981,11 +983,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             var imgCache = ctxCache.createImageData(cacheW, cacheH);    
             fishEye.renderFishEye (imgCache.data, cacheW, cacheH, 1, cx - (fishEye.data.contentWidth - data.scaledBitmap.width) / 2, cy - (fishEye.data.contentHeight - data.scaledBitmap.height) / 2, data.scaledBitmap);
         */
-        
+
         ctxCache.beginPath ();
         ctxCache.ellipse (
-            (cacheW / 2) - 1,
-            (cacheH / 2) - 1,
+            (cacheW / 2),
+            (cacheH / 2),
             rr * ratio * squashX - 3 * window.devicePixelRatio,
             rr * ratio * squashY - 3 * window.devicePixelRatio,
             0,
@@ -1009,7 +1011,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     function drawCircle (data, x, y, r, fill, stroke, cursor, renderHint, level, shadow) {
     //////////////////////
     var diff;
-    if (renderHint === "1") diff = 2; else diff = 1;
+    if (renderHint === "1") diff = 1; else diff = 1;
     if (r * squashX - diff <= 0 || r * squashY - diff <= 0) return;
     //////////////////////
         if (r * squashX > 0.5 && r * squashY > 0.5) {
@@ -1047,10 +1049,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     */
                 }
             } else {
-                                
+                
                 var diff;
                 if (renderHint === "1")
-                    diff = 2;
+                    diff = 1;
                 else
                     diff = 1;
                     
@@ -1066,14 +1068,14 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     false
                 );
                 ctx.closePath ();
+
                 ctx.lineWidth = 0;
                 if (data.backColor)
                     ctx.fillStyle = data.backColor;
                 else
                     ctx.fillStyle = fill;
                 ctx.fill ();
-                
-                
+                      
                 if (animating === "level")
                     ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
                 else
@@ -1117,7 +1119,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             ctx.drawImage(data.cachedCnv, ~~xo, ~~yo, ~~w, ~~h);
                             
                         } else if (level === 1) {
-                            ctx.drawImage(data.cachedCnv, ~~xo + 1, ~~yo);
+                            ctx.drawImage(data.cachedCnv, ~~xo, ~~yo - 2);
                         
                         } else {
                             if (!data.cachedData)
@@ -1133,12 +1135,11 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
 
                             ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
-                        
                         }
                     //}
                 }
-                
-                if (renderHint !== "0" && renderHint !== "1") {
+
+                if (ctx.globalAlpha !== 1 && renderHint !== "0" && renderHint !== "1") {
                     ctx.globalAlpha = 1 - ctx.globalAlpha;
                     
                     ctx.beginPath ();
@@ -1206,6 +1207,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         //clear ();
         renderData = [];
         var ret = n.render (minRadius, x1, y1, r1, orientation/*0*/, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData);
+            
         return ret;
     }
 

@@ -231,16 +231,16 @@
                 pauseLoading = true;
             }
 
-            async function prepareOval(node) {
-                return new Promise(async function(resolve, reject) {
+            function prepareOval(node) {
+            //    return new Promise(async function(resolve, reject) {
                     var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
                     node.scaledBitmap = Crisp.crispBitmapXY(canvas);
 
                     divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
                     divContainer.dispatchEvent(new CustomEvent('redraw', null));
                     
-                    resolve();
-                });
+//                    resolve();
+            //    });
             }
             
             async function onIdle (ovals) {
@@ -249,14 +249,16 @@
                 for (i = 0; i < ovals.length && !pauseLoading; i++) {
                     if (!ovals[i].data.scaledBitmap) {
                         var node = ovals[i].data;
-                        if (node.img) {
-                            await prepareOval (node);
-                        } else {
+                        if (!node.img) {
                             try {
                                 await loadOval (ovals[i].data);
+                                    
                             } catch (e) {
+                                break;
                             }
                         }
+
+                        prepareOval (node);
                     }
                 }
             }
@@ -268,6 +270,10 @@
                     ifr.style.border = "none";
                     ifr.style.overflow = "hidden";
 
+                    ifr.onerror = function () {
+                        reject ();
+                    };
+                    
                     ifr.onload = function () {
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
@@ -285,8 +291,8 @@
                         
                         node.img.onload = function (e) {
                             if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
-                                prepareOval (node);
                                 resolve ();
+
                             } else {
                                 divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 reject ();
@@ -371,7 +377,7 @@
                             node.img.src = node.src;
                             ifr.remove();
 
-                        } else if (node.type === "html" && !pauseLoading) {
+                        } else if (node.type === "html") {
                             if (env.htmlRenderer === "legacy") {
                                 var base = ifr.contentDocument.createElement('base');
                                 base.href = node.src;//xhr.responseURL;
@@ -416,6 +422,9 @@
                         } else {
                             ifr.remove();
                         }
+                        
+                        if (pauseLoading)
+                            reject();
                     }
                     
                     var node = data;

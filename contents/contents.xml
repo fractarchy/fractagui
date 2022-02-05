@@ -14,6 +14,6 @@
         <item type="html" src="c-0-3-2.xhtml"/>
         <item type="html" src="c-0-3-3.xhtml"/>
     </item>
-    <item type="html" src="c-0-4.xhtml" backcolor="rgb(128,128,128)" halign="middle" valign="top" hlock="true"/>
+    <item type="html" src="c-0-4.xhtml" backcolor="rgba(128,128,128)" halign="middle" valign="top" hlock="true"/>
 </item>
 

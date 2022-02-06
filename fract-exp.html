@@ -248,10 +248,10 @@
                 idleAgain = ovals;
 
                 clearInterval (interval);
-                interval = setInterval (async function () {
+                interval = setInterval (function () {
                     if (!pauseLoading && !onIdleRunning && idleAgain) {
-                        await refresh (idleAgain);
                         clearInterval (interval);
+                        refresh (idleAgain);
                     }
                 }, 250);
             }

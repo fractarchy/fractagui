@@ -20,4 +20,6 @@
     - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. To properly function, the application needs an OpenCog installation, along with a http server and php scripting service.
     - Project home of this application is at: [github.com/opencog/cogprotolab](https://github.com/opencog/cogprotolab).
 
+- - -
+
 *(We are looking for exposure of other case studies, also. If you would like your example to appear in this file, please send us a GitHub pull request.)*

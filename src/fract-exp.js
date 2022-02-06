@@ -1119,7 +1119,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             ctx.drawImage(data.cachedCnv, ~~xo, ~~yo, ~~w, ~~h);
                             
                         } else if (level === 1) {
-                            ctx.drawImage(data.cachedCnv, ~~xo, ~~yo - 2);
+                            ctx.drawImage(data.cachedCnv, ~~xo, ~~yo - 1);
                         
                         } else {
                             if (!data.cachedData)

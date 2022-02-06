@@ -1140,6 +1140,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 }
 
                 if (ctx.globalAlpha !== 1 && renderHint !== "0" && renderHint !== "1") {
+ctx.globalCompositeOperation = 'destination-out';
                     ctx.globalAlpha = 1 - ctx.globalAlpha;
                     
                     ctx.beginPath ();
@@ -1159,6 +1160,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
                     ctx.fillStyle = back1;
                     ctx.fill ();
+ctx.globalCompositeOperation = 'source-over';
                 }
 
                 ctx.globalAlpha = 1;

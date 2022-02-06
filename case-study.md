@@ -1,6 +1,7 @@
 ## case studies
 
-- We built a promotional site for an accommodation facility:
+- We built a promotional site for an accommodation facility.
+    - ![](media/ssh-320-apv.png)
     - The site includes detailed accommodation object description, featuring three accommodation units. Top page includes the photo of the entire object and a short description of the object. Descendent pages include each apartment unit description, unit plan, and unit inerior photos - roughly about ten photos per each unit.
     - We updated the index page with links for mailing and choosing site translation. Two languages are available: English and Croatian.
     - We attach a booking calendar to each apartment, so that customers may choose between available dates to book for vacation by direct email correspondence to the accommodation staff. On successful agreement, accommodation stuff alters each apartment booking calendar to be synchronized with actual guest reservations.
@@ -9,13 +10,14 @@
     - The site has been tested with desktop Chrommium, Edge, Firefox, Opera, mobile Chrome and mobile Samsung web browsers.
     - Online web address of this site is: [www.apartments-vodisek-tribunj.com](https://www.apartments-vodisek-tribunj.com).
 
-- We built a simple s-expression visualization tool:
-    - The HTML application is consisted of two panes: left pane includes input prompt; right pane includes visualization area.
-    - Input prompt resembles usual terminal input built of `textarea` elements, while visualization pane resembles Fract-exp system waiting for data. Input prompt accepts possibly multiline s-expressions.
-    - We implemented accessing history of input by pressing up and down arrows. After hitting `enter` at the input prompt, inputted s-expression is checked for validity. Valid s-expressions are fed to visualization pane. In a case of unmatching braces, an s-expression error is reported.
-    - We implemented a custom oval renderer to paint s-expression substructures in designated ovals.
+- We built a visualization tool for OpenCog: CogProtoLab.
+    - ![](media/ssh-320-cogprotolab.png)
+    - OpenCog project aims to reach general artificial intelligence state, and it is work-in-progress kind of project. It uses Atomspace as its graph database and knowledge base format, and CogProtoLab aims to visualize the knowledge base. We are hoping to help newbies to get familiar with OpenCog command system.
+    - The application sends commands to CogServer over php telnet, and prints output in the left pane, while the visualization is shown on the right pane.
+    - Left pane also holds a little script manager, to help sending commands to CogServer.
+    - We implemented a custom oval renderer in the right pane to paint s-expression substructures extracted from AtomSpace by a custom visualization command.
     - Messages between the two `iframe` panes - from input prompt to visualization section - are sent using `postMessage` javascript functionality. We updated Fract-exp source code by `redefineData` event message to restructure the oval system on the fly, when new input arrives.
-    - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. The application works straight from the local file system without need for installing a web server.
-    - Online web address of this application is: [contrast-zone.github.io/atomizer](https://contrast-zone.github.io/atomizer).
-    
+    - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. To properly function, the application needs an OpenCog installation, along with a http server and php scripting service.
+    - Project home of this application is at: [github.com/opencog/cogprotolab](https://github.com/opencog/cogprotolab).
+
 *(We are looking for exposure of other case studies, also. If you would like your example to appear in this file, please send us a GitHub pull request.)*

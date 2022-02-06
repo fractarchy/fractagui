@@ -30,9 +30,9 @@ This software is released under [conditional Creative Commons Attribution 4.0 In
 
 ### 3.2. case studies
 
-![](media/ssh-320-apv.png) ![](media/ssh-320-atomizer.png)
+![](media/ssh-320-apv.png) ![](media/ssh-320-cogprotolab.png)
 
-We built a couple of independent web sites using Fract-exp. To get info about these particular case studies, please refer to [this document](case-study.md).
+We built an independent web site and some applications using Fract-exp. To get info about these particular case studies, please refer to [this document](case-study.md).
 
 ### 3.3. giving it a try
 

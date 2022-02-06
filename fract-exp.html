@@ -250,7 +250,7 @@
                 clearInterval (interval);
                 interval = setInterval (function () {
                     if (!pauseLoading && !onIdleRunning && idleAgain) {
-                        //clearInterval (interval);
+                        clearInterval (interval);
                         refresh (idleAgain);
                     }
                 }, 250);

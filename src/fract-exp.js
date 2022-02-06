@@ -1974,7 +1974,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 }
             
                 if (!animating) {
+                    dragging = false;
                     redraw ({x: mouse.x, y: mouse.y});
+                    
+                    idle ();
                 }
 
             } else if (panning && oldPan) {

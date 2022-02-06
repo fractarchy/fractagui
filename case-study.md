@@ -12,7 +12,7 @@
 
 - We built a visualization tool for OpenCog:  
     ![](media/ssh-320-cogprotolab.png)
-    - OpenCog project aims to reach general artificial intelligence state, and it is work-in-progress kind of project. It uses Atomspace as its graph database and knowledge base format. Our new-built tool named CogProtoLab aims to visualize the knowledge base. We are hoping to help newbies to get familiar with OpenCog command system.
+    - OpenCog project aims to reach general artificial intelligence state, and it is work-in-progress kind of project. It uses Atomspace as its graph database and knowledge base format. Our new-built tool named CogProtoLab aims to visualize the knowledge base. We are hoping to help newbies to get familiar about how OpenCog command system affects the knowledge base.
     - The application sends commands to CogServer over php telnet, and prints output in the left pane, while the visualization is shown on the right pane.
     - Left pane also holds a little script manager, to help sending commands to CogServer.
     - We implemented a custom oval renderer in the right pane to paint s-expression substructures extracted from AtomSpace by a custom visualization command.

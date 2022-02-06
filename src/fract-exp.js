@@ -1875,7 +1875,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 var x0 = Math.floor (x1 * squashX);
                 var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
                 
-                if (Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
+                if (Math.sqrt ((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
                     if (panning) {
                         panning = false;
                     }
@@ -1886,7 +1886,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 
                 if (preSelect) {
                     cnv.style.cursor = "grabbing";
-                    busy();
+                    busy ();
                 }
             }
         }
@@ -1965,7 +1965,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                             animating = false;
                             preSelect = redraw ({x: mouse.x, y: mouse.y});
 
-                            idle ();
+                            //idle ();
                         }
                     }
 

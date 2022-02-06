@@ -15,7 +15,7 @@
     - OpenCog project aims to reach general artificial intelligence state, and it is work-in-progress kind of project. It uses Atomspace as its graph database and knowledge base format. Our new-built tool named CogProtoLab aims to visualize the knowledge base. We are hoping to help newbies to get familiar about how OpenCog command system affects the knowledge base.
     - The application sends commands to CogServer over php telnet, and prints output in the left pane, while the visualization is shown on the right pane.
     - Left pane also holds a little script file manager, to help sending commands to CogServer.
-    - We implemented a custom oval renderer in the right pane to paint s-expression substructures extracted from AtomSpace by a custom visualization command.
+    - We implemented a custom oval renderer in the right pane to paint s-expression substructures extracted from the knowledge base by a custom visualization command.
     - Messages between the two `iframe` panes - from input prompt to visualization section - are sent using `postMessage` javascript functionality. We updated Fract-exp source code by `redefineData` event message to restructure the oval system on the fly, when new input arrives.
     - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. To properly function, the application needs an OpenCog installation, along with a http server and php scripting service.
     - Project home of this application is at: [github.com/opencog/cogprotolab](https://github.com/opencog/cogprotolab).

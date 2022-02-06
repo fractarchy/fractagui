@@ -18,7 +18,7 @@
     - We implemented a custom oval renderer in the right pane to paint s-expression substructures extracted from the knowledge base by a custom visualization command.
     - Messages between the two `iframe` panes - from input prompt to visualization section - are sent using `postMessage` javascript functionality. We updated Fract-exp source code by `redefineData` event message to restructure the oval system on the fly, when new input arrives.
     - The HTML application is tested on desktop Chrommium, Firefox, and Opera web browsers. To properly function, the application needs an OpenCog installation, along with a http server and php scripting service.
-    - Project home of this application is at: [github.com/opencog/cogprotolab](https://github.com/opencog/cogprotolab).
+    - Project home page of this application is at: [github.com/opencog/cogprotolab](https://github.com/opencog/cogprotolab).
 
 - - -
 

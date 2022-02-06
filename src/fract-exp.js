@@ -2324,7 +2324,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }
 
         window.addEventListener("touchstart", function (evt) {
-            //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
             
@@ -2340,12 +2339,13 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     }
                 //}
             }
+
+            evt.preventDefault ();
         }, false);
         
         var scaleD0 = 0;
         var curMagn = 1;
         window.addEventListener("touchmove", function (evt) {
-            //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
             
@@ -2386,6 +2386,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                     redraw();
                 }
             }
+
+            evt.preventDefault ();
         }, false);
 
         window.addEventListener("touchcancel", function (evt) {
@@ -2412,7 +2414,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
         }, false);
 
         window.addEventListener("touchend", function (evt) {
-            //evt.preventDefault ();
             device = "touch";
             var touches = evt.changedTouches;
 
@@ -2433,6 +2434,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
             scaleD0 = 0;
             curMagn = magn;
+
+            evt.preventDefault ();
         }, false);
     }
     

@@ -256,11 +256,12 @@
                 }, 250);
             }
 
-            async function refresh (ovals) {
+            async function refresh (ovals1) {
                 idleAgain = false;
                 onIdleRunning = true;
+                ovals = [...ovals1];
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
-                for (i = 0; i < ovals.length && !pauseLoading; i++) {
+                for (i = 0; i < ovals.length && !pauseLoading && (!idleAgain || ovals1 === idleAgain); i++) {
                     if (!ovals[i].data.scaledBitmap) {
                         var node = ovals[i].data;
                         if (!node.img) {

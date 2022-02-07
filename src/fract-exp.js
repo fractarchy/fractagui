@@ -1075,7 +1075,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                 else
                     ctx.fillStyle = fill;
                 ctx.fill ();
-                      
+                
                 if (animating === "level")
                     ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
                 else

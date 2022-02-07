@@ -1099,6 +1099,7 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
                         if (cursor) {
                             //if (isNaN(cursor.centerY))
                             //    cursor.centerY = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
+                            if (level > 1)  alignOval (data, cursor);
                             cx = cursor.centerX;
                             cy = cursor.centerY;
                         } else {

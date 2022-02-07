@@ -195,6 +195,10 @@
             document.getElementById("helpbtn").addEventListener('click', showHelp);
             document.getElementById("helpcontainer").addEventListener('click', hideHelp);
             
+            document.getElementById("body").addEventListener("touchstart", function (evt) {
+                evt.preventDefault ();
+            }, false);
+
             setSize();
         </script>
     </body>

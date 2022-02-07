@@ -312,7 +312,7 @@
                         node.img.crossOrigin = "anonymous";
                         
                         node.img.onload = function (e) {
-                            if (node.img.width > 0 && node.img.height > 0 /*&& !pauseLoading*/) {
+                            if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
                                 resolve ();
 
                             } else {

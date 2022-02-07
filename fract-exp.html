@@ -233,6 +233,7 @@
             }
 
             var pauseLoading;
+            var continueLoading;
             var onIdleRunning;
             var idleAgain;
             var interval;
@@ -240,15 +241,17 @@
             function onBusy () {
                 pauseLoading = true;
                 idleAgain = false;
+                continueLoading = false;
                 clearInterval (interval);
             }
-            
+
             function onIdle (ovals) {
                 pauseLoading = false;
                 idleAgain = ovals;
+                continueLoading = idleAgain;
 
                 clearInterval (interval);
-                interval = setInterval (function () {
+                interval = setInterval (async function () {
                     if (!pauseLoading && !onIdleRunning && idleAgain) {
                         clearInterval (interval);
                         refresh (idleAgain);
@@ -261,7 +264,7 @@
                 onIdleRunning = true;
                 ovals = [...ovals1];
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
-                for (i = 0; i < ovals.length && !pauseLoading && (!idleAgain || ovals1 === idleAgain); i++) {
+                for (i = 0; i < ovals.length && continueLoading === ovals1 /*&& !pauseLoading*/; i++) {
                     if (!ovals[i].data.scaledBitmap) {
                         var node = ovals[i].data;
                         if (!node.img) {

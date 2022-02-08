@@ -264,7 +264,7 @@
                 onIdleRunning = true;
                 ovals = [...ovals1];
                 ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
-                for (i = 0; i < ovals.length && continueLoading === ovals1 /*&& !pauseLoading*/; i++) {
+                for (i = 0; i < ovals.length && continueLoading === ovals1; i++) {
                     if (!ovals[i].data.scaledBitmap) {
                         var node = ovals[i].data;
                         if (!node.img) {
@@ -316,7 +316,6 @@
                                 resolve ();
 
                             } else {
-                                //divContainer.dispatchEvent(new CustomEvent('redraw', null));
                                 reject ();
                             }
                         }
@@ -326,7 +325,7 @@
                                 error = true
                                 console.debug (`Error loading: '${node.src}'`);
                             }
-                            //divContainer.dispatchEvent(new CustomEvent('redraw', null));
+
                             reject ();
                         }
                         
@@ -443,10 +442,8 @@
                             */
                         } else {
                             ifr.remove();
+                            reject();
                         }
-                        
-//                        if (pauseLoading)
-//                            reject();
                     }
                     
                     var node = data;

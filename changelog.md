@@ -32,6 +32,5 @@
 - - -
 
 - UX improvement  
-- background image support  
 - halign, valign, hlock, vlock, backcolor for each oval. Find use example in `contents/contents.xml`
 

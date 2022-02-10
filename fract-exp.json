@@ -1,7 +1,6 @@
 {
     "html-renderer": "legacy",
     "background-color": "gray",
-    "background-image": "url('trianglify.png')",
     "oval-color": "rgba(224, 224, 224)",
     "shadow-radius": "20",
     "shadow-color": "rgb(0, 0, 0, 1)",

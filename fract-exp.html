@@ -296,6 +296,8 @@
                     };
                     
                     ifr.onload = function () {
+                        if (pauseLoading) reject ();
+                        
                         if (node.type === "html") {
                             if (ifr.contentWindow.document.body === null) {
                                 error = true

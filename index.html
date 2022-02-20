@@ -53,22 +53,6 @@
             a, a.btn:visited, a.btn:link {cursor: pointer; color: rgb(226, 226, 226); text-decoration:underline;}
             a.btn:hover, a.btn:active {cursor: pointer; color:white; text-decoration:underline;}
         </style>
-        <script>
-            function setDesign(pr) {
-                var viewport = document.querySelector("meta[name=viewport]");
-                if (!viewport){
-                    viewport=document.createElement('meta');
-                    viewport.name = "viewport";
-                    document.getElementsByTagName('head')[0].appendChild(viewport);
-                }
-                var sc = 1 / pr;
-                var sc1 = 1.6 / pr;
-                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
-                //viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc1 + ", minimum-scale=" + sc);
-            }
-            
-            setDesign(window.devicePixelRatio);
-        </script>
     </head>
     <body>
         <noscript>
@@ -84,26 +68,26 @@
             <i class="material-icons" style="font-size: 7em;">help_outline</i>
         </a>
         <div id="helpcontainer" class="center" style="position: absolute; visibility: hidden; left: 0; top: 0; right: 0; bottom: 0; background-color: rgb(48, 48, 48, 0.95);">
-            <div style="position: absolute; top: 0em; right: 0.5em; font-size: 2.7em; color: lightgray;">×</div>
+            <div style="position: absolute; top: 0em; right: 0.5em; font-size: 5em; color: lightgray;">×</div>
             <div id="help" class="center" style="/*position: absolute; left: 0; top: 0; right: 0; bottom: 0;*/ background-color: rgb(48, 48, 48, 0.0); border: 1px solid lightgray; padding: 1px;">
-                <div align="center" style="color: lightgray; width: 520px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 40px; font-weight: bold; background-color: rgb(48, 48, 48);">
+                <div align="center" style="color: lightgray; width: 500px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 40px; font-weight: bold; background-color: rgb(48, 48, 48);">
                 Contents <br/> navigation instructions
                 </div>
-                <div style="color: lightgray; width: 520px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 29px; background-color: rgb(48, 48, 48);">
+                <div style="color: lightgray; width: 500px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 29px; background-color: rgb(48, 48, 48);">
                     <div style="float: left; width: 30px;">1.</div>
                     <img src="media/li1.png" width="100" style="float: left; padding-right: 10px">
                     Point and drag inside the central
                     oval to scroll the visible
                     contents.
                 </div>
-                <div style="color: lightgray; width: 520px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 29px; background-color: rgb(48, 48, 48);">
+                <div style="color: lightgray; width: 500px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 29px; background-color: rgb(48, 48, 48);">
                     <div style="float: left; width: 30px;">2.</div>
                     <img src="media/li2.png" width="100" style="float: left; padding-right: 10px"/>
                     Point and drag orbiting ovals
                     around the central oval to
                     rotate them.
                 </div>
-                <div style="color: lightgray; width: 520px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 29px; background-color: rgb(48, 48, 48);">
+                <div style="color: lightgray; width: 500px; padding: 30px; font-family: Arial, Helvetica, sans-serif; font-size: 29px; background-color: rgb(48, 48, 48);">
                     <div style="float: left; width: 30px;">3.</div>
                     <img src="media/li3.png" width="100" style="float: left; padding-right: 10px"/>
                     Point and drag orbiting ovals
@@ -123,8 +107,8 @@
                 
                 bd.style.top = "0px";
                 bd.style.left = "0px";
-                bd.style.width = document.body.clientWidth + "px";
-                bd.style.height = document.body.clientHeight + "px";
+                bd.style.width = "100%";
+                bd.style.height = "100%";
                 
                 hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
 

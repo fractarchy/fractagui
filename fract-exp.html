@@ -2,7 +2,6 @@
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!--meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" /-->
     <head>
         <style media="screen">
             section {
@@ -23,45 +22,11 @@
                 touch-action: none;
                 user-select: none;
             }
-            
-            .rotate {
-              animation: rotation 1s infinite linear;
-            }
-
-            @keyframes rotation {
-              from {
-                transform: rotate(-180deg);
-              }
-              to {
-                transform: rotate(180deg);
-              }
-            }
-            
 
             a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
             a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
             a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
         </style>
-        
-        <script>
-            function setDesign(pr) {
-                var viewport = document.querySelector("meta[name=viewport]");
-                if (!viewport){
-                    viewport=document.createElement('meta');
-                    viewport.name = "viewport";
-                    document.getElementsByTagName('head')[0].appendChild(viewport);
-                }
-                var sc = 1 / pr;
-                var sc1 = 1.6 / pr;
-                viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc + ", minimum-scale=" + sc + ", user-scalable=no");
-                //viewport.setAttribute('content', "width=device-width, initial-scale=" + sc + ", maximum-scale=" + sc1 + ", minimum-scale=" + sc);
-            }
-            
-            setDesign(window.devicePixelRatio);
-        </script>
-
-        <script src="src/html2canvas.edit.js"></script>
-        <script src="src/render-html.js"></script>
         <script src="src/fract-exp.js"></script>
     </head>
     <body>
@@ -89,13 +54,12 @@
             }
 
             function dispatchSize () {
-                var event1 = new CustomEvent('resize1', null);
-                divContainer.dispatchEvent(event1);
+                divContainer.dispatchEvent(new CustomEvent('resize1', null));
             }
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.flatArea / 100, 100 / env.scale / window.devicePixelRatio, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
 
@@ -115,38 +79,13 @@
             }
             
             function setupEnv (data) {
-                if (data["html-renderer"]) {
-                    if (data["html-renderer"] !== "legacy" && data["html-renderer"] !== "latest") {
-                        alert ('Error in fract-exp.json: "html-renderer" can only be "legacy" or "latest"');
-                        throw new error ();
-                    }
-                } else {
-                    data["html-renderer"] = "latest";
-                }
-
-                if (data["contents-flat-area"])
-                    try {
-                        if (data["contents-flat-area"].substr(data["contents-flat-area"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var flatArea = parseFloat (data["contents-flat-area"].substr(0, data["contents-flat-area"].length - 1));
-                        if (flatArea < 0 || flatArea > 100)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        alert ('Error in fract-exp.json: "contents-flat-area" has to be a percent between "0%" and "100%"');
-                        throw new error ();
-                    }
-                else
-                    flatArea = 0;
-
                 if (data["contents-scale"])
                     try {
                         if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
                             throw new error ();
                         
-                        var scale = parseFloat (data["contents-scale"].substr(0, data["contents-scale"].length - 1));
-                        if (scale <= 0)
+                        var cscale = parseFloat (data["contents-scale"].substr(0, data["contents-scale"].length - 1));
+                        if (cscale <= 0)
                             throw new error ();
                         
                     } catch (e) {
@@ -154,7 +93,7 @@
                         throw new error ();
                     }
                 else
-                    scale = 100;
+                    cscale = 100;
                 
                 if (data["ui-scale"])
                     try {
@@ -196,39 +135,14 @@
                 }
                 
                 return {
-                    htmlRenderer: data["html-renderer"],
                     ovalColor: data["oval-color"],
                     backColor: data["background-color"],
                     shadowRadius: sradius,
                     shadowColor: data["shadow-color"],
-                    flatArea: flatArea,
-                    scale: scale,
+                    contentScale: cscale,
                     uiscale: uiscale,
                     quant: quant,
                 }
-            }
-            
-            function createCanvasImg (img, scale, fill) {
-                var cnvim = document.createElement ("canvas");
-                cnvim.width = ~~(img.width * scale) + 2;
-                cnvim.height = ~~(img.height * scale) + 2;
-                var ctxim = cnvim.getContext ('2d');
-
-                ctxim.fillStyle = fill;
-                ctxim.fillRect(0, 0, cnvim.width, cnvim.height);
-                
-                // safari bug fix - draw twice
-                ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
-                //ctxim.drawImage (img, 1, 1, ~~(img.width * scale), ~~(img.height * scale));
-
-                return cnvim
-            }            
-
-            function prepareOval(node) {
-                var canvas = createCanvasImg (node.img, node.scaleImg? env.scale / 100 * node.scaleImg : 1, env.ovalColor);
-                node.scaledBitmap = Crisp.crispBitmapXY(canvas);
-
-                divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
             }
 
             var pauseLoading;
@@ -255,202 +169,199 @@
                         clearInterval (interval);
                         refresh (idleAgain);
                     }
-                }, 500);
+                }, 125);
             }
 
-            async function refresh (ovals1) {
+            allOvals = []
+            function hideOvals (data) {
+                for (var i = 0; i < allOvals.length; i++) {
+                    if (allOvals[i].ifr.style.visibility !== "hidden") {
+                        allOvals[i].ifr.style.visibility = "hidden";
+                        allOvals[i].ifr.style.pointerEvents = "none"
+                    }
+                }
+            }
+            
+            async function refresh (ovals) {
                 idleAgain = false;
                 onIdleRunning = true;
-                ovals = [...ovals1];
-                ovals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
-                for (i = 0; i < ovals.length && continueLoading === ovals1; i++) {
-                    if (!ovals[i].data.scaledBitmap) {
-                        var node = ovals[i].data;
-                        if (!node.img) {
-                            try {
-                                await loadOval (node);
-                            } catch (e) {
-                                break;
-                            }
-                        }
-
-                        if (node.img) {
-                            prepareOval (node);
-                            divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                
+                sortedOvals = [...ovals];
+                sortedOvals.sort((a, b) => (a.radius > b.radius) ? -1 : 1)
+                for (i = 0; i < sortedOvals.length && continueLoading === ovals; i++) {
+                    var node = sortedOvals[i].data;
+                    if (!node.ifr) {
+                        try {
+                            await loadOval (node);
+                        } catch (e) {
+                            break;
                         }
                     }
+
+                    //if (node.ifr) {
+                    //    divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                    //}
                 }
                 
                 onIdleRunning = false;
             }
             
-            async function loadOval(data) {
+            async function loadOval(node) {
                 return new Promise(async function(resolve, reject) {
+                    if (node.ifr)
+                        resolve();
+                    
+                    //var loaded = false;
                     var ifr = document.createElement ('iframe');
+                    ifr.addEventListener('load', function () {
+                        /*
+                        if (loaded) {
+                            ifr.src = "";
+                            loaded = false;
+                            return;
+                        } else {
+                            loaded = true;
+
+                            ifr.width  = ifr.contentWindow.document.body.offsetWidth;
+                            ifr.height = ifr.contentWindow.document.body.offsetHeight;
+                            
+                            ifr.contentDocument.body.style.userSelect= "none";
+
+                            divContainer.addEventListener('mousedown', function (evt) {
+                                ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
+                                ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
+                            });
+                            
+                            divContainer.addEventListener('mouseup', function (evt) {
+                                ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
+                                ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
+                            });
+                            
+                            ifr.contentWindow.addEventListener('mousedown', function (evt) {
+                                ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
+                                ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
+                                
+                                handleMouseDown(evt);
+                            });
+                            
+                            function handleMouseDown(evt) {
+                                divContainer.dispatchEvent (new CustomEvent('mdown', {detail: {ifr: ifr, evt: evt}}));
+                            }
+                            
+                            function handleMouseMove(evt) {
+                                divContainer.dispatchEvent (new CustomEvent('mmove', {detail: {ifr: ifr, evt: evt}}));
+                            }
+
+                            function handleMouseUp(evt) {
+                                ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
+                                ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
+     
+                                divContainer.dispatchEvent (new CustomEvent('mup', {detail: {ifr: ifr, evt: evt}}));
+                            }
+                        
+                            divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+                            allOvals.push (node);
+                            divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                            
+                            resolve ();
+                        }
+                        */
+
+                        ifr.width  = ifr.contentWindow.document.body.offsetWidth;
+                        ifr.height = ifr.contentWindow.document.body.offsetHeight;
+                        
+                        divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+                        allOvals.push (node);
+                        divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                        
+                        //extractLinks (node);
+                        var interval = setInterval (function () {
+                            if (node.ifr)
+                                extractLinks (node);
+                            else
+                                clearInterval (interval);
+                        }, 125);
+                        
+                        resolve ();
+                    });
+                    
+                    ifr.addEventListener('error', function () {
+                        reject ();
+                    });
+
+                    ifr.style.position = "absolute";
                     ifr.style.visibility = "hidden";
+                    //ifr.style.backgroundColor = "white"
                     ifr.style.border = "none";
                     ifr.style.overflow = "hidden";
+                    ifr.scrolling = "no";
+                    ifr.disabled = true;
+                    ifr.tabIndex = -1;
 
-                    ifr.onerror = function () {
-                        reject ();
-                    };
-                    
-                    ifr.onload = function () {
-                        if (pauseLoading) reject ();
-                        
-                        if (node.type === "html") {
-                            if (ifr.contentWindow.document.body === null) {
-                                error = true
-                                console.debug (`Error loading: '${ifr.src}'`);
-                                reject ();
-                                return;
-                            }
-                            ifr.style.width = "0px";
-                            ifr.style.height = "0px";
-                        }
-                        
-                        node.img = new Image ();
-                        node.img.crossOrigin = "anonymous";
-                        
-                        node.img.onload = function (e) {
-                            if (node.img.width > 0 && node.img.height > 0 && !pauseLoading) {
-                                resolve ();
+                    ifr.src = node.src;
+                    node.ifr = ifr;
+                    document.body.appendChild (ifr);
+                    //resolve ();
+                });
+            }
+            
+            function extractLinks (node) {
+                delete node.hyperlinks;
+                var links = node.ifr.contentWindow.document.getElementsByTagName("a");
+                for (var i = 0; i < links.length; i++) {
+                    var tg = links[i].getAttribute('target');
+                    var hr = links[i].href;
+                    if (hr.baseVal) hr = hr.baseVal;
 
-                            } else {
-                                reject ();
-                            }
-                        }
+                    if (!hr)
+                        hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                  
+                    if (hr) {
+                        if (!node.hyperlinks)
+                            node.hyperlinks = [];
                         
-                        node.img.onerror = function (e) {
-                            if (!error) {
-                                error = true
-                                console.debug (`Error loading: '${node.src}'`);
-                            }
-
-                            reject ();
-                        }
-                        
-                        if (node.type === "image" || env.htmlRenderer === "latest") {
-                            var links = ifr.contentWindow.document.getElementsByTagName("a");
-                            for (var i = 0; i < links.length; i++) {
-                                var tg = links[i].getAttribute('target');
-                                var hr = links[i].href;
-                                if (hr.baseVal) hr = hr.baseVal;
-
-                                if (!hr)
-                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                              
-                                if (hr) {
-                                    if (env.htmlRenderer === "legacy")
-                                        var myScale = 1;
-                                    else
-                                        var myScale = 100 / env.scale / window.devicePixelRatio;
-                                    
-                                    if (!node.hyperlinks)
-                                        node.hyperlinks = [];
-                                    
-                                    if (links[i].children && links[i].children.length > 0) {
-                                        (function traverseChildren(link, node) {
-                                            if (link.children && link.children.length > 0) {
-                                                for (var j = 0; j < link.children.length; j++) {
-                                                    traverseChildren(link.children[j], node)
-                                                }
-                                            }
-                                            
-                                            var rects = link.getClientRects();
-                                            for (var j in rects) {
-                                                if (rects[j].right)
-                                                    node.hyperlinks.push (
-                                                        {
-                                                            "type": "rect",
-                                                            "target": tg,
-                                                            "href": hr,
-                                                            "left": rects[j].left / myScale,
-                                                            "top": rects[j].top / myScale,
-                                                            "right": rects[j].right / myScale,
-                                                            "bottom": rects[j].bottom / myScale
-                                                        }
-                                                    );
-                                            }
-                                        }) (links[i], node);
-                                    } else {
-                                        var rects = links[i].getClientRects();
-                                        for (var j in rects) {
-                                            node.hyperlinks.push (
-                                                {
-                                                    "type": "rect",
-                                                    "target": tg,
-                                                    "href": hr,
-                                                    "left": rects[j].left / myScale,
-                                                    "top": rects[j].top / myScale,
-                                                    "right": rects[j].right / myScale,
-                                                    "bottom": rects[j].bottom / myScale
-                                                }
-                                            );
-                                        }
+                        if (links[i].children && links[i].children.length > 0) {
+                            (function traverseChildren(link, node) {
+                                if (link.children && link.children.length > 0) {
+                                    for (var j = 0; j < link.children.length; j++) {
+                                        traverseChildren(link.children[j], node)
                                     }
                                 }
-                            }
-                        }
-
-                        if (node.type === "image") {
-                            node.scaleImg = window.devicePixelRatio;
-
-                            node.img.src = node.src;
-                            ifr.remove();
-
-                        } else if (node.type === "html") {
-                            if (env.htmlRenderer === "legacy") {
-                                var base = ifr.contentDocument.createElement('base');
-                                base.href = node.src;//xhr.responseURL;
                                 
-                                var head = ifr.contentDocument.getElementsByTagName('head')[0];
-                                head.insertBefore(base, head.childNodes[0]);
-
-                                scaleifr = window.devicePixelRatio;
-                                    
-                                html2canvas(ifr.contentDocument.body, {logging: false, scale: env.scale / 100 * scaleifr, backgroundColor: null, scrollX: 0, scrollY: 0})
-                                    .then(function(ret) {
-                                        node.hyperlinks = ret.hyperlinks;
-                                        for (var j in node.hyperlinks) {
-                                            node.hyperlinks[j].top *= env.scale / 100;
-                                            node.hyperlinks[j].left *= env.scale / 100;
-                                            node.hyperlinks[j].bottom *= env.scale / 100;
-                                            node.hyperlinks[j].right *= env.scale / 100;
-                                        }
-                                        node.img.src = ret.canvas.toDataURL();
-                                        ifr.remove();
-                                    });
-
-                            } else if (env.htmlRenderer === "latest") {
-                                node.scaleImg = window.devicePixelRatio;
-
-                                renderHtml.fromIframe(ifr).toBase64Svg()
-                                    .then (function (ret) {
-                                        node.img.src = ret;
-                                        ifr.remove();
-                                    });
-                            }
-
-                            /*
-                            domtoimage.toSvg(ifr.contentDocument.body)
-                                .then(function (dataUrl) {
-                                    node.img.src = dataUrl;
-                                })
-                                .catch(function (error) {
-                                    console.debug('oops, something went wrong!', error);
-                                });
-                            */
+                                var rects = link.getClientRects();
+                                for (var j in rects) {
+                                    if (rects[j].right)
+                                        node.hyperlinks.push (
+                                            {
+                                                "type": "rect",
+                                                "target": tg,
+                                                "href": hr,
+                                                "left": rects[j].left,
+                                                "top": rects[j].top,
+                                                "right": rects[j].right,
+                                                "bottom": rects[j].bottom
+                                            }
+                                        );
+                                }
+                            }) (links[i], node);
                         } else {
-                            ifr.remove();
-                            reject();
+                            var rects = links[i].getClientRects();
+                            for (var j in rects) {
+                                node.hyperlinks.push (
+                                    {
+                                        "type": "rect",
+                                        "target": tg,
+                                        "href": hr,
+                                        "left": rects[j].left,
+                                        "top": rects[j].top,
+                                        "right": rects[j].right,
+                                        "bottom": rects[j].bottom
+                                    }
+                                );
+                            }
                         }
                     }
-                    
-                    var node = data;
-                    ifr.src = data.src;
-                    document.body.appendChild (ifr);
-                });
+                }
             }
             
             var xhr;
@@ -516,9 +427,8 @@
                                     nodeTree = formArray (xhr.responseXML, null);
                                     var waitForImages = function () {
 
-                                        var myscale = window.devicePixelRatio;
                                         document.body.style.backgroundColor = env.backColor;
-                                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius * window.devicePixelRatio + "px " + env.shadowColor + ")"
+                                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")"
                                         window.addEventListener("load", wonload ());
                                     }
                                     

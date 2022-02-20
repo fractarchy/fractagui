@@ -20,21 +20,21 @@ Fract-exp is an attractive, minimalistic, and progressive web content management
 
 ## 2. fract-exp specifics
 
-Fract-exp is a fractal-structure inspired, parent-child orbiting, zooming-elements based, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. Fract-exp is a kind of headless, flat-file, and light CMS. Composing contents in Fract-exp is consisted of importing external content pages and arranging them using parent-children structure described in an initial XML file. The final result brings all the imported content pages shown inside orbitable and zoomable ovals that form a seamless dynamic fractal. We navigate the entire fractal structure only by dragging the ovals.
+Fract-exp is a fractal-structure inspired, parent-child orbiting, zooming-elements based, and minimalistic content management assistant. A content management system (CMS) is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites. Fract-exp is a kind of headless, flat-file, and light CMS. Composing contents in Fract-exp is consisted of using external content pages and arranging them using parent-children structure described in initial XML file. The final result brings all the imported content pages to be shown inside orbitable and zoomable ovals that form a seamless dynamic fractal. We navigate the entire fractal structure only by dragging the ovals.
 
 ## 3. using fract-exp
 
-### 3.1. licensing
-
-This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free to try, but if your plans meet publishing sites based on Fract-exp, please refer to the licence file for details about pricing.
-
-### 3.2. case studies
+### 3.1. case studies
 
 ![](media/ssh-320-apv.png) ![](media/ssh-320-cogprotolab.png)
 
-We built an independent web site and some applications using Fract-exp. To get info about these particular case studies, please refer to [this document](case-study.md).
+We built an independent web site and an application using Fract-exp. To get info about these particular case studies, please refer to [this document](case-study.md).
 
-### 3.3. giving it a try
+### 3.2. giving it a try
 
 To get started with site creation using Fract-exp, please refer to the [example site](https://contrast-zone.github.io/fract-exp/) containing use instructions.
+
+### 3.3. licensing
+
+This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free to try, but if your plans meet publishing sites based on Fract-exp, please refer to the licence file for details about pricing.
 

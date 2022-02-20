@@ -1,97 +1,54 @@
-Crisp = (function () {
-    var step = 2;
-    
-    var log = [-Infinity];
-    for (var i = 1; i < 65535; i++) {
-        log.push (Math.ceil (Math.log(i) / Math.log(step)));
-    }
+function Polygon() {
+    var pointList = [];
 
-    function crispBitmap (cnvim) {
-        "use strict";
-        var ctxim = cnvim.getContext('2d');
-        
-        var cnvScaled = {width: cnvim.width, height: cnvim.height, step: step, images: []};
-        
-        var iWidth = cnvim.width;
-        var iHeight = cnvim.height;
+    this.node = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
 
-        var dataWH = {im: undefined/*imageDataim*/, cnv: cnvim};
-        cnvScaled.images.push ({width: iWidth, height: iHeight, /*imageData: dataWH.im,*/ canvas: dataWH.cnv});
-
-        while (true) {
-            iWidth = iWidth / cnvScaled.step;
-            iHeight = iHeight / cnvScaled.step;
-
-            if (iWidth <= 16 || iHeight <= 16) break;
-            
-            var data = dataWH.im;
-            var cnv = document.createElement ("canvas")
-            cnv.width = iWidth;
-            cnv.height = iHeight;
-            
-            var ctx = cnv.getContext('2d');
-            
-            ctx.drawImage(dataWH.cnv, 0, 0, cnv.width, cnv.height);
-            dataWH = {cnv: cnv, im: undefined/*imageData*/};
-            
-            cnvScaled.images.push ({width: iWidth, height: iHeight, /*imageData: dataWH.im,*/ canvas: dataWH.cnv});
+    function build(arg) {
+        var res = [];
+        for (var i = 0, l = arg.length; i < l; i++) {
+            res.push(arg[i].join(','));
         }
-        
-        return cnvScaled;
+        return res.join(' ');
     }
-    
-    function crispBitmapXY (cnvim) {
-        "use strict";
-        var ctxim = cnvim.getContext('2d');
-        var imageDataim = ctxim.getImageData(0, 0, cnvim.width, cnvim.height);
-        
-        var cnvScaled1 = {width: cnvim.width, height: cnvim.height, step: step, images: []};
-        
-        var iWidth = cnvim.width;
-        var iHeight = cnvim.height;
 
-        var dataW = {im: imageDataim, cnv: cnvim};
-        cnvScaled1.images.push ([{width: iWidth, height: iHeight, /*imageData: dataW.im, dataBuffer: new Uint32Array(dataW.im.data.buffer),*/ canvas: dataW.cnv}]);
-        var x = cnvScaled1.images.length - 1;
+    this.attribute = function (key, val) {
+        if (val === undefined) return this.node.getAttribute(key);
+        this.node.setAttribute(key, val);
+    };
 
-        return cnvScaled1;
-    }
-    
-    function crispX (oldCnv, imageData1, width1, height1, step) {
-        "use strict";
-        var data1 = imageData1.data;
-        var cnv1 = document.createElement ("canvas")
-        cnv1.width = Math.ceil (width1 / step);
-        cnv1.height = height1;
-        
-        var ctx1 = cnv1.getContext('2d');
-        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
-        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+    this.getPoint = function (i) {
+        return pointList[i]
+    };
 
-        return {cnv: cnv1, im: imData};
-    }
-    
-    function crispY (oldCnv, imageData1, width1, height1, step) {
-        "use strict";
-        var data1 = imageData1.data;
-        var cnv1 = document.createElement ("canvas")
-        cnv1.width = width1;
-        cnv1.height = Math.ceil (height1 / step);
-        
-        var ctx1 = cnv1.getContext('2d');
-        ctx1.drawImage(oldCnv, 0, 0, cnv1.width, cnv1.height);
-        var imData = ctx1.getImageData(0, 0, cnv1.width, cnv1.height);
+    this.setPoint = function (i, x, y) {
+        pointList[i] = [x, y];
+        this.attribute('points', build(pointList));
+    };
 
-        return {cnv: cnv1, im: imData};
+    this.points = function (arg) {
+        for (var i = 0, l = arg.length; i < l; i += 2) {
+            pointList.push([arg[i], arg[i + 1]]);
+        }
+        this.attribute('points', build(pointList));
+    };
+
+    this.points.apply(this, arguments);
+}
+
+function round (x, y, r1, r2, s) {
+    var polygon = new Polygon (0, 0, 0, 0);
+
+    var p = [];
+    for (var i = 0.5; i < s; i++) {
+        p.push (x + Math.cos (2 * Math.PI / s * i) * r1);
+        p.push (y + Math.sin (2 * Math.PI / s * i) * r2);
     }
+    //polygon.setPoint (0, p[0], p[1]);
+    polygon.points (p);
+    polygon.attribute('style', 'fill:red');
     
-    return {
-        crispBitmap: crispBitmap,
-        crispBitmapXY: crispBitmapXY,
-        log: log,
-        step: step
-    }
-}) ();
+    return polygon;
+}
 
 function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1, shadowr, shadowColor) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
@@ -105,25 +62,6 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     var shadow;
 
     var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
-        
-        if (renderHint !== "1") {
-            /*
-            ctx.beginPath ();
-            shadow = true;
-            render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
-            shadow = false;
-            
-            ctx.closePath ();
-            ctx.shadowBlur = shadowr;
-            ctx.shadowColor = shadowColor;
-            ctx.lineWidth = 0;
-            ctx.fillStyle = shadowColor;
-            ctx.fill ();
-            ctx.shadowBlur = 0;
-            */
-            
-        }
-        
         return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
     }
     
@@ -225,18 +163,26 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
         var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
         var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
         
-        //if (shadow) {
+//        if (shadow) {
 //            if (rec === 1 && renderHint !== "1") {
             if (rec === 1) {
                 clear();
+                hideOvals(data);
             }
 //            }
-        //}
+//        }
         
             
         if (
-            Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr
+            !(Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr)
         ) {
+            //if (data.ifr)
+            //    data.ifr.style.visibility = "hidden";
+
+        } else  {
+            //if (rec === 1 && renderHint !== "0" && data.parent.ifr)
+            //    data.parent.ifr.style.visibility = "hidden";
+
             if ((r1 * squashY * squashX) >= minRadius) {
                 var colorFill = fill1;
                 
@@ -287,9 +233,12 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                                 alp = alpha;
                                 ret = got;
                             }
-                        } else
+                        } else {
+                            //if (data.children[ci].ifr)
+                            //    data.children[ci].ifr.style.visibility = "hidden";                
                             if (!delta)
                                 break;
+                        }
                         
                         oldr = c1.r;
                         c1 = getNeighbor (c1, "+", x0, y0, r0, x1, y1, r1);
@@ -312,9 +261,12 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                                 alp = alpha;
                                 ret = got;
                             }
-                        } else
+                        } else {
+                            //if (data.children[ci].ifr)
+                            //    data.children[ci].ifr.style.visibility = "hidden";                
                             if (!delta)
                                 break;
+                        }
                         
                         oldr = c1.r;
                         c1 = getNeighbor (c1, "-", x0, y0, r0, x1, y1, r1);
@@ -514,9 +466,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-// var ctx1, shadowr1, shadowColor1, fillo1;
-
-function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy) {
+function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -542,31 +492,6 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
             backColor: canvasScape.backColor,
         };
         
-        /*
-        if (canvasScape.scaledBitmap)
-            data.scaledBitmap = canvasScape.scaledBitmap;
-
-        else
-            data.scaledBitmap = Crisp.crispBitmapXY(canvasScape.canvas);
-
-        if (canvasScape.hyperlinks) {
-            data.hyperlinks = [];
-            for (var i = 0; i < canvasScape.hyperlinks.length; i++) {
-               var hl = canvasScape.hyperlinks[i];
-               data.hyperlinks.push (
-                    {
-                        target: hl.target,
-                        href: hl.href,
-                        left: hl.left / scale,
-                        top: hl.top / scale,
-                        right: hl.right / scale,
-                        bottom: hl.bottom / scale
-                    }
-                );
-            }
-        }
-        */
-
         if (fst)
             parent.children = [data];
         
@@ -591,8 +516,10 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     var svgns = "http://www.w3.org/2000/svg";
     
     divContainer.innerHTML = "";
+
     // clip path
     var svg = document.createElementNS (svgns, "svg");
+    svg.style.position = "absolute";
     svg.style.display = "block";
     svg.style.height = 0;
     divContainer.appendChild (svg);
@@ -607,6 +534,18 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
     
+    // event overlay
+    var div = document.createElement ("DIV");
+    div.style.position = "absolute";
+    div.style.backgroundColor = "rgb(255, 0, 0, 0)";
+    div.style.left = "0px";
+    div.style.top = "0px";
+    div.style.bottom = "0px";
+    div.style.right = "0px";
+    div.draggable = false;
+    div.ondragstart = function () {return false};
+    document.body.appendChild (div);
+
     var onHyperlink;
     var tooltip = document.createElement("DIV");
     tooltip.id = "tooltip";
@@ -621,23 +560,23 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
     tooltip.innerText = "";
     document.body.appendChild(tooltip);
     
-    
-    //ctx.mozImageSmoothingEnabled    = true
+    /*
     ctx.webkitImageSmoothingEnabled = true
     ctx.msImageSmoothingEnabled     = true
     ctx.imageSmoothingEnabled       = true
     ctx.imageSmoothingQuality       = "high"
-    /*
+    */
+    
     ctx.webkitImageSmoothingEnabled = false
     ctx.msImageSmoothingEnabled     = false
     ctx.imageSmoothingEnabled       = false
     ctx.imageSmoothingQuality       = "low"
-    */
+    
     
     var superSampling = 1;
 
 
-    var ratio = 1 / 1.61803398875; //0.7;//575;
+    var ratio = 1 / 1.61803398875;
 
     var minRadius;
     var shadowr = shadowRadius;
@@ -647,56 +586,8 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
     var MAX_INT32 = Math.pow (2, 31) - 1;
 
-    function invalidateCache () {
-        
-        function invalidateCursor (x) {
-            //x.centerX = 0;
-            //x.centerY = 0;
-            //if (x.data)
-            //    x.data.cachedCnv = null;
-                
-            for (var i = 0; i < x.children.length; i++) {
-                if (x.children[i]) invalidateCursor (x.children[i]);
-            }
-        }
-        
-        var c = cursor;
-        while (c.parent) c = c.parent;
-
-        invalidateCursor (c);
-    }
-    
-    function getCnvCache (data, cx, cy, rr) {
-        cx = Math.round (Math.round (cx / qpan) * qpan);
-        cy = Math.round (Math.round (cy / qpan) * qpan);
-
-        var cnvCache = document.createElement ("canvas");
-        var cacheW = 2 * Math.floor (rr * ratio * squashX);
-        var cacheH = 2 * Math.floor (rr * ratio * squashY);
-        cnvCache.width = cacheW;
-        cnvCache.height = cacheH;
-        var ctxCache = cnvCache.getContext('2d');
-        
-        ctxCache.beginPath ();
-        ctxCache.ellipse (
-            (cacheW / 2),
-            (cacheH / 2),
-            rr * ratio * squashX - 3 * window.devicePixelRatio,
-            rr * ratio * squashY - 3 * window.devicePixelRatio,
-            0,
-            0,
-            2 * Math.PI,
-            false
-        );
-        ctxCache.closePath ();
-        ctxCache.clip();
-        
-        ctxCache.drawImage (data.img, ~~(cacheW / 2 - data.img.width / 2 - cx), ~~(cacheH / 2 - data.img.height / 2 - cy));
-        
-        return cnvCache;
-    }
-    
     function drawCircle (data, x, y, r, fill, stroke, cursor, renderHint, level, shadow) {
+
     //////////////////////
     var diff;
     if (renderHint === "1") diff = 1; else diff = 1;
@@ -706,156 +597,110 @@ function Orbital (divContainer, data, quant, flatArea, scale, ovalColor, backCol
 
             ctx.globalAlpha = 1;
             
+            
+            var diff;
+            if (renderHint === "1")
+                diff = 1;
+            else
+                diff = 1;
+            
+            ctx.beginPath ();
+            ctx.ellipse (
+                x * squashX,
+                y * squashY,
+                r * squashX - diff,
+                r * squashY - diff,
+                0,
+                0,
+                2 * Math.PI,
+                false
+            );
+            ctx.closePath ();
+            ctx.lineWidth = 0;
+            if (data.backColor)
+                ctx.fillStyle = data.backColor;
+            else
+                ctx.fillStyle = fill;
+            ctx.fill ();
 
-            if (shadow) {
-                if (shadowColor) {
-
-                    /*
-                    //ctx.beginPath ();
-                    ctx.moveTo (x * squashX, y * squashY);
-                    ctx.ellipse (
-                        x * squashX,
-                        y * squashY,
-                        r * squashX - 1,
-                        r * squashY - 1,
-                        0,
-                        0,
-                        2 * Math.PI,
-                        false
-                    );
-                    //ctx.closePath ();
-                    */
-
-                    /*
-                    ctx.shadowBlur = shadowr;
-                    ctx.shadowColor = shadowColor;
-                    ctx.lineWidth = 0;
-                    ctx.fillStyle = fill;
-                    ctx.fill ();
-
-                    ctx.shadowBlur = 0;
-                    */
-                }
-            } else {
-                
-                var diff;
-                if (renderHint === "1")
-                    diff = 1;
-                else
-                    diff = 1;
-                    
-                ctx.beginPath ();
-                ctx.ellipse (
-                    x * squashX,
-                    y * squashY,
-                    r * squashX - diff,
-                    r * squashY - diff,
-                    0,
-                    0,
-                    2 * Math.PI,
-                    false
-                );
-                ctx.closePath ();
-
-                ctx.lineWidth = 0;
-                if (data.backColor)
-                    ctx.fillStyle = data.backColor;
-                else
-                    ctx.fillStyle = fill;
-                ctx.fill ();
-                
-                if (animating === "level")
-                    ctx.globalAlpha = r / (levelrr * ratio * Math.pow(1 - ratio, level - 1));
-                else
-                    ctx.globalAlpha = r / (rr * ratio * Math.pow(1 - ratio, level - 1));
-
-                ctx.globalAlpha = Math.pow(ctx.globalAlpha, 1/2); // change this and you are doomed
-
-                if (data.scaledBitmap) {
-                    //if (r > 5) {
-                        var magn = r / (rr * ratio);
-                        
-                        var xo = x * squashX - r * squashX + 1;
-                        var yo = y * squashY - r * squashY + 1;
-                        var xi = x * squashX + r * squashX - 1;
-                        var yi = y * squashY + r * squashY - 1;
-                        
-                        var w = xi - xo;
-                        var h = yi - yo;
-
-                        var cx, cy;
-                        if (cursor) {
-                            //if (isNaN(cursor.centerY))
-                            //    cursor.centerY = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
-                            if (level > 1)  alignOval (data, cursor);
-                            cx = cursor.centerX;
-                            cy = cursor.centerY;
-                        } else {
-                            //cx = 0;
-                            //cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
-                            cx = data.centerX;
-                            cy = data.centerY;
-                        }
-                        
-                        if (!data.cachedCnv || data.centerX !== cx || data.centerY !== cy) {
-                            data.cachedCnv = getCnvCache (data, cx, cy, rr);
-                            data.centerX = cx;
-                            data.centerY = cy;
-                            data.cachedData = null;
-                        }
-
-                        if (renderHint === "0") {
-                            ctx.drawImage(data.cachedCnv, ~~xo, ~~yo, ~~w, ~~h);
-                            
-                        } else if (level === 1) {
-                            ctx.drawImage(data.cachedCnv, ~~xo, ~~yo - 1);
-                        
-                        } else {
-                            if (!data.cachedData)
-                                data.cachedData = Crisp.crispBitmap (data.cachedCnv);
-
-                            var tmp = Math.ceil (data.cachedCnv.width / w * 0.5); //remove 0.5 and you are doomed
-                            if (tmp >= Crisp.log.length)
-                                var bmpscale = Crisp.log[Crisp.log.length - 1];
-                            else
-                                var bmpscale = Crisp.log[tmp] - 1;
-
-                            bmpscale = Math.max (0, bmpscale);
-                            bmpscale = Math.min (data.cachedData.images.length - 1, bmpscale);
-
-                            ctx.drawImage (data.cachedData.images[bmpscale].canvas, xo, yo, w, h);
-                        }
-                    //}
-                }
-
-                if (ctx.globalAlpha !== 1 && renderHint !== "0" && renderHint !== "1") {
-ctx.globalCompositeOperation = 'destination-out';
-                    ctx.globalAlpha = 1 - ctx.globalAlpha;
-                    
-                    ctx.beginPath ();
-                    ctx.ellipse (
-                        x * squashX,
-                        y * squashY,
-                        r * squashX - 1,
-                        r * squashY - 1,
-                        0,
-                        0,
-                        2 * Math.PI,
-                        false
-                    );
-                    ctx.closePath ();
-
-                    ctx.lineWidth = 0;
-
-                    ctx.fillStyle = back1;
-                    ctx.fill ();
-ctx.globalCompositeOperation = 'source-over';
-                }
-
-                ctx.globalAlpha = 1;
-                
-                renderData.push({radius: r, data: data});
+            var n = 24;
+            
+            /*
+            ctx.beginPath ();
+            ctx.moveTo(r * squashX * Math.cos (0), r * squashX * Math.sin (0));
+            for (var i = 0.5; i < n + 1.5; i++){
+                ctx.lineTo(x * squashX + r * squashX * Math.cos (2 * Math.PI / n * i), y * squashY + r * squashY * Math.sin (2 * Math.PI / n * i));
             }
+            ctx.closePath ();
+            ctx.lineWidth = 0;
+            if (data.backColor)
+                ctx.fillStyle = data.backColor;
+            else
+                ctx.fillStyle = fill;
+            ctx.fill ();
+            */
+
+            if (data.ifr && data.ifr.width > 0 && data.ifr.height > 0) {
+                var cx, cy;
+                if (cursor) {
+                    if (level > 1)  alignOval (data, cursor);
+                    cx = cursor.centerX;
+                    cy = cursor.centerY;
+                } else {
+                    cx = data.centerX;
+                    cy = data.centerY;
+                }
+
+                var magn = ~~(scale * r / (rr * ratio) * 100) / 100 //* window.devicePixelRatio;
+                data.ifr.magn = magn;
+                
+                var tr = "scale(" + magn + ")"
+                if (data.ifr.style.transformOrigin !== "0px 0px 0px") data.ifr.style.transformOrigin = "0px 0px 0px";
+                if (data.ifr.style.transform !== tr) data.ifr.style.transform = tr;
+                var l = ~~(x * squashX - magn * (data.ifr.width / 2 + cx));
+                var t = ~~(y * squashY - magn * (data.ifr.height / 2 + cy));
+                
+                if (data.ifr.style.left === l + "px" && data.ifr.style.top === t + "px") {
+                    //alert ("skip the same position");
+                } else {
+                    data.ifr.style.left = l + "px";
+                    data.ifr.style.top = t + "px";
+
+                    if (data.clip1) data.clip1.remove();
+                    if (data.clip2) data.clip2.remove();
+                    
+                    // local
+                    var rand1 = (Math.random() + "").substring(2);
+                    var clipPath1 = document.createElementNS(svgns, 'clipPath');
+                    clipPath1.setAttributeNS(null, 'id', "cl1" + rand1);
+                    svg.appendChild(clipPath1);
+                    var clip1 = round ((x * squashX - l) / magn, (y * squashY - t) / magn, (r * squashX - 2 * window.devicePixelRatio * magn) / magn - 1 / magn, (r * squashY - 2 * window.devicePixelRatio * magn) / magn - 1 / magn, n).node;
+                    clipPath1.appendChild(clip1);
+
+                    // global
+                    var rand2 = (Math.random() + "").substring(2);
+                    var clipPath2 = document.createElementNS(svgns, 'clipPath');
+                    clipPath2.setAttributeNS(null, 'id', "cl2" + rand2);
+                    svg.appendChild(clipPath2);
+                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t) / magn, (rr * squashX + shadowr) / magn, (rr * squashY + shadowr) / magn, n).node;
+                    clipPath2.appendChild(clip2);
+
+                    // intersect
+                    clip1.style.clipPath = "url(#cl2" + rand2 + ")";
+                    data.ifr.style.clipPath = "url(#cl1" + rand1 + ")";
+
+                    data.clip1 = clipPath1;
+                    data.clip2 = clipPath2;
+                }
+
+                data.ifr.style.visibility = "visible";
+                //if (level === 1)
+                //    data.ifr.style.pointerEvents = "auto"
+                //else
+                //    data.ifr.style.pointerEvents = "none"
+            }
+            
+            renderData.push({radius: r, data: data});
         }
     }
     
@@ -869,14 +714,9 @@ ctx.globalCompositeOperation = 'source-over';
                 select = select.child;
                 
                 if (!sc.children[select.index]) {
-                    //var cy = NaN;
-                    //if (select.data.scaledBitmap)
-                    //    cy = ~~Math.min (/*center*/ -select.data.scaledBitmap.height / 2 + alignY, select.data.scaledBitmap.height / 2);
-                    //sc.children[select.index] = {parent: sc, index: 0, centerX: cx, centerY: cy, angle: Math.PI, children: []};
-                    
                     sc.children[select.index] = {parent: sc, index: 0, centerX: 0, centerY: 0, angle: Math.PI, children: []};
                     var cx = 0, cy = 0;
-                    if (select.data.scaledBitmap) {
+                    if (select.data.ifr) {
                         alignOval (select.data, sc.children[select.index])
                     }
                         
@@ -887,17 +727,22 @@ ctx.globalCompositeOperation = 'source-over';
             }
         }
     }
-        
+
     function clear (fill) {
         if (!fill) fill = fill2
         ctx.fillStyle = fill2;
         ctx.clearRect(0, 0, ww, hh);
+        hideOvals(data);
     }
 
     function redraw (m, renderHint, selectedCursor) {
         //clear ();
+        hideOvals(data);
+                    
+        div.style.zIndex = Math.pow(2, 31);
+        
         renderData = [];
-        var ret = n.render (minRadius, x1, y1, r1, orientation/*0*/, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData);
+        var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData);
             
         return ret;
     }
@@ -930,7 +775,7 @@ ctx.globalCompositeOperation = 'source-over';
       
       xpos -= obj_left;
       ypos -= obj_top;
-//        divContainer.style.transform = "scale(" + magn + ") translateY(" + (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn) + "px)";
+
       var cw2 = divContainer.clientWidth / 2;
       var ch2 = divContainer.clientHeight / 2;
         xpos = cw2 + (xpos - cw2) / magn;
@@ -940,10 +785,10 @@ ctx.globalCompositeOperation = 'source-over';
     }
     
     function setCenter (select, x, y) {
-        if (select.cursor.data && select.cursor.data.scaledBitmap) {
+        if (select.cursor.data && select.cursor.data.ifr) {
             if (select.cursor.data.hLock !== "true") {
                 select.cursor.centerX = x;
-                var minmaxW = Math.floor (select.cursor.data.scaledBitmap.width / 2);
+                var minmaxW = Math.floor (select.cursor.data.ifr.width / 2);
                 if (select.cursor.centerX > minmaxW)
                     select.cursor.centerX = minmaxW;
                 if (select.cursor.centerX < -minmaxW)
@@ -954,7 +799,7 @@ ctx.globalCompositeOperation = 'source-over';
             
             if (select.cursor.data.vLock !== "true") {
                 select.cursor.centerY = y;
-                var minmaxH = Math.floor (select.cursor.data.scaledBitmap.height / 2);
+                var minmaxH = Math.floor (select.cursor.data.ifr.height / 2);
                 if (select.cursor.centerY > minmaxH)
                     select.cursor.centerY = minmaxH;
                 if (select.cursor.centerY < -minmaxH)
@@ -974,10 +819,10 @@ ctx.globalCompositeOperation = 'source-over';
             var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
 
             if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                setCenter (select, oldCenterX + (dragX - x0) - (x - x0), oldCenterY + (dragY - y0) - (y - y0));
+                setCenter (select, oldCenterX + ((dragX - x0) - (x - x0)) / scale /* window.devicePixelRatio*/, oldCenterY + ((dragY - y0) - (y - y0)) / scale /* window.devicePixelRatio*/);
 
             } else {
-                if (select.cursor.data && select.cursor.data.scaledBitmap) {
+                if (select.cursor.data && select.cursor.data.ifr) {
                     alignOval (select.cursor.data, select.cursor)
                 }
 
@@ -999,7 +844,7 @@ ctx.globalCompositeOperation = 'source-over';
     
     function setMouseHyperlink (x, y) {
         var found = false;
-        if (cursor && cursor.data.scaledBitmap) {
+        if (cursor && cursor.data.ifr) {
             if (!dragging && !panning && !animating) {
                 var r0 = r1 * ratio;
 
@@ -1007,15 +852,15 @@ ctx.globalCompositeOperation = 'source-over';
                 var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
 
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                    var hx = cursor.centerX + cursor.data.scaledBitmap.width / 2 + (x - x0);
-                    var hy = cursor.centerY  + cursor.data.scaledBitmap.height / 2 + (y - y0);
+                    var hx = cursor.centerX + cursor.data.ifr.width / 2 + (x - x0) / scale;// / window.devicePixelRatio;
+                    var hy = cursor.centerY + cursor.data.ifr.height / 2 + (y - y0) / scale;// / window.devicePixelRatio;
 
                     if (cursor.data.hyperlinks) {
                         for (var i = 0; i < cursor.data.hyperlinks.length; i++) {
                             var hl = cursor.data.hyperlinks[i];
                             if (hl.top < hy && hl.bottom > hy && hl.left < hx && hl.right > hx) {
                                 found = true;
-                                cnv.style.cursor = "pointer";
+                                div.style.cursor = "pointer";
                                 tooltip.style.visibility = "visible";
                                 tooltip.innerText = " " + hl.href + " ";
                                 tooltip.myHref = hl.href;
@@ -1027,7 +872,7 @@ ctx.globalCompositeOperation = 'source-over';
             }
         }
         if (!found) {
-            cnv.style.cursor = "default";
+            div.style.cursor = "default";
             tooltip.style.visibility = "hidden";
             tooltip.innerText = "";
         }
@@ -1058,16 +903,12 @@ ctx.globalCompositeOperation = 'source-over';
                         
                         oldCenterX = select.cursor.centerX;
                         oldCenterY = select.cursor.centerY;
-                        
-                        //inertPan = [];
-                        //inertIdxPan = 0;
+
                         oldPan = null;
                         
                     } else {
                         dragging = true;
-                        
-                        //inert = [];
-                        //inertIdx = 0;
+
                         oldAng = null;
                     }
                 }
@@ -1139,6 +980,7 @@ ctx.globalCompositeOperation = 'source-over';
                     //clear ();
                     var sel = select;
                     window.requestAnimationFrame(function () {
+                    //setTimeout (function () {
                         if (!panning) {
                             renderData = [];
                             if (qang1 !== qang2) {
@@ -1148,6 +990,7 @@ ctx.globalCompositeOperation = 'source-over';
                             if (!select)
                                 mouseup (lastMouseEvent);
                         }
+                    //}, 0);
                     });
                     
                 //} else {
@@ -1221,12 +1064,6 @@ ctx.globalCompositeOperation = 'source-over';
                 }
                 
                 var aa0 = animateAng0;
-                /*
-                animateAng0 = Math.round ((animateAng0) / qang) * qang;
-                animateAng0Start = Math.PI + Math.round ((animateAng0Start - Math.PI) / qang) * qang;
-                animateAng2 = Math.round ((animateAng2) / qang) * qang;
-                animateAng2Start = Math.PI + Math.round ((animateAng2Start - Math.PI) / qang) * qang;
-                */
 
                 animateAng0 = Math.min (animateAng0, angMax);
                 animateAng0 = Math.max (animateAng0, angMin);
@@ -1311,7 +1148,6 @@ ctx.globalCompositeOperation = 'source-over';
 
                                 if (i < 1) {
                                     var t1 = (new Date()).getTime();
-                                    //i += 0.005 + (0.5 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
                                     i += (t1 - t0) / 384;
                                     if (t1 - t0 === 0) i += 1 / 384;
                                     if (i > 1) i = 1;
@@ -1320,16 +1156,11 @@ ctx.globalCompositeOperation = 'source-over';
                                     window.requestAnimationFrame(aEnlarge)
                                 } else {
                                     level = gettingLevel;
-                                    //inertIdx = 0;
-                                    //inert = [];
                                     oldAng = null;
 
                                     if (!cursor.children[cursor.index]) {
-                                        //var cy = NaN;
-                                        //if (topc.child.data.scaledBitmap)
-                                        //    cy = ~~Math.min (/*center*/ -topc.child.data.scaledBitmap.height / 2 + alignY, topc.child.data.scaledBitmap.height / 2);
                                         cursor.children[cursor.index] = {parent: cursor, centerX: 0, centerY: 0, index: 0, angle: Math.PI, children: []};
-                                        if (topc.child.data.scaledBitmap) {
+                                        if (topc.child.data.ifr) {
                                             alignOval (topc.child.data, cursor.children[cursor.index])
                                         }
                                             
@@ -1407,8 +1238,6 @@ ctx.globalCompositeOperation = 'source-over';
                                     };
 
                                     var m = topc.getCircle (lastAngle);
-                                    //var la = Math.PI + Math.round ((lastAngle - Math.PI) / qang) * qang;
-                                    //var m = topc.getCircle (la);
                                     
                                     var x0 = topc.smallX + m.x;
                                     var y0 = topc.smallY + m.y;
@@ -1441,7 +1270,6 @@ ctx.globalCompositeOperation = 'source-over';
 
                                     if (i < 1) {
                                         var t1 = (new Date()).getTime();
-                                        //i += 0.005 + (0.5 - Math.abs (i - 0.5)) * (t1 - t0) / 100;
                                         i += (t1 - t0) / 384;
                                         if (t1 - t0 === 0) i += 1 / 384;
                                         if (i > 1) i = 1
@@ -1450,8 +1278,7 @@ ctx.globalCompositeOperation = 'source-over';
                                         window.requestAnimationFrame(aEnsmall);
                                     } else {
                                         level = gettingLevel;
-                                        //inertIdx = 0;
-                                        //inert = [];
+
                                         oldAng = null;
 
                                         cursor = cursor.parent;
@@ -1483,14 +1310,8 @@ ctx.globalCompositeOperation = 'source-over';
                                 if (aa0 < 3 * Math.PI / 2 && aa0 > Math.PI / 2) {
                                     panning = false;
                                     animating = "level";
-                                    //cursor.centerX = 0;
-                                    //cursor.centerY = NaN;
-                                    //if (cursor.data.scaledBitmap)
-                                    //    cursor.centerY = ~~Math.min (/*center*/ -cursor.data.scaledBitmap.height / 2 + alignY, cursor.data.scaledBitmap.height / 2);
-                                    if (cursor.data.scaledBitmap) {
+                                    if (cursor.data.ifr) {
                                         alignOval (cursor.data, cursor)
-                                        //cursor.centerX = cursor.data.centerX;
-                                        //cursor.centerY = cursor.data.centerY;
                                     }
 
                                     window.requestAnimationFrame (aEnsmall);
@@ -1552,7 +1373,7 @@ ctx.globalCompositeOperation = 'source-over';
                 onHyperlink = tooltip.innerText;
                 
                 if (preSelect) {
-                    cnv.style.cursor = "grabbing";
+                    div.style.cursor = "grabbing";
                     busy ();
                 }
             }
@@ -1593,7 +1414,6 @@ ctx.globalCompositeOperation = 'source-over';
                             var sindi = Math.pow(di, 2);
                             if (di > 0){
                                 ang0 += avgAng * sindi * (c.getCircle(ang0).r / c1);
-                                //if (inertIdx === 0) inertIdx = 1;
                                 var a0 = ang0 - dang0;
                                 a0 = Math.max (a0, select.getAngMin());
                                 a0 = Math.min (a0, select.getAngMax());
@@ -1615,11 +1435,6 @@ ctx.globalCompositeOperation = 'source-over';
                                     redraw (null, "1+", (select)?select.cursor:null);
                                 }
 
-                                /*
-                                c.setAngle (a0, 0);//inert[inertIdx - 1].percentRawAngle);
-
-                                redraw (null, "1+", (select)?select.cursor:null);
-                                */
                                 window.requestAnimationFrame(aInert);
                                 
                             } else {
@@ -1676,7 +1491,6 @@ ctx.globalCompositeOperation = 'source-over';
                                         var px = Math.round (cursor.centerX / qpan) * qpan;
                                         var py = Math.round (cursor.centerY / qpan) * qpan;
                                         setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
-                                        //setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
                                         if (oldx != cursor.centerX || oldy != cursor.centerY) {
                                             if (px !== globalSel.px || py !== globalSel.py) {
                                                 redraw (null, "1", globalSel.cursor);
@@ -1690,7 +1504,7 @@ ctx.globalCompositeOperation = 'source-over';
                                             panning = false;
                                             animating = false;
                                             redraw ({x: mouse.x, y: mouse.y});
-                                            if (cnv.style.cursor !== "grabbing")
+                                            if (div.style.cursor !== "grabbing")
                                                 setMouseHyperlink (mouse.x, mouse.y);
 
                                             idle ();
@@ -1700,7 +1514,7 @@ ctx.globalCompositeOperation = 'source-over';
                                         panning = false;
                                         animating = false;
                                         redraw ({x: mouse.x, y: mouse.y});
-                                        if (cnv.style.cursor !== "grabbing")
+                                        if (div.style.cursor !== "grabbing")
                                             setMouseHyperlink (mouse.x, mouse.y);
 
                                         idle ();
@@ -1718,7 +1532,7 @@ ctx.globalCompositeOperation = 'source-over';
                                         
                                         idle ();
                                     }
-                                    if (cnv.style.cursor !== "grabbing")
+                                    if (div.style.cursor !== "grabbing")
                                         setMouseHyperlink (mouse.x, mouse.y);
                                 }
                             }
@@ -1794,8 +1608,10 @@ ctx.globalCompositeOperation = 'source-over';
 
     function resize(width, height) {
         setDimensions (width, height);
-        alignX = squashX * rr * 1 / 2.5;;
-        alignY = squashY * rr * 1 / 2.5;
+        svg.style.width = width + "px";
+        svg.style.height = height + "px";
+        alignX = squashX * rr * 1 / 2.5 / scale;// / window.devicePixelRatio;
+        alignY = squashY * rr * 1 / 2.5 / scale;// / window.devicePixelRatio;
     
         n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
         
@@ -1812,43 +1628,10 @@ ctx.globalCompositeOperation = 'source-over';
         cnv.setAttribute ("width", ww);
         cnv.setAttribute ("height", hh);
         cnv.style.clipPath = "url(#clip128)";
-        
-        function clearData (data) {
-            data.scaledBitmap = null;
-            data.cachedCnv = null;
-            data.cachedData = null;
-            //data.centerX = 0;
-            //data.centerY = NaN;
-            alignOval(data, data);
-            
-            for (var i = 0; i < data.children.length; i++)
-                clearData (data.children[i]);
 
-        }
-        
-        function updateCache (data) {
-            if (data.scaledBitmap) {
-                //var cy = ~~Math.min (/*center*/ -data.scaledBitmap.height / 2 + alignY, data.scaledBitmap.height / 2);
-                //data.centerX = 0;
-                //data.centerY = cy;
-                alignOval (data, data);
-                
-                data.cachedCnv = getCnvCache (data, data.centerX, data.centerY, rr);
-                data.cachedData = Crisp.crispBitmap (data.cachedCnv);
-            }
-            
-            for (var i = 0; i < data.children.length; i++)
-                updateCache (data.children[i]);
-
-        }
-        
         function updateCursor (c) {
             if (c) {
-                //c.centerX = 0;
-                //c.centerY = NaN;
-                //if (c.data && c.data.scaledBitmap)
-                //    c.centerY = ~~Math.min (/*center*/ -c.data.scaledBitmap.height / 2 + alignY, c.data.scaledBitmap.height / 2);
-                if (c.data && c.data.scaledBitmap) {
+                if (c.data && c.data.ifr) {
                     alignOval (c.data, c)
                 }
                                 
@@ -1858,8 +1641,17 @@ ctx.globalCompositeOperation = 'source-over';
             }
         }
         
+        function updateData (d) {
+            if (d.ifr) {
+                alignOval (d, d)
+            }
+                            
+            for (var i = 0; i < d.children.length; i++)
+                updateData (d.children[i]);
+        }
+        
         var c = cursor;
-        while (c.parent)
+        while (c && c.parent)
             c = c.parent;
             
         updateCursor (c);
@@ -1868,32 +1660,32 @@ ctx.globalCompositeOperation = 'source-over';
         while (d.parent)
             d = d.parent;
 
-        //clearData (d.children[0]);
-        updateCache (d.children[0]);
+        updateData (d);
+
         rescale (magn);
         redraw ();
         idle ();
     }
     
     function alignOval (o, c) {
-        if (o.scaledBitmap) {
+        if (o.ifr) {
             if (o.hAlign === "left")
-                c.centerX = ~~Math.min (/*center*/ -o.scaledBitmap.width / 2 + alignX, o.scaledBitmap.width / 2);
+                c.centerX = ~~Math.min (/*center*/ -o.ifr.width / 2 + alignX, o.ifr.width / 2);
                 
             else if (o.hAlign === "right")
-                c.centerX = ~~Math.min (/*center*/ +o.scaledBitmap.width / 2 - alignX, o.scaledBitmap.width / 2);
+                c.centerX = ~~Math.min (/*center*/ +o.ifr.width / 2 - alignX, o.ifr.width / 2);
                 
             else
                 c.centerX = 0;
                 
             if (o.vAlign === "bottom")
-                c.centerY = ~~Math.min (/*center*/ +o.scaledBitmap.height / 2 - alignY, o.scaledBitmap.height / 2);
+                c.centerY = ~~Math.min (/*center*/ +o.ifr.height / 2 - alignY, o.ifr.height / 2);
 
             else if (o.vAlign === "middle")
                 c.centerY = 0;
 
             else
-                c.centerY = ~~Math.min (/*center*/ -o.scaledBitmap.height / 2 + alignY, o.scaledBitmap.height / 2);
+                c.centerY = ~~Math.min (/*center*/ -o.ifr.height / 2 + alignY, o.ifr.height / 2);
         } else {
             c.centerX = 0;
             c.centerY = 0;
@@ -1903,10 +1695,10 @@ ctx.globalCompositeOperation = 'source-over';
     function rescale (m) {
         magn = m;
         if (m === 1)
-            divContainer.style.transform = "";
+            document.body.style.transform = "";
         
         else
-            divContainer.style.transform = "scale(" + magn + ") translateY(" + transformY() + "px)";
+            document.body.style.transform = "scale(" + magn + ") translateY(" + transformY() + "px)";
     }
     
     function busy () {
@@ -1947,8 +1739,7 @@ ctx.globalCompositeOperation = 'source-over';
     svg.appendChild(clipPath);
 
     var clip = document.createElementNS(svgns, 'ellipse');
-    clipPath.appendChild(clip);
-    
+    clipPath.appendChild(clip);   
     
     function transformY () {
         return (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn);
@@ -1992,14 +1783,12 @@ ctx.globalCompositeOperation = 'source-over';
             var touches = evt.changedTouches;
             
             for (var i = 0; i < touches.length; i++) {
-                //if (ongoingTouches.length === 0) {
-                    ongoingTouches.push(copyTouch(touches[i]));
-                    var idx = ongoingTouchIndexById(touches[i].identifier);
-                    
-                    if (idx >= 0) {
-                        mousedown (ongoingTouches[idx]);
-                    }
-                //}
+                ongoingTouches.push(copyTouch(touches[i]));
+                var idx = ongoingTouchIndexById(touches[i].identifier);
+                
+                if (idx >= 0) {
+                    mousedown (ongoingTouches[idx]);
+                }
             }
 
             evt.preventDefault ();
@@ -2121,4 +1910,26 @@ ctx.globalCompositeOperation = 'source-over';
             alignOval(e.detail, cursor);
         }
     });
+
+    /*    
+    function getIfrMouse(e) {
+        return {
+            pageX: e.detail.evt.pageX * e.detail.ifr.magn + e.detail.ifr.offsetLeft,
+            pageY: e.detail.evt.pageY * e.detail.ifr.magn + e.detail.ifr.offsetTop,
+            which: e.detail.evt.which
+        };
+    }
+    
+    divContainer.addEventListener('mmove', function (e) {
+        mousemove (getIfrMouse(e));
+    });
+    
+    divContainer.addEventListener('mdown', function (e) {
+        mousedown (getIfrMouse(e));
+    });
+    
+    divContainer.addEventListener('mup', function (e) {
+        mouseup (getIfrMouse(e));
+    });
+    */
 }

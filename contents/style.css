@@ -1,7 +1,7 @@
 @media (max-device-width: 640px), (max-device-height: 640px) {
     body {
-        width: 180px;
-        font-size: 1em;
+        width: 480px;
+        font-size: 2.6em;
         font-family: Times New Roman, Georgia, Garamond;
         margin: 0;
         padding: 0;
@@ -11,9 +11,8 @@
         padding: 0.1em;
         color: black;
         background-color: rgb(180, 180, 180);
-        font-size: 1.7em;
-        margin-top: -0.1em;
-        margin-bottom: 0.3em;
+        font-size: 2em;
+        margin-top: 0em;
         font-weight: bold;
     }
 }
@@ -21,7 +20,7 @@
 @media (min-device-width: 640px) {
     @media (min-device-height: 640px) {
         body {
-            width: 512px;
+            width: 480px;
             font-size: 1.2em;
             font-family: Times New Roman, Georgia, Garamond;
             margin: 0;
@@ -32,12 +31,21 @@
             padding: 0.1em;
             color: black;
             background-color: rgb(180, 180, 180);
-            font-size: 3.4em;
-            margin-top: -0.1em;
-            margin-bottom: 0.3em;
+            font-size: 3.2em;
+            margin-top: 0em;
             font-weight: bold;
         }
+        
     }
+}
+
+body {
+    animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+    from { opacity: 0; /*transform: scale(0.5);*/}
+    to   { opacity: 1; /*transform: scale(1.0);*/}
 }
 
 .float-left {

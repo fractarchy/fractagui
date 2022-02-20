@@ -274,15 +274,21 @@
                         allOvals.push (node);
                         divContainer.dispatchEvent(new CustomEvent('redraw', null));
                         
+                        // resize observer
+                        const resize_ob = new ResizeObserver(function(entries) {
+	                        // since we are observing only a single element, so we access the first element in entries array
+	                        let rect = entries[0].contentRect;
+
+                            ifr.width  = rect.width;
+                            ifr.height = rect.height;
+                            alert (0)
+                        });
+
+                        // start observing for resize
+                        resize_ob.observe(ifr.contentWindow.document.body);
+
                         //extractLinks (node);
                         var interval = setInterval (function () {
-                            if (ifr.width  !== ifr.contentWindow.document.body.offsetWidth || ifr.height !== ifr.contentWindow.document.body.offsetHeight) {
-                                ifr.width  = ifr.contentWindow.document.body.offsetWidth;
-                                ifr.height = ifr.contentWindow.document.body.offsetHeight;
-                                
-                                //divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
-                            }
-
                             if (node.ifr) {
                                 extractLinks (node);
                             } else {

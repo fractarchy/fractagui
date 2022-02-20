@@ -276,11 +276,19 @@
                         
                         //extractLinks (node);
                         var interval = setInterval (function () {
-                            if (node.ifr)
+                            if (ifr.width  !== ifr.contentWindow.document.body.offsetWidth || ifr.height !== ifr.contentWindow.document.body.offsetHeight) {
+                                ifr.width  = ifr.contentWindow.document.body.offsetWidth;
+                                ifr.height = ifr.contentWindow.document.body.offsetHeight;
+                                
+                                //divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+                            }
+
+                            if (node.ifr) {
                                 extractLinks (node);
-                            else
+                            } else {
                                 clearInterval (interval);
-                        }, 125);
+                            }
+                        }, 250);
                         
                         resolve ();
                     });

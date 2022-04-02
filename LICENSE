@@ -1,17 +1,26 @@
-(c) 2021, Contrast Zone Productions
+(c) 2022, Contrast Zone Productions
 
 License Type
 ------------
 This software is licensed under *conditional* Creative Commons Attribution 4.0
 International License. Find more details about the license at:
 
-(http://creativecommons.org/licenses/by/4.0/).
+(http://creativecommons.org/licenses/by/4.0/)
 
 Conditions
 ----------
-This software is free to try, but if you are publishing a site using this software
-to a server, the condition for obtaining the above license includes payment to the
-author in amount of $20.00 USD per upload server. The payment is conducted using
-the official PayPal software funding pages at:
+* use type: personal
+    personal use
+    100% free
 
-(https://www.paypal.com/paypalme/contrastzone/0).
+* use-type: patron
+    25$ to support development
+
+* use-type: commercial
+    14 days trial before purchasing
+    commercial use
+    50$ per user per year
+
+Purchasing is conducted using our official PayPal software funding pages at:
+
+(https://www.paypal.com/paypalme/contrastzone/0)

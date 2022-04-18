@@ -10,7 +10,7 @@ tags: content-management-system, fractal-structure-inspired, parent-child-orbiti
 > 
 > ![](media/socmedia.png)
 > 
-> To overview an example site made with Fract-exp CMS, please follow [this link](https://contrast-zone.github.io/fract-exp/).
+> To overview an example site made with Fract-exp CMS, please follow [this link](https://contrast-zone.github.io/moonlight/).
 
 ## 1. about moonlight
 
@@ -34,7 +34,7 @@ We built an independent web site using Moonlight. To get info about these partic
 
 ### 3.2. giving it a try
 
-To get started with site creation using Moonlight, please refer to the [example site](https://contrast-zone.github.io/fract-exp/) containing use instructions.
+To get started with site creation using Moonlight, please refer to the [example site](https://contrast-zone.github.io/moonlight/) containing use instructions.
 
 ### 3.3. licensing
 

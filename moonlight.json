@@ -1,11 +1,11 @@
 {
     "background-color": "gray",
     "oval-color": "rgba(224, 224, 224)",
-    "shadow-radius": "20",
+    "shadow-radius": "0",
     "shadow-color": "rgb(0, 0, 0, 1)",
     "contents-scale": "100%",
-    "ui-scale": "128%",
-    "power-consumption-optimisation": "50%",
+    "ui-scale": "120%",
+    "power-consumption-optimisation": "85%",
     "contents": "contents/contents.xml"
 }
 

@@ -1,6 +1,6 @@
 # moonlight
 
-(v 0.5 - beta)
+(v 0.5 - release)
 
 tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms, light-cms
 

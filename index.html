@@ -111,7 +111,9 @@
                 bd.style.width = "100%";
                 bd.style.height = "100%";
                 
-                hlp.style.transform = "scale(" + window.devicePixelRatio / 1.7 + ")";
+                hlp.style.transform = "scale(" + 1 + ")";
+                var hh = window.innerHeight / hlp.clientHeight * 0.9;
+                hlp.style.transform = "scale(" + hh + ")";
 
                 f.style.right = "0px";
                 f.style.top = "0px";

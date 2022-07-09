@@ -38,5 +38,8 @@
     - CSS animations support  
     - responsive mode matches native appearance in scale  
 
-- v 0.5 - release
+- v 0.5 - release  
     - bug fixes  
+
+- v 0.5 - update  
+    - UX improvement  

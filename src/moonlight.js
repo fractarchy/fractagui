@@ -274,7 +274,10 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
                     }
                 }
                 
-                var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
+                //var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
+                var cond1 = (rec === 2)? ((selectedCursor)? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x1, 2) + Math.pow(mouse.y / squashY - y1, 2)) <= r1)) : false;
+                var cond2 = (rec === 1)? ((selectedCursor)? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) : false;
+                var cond = cond1 || cond2;
                 
                 if (cursor) {
                     cursor.data = data;
@@ -946,6 +949,21 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             }
             
             var minR, maxR, mouseDistance;
+            
+            if (!isOnParent) {
+                if (select.parent) {
+                    minR = 0;//select.parent.largeR;
+                    maxR = Infinity;//select.parent.smallR + 2 * select.parent.getCircle(ang1).r * ratio;//select.smallR;
+                    mouseDistance = Math.sqrt (Math.pow (select.parent.smallX - mouse.x / squashX, 2) + Math.pow(select.parent.smallY - mouse.y / squashY, 2));
+
+                } else {
+                    minR = 0;
+                    maxR = select.smallR;
+                    mouseDistance = Math.sqrt (Math.pow (select.smallX - mouse.x / squashX, 2) + Math.pow(select.smallY - mouse.y / squashY, 2))
+                }
+            }
+            
+            /*
             if (!isOnParent) {
                 if (select.parent) {
                     minR = select.parent.smallR;
@@ -958,6 +976,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
                     mouseDistance = Math.sqrt (Math.pow (select.smallX - mouse.x / squashX, 2) + Math.pow(select.smallY - mouse.y / squashY, 2))
                 }
             }
+            */
 
             if (!animating && dragging && select.parent && !isOnParent && mouseDistance < maxR) {
                 //select.parent.setAngle (ang[1], dr);

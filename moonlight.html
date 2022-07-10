@@ -59,7 +59,7 @@
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
 
@@ -105,11 +105,27 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in moonlight.json: "ui-scale" hast to be a percent greater than "0%"');
+                        alert ('Error in moonlight.json: "ui-scale" has to be a percent greater than "0%"');
                         throw new error ();
                     }
                 else
                     uiscale = 100;
+
+                if (data["rod-length"])
+                    try {
+                        if (data["rod-length"].substr(data["rod-length"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var rodlength = parseFloat (data["rod-length"].substr(0, data["rod-length"].length - 1));
+                        if (rodlength < 0 || rodlength >= 100)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in moonlight.json: "rod-length" has to be a percent between "0%" and "100%"');
+                        throw new error ();
+                    }
+                else
+                    rodlength = 5;
 
                 if (data["power-consumption-optimisation"])
                     try {
@@ -142,6 +158,7 @@
                     contentScale: cscale,
                     uiscale: uiscale,
                     quant: quant,
+                    rodLength: rodlength,
                 }
             }
 

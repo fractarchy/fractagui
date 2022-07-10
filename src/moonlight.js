@@ -43,7 +43,6 @@ function round (x, y, r1, r2, s) {
         p.push (x + Math.cos (2 * Math.PI / s * i) * r1);
         p.push (y + Math.sin (2 * Math.PI / s * i) * r2);
     }
-    //polygon.setPoint (0, p[0], p[1]);
     polygon.points (p);
     polygon.attribute('style', 'fill:red');
     
@@ -469,7 +468,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy) {
+function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -580,7 +579,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
 
 
     var ratio = 1 / 1.61803398875;
-    var circleSize = 0.95;
+    var circleSize = 1 - rodLength / 200;
     var lineWidth = 40;
 
     var minRadius;
@@ -639,18 +638,12 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             var anglea = Math.atan2(ya - data.parent.currYA, xa - data.parent.currXA);
             data.currAnglea = anglea;
 
-            var diff;
-            if (renderHint === "1")
-                diff = 1;
-            else
-                diff = 1;
-            
             ctx.beginPath ();
             ctx.ellipse (
                 xa * squashX,
                 ya * squashY,
-                ra * squashX - diff,
-                ra * squashY - diff,
+                ra * squashX,
+                ra * squashY,
                 0,
                 0,
                 2 * Math.PI,
@@ -878,7 +871,8 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
     var qpx1, qpy1;
     function mousemovePan(x, y) {
         if (select && !animating) {
-            var r0 = r1 * ratio;
+            //var r0 = r1 * ratio;
+            var r0 = r1 * ratio * circleSize;
 
             var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
             var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);

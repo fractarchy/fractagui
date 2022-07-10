@@ -723,7 +723,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
                 if (data.ifr.style.transformOrigin !== "0px 0px 0px") data.ifr.style.transformOrigin = "0px 0px 0px";
                 if (data.ifr.style.transform !== tr) data.ifr.style.transform = tr;
                 var l = ~~(xa * squashX - magn * (data.ifr.width / 2 + cx));
-                var t = ~~(y * squashY - magn * (data.ifr.height / 2 + cy));
+                var t = ~~(ya * squashY - magn * (data.ifr.height / 2 + cy));
                 
                 if (data.ifr.style.left === l + "px" && data.ifr.style.top === t + "px") {
                     //alert ("skip the same position");
@@ -1699,7 +1699,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
         svg.style.width = width + "px";
         svg.style.height = height + "px";
         alignX = squashX * rr * 1 / 2.5 / scale;// / window.devicePixelRatio;
-        alignY = squashY * rr * 1 / 2.5 / scale;// / window.devicePixelRatio;
+        alignY = squashY * rr * circleSize * 1 / 2.5 / scale;// / window.devicePixelRatio;
     
         n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
         
@@ -1771,7 +1771,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
                 c.centerY = ~~Math.min (/*center*/ +o.ifr.height / 2 - alignY, o.ifr.height / 2);
 
             else if (o.vAlign === "middle")
-                c.centerY = 0;
+                c.centerY =  0;
 
             else
                 c.centerY = ~~Math.min (/*center*/ -o.ifr.height / 2 + alignY, o.ifr.height / 2);

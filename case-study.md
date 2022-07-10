@@ -1,7 +1,7 @@
 ## case study
 
 - We built a promotional site for an accommodation facility:  
-    ![](media/ssh-320-apv.png)
+    ![](media/ssh-480-apv.png)
     - The site includes detailed accommodation object description, featuring three accommodation units. Top page includes the photo of the entire object and a short description of the object. Descendent pages include each apartment unit description, unit plan, and unit inerior photos - roughly about ten photos per each unit.
     - We updated the index page with links for mailing and choosing site translation. Two languages are available: English and Croatian.
     - We attach a booking calendar to each apartment, so that customers may choose between available dates to book for vacation by direct email correspondence to the accommodation staff. On successful agreement, accommodation stuff alters each apartment booking calendar to be synchronized with actual guest reservations.

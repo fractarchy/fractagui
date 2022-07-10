@@ -28,7 +28,7 @@ Being an attractive, minimalistic, and progressive web CMS, you can say many thi
 
 ### 3.1. case study
 
-![](media/ssh-320-apv.png)
+![](media/ssh-480-apv.png)
 
 We built an independent web site using Moonlight. To get info about this particular case study, please refer to [this document](case-study.md).
 

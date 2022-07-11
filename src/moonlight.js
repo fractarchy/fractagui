@@ -907,8 +907,8 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             if (!dragging && !panning && !animating) {
                 var r0 = r1 * ratio;
 
-                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
-                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY - Math.cos (orientation) * r0 * (1 - circleSize));
+                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0 + r0 * (1 - circleSize))) * squashX);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0 + r0 * (1 - circleSize))) * squashY);
 
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
                     var hx = cursor.centerX + cursor.data.ifr.width / 2 + (x - x0) / scale;// / window.devicePixelRatio;

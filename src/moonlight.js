@@ -908,7 +908,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
                 var r0 = r1 * ratio;
 
                 var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
-                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY - (r0 * (1 - circleSize)));
 
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
                     var hx = cursor.centerX + cursor.data.ifr.width / 2 + (x - x0) / scale;// / window.devicePixelRatio;

@@ -1,0 +1,10 @@
+{
+    "background-color": "gray",
+    "oval-color": "rgba(224, 224, 224)",
+    "rod-length": "10%",
+    "contents-scale": "100%",
+    "ui-scale": "120%",
+    "power-consumption-optimisation": "85%",
+    "top-node": "contents/c-0.xml"
+}
+

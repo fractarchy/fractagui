@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<contents>
+    <item src="c-0.html" hlock="true"/>
+    <children>
+        <child src="c-0-1.xml"/>
+        <child src="c-0-2.xml"/>
+        <child src="c-0-3.xml"/>
+        <child src="c-0-4.xml"/>
+    </children>
+</contents>

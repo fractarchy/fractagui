@@ -1,4 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <meta name="robots" content="noindex"/>
     <head>
         <link rel="stylesheet" href="style.css"/>
         <style>
@@ -21,41 +22,43 @@
         <p>
             <ul>
                 <li>
-                    <code class="c1" >index.html</code> - this is the main file containing visible project
+                    <code class="c1" >index.html</code> - this is the main file containing visible page
                     title, social media promotional informations, and meaningful
                     <a href="https://en.wikipedia.org/wiki/Search_engine_optimization" target="_new">SEO</a>
                     texts enclosed within <code class="c1">noscript</code> tags.
+                    
                 </li>
                 <li>
-                    <code class="c1" >moonlight.html</code> - this file usually won't need to be referenced
-                    unless we want override the default <code class="c1" >index.html</code> interface. However,
-                    if we want to use use our own layout, we may place the <code class="c1" >moonlight.html</code>
-                    reference inside custom <code class="c1" >iframe</code> structures as a part of user defined
-                    <code class="c1" >index.html</code>.
+                    <code class="c1" >init.json</code> - in this file we can setup various Fractarchy rendering
+                    parameters such as ovals and background color, power consumption, etc. The most important
+                    part in this file is <code class="c1" >top-node</code> property that points to the top XML file.
                 </li>
                 <li>
-                    <code class="c1" >moonlight.json</code> - in this file we can setup various Moonlight rendering
-                    parameters such as ovals and background color, power consumption, etc.
-                </li>
-                <li>
-                    <code class="c1" >contents/</code> - this is a folder where we keep our site content files.
-                    <code class="c1" >contents.xml</code> is the main XML file under the same folder where we
-                    structure the site contents. The site content files (HTML, CSS, images, ...) are originally
-                    meant to be placed under the <code class="c1" >contents/</code> folder and referred from
-                    <code class="c1" >contents.xml</code> file. Nevertheles, the content files may reside in any
-                    folders, but it is recommended to place the entire structure under the
-                    <code class="c1" >contents/</code> folder to keep our site clean and tidy.
+                    <code class="c1" >contents/</code> - this is a folder where we keep our site content files
+                    (HTML, CSS, images, ...). Nevertheles, the content files may reside in any
+                    folder, but it is recommended to place the entire structure under the
+                    <code class="c1" >contents/</code> folder to keep our site clean and tidy.<br/>
+                    <br/>
+                    A site structure is spanned over multiple cascading XML files, each representing an oval, pointing
+                    to its content and a number of children XML structure files, recursively. The structure resembles a ramification
+                    of contents from the top node downwards.<br/>
+                    <br/>
+                    It may be wise to exclude HTML pages in this folder from search engine indexing by setting
+                    <code class="c1">meta</code> tag with <code class="c1">name="robots"</code> and
+                    <code class="c1">content="noindex"</code> attributes. All the search engine information
+                    can be then extracted from <code class="c1">noscript</code> tag in the
+                    <code class="c1" >index.html</code> placed in the cms home folder.
                 </li>
             </ul>
         </p>
         <p>
             Hopefully, examining the default site example (that is, files containing these instructions) should
-            be descriptive enough to compose our own site. This is the quirky part where we will be using
+            be descriptive enough to compose our own site. This is the steep part where we will be using
             <a href="https://en.wikipedia.org/wiki/File_manager" target="_new">file manager</a>
             and
             <a href="https://en.wikipedia.org/wiki/Text_editor" target="_new">text editor</a>
             to arrange and edit files of our interest. Please refer to provided links if you need to get more
-            familiar with mentioned notions. This procedure is what makes Fract-exp site creating experience
+            familiar with mentioned notions. This procedure is what makes Fractarchy site creating experience
             "slack", and requires a bit more advanced knowledge from the site creators, especially considering
             possible use of server side scripting or other technologies.
         </p>

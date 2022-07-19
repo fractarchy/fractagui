@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<contents>
+    <item type="html" src="c-0-1.xhtml" hlock="true"/>
+    <children>
+        <child src="c-0-1-1.xml"/>
+    </children>
+</contents>

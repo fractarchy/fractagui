@@ -59,7 +59,7 @@
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalFillColor, env.ovalStrokeColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
 
@@ -144,14 +144,18 @@
                     quant = 80;
                 
                 if (data["shadow-radius"]) {
-                    var sradius = parseFloat (data["shadow-radius"]);
+                    var sradius = parseFloat (data["shadow-radius"]) * window.devicePixelRatio;
                     
                 } else {
                     sradius = 0;
                 }
                 
+                if (!data["oval-stroke-color"])
+                    data["oval-stroke-color"] = data["oval-fill-color"];
+                    
                 return {
-                    ovalColor: data["oval-color"],
+                    ovalFillColor: data["oval-fill-color"],
+                    ovalStrokeColor: data["oval-stroke-color"],
                     backColor: data["background-color"],
                     shadowRadius: sradius,
                     shadowColor: data["shadow-color"],
@@ -492,6 +496,7 @@
                         nodeTree.parent.children = [nodeTree];
                         
                         document.body.style.backgroundColor = env.backColor;
+                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")";
                         window.addEventListener("load", wonload ());
                     }
                 };

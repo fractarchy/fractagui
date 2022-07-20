@@ -49,12 +49,12 @@ function round (x, y, r1, r2, s) {
     return polygon;
 }
 
-function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, str1, shadowr, shadowColor) {
+function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
     var qang = 0.025 * Math.PI;
 
     var hilight = fill1;
-    var stroke1 = str1;
+    //var stroke1 = str1;
     var fill2 = stroke1;
     var stroke2 = fill1;
     
@@ -468,7 +468,7 @@ function fractalOvals(ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCirc
     };
 }
 
-function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength) {
+function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -507,7 +507,8 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
 
     data = prepareData (data);
     
-    var fill1 = ovalColor;
+    var fill1 = ovalFillColor;
+    var stroke1 = ovalStrokeColor;
     var back1 = backColor;
     var orientation = 0;
     var curvature = 1 / 8;
@@ -580,7 +581,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
 
 
     var ratio = 1 / 1.61803398875;
-    var circleSize = 1 - rodLength / 200;
+    var circleSize = 1 - rodLength / 100;
     var lineWidth = 40;
 
     var minRadius;
@@ -622,6 +623,10 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             
             var magn = r / (rr * ratio);
             
+            var lw = lineWidth * rr / 1000 * magn;
+            if (fill === stroke)
+                lw = 0;
+            
             var ra = r * circleSize;
             var xa = x + (r - ra) * Math.cos (angle - Math.PI / 2)
             var ya = y + (r - ra) * Math.sin (angle - Math.PI / 2)
@@ -629,6 +634,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             data.currXA = xa;
             data.currYA = ya;
             data.currRA = ra;
+            data.currMagn = magn;
             if (!data.parent.currXA) {
                 data.parent.currXA = xx;
                 data.parent.currYA = yy * ratio;
@@ -639,47 +645,97 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             var anglea = Math.atan2(ya - data.parent.currYA, xa - data.parent.currXA);
             data.currAnglea = anglea;
 
+            ctx.save ();
+            ctx.scale(squashX, squashY)
+
             ctx.beginPath ();
             ctx.ellipse (
+                /*
                 xa * squashX,
                 ya * squashY,
-                ra * squashX,
-                ra * squashY,
+                ra * squashX - lw / 2,
+                ra * squashY - lw / 2,
+                */
+                xa,
+                ya,
+                ra - lw,
+                ra - lw,
                 0,
                 0,
                 2 * Math.PI,
                 false
             );
             ctx.closePath ();
-            ctx.lineWidth = 0;
+            ctx.lineWidth = lw;
             if (data.backColor)
                 ctx.fillStyle = data.backColor;
             else
                 ctx.fillStyle = fill;
+
             ctx.fill ();
 
-            // line
-            if (level !== 1 && data.parent.parent){
-                ctx.globalCompositeOperation = "source-over";
-                var x1 = xa + (ra - lineWidth * rr / 500 * magn / squashX) * Math.cos (anglea - Math.PI);
-                var y1 = ya + (ra - lineWidth * rr / 500 * magn / squashY) * Math.sin (anglea - Math.PI);
-                var x2 = data.parent.currXA + (data.parent.currRA - lineWidth * rr / 500 * magn / squashX) * Math.cos (anglea);
-                var y2 = data.parent.currYA + (data.parent.currRA - lineWidth * rr / 500 * magn / squashY) * Math.sin (anglea);
-                ctx.lineWidth = lineWidth * rr / 500 * magn;
+            if (fill !== stroke) {
                 ctx.beginPath ();
-                ctx.moveTo(x1 * squashX, y1 * squashY);
-                ctx.lineTo(x2 * squashX, y2 * squashY);
+                ctx.ellipse (
+                    /*
+                    xa * squashX,
+                    ya * squashY,
+                    ra * squashX - lw / 2,
+                    ra * squashY - lw / 2,
+                    */
+                    xa,
+                    ya,
+                    ra - lw / 2,
+                    ra - lw / 2,
+                    0,
+                    0,
+                    2 * Math.PI,
+                    false
+                );
                 ctx.closePath ();
 
-                ctx.globalCompositeOperation = "destination-over";
-                if (data.backColor)
-                    ctx.strokeStyle = data.backColor;
-                else
-                    ctx.strokeStyle = fill;
+                ctx.lineWidth = lw;
+                ctx.strokeStyle = stroke;//fill;
+                ctx.stroke ();
+            }
+
+            ctx.restore ();
+
+            // line
+            var lw = lineWidth * rr / 1000 * magn;
+            if (level !== 1 && data.parent.parent){
+                
+                //ctx.globalCompositeOperation = "source-over";
+                ctx.lineWidth = lw;//lineWidth * rr / 500 * magn;
+                //ctx.lineCap = "round"
+                //var x1 = xa + (ctx.lineWidth / 2 + ra) * Math.cos (anglea - Math.PI);
+                //var y1 = ya + (ctx.lineWidth / 2 + ra) * Math.sin (anglea - Math.PI);
+                //var x2 = data.parent.currXA + (ctx.lineWidth / 2 + data.parent.currRA) * Math.cos (anglea);
+                //var y2 = data.parent.currYA + (ctx.lineWidth / 2 + data.parent.currRA) * Math.sin (anglea);
+                
+                var x1 = xa + (-1 + ra) * Math.cos (anglea - Math.PI);
+                var y1 = ya + (-1 + ra) * Math.sin (anglea - Math.PI);
+                var x2 = data.parent.currXA + (-1 + data.parent.currRA) * Math.cos (anglea);
+                var y2 = data.parent.currYA + (-1 + data.parent.currRA) * Math.sin (anglea);
+                ctx.save ();
+                ctx.scale(squashX, squashY)
+                ctx.beginPath ();
+                //ctx.moveTo(x1 * squashX, y1 * squashY);
+                //ctx.lineTo(x2 * squashX, y2 * squashY);
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                //ctx.closePath ();
+
+                //ctx.globalCompositeOperation = "destination-over";
+                //if (data.backColor)
+                //  ctx.strokeStyle = data.backColor;
+                //else
+                    ctx.strokeStyle = stroke//fill;
 
                 ctx.stroke();
+                ctx.restore ();
 
-                ctx.globalCompositeOperation = "source-over";
+                //ctx.globalCompositeOperation = "source-over";
             }
 
             var n = 24;
@@ -699,6 +755,10 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
             ctx.fill ();
             */
 
+            var lw = lineWidth * rr / 1000 * magn;
+            if (fill === stroke)
+                lw = 0;
+
             if (data.ifr && data.ifr.width > 0 && data.ifr.height > 0) {
                 var cx, cy;
                 if (cursor) {
@@ -713,12 +773,16 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
                 var magn = ~~(scale * r / (rr * ratio) * 100) / 100 //* window.devicePixelRatio;
                 data.ifr.magn = magn;
                 
-                var tr = "scale(" + magn + ")"
+                //var l2 = ~~((data.ifr.width / 2 + cx));
+                //var t2 = ~~((data.ifr.height / 2 + cy));
+                //var tr = "scale(" + magn + ") " + (level === 1?"": "translate(" + l2 + "px, " + t2 + "px) " + "scale("+ squashX + ", " + squashY + ") " + " rotate(" + (anglea - Math.PI / 2) + "rad) " + "scale(" + 1 / squashX + ", " + 1 / squashY + ") " + "translate(" + (-l2) + "px, " + (-t2) + "px) ");
+
+                var tr = "scale(" + magn + ") ";
                 if (data.ifr.style.transformOrigin !== "0px 0px 0px") data.ifr.style.transformOrigin = "0px 0px 0px";
                 if (data.ifr.style.transform !== tr) data.ifr.style.transform = tr;
+                
                 var l = ~~(xa * squashX - magn * (data.ifr.width / 2 + cx));
                 var t = ~~(ya * squashY - magn * (data.ifr.height / 2 + cy));
-                
                 if (data.ifr.style.left === l + "px" && data.ifr.style.top === t + "px") {
                     //alert ("skip the same position");
                 } else {
@@ -729,11 +793,12 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
                     if (data.clip2) data.clip2.remove();
                     
                     // local
+//                    if (fill === stroke) lw = 0;
                     var rand1 = (Math.random() + "").substring(2);
                     var clipPath1 = document.createElementNS(svgns, 'clipPath');
                     clipPath1.setAttributeNS(null, 'id', "cl1" + rand1);
                     svg.appendChild(clipPath1);
-                    var clip1 = round ((xa * squashX - l) / magn, (ya * squashY - t) / magn, (ra * squashX - 2 * window.devicePixelRatio * magn) / magn - 1 / magn, (ra * squashY - 2 * window.devicePixelRatio * magn) / magn - 1 / magn, n).node;
+                    var clip1 = round ((xa * squashX - l) / magn, (ya * squashY - t) / magn, (ra * squashX - 2 * window.devicePixelRatio * magn - lw * squashX) / magn - 1 / magn, (ra * squashY - 2 * window.devicePixelRatio * magn - lw * squashY) / magn - 1 / magn, n).node;
                     clipPath1.appendChild(clip1);
 
                     // global
@@ -1696,7 +1761,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
         alignX = squashX * rr * 1 / 2.5 / scale;// / window.devicePixelRatio;
         alignY = squashY * rr * circleSize * 1 / 2.5 / scale;// / window.devicePixelRatio;
     
-        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor);
         
         //minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
         minRadius = Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount) * window.devicePixelRatio);
@@ -1815,7 +1880,7 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
     
     var device = "mouse";
 
-    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, back1, shadowRadius, shadowColor);
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');
@@ -1897,9 +1962,8 @@ function Orbital (divContainer, data, quant, scale, ovalColor, backColor, shadow
 
             if (tchs.length === 1) {
                 mousemove (ongoingTouches[idx]);
-            }
             
-            if (tchs.length === 2) {
+            } else if (tchs.length === 2) {
                 if (scaleD0 === 0) {
                     var tx = tchs[0].pageX - tchs[1].pageX;
                     var ty = tchs[0].pageY - tchs[1].pageY;

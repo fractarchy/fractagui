@@ -44,3 +44,5 @@
 - v 0.5 - update  
     - only top level navigation  
     - each oval structure stored into separate xml - scallable dynamic loading of each xml  
+    - graphics design update  
+

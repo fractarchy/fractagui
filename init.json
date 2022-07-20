@@ -1,10 +1,13 @@
 {
     "background-color": "gray",
-    "oval-color": "rgba(224, 224, 224)",
-    "rod-length": "10%",
+    "oval-fill-color": "rgba(208, 208, 208)",
+    "oval-stroke-color": "rgba(208, 208, 208)",
+    "shadow-color": "black",
+    "shadow-radius": "10px",
+    "rod-length": "5%",
     "contents-scale": "100%",
     "ui-scale": "120%",
-    "power-consumption-optimisation": "85%",
+    "power-consumption-optimisation": "75%",
     "top-node": "contents/c-0.xml"
 }
 

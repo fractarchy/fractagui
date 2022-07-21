@@ -59,7 +59,7 @@
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalFillColor, env.ovalStrokeColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
 
@@ -150,12 +150,12 @@
                     sradius = 0;
                 }
                 
-                if (!data["oval-stroke-color"])
-                    data["oval-stroke-color"] = data["oval-fill-color"];
+                if (!data["oval-border-color"])
+                    data["oval-border-color"] = data["oval-background-color"];
                     
                 return {
-                    ovalFillColor: data["oval-fill-color"],
-                    ovalStrokeColor: data["oval-stroke-color"],
+                    ovalBackColor: data["oval-background-color"],
+                    ovalBorderColor: data["oval-border-color"],
                     backColor: data["background-color"],
                     shadowRadius: sradius,
                     shadowColor: data["shadow-color"],
@@ -320,7 +320,7 @@
                         reject ();
                     });
 
-                    if (node.xml) {
+                    //if (node.xml) {
                         loadNode (node.xml, node).then ((loaded) => {
                             delete node.xml;
                             node.children = loaded.children;
@@ -339,7 +339,7 @@
 
                             dispatchSize ();
                         });
-                    }
+                    //}
                     //resolve ();
                 });
             }

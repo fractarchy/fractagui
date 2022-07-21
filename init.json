@@ -1,9 +1,6 @@
 {
     "background-color": "gray",
-    "oval-fill-color": "rgba(208, 208, 208)",
-    "oval-stroke-color": "rgba(208, 208, 208)",
-    "shadow-color": "black",
-    "shadow-radius": "10px",
+    "oval-background-color": "rgba(208, 208, 208)",
     "rod-length": "5%",
     "contents-scale": "100%",
     "ui-scale": "120%",

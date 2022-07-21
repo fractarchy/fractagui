@@ -650,16 +650,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             ctx.beginPath ();
             ctx.ellipse (
-                /*
-                xa * squashX,
-                ya * squashY,
-                ra * squashX - lw / 2,
-                ra * squashY - lw / 2,
-                */
                 xa,
                 ya,
-                ra - lw,
-                ra - lw,
+                ra - lw / 2,
+                ra - lw / 2,
                 0,
                 0,
                 2 * Math.PI,
@@ -677,12 +671,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             if (fill !== stroke) {
                 ctx.beginPath ();
                 ctx.ellipse (
-                    /*
-                    xa * squashX,
-                    ya * squashY,
-                    ra * squashX - lw / 2,
-                    ra * squashY - lw / 2,
-                    */
                     xa,
                     ya,
                     ra - lw / 2,

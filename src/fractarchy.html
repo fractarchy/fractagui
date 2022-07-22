@@ -143,22 +143,22 @@
                 else
                     quant = 80;
                 
-                if (data["shadow-radius"]) {
-                    var sradius = parseFloat (data["shadow-radius"]) * window.devicePixelRatio;
+                if (data["oval-shadow-radius"]) {
+                    var sradius = parseFloat (data["oval-shadow-radius"]) * window.devicePixelRatio;
                     
                 } else {
                     sradius = 0;
                 }
                 
                 if (!data["oval-border-color"])
-                    data["oval-border-color"] = data["oval-background-color"];
+                    data["oval-border-color"] = data["oval-color"];
                     
                 return {
-                    ovalBackColor: data["oval-background-color"],
+                    ovalBackColor: data["oval-color"],
                     ovalBorderColor: data["oval-border-color"],
                     backColor: data["background-color"],
                     shadowRadius: sradius,
-                    shadowColor: data["shadow-color"],
+                    shadowColor: data["oval-shadow-color"],
                     contentScale: cscale,
                     uiscale: uiscale,
                     quant: quant,
@@ -197,13 +197,14 @@
             allOvals = []
             function hideOvals (data) {
                 for (var i = 0; i < allOvals.length; i++) {
-                    if (allOvals[i].ifr.style.visibility !== "hidden") {
+                    if (allOvals[i].ifr && allOvals[i].ifr.style.visibility !== "hidden") {
                         allOvals[i].ifr.style.visibility = "hidden";
                         allOvals[i].ifr.style.pointerEvents = "none"
                     }
                 }
             }
             
+            var oldOvals = [];
             async function refresh (ovals) {
                 idleAgain = false;
                 onIdleRunning = true;
@@ -221,6 +222,34 @@
                     }
                 }
                 
+                // update cache
+                for (var i1 = 0; i1 < oldOvals.length; i1++) {
+                    is = false;
+                    for (var i2 = 0; i2 < ovals.length; i2++) {
+                        if (oldOvals[i1].data === ovals[i2].data) {
+                            is = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!is) {
+                        var p = sortedOvals[0].data;
+                        do {
+                            if (oldOvals[i1].data === p) {
+                                is = true;
+                                break;
+                            }
+                            p = p.parent;
+                        } while (p);
+                        
+                        if (!is) {
+                            oldOvals[i1].data.ifr = null;
+                            oldOvals[i1].data.children = [];
+                        }
+                    }
+                }
+                oldOvals = ovals;
+
                 onIdleRunning = false;
             }
             
@@ -322,7 +351,7 @@
 
                     //if (node.xml) {
                         loadNode (node.xml, node).then ((loaded) => {
-                            delete node.xml;
+                            //delete node.xml;
                             node.children = loaded.children;
 
                             ifr.style.position = "absolute";

@@ -57,6 +57,10 @@
                 divContainer.dispatchEvent(new CustomEvent('resize1', null));
             }
 
+            function dispatchDraw () {
+                divContainer.dispatchEvent(new CustomEvent('redraw1', null));
+            }
+
             wonload = function () {
                 setSize ();
                 Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
@@ -366,7 +370,7 @@
                             node.ifr = ifr;
                             document.body.appendChild (ifr);
 
-                            dispatchSize ();
+                            dispatchDraw(); //Size ();
                         });
                     //}
                     //resolve ();

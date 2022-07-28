@@ -517,6 +517,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var qpan = quant * 12 * window.devicePixelRatio;  
     var qlevel = 8 / quant;                           
     var ngonsides = 4 * Math.round (8 / quant * 0.7);
+    if (ngonsides > 100) ngonsides = 100;
     
     var svgns = "http://www.w3.org/2000/svg";
     
@@ -2063,6 +2064,11 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         }
     });
     
+    divContainer.addEventListener('redraw1', function (e) {
+        redraw ();
+        idle ();
+    });
+
     divContainer.addEventListener('redraw', function (e) {
         if (!animating && !dragging && !panning) {
             redraw ();

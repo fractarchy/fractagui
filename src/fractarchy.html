@@ -133,11 +133,11 @@
                             throw new error ();
                         
                         var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
-                        if (quant <= 0)
+                        if (quant <= 0 || quant > 300)
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%"');
+                        alert ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%" and less than "300%"');
                         throw new error ();
                     }
                 else

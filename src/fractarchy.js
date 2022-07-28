@@ -2038,13 +2038,12 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     
     function setupWheelEvent () {
         window.addEventListener('wheel', function (evt) {
-            event.deltaY * -0.01
             magn = magn + event.deltaY * -0.0025;
             if (magn < 1)
                 magn = 1;
                 
-            else if (magn > 1 / ratio)
-                magn = 1 / ratio;
+            else if (magn > 1 / ratio * (1 / circleSize) * uiscale)
+                magn = 1 / ratio * (1 / circleSize) * uiscale;
                     
             rescale (magn);
             redraw();

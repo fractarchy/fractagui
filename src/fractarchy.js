@@ -1980,8 +1980,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     if (magn < 1)
                         magn = 1;
                         
-                    else if (magn > 1 / ratio)
-                        magn = 1 / ratio;
+                    else if (magn > 1 / ratio * (1 / circleSize) * uiscale)
+                        magn = 1 / ratio * (1 / circleSize) * uiscale;
                             
                     rescale (magn);
                     redraw();

@@ -516,6 +516,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var qang = quant * 0.0192 * Math.PI;              
     var qpan = quant * 12 * window.devicePixelRatio;  
     var qlevel = 8 / quant;                           
+    var ngonsides = 24;
     
     var svgns = "http://www.w3.org/2000/svg";
     
@@ -647,7 +648,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             ctx.save ();
             ctx.scale(squashX, squashY)
-
+/*
             ctx.beginPath ();
             ctx.ellipse (
                 xa,
@@ -686,6 +687,21 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 ctx.strokeStyle = stroke;//fill;
                 ctx.stroke ();
             }
+*/
+            var n = ngonsides;
+
+            ctx.beginPath ();
+            ctx.moveTo((ra - lw / 2) * Math.cos (0), (ra - lw / 2) * Math.sin (0));
+            for (var i = 0.5; i < n + 1.5; i++){
+                ctx.lineTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * i), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * i));
+            }
+            ctx.closePath ();
+            ctx.lineWidth = 0;
+            if (data.backColor)
+                ctx.fillStyle = data.backColor;
+            else
+                ctx.fillStyle = fill;
+            ctx.fill ();
 
             ctx.restore ();
 
@@ -701,10 +717,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 //var x2 = data.parent.currXA + (ctx.lineWidth / 2 + data.parent.currRA) * Math.cos (anglea);
                 //var y2 = data.parent.currYA + (ctx.lineWidth / 2 + data.parent.currRA) * Math.sin (anglea);
                 
-                var x1 = xa + (-1 + ra) * Math.cos (anglea - Math.PI);
-                var y1 = ya + (-1 + ra) * Math.sin (anglea - Math.PI);
-                var x2 = data.parent.currXA + (-1 + data.parent.currRA) * Math.cos (anglea);
-                var y2 = data.parent.currYA + (-1 + data.parent.currRA) * Math.sin (anglea);
+                var x1 = xa;// + (-1 + ra) * Math.cos (anglea - Math.PI);
+                var y1 = ya;// + (-1 + ra) * Math.sin (anglea - Math.PI);
+                var x2 = data.parent.currXA;// + (-1 + data.parent.currRA) * Math.cos (anglea);
+                var y2 = data.parent.currYA;// + (-1 + data.parent.currRA) * Math.sin (anglea);
                 ctx.save ();
                 ctx.scale(squashX, squashY)
                 ctx.beginPath ();
@@ -726,8 +742,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 //ctx.globalCompositeOperation = "source-over";
             }
 
-            var n = 24;
-            
             /*
             ctx.beginPath ();
             ctx.moveTo(r * squashX * Math.cos (0), r * squashX * Math.sin (0));

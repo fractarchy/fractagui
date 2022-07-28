@@ -516,7 +516,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var qang = quant * 0.0192 * Math.PI;              
     var qpan = quant * 12 * window.devicePixelRatio;  
     var qlevel = 8 / quant;                           
-    var ngonsides = 24;
+    var ngonsides = 4 * Math.round (8 / quant * 0.7);
     
     var svgns = "http://www.w3.org/2000/svg";
     

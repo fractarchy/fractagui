@@ -450,8 +450,9 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
                                 pass.cursor.angle = Math.PI;
                                 pass.angle1 = pass.cursor.angle;
                             
-                            } else                                 
+                            } else {
                                 pass.angle1 = ang;
+                            }
                         },
                     };
                     
@@ -468,7 +469,7 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
     };
 }
 
-function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength) {
+function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength, orient, shiftY) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -481,6 +482,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         
         var data = {
             xml: canvasScape.xml,
+            nodeRawData: canvasScape.nodeRawData,
             img: canvasScape.img,
             src: canvasScape.src,
             type: canvasScape.type,
@@ -510,7 +512,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var fill1 = ovalFillColor;
     var stroke1 = ovalStrokeColor;
     var back1 = backColor;
-    var orientation = 0;
+    var orientation = orient;
     var curvature = 1 / 8;
     
     var qang = quant * 0.0192 * Math.PI;              
@@ -518,6 +520,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var qlevel = 8 / quant;                           
     var ngonsides = 4 * Math.round (8 / quant * 0.7);
     if (ngonsides > 100) ngonsides = 100;
+    
+    if (!shiftY) shiftY = 0;
     
     var svgns = "http://www.w3.org/2000/svg";
     
@@ -784,19 +788,19 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 if (data.ifr.style.transformOrigin !== "0px 0px 0px") data.ifr.style.transformOrigin = "0px 0px 0px";
                 if (data.ifr.style.transform !== tr) data.ifr.style.transform = tr;
                 
-                var l = ~~(xa * squashX - magn * (data.ifr.width / 2 + cx));
-                var t = ~~(ya * squashY - magn * (data.ifr.height / 2 + cy));
-                if (data.ifr.style.left === l + "px" && data.ifr.style.top === t + "px") {
+                var l = ~~((xa * squashX - magn * (data.ifr.width / 2 + cx)));
+                var t = ~~((ya * squashY - magn * (data.ifr.height / 2 + cy)));
+                //if (data.ifr.style.left === l + "px" && data.ifr.style.top === t + "px") { // it was scaling bug
                     //alert ("skip the same position");
-                } else {
-                    data.ifr.style.left = l + "px";
-                    data.ifr.style.top = t + "px";
+                //} else {
+                    data.ifr.style.left = (cnv.parentNode.clientLeft + l) + "px";
+                    data.ifr.style.top = (cnv.parentNode.clientTop + t) + "px";
 
                     if (data.clip1) data.clip1.remove();
                     if (data.clip2) data.clip2.remove();
+                    if (data.clip3) data.clip3.remove();
                     
                     // local
-//                    if (fill === stroke) lw = 0;
                     var rand1 = (Math.random() + "").substring(2);
                     var clipPath1 = document.createElementNS(svgns, 'clipPath');
                     clipPath1.setAttributeNS(null, 'id', "cl1" + rand1);
@@ -812,13 +816,27 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t) / magn, (rr * squashX + shadowr) / magn, (rr * squashY + shadowr) / magn, n).node;
                     clipPath2.appendChild(clip2);
 
+                    // global
+                    var rand3 = (Math.random() + "").substring(2);
+                    var clipPath3 = document.createElementNS(svgns, 'clipPath');
+                    clipPath3.setAttributeNS(null, 'id', "cl3" + rand3);
+                    svg.appendChild(clipPath3);
+                    var newRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    newRect.setAttribute("x", (cnv.clientLeft - l) / magn);
+                    newRect.setAttribute("y", (cnv.clientTop - t) / magn);
+                    newRect.setAttribute("width", cnv.clientWidth / magn);
+                    newRect.setAttribute("height", cnv.clientHeight / magn);
+                    clipPath3.appendChild(newRect);
+
                     // intersect
+                    clip2.style.clipPath = "url(#cl3" + rand3 + ")";
                     clip1.style.clipPath = "url(#cl2" + rand2 + ")";
                     data.ifr.style.clipPath = "url(#cl1" + rand1 + ")";
 
                     data.clip1 = clipPath1;
                     data.clip2 = clipPath2;
-                }
+                    data.clip3 = clipPath3;
+                //}
 
                 data.ifr.style.visibility = "visible";
                 //if (level === 1)
@@ -866,7 +884,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         //clear ();
         hideOvals(data);
                     
-        div.style.zIndex = Math.pow(2, 31);
+        div.style.zIndex = 2000000000;//Math.pow(2, 31);
         
         renderData = [];
         var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData);
@@ -940,33 +958,37 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var qpx1, qpy1;
     function mousemovePan(x, y) {
         if (select && !animating) {
-            //var r0 = r1 * ratio;
-            var r0 = r1 * ratio * circleSize;
-
-            var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
-            var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
-
-            if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                setCenter (select, oldCenterX + ((dragX - x0) - (x - x0)) / scale /* window.devicePixelRatio*/, oldCenterY + ((dragY - y0) - (y - y0)) / scale /* window.devicePixelRatio*/);
+            if (noPan) {
+                setCenter (select, oldCenterX, oldCenterY);
 
             } else {
-                if (select.cursor.data && select.cursor.data.ifr) {
-                    alignOval (select.cursor.data, select.cursor)
-                }
+                //var r0 = r1 * ratio;
+                var r0 = r1 * ratio * circleSize;
 
+                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
+
+                if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
+                    setCenter (select, oldCenterX + ((dragX - x0) - (x - x0)) / scale /* window.devicePixelRatio*/, oldCenterY + ((dragY - y0) - (y - y0)) / scale /* window.devicePixelRatio*/);
+
+                } else {
+                    if (select.cursor.data && select.cursor.data.ifr) {
+                        alignOval (select.cursor.data, select.cursor)
+                    }
+
+                }
+                
+                globalt0 = (new Date()).getTime();
+                window.requestAnimationFrame(function () {
+                    var qpx = Math.round (select.cursor.centerX / qpan) * qpan;
+                    var qpy = Math.round (select.cursor.centerY / qpan) * qpan;
+                    if (qpx !== qpx1 || qpy !== qpy1) {
+                        redraw ({x: mouse.x, y: mouse.y}, "1");
+                        qpx1 = qpx;
+                        qpy1 = qpy;
+                    }
+                });
             }
-            
-            globalt0 = (new Date()).getTime();
-            window.requestAnimationFrame(function () {
-                var qpx = Math.round (select.cursor.centerX / qpan) * qpan;
-                var qpy = Math.round (select.cursor.centerY / qpan) * qpan;
-                if (qpx !== qpx1 || qpy !== qpy1) {
-                    redraw ({x: mouse.x, y: mouse.y}, "1");
-                    qpx1 = qpx;
-                    qpy1 = qpy;
-                }
-            });
-
         }
     }
     
@@ -1084,8 +1106,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 } else {
                     minR = 0;
                     var ra = select.smallR * circleSize;
-                    var xa = select.smallX + (select.smallR - ra) * Math.cos (0 - Math.PI / 2);
-                    var ya = select.smallY + (select.smallR - ra) * Math.sin (0 - Math.PI / 2);
+                    var xa = select.smallX + (select.smallR - ra) * Math.cos (orient - Math.PI / 2);
+                    var ya = select.smallY + (select.smallR - ra) * Math.sin (orient - Math.PI / 2);
 
                     maxR = ra;
                     mouseDistance = Math.sqrt (Math.pow (xa - mouse.x / squashX, 2) + Math.pow(ya - mouse.y / squashY, 2))
@@ -1355,7 +1377,11 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                                 i = 0;
                                 t0 = (new Date()).getTime();
                                 tmpi = 0;
-                                
+// reset children position                                
+select.cursor.children = [];
+select.cursor.index = 0;
+select.cursor.angle = Math.PI;
+// end reset
                                 var angles = [];
                                 var cc = select.cursor.parent;
                                 var cp = select.parent;
@@ -1514,7 +1540,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 var x0 = Math.floor (x1 * squashX);
                 var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
                 
-                if (Math.sqrt ((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
+                if (!noPan && Math.sqrt ((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
                     if (panning) {
                         panning = false;
                     }
@@ -1613,7 +1639,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     idle ();
                 }
 
-            } else if (panning && oldPan) {
+            } else if (!noPan && panning && oldPan) {
                 var r0 = r1 * ratio;
 
                 var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
@@ -1745,8 +1771,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             }
         }
         
-        x1 = (ww) / squashX / 2;
-        y1 = (hh) / squashY / 2 /* + rr * (uiscale - 1) / 4*/; // touch it and you're doomed
+        x1 = Math.cos(orient + Math.PI / 2) * rr * shiftY + (ww) / squashX / 2;
+        y1 = Math.sin(orient + Math.PI / 2) * rr * shiftY + (hh) / squashY / 2 /* + rr * (uiscale - 1) / 4*/; // touch it and you're doomed
         
         rr = rr * uiscale;
         r1 = rr;
@@ -1775,10 +1801,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         clip.setAttribute('ry', (r1) * squashY + shadowr);
         clip.setAttribute('stroke-width',  1);
         
-        cnv.width = ww;
-        cnv.height = hh;
-        cnv.setAttribute ("width", ww);
-        cnv.setAttribute ("height", hh);
+        cnv.width = Math.ceil (ww);
+        cnv.height = Math.ceil (hh);
+        cnv.setAttribute ("width", Math.ceil (ww));
+        cnv.setAttribute ("height", Math.ceil (hh));
         cnv.style.clipPath = "url(#clip128)";
 
         function updateCursor (c) {
@@ -1863,6 +1889,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             onIdle (renderData);
     }
     
+    var onStop;
+    
     var magn = 1;
     var oldAng, newAng, oldPan, newPan;
     var renderData;
@@ -1893,21 +1921,53 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var clip = document.createElementNS(svgns, 'ellipse');
     clipPath.appendChild(clip);   
     
+    var noPan;
+    
     function transformY () {
-        return (hh - 2 * shadowRadius) / 2 * (1 - 1 / magn);
+        var ret = Math.floor ((hh / 2 - shadowRadius) * (1 - 1 / magn));
+        
+        if (orient !== 0) {
+            ret = - ret;
+        }
+
+        return ret;
     }
 
     function setupMouseEvents () {
         window.addEventListener('mousemove', function (evt) {
             device = "mouse";
+            if (evt.detail.W !== undefined) {
+                evt.pageX = evt.detail.X;
+                evt.pageY = evt.detail.Y;
+                evt.which = evt.detail.W;
+                noPan = true;
+            } else {
+                noPan = false;
+            }
             mousemove (evt)
         }, false);
         window.addEventListener('mousedown',  function (evt) {
             device = "mouse";
+            if (evt.detail.W !== undefined) {
+                evt.pageX = evt.detail.X;
+                evt.pageY = evt.detail.Y;
+                evt.which = evt.detail.W;
+                noPan = true;
+            } else {
+                noPan = false;
+            }
             mousedown (evt)
         }, false);
         window.addEventListener('mouseup',  function (evt) {
             device = "mouse";
+            if (evt.detail.W !== undefined) {
+                evt.pageX = evt.detail.X;
+                evt.pageY = evt.detail.Y;
+                evt.which = evt.detail.W;
+                noPan = true;
+            } else {
+                noPan = false;
+            }
             mouseup (evt)
         }, false);
     }
@@ -1932,7 +1992,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
         window.addEventListener("touchstart", function (evt) {
             device = "touch";
-            var touches = evt.changedTouches;
+
+            if (evt.detail.CT !== undefined) {
+                var touches = evt.detail.CT;
+                noPan = true;
+                
+            } else {
+                var touches = evt.changedTouches;
+                noPan = false;
+            }
             
             for (var i = 0; i < touches.length; i++) {
                 ongoingTouches.push(copyTouch(touches[i]));
@@ -1950,7 +2018,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         var curMagn = 1;
         window.addEventListener("touchmove", function (evt) {
             device = "touch";
-            var touches = evt.changedTouches;
+
+            if (evt.detail.CT !== undefined) {
+                var touches = evt.detail.CT;
+                noPan = true;
+                
+            } else {
+                var touches = evt.changedTouches;
+                noPan = false;
+            }
             
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
@@ -1978,11 +2054,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var scaleD1 = Math.sqrt(tx * tx + ty * ty);
 
                     magn = curMagn * scaleD1 / scaleD0;
+
+                    var ty = (hh / 2 - shadowRadius) * (1 - 1 / uiscale);
+                    var magnmax = 1 * (rr - rr * shiftY + ty / squashY) / (rr) / ratio / circleSize;
+                    
                     if (magn < 1)
                         magn = 1;
                         
-                    else if (magn > 1 / ratio * (1 / circleSize) * uiscale)
-                        magn = 1 / ratio * (1 / circleSize) * uiscale;
+                    else if (magn > magnmax)
+                        magn = magnmax;
                             
                     rescale (magn);
                     redraw();
@@ -1994,7 +2074,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
         window.addEventListener("touchcancel", function (evt) {
             device = "touch";
-            var touches = evt.changedTouches;
+
+            if (evt.detail.CT !== undefined) {
+                var touches = evt.detail.CT;
+                noPan = true;
+                
+            } else {
+                var touches = evt.changedTouches;
+                noPan = false;
+            }
 
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
@@ -2015,7 +2103,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
         window.addEventListener("touchend", function (evt) {
             device = "touch";
-            var touches = evt.changedTouches;
+
+            if (evt.detail.CT !== undefined) {
+                var touches = evt.detail.CT;
+                noPan = true;
+                
+            } else {
+                var touches = evt.changedTouches;
+                noPan = false;
+            }
 
             for (var i = 0; i < touches.length; i++) {
                 var idx = ongoingTouchIndexById(touches[i].identifier);
@@ -2036,21 +2132,32 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             evt.preventDefault ();
         }, false);
     }
-    
+
     function setupWheelEvent () {
         window.addEventListener('wheel', function (evt) {
-            magn = magn + event.deltaY * -0.0025;
+            if (evt.detail.DY !== undefined) {
+                evt.deltaY = evt.detail.DY;
+                noPan = true;
+            } else {
+                noPan = false;
+            }
+            
+            var ty = (hh / 2 - shadowRadius) * (1 - 1 / uiscale);
+            var magnmax = 1 * (rr - rr * shiftY + ty / squashY) / (rr) / ratio / circleSize;
+
+            magn = magn + Math.sign(event.deltaY) * Math.sign (Math.sin(orient + Math.PI / 2)) * (magnmax - 1) / 5;
+
             if (magn < 1)
                 magn = 1;
                 
-            else if (magn > 1 / ratio * (1 / circleSize) * uiscale)
-                magn = 1 / ratio * (1 / circleSize) * uiscale;
-                    
+            else if (magn > magnmax)
+                magn = magnmax;
+
             rescale (magn);
             redraw();
         }, { passive: false });
     }
-    
+
     setupMouseEvents ();
     setupTouchEvents ();
     setupWheelEvent ();
@@ -2082,6 +2189,78 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         }
     });
 
+    divContainer.addEventListener('redefineData', function (e) {
+        data = prepareData (e.detail);
+        cursor = {parent: null, index: 0, data: data, centerX: 0, centerY: 0, angle: Math.PI, children: []}
+        cursor.parent = {index: 0, children: [cursor]};
+        path = [];
+        resize (divContainer.clientWidth, divContainer.clientHeight);
+    });
+
+    divContainer.addEventListener('redefineCursor', function (e) {
+        function setCursorAndPath (c1, c2, idx) {
+            while (data.parent)
+                data = data.parent;
+            
+            data = data.children[0];
+
+            var topc1 = c1;
+            while (topc1.parent)
+                topc1 = topc1.parent;
+            
+            topc1 = topc1.children[0];
+            
+            var topc2 = c2;
+            while (topc2.parent)
+                topc2 = topc2.parent;
+            
+            topc2 = topc2.children[0];
+            
+            if (topc2) {
+                var parent = {index: 0, children: []};
+                //cursor = {parent: parent, index: topc2.index, data: data, centerX: 0, centerY: 0, angle: topc2.angle, children: []};
+                //parent.children = [cursor];
+                //parent = cursor;
+                for (var i = 0; i <= idx; i++) {
+                    var olddata = data;
+                    if (topc2) {
+                        cursor = {parent: parent, index: topc2.index, data: data, centerX: topc1?topc1.centerX: 0, centerY: topc1?topc1.centerY: 0, angle: topc2.angle, children: []};
+                        if (!topc1)
+                            alignOval (data, cursor)
+                    
+                    } else
+                        break;//cursor = {parent: parent, index: 0, data: data, centerX: 0, centerY: 0, angle: Math.PI, children: []};
+                        
+                    parent.children[parent.index] = cursor;
+                    parent = cursor;
+
+                    if (i === idx)
+                        break;
+                    
+                    else {
+                        path.push (data);
+                        if (topc2) {
+                            data = data.children[topc2.index];
+                            topc2 = topc2.children[topc2.index];
+         
+                        } else {
+                            break;//data = data.children[0];
+                        }
+                        if (topc1) {
+                            topc1 = topc1.children[topc1.index];
+                        }
+                    }
+                }
+            }
+        }
+    
+        path = [];
+        setCursorAndPath (cursor, e.detail.cursor, e.detail.pathLength);
+        redraw ();
+        idle ();
+        //resize (divContainer.clientWidth, divContainer.clientHeight);
+    });
+
     /*    
     function getIfrMouse(e) {
         return {
@@ -2103,4 +2282,13 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         mouseup (getIfrMouse(e));
     });
     */
+    
+    return {
+        getCursor: function () {
+            return cursor;
+        },
+        getPathLength: function () {
+            return path.length;
+        }
+    }
 }

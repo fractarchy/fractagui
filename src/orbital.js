@@ -1744,20 +1744,30 @@ select.cursor.angle = Math.PI;
     function setDimensions(width, height) {
         ww = width;
         hh = height;
-
+        /*
         if (ww > hh / ratio) {
             squashX = 1 / ratio;
             squashY = 1;
             rr = hh / 2 - shadowr;
             ferr = rr * uiscale;
-
             
         } else if (hh > ww / ratio){
             squashX = 1;
             squashY = 1 / ratio;
             rr = ww / 2 - shadowr;
             ferr = rr * uiscale;
-
+        */
+        if (ww > hh / ratio) {
+            squashX = 1 / ratio;
+            squashY = 1;
+            rr = (hh / 2 - shadowr);
+            ferr = rr * uiscale;
+            
+        } else if (hh > ww / ratio){
+            squashX = 1;
+            squashY = 1 / ratio;
+            rr = (hh / 2 - shadowr) * ratio;
+            ferr = rr * uiscale;
         } else {
             if (ww > hh) {
                 squashX = 1 / ratio;

@@ -63,7 +63,7 @@
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, 0);
+                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, env.uishift / 100);
                 //Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
@@ -116,6 +116,22 @@
                 else
                     uiscale = 100;
 
+                if (data["ui-shift"])
+                    try {
+                        if (data["ui-shift"].substr(data["ui-shift"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var uishift = parseFloat (data["ui-shift"].substr(0, data["ui-shift"].length - 1));
+                        if (uishift <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        alert ('Error in init.json: "ui-shift" has to be a percent greater than "0%"');
+                        throw new error ();
+                    }
+                else
+                    uishift = 0;
+
                 if (data["rod-length"])
                     try {
                         if (data["rod-length"].substr(data["rod-length"].length - 1, 1) !== "%")
@@ -166,6 +182,7 @@
                     shadowColor: data["oval-shadow-color"],
                     contentScale: cscale,
                     uiscale: uiscale,
+                    uishift: uishift,
                     quant: quant,
                     rodLength: rodlength,
                     topNode: data["top-node"]

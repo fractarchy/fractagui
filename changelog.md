@@ -45,4 +45,5 @@
     - only top level navigation  
     - each oval structure stored into separate XML - scallable dynamic loading of each XML  
     - mouse wheel event resembles pinch-zoom  
+    - updated scaling policy  
 

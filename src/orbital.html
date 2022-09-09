@@ -122,7 +122,7 @@
                             throw new error ();
                         
                         var uishift = parseFloat (data["ui-shift"].substr(0, data["ui-shift"].length - 1));
-                        if (uishift <= 0)
+                        if (uishift < 0)
                             throw new error ();
                         
                     } catch (e) {

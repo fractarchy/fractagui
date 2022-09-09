@@ -2295,6 +2295,12 @@ select.cursor.angle = Math.PI;
     */
     
     return {
+        getData: function () {
+            return data;
+        },
+        setData: function (d) {
+            data = d;
+        },
         getCursor: function () {
             return cursor;
         },

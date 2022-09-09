@@ -10,7 +10,7 @@ tags: content-management-system, fractal-structure-inspired, parent-child-orbiti
 > 
 > ![](media/socmedia.png)
 > 
-> To overview an example site made with Fractarchy CMS, please follow [this link](https://contrast-zone.github.io/fractarchy/).
+> To overview an example site made with Fractarchy CMS, please follow [this link](https://contrast-zone.github.io/fractarchy-cms/).
 
 ## 1. about fractarchy
 
@@ -34,7 +34,7 @@ We built an independent web site using Fractarchy. To get info about this partic
 
 ### 4.2. giving it a try
 
-To get started with site creation using Fractarchy, please refer to the [example site](https://contrast-zone.github.io/fractarchy/) containing use instructions.
+To get started with site creation using Fractarchy, please refer to the [example site](https://contrast-zone.github.io/fractarchy-cms/) containing use instructions.
 
 ### 4.3. licensing
 

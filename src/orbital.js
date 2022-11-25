@@ -49,7 +49,7 @@ function round (x, y, r1, r2, s) {
     return polygon;
 }
 
-function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor) {
+function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor, circleSize) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
     var qang = 0.025 * Math.PI;
 
@@ -273,9 +273,14 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
                     }
                 }
                 
+                var ra = r0 * circleSize;
+                var xa = x0 + (r0 - ra) * Math.cos (angle - Math.PI / 2)
+                var ya = y0 + (r0 - ra) * Math.sin (angle - Math.PI / 2)
                 //var cond = selectedCursor? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0);
+
                 var cond1 = (rec === 2)? ((selectedCursor)? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x1, 2) + Math.pow(mouse.y / squashY - y1, 2)) <= r1)) : false;
-                var cond2 = (rec === 1)? ((selectedCursor)? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) : false;
+                //var cond2 = (rec === 1)? ((selectedCursor)? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - x0, 2) + Math.pow(mouse.y / squashY - y0, 2)) <= r0)) : false;
+                var cond2 = (rec === 1)? ((selectedCursor)? (cursor === selectedCursor) : (mouse && Math.sqrt(Math.pow(mouse.x / squashX - xa, 2) + Math.pow(mouse.y / squashY - ya, 2)) <= ra)) : false;
                 var cond = cond1 || cond2;
                 
                 if (cursor) {
@@ -457,7 +462,7 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
                     };
                     
                     if (ret) ret.parent = pass;
-                                        
+
                     return pass;
                 }
             }
@@ -516,7 +521,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var curvature = 1 / 8;
     
     var qang = quant * 0.0192 * Math.PI;              
-    var qpan = quant * 12 * window.devicePixelRatio;  
+    var qpan = quant * 12;// * window.devicePixelRatio;  
     var qlevel = 8 / quant;                           
     var ngonsides = 4 * Math.round (8 / quant * 0.7);
     if (ngonsides > 100) ngonsides = 100;
@@ -591,7 +596,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     var lineWidth = 40;
 
     var minRadius;
-    var shadowr = shadowRadius;
+    var shadowr = 0;// shadowRadius;
     var recCount = 4;
 
     var dragPrecision = Math.pow (2, 8);
@@ -629,7 +634,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             
             var magn = r / (rr * ratio);
             
-            var lw = lineWidth * rr / 1000 * magn;
+            var lw = lineWidth * rr / 2048 * magn;
             if (fill === stroke)
                 lw = 0;
             
@@ -641,11 +646,13 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             data.currYA = ya;
             data.currRA = ra;
             data.currMagn = magn;
+            data.lineWidth = lineWidth * rr / 2048 * magn;
             if (!data.parent.currXA) {
                 data.parent.currXA = xx;
                 data.parent.currYA = yy * ratio;
                 data.parent.currRA = rr * ratio;
                 data.parent.currAngleA = Math.PI / 2;
+                data.parent.lineWidth = lineWidth * rr / 2048 * magn * ratio * 2;
             }
 
             var anglea = Math.atan2(ya - data.parent.currYA, xa - data.parent.currXA);
@@ -696,36 +703,48 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             var n = ngonsides;
 
             ctx.beginPath ();
-            ctx.moveTo((ra - lw / 2) * Math.cos (0), (ra - lw / 2) * Math.sin (0));
+            ctx.moveTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * -0.5), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * -0.5));
             for (var i = 0.5; i < n + 1.5; i++){
                 ctx.lineTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * i), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * i));
             }
-            ctx.closePath ();
-            ctx.lineWidth = 0;
+            ctx.lineWidth = lw;
             if (data.backColor)
                 ctx.fillStyle = data.backColor;
             else
                 ctx.fillStyle = fill;
             ctx.fill ();
+            ctx.closePath ();
 
+            if (fill !== stroke) {
+                ctx.beginPath ();
+                ctx.moveTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * -0.5), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * -0.5));
+                for (var i = 0.5; i < n + 1.5; i++){
+                    ctx.lineTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * i), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * i));
+                }
+                ctx.lineWidth = lw;
+                ctx.strokeStyle = stroke;
+                ctx.stroke ();
+                ctx.closePath ();
+            }
+            
             ctx.restore ();
 
             // line
-            var lw = lineWidth * rr / 1000 * magn;
+            var lw = lineWidth * rr / 1024 * magn;
             if (level !== 1 && data.parent.parent){
                 
-                //ctx.globalCompositeOperation = "source-over";
+                ctx.globalCompositeOperation = "source-over";
                 ctx.lineWidth = lw;//lineWidth * rr / 500 * magn;
                 //ctx.lineCap = "round"
-                //var x1 = xa + (ctx.lineWidth / 2 + ra) * Math.cos (anglea - Math.PI);
-                //var y1 = ya + (ctx.lineWidth / 2 + ra) * Math.sin (anglea - Math.PI);
-                //var x2 = data.parent.currXA + (ctx.lineWidth / 2 + data.parent.currRA) * Math.cos (anglea);
-                //var y2 = data.parent.currYA + (ctx.lineWidth / 2 + data.parent.currRA) * Math.sin (anglea);
+                var x1 = xa + (-data.lineWidth * ratio + ra) * Math.cos (anglea - Math.PI);
+                var y1 = ya + (-data.lineWidth * ratio + ra) * Math.sin (anglea - Math.PI);
+                var x2 = data.parent.currXA + (-data.parent.lineWidth + data.parent.currRA) * Math.cos (anglea);
+                var y2 = data.parent.currYA + (-data.parent.lineWidth + data.parent.currRA) * Math.sin (anglea);
                 
-                var x1 = xa;// + (-1 + ra) * Math.cos (anglea - Math.PI);
-                var y1 = ya;// + (-1 + ra) * Math.sin (anglea - Math.PI);
-                var x2 = data.parent.currXA;// + (-1 + data.parent.currRA) * Math.cos (anglea);
-                var y2 = data.parent.currYA;// + (-1 + data.parent.currRA) * Math.sin (anglea);
+                //var x1 = xa;// + (-1 + ra) * Math.cos (anglea - Math.PI);
+                //var y1 = ya;// + (-1 + ra) * Math.sin (anglea - Math.PI);
+                //var x2 = data.parent.currXA;// + (-1 + data.parent.currRA) * Math.cos (anglea);
+                //var y2 = data.parent.currYA;// + (-1 + data.parent.currRA) * Math.sin (anglea);
                 ctx.save ();
                 ctx.scale(squashX, squashY)
                 ctx.beginPath ();
@@ -744,7 +763,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 ctx.stroke();
                 ctx.restore ();
 
-                //ctx.globalCompositeOperation = "source-over";
+                ctx.globalCompositeOperation = "source-over";
             }
 
             /*
@@ -762,7 +781,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             ctx.fill ();
             */
 
-            var lw = lineWidth * rr / 1000 * magn;
+            var lw = lineWidth * rr / 2048 * magn;
             if (fill === stroke)
                 lw = 0;
 
@@ -785,16 +804,16 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 //var tr = "scale(" + magn + ") " + (level === 1?"": "translate(" + l2 + "px, " + t2 + "px) " + "scale("+ squashX + ", " + squashY + ") " + " rotate(" + (anglea - Math.PI / 2) + "rad) " + "scale(" + 1 / squashX + ", " + 1 / squashY + ") " + "translate(" + (-l2) + "px, " + (-t2) + "px) ");
 
                 if (data.ifr.style.transformOrigin !== "0px 0px 0px") data.ifr.style.transformOrigin = "0px 0px 0px";
-                var tr = "scale(" + magn.toFixed(2) + ") ";
+                var tr = "scale(" + magn.toFixed(2) + ")";
                 //if (data.ifr.style.transform !== tr) data.ifr.style.transform = tr;
                 
                 var l = ~~((xa * squashX - magn * (data.ifr.width / 2 + cx)));
                 var t = ~~((ya * squashY - magn * (data.ifr.height / 2 + cy)));
-                if (data.ifr.style.left === l + "px" && data.ifr.style.top === t + "px" && data.ifr.style.transform === tr) { // it was scaling bug
+                if (data.ifr.style.left === ~~(cnv.parentNode.clientLeft + l) + "px" && data.ifr.style.top === ~~(cnv.parentNode.clientLeft + t) + "px" && data.ifr.style.transform === tr) { // it was scaling bug
                     //alert ("skip the same position");
                 } else {
-                    data.ifr.style.left = (cnv.parentNode.clientLeft + l) + "px";
-                    data.ifr.style.top = (cnv.parentNode.clientTop + t) + "px";
+                    data.ifr.style.left = ~~(cnv.parentNode.clientLeft + l) + "px";
+                    data.ifr.style.top = ~~(cnv.parentNode.clientTop + t) + "px";
                     data.ifr.style.transform = tr;
 
                     if (data.clip1) data.clip1.remove();
@@ -806,7 +825,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clipPath1 = document.createElementNS(svgns, 'clipPath');
                     clipPath1.setAttributeNS(null, 'id', "cl1" + rand1);
                     svg.appendChild(clipPath1);
-                    var clip1 = round ((xa * squashX - l) / magn, (ya * squashY - t) / magn, (ra * squashX - 2 * window.devicePixelRatio * magn - lw * squashX) / magn - 1 / magn, (ra * squashY - 2 * window.devicePixelRatio * magn - lw * squashY) / magn - 1 / magn, n).node;
+                    var clip1 = round ((xa * squashX - l) / magn, (ya * squashY - t) / magn, (ra * squashX - 2 * magn - lw * squashX) / magn - 1 / magn, (ra * squashY - 2 * magn - lw * squashY) / magn - 1 / magn, n).node;
                     clipPath1.appendChild(clip1);
 
                     // global
@@ -1047,8 +1066,13 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             if (mouseDown === 1) {
                 if (3 < Math.sqrt(Math.pow(mouse.x - dragX, 2) + Math.pow(mouse.y - dragY, 2))) {
                     setupSelect(preSelect);
-                    
-                    if (!animating && select && Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
+        
+                    var angle = Math.PI;
+                    var ra = r0 * circleSize;
+                    var xa = x0 + (r0 - ra) * Math.cos (angle - Math.PI / 2)
+                    var ya = y0 + (r0 - ra) * Math.sin (angle - Math.PI / 2)
+                    //if (!animating && select && Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
+                    if (!animating && select && Math.sqrt((mouse.x - xa) / squashX * (mouse.x - xa) / squashX + (mouse.y - ya) / squashY * (mouse.y - ya) / squashY) < ra) {
                         panning = true;
                         
                         oldCenterX = select.cursor.centerX;
@@ -1089,11 +1113,19 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             var isOnParent = select.parent;
             while (isOnParent) {
-                if (isOnParent.smallR - 1 > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
+                if (isOnParent.data.currRA - 1 > Math.sqrt (Math.pow (isOnParent.data.currXA - mouse.x / squashX, 2) + Math.pow (isOnParent.data.currYA - mouse.y / squashY, 2)))
                     break;
                     
                 isOnParent = isOnParent.parent
             }
+            
+            //var isOnParent = select.parent;
+            //while (isOnParent) {
+            //    if (isOnParent.smallR - 1 > Math.sqrt (Math.pow (isOnParent.smallX - mouse.x / squashX, 2) + Math.pow (isOnParent.smallY - mouse.y / squashY, 2)))
+            //        break;
+            //        
+            //    isOnParent = isOnParent.parent
+            //}
             
             var minR, maxR, mouseDistance;
             
@@ -1136,13 +1168,14 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 //select.parent.setAngle (ang[1], dr);
                 var myang = 0;
                 var myangadd = 0;
+                
                 while (Math.abs (myang) < Math.abs (ang1 - Math.PI)) {
                     myangadd = qang * Math.sign(ang1 - Math.PI) * select.parent.getCircle(myang + Math.PI).r / (select.parent.largeR * (1 - ratio));
                     myang += myangadd;
                 }
                 myang -= myangadd;
-                if (ang1 <= select.getAngMin () || ang1 >= select.getAngMax ())
-                    myang += myangadd;
+                //if (ang1 < select.getAngMin () || ang1 > select.getAngMax ())
+                //    myang += myangadd;
                 
                 var qang1 = Math.PI + myang;
                 select.parent.setAngle (qang1, 0);
@@ -1541,7 +1574,12 @@ select.cursor.angle = Math.PI;
                 var x0 = Math.floor (x1 * squashX);
                 var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
                 
-                if (!noPan && Math.sqrt ((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
+                var angle = Math.PI;
+                var ra = r0 * circleSize;
+                var xa = x0 + (r0 - ra) * Math.cos (angle - Math.PI / 2)
+                var ya = y0 + (r0 - ra) * Math.sin (angle - Math.PI / 2)
+                //if (!noPan && Math.sqrt ((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) >= r0) {
+                if (!noPan && Math.sqrt ((dragX - xa) / squashX * (dragX - xa) / squashX + (dragY - ya) / squashY * (dragY - ya) / squashY) >= ra) {
                     if (panning) {
                         panning = false;
                     }
@@ -1603,8 +1641,8 @@ select.cursor.angle = Math.PI;
                                     myang += myangadd;
                                 }
                                 myang -= myangadd;
-                                if (a0 <= select.getAngMin () || a0 >= select.getAngMax ())
-                                    myang += myangadd;
+                                //if (a0 < select.getAngMin () || a0 > select.getAngMax ())
+                                //    myang += myangadd;
                                 
                                 var qang1 = Math.PI + myang;
                                 if (tmpa0 !== qang1) {
@@ -1798,10 +1836,10 @@ select.cursor.angle = Math.PI;
         setDimensions (width, height);
         svg.style.width = width + "px";
         svg.style.height = height + "px";
-        alignX = squashX * rr * 1 / 2.5 / scale;// / window.devicePixelRatio;
-        alignY = squashY * rr * circleSize * 1 / 2.5 / scale;// / window.devicePixelRatio;
+        alignX = squashX * rr * circleSize * 1 / 2.4 / scale;// / window.devicePixelRatio;
+        alignY = squashY * rr * circleSize * 1 / 2.4 / scale;// / window.devicePixelRatio;
     
-        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor);
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize);
         
         //minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
         minRadius = Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount) * window.devicePixelRatio);
@@ -1833,6 +1871,8 @@ select.cursor.angle = Math.PI;
         function updateData (d) {
             if (d.ifr) {
                 alignOval (d, d)
+                //d.ifr.remove();
+                //d.ifr = null;
             }
                             
             for (var i = 0; i < d.children.length; i++)
@@ -1922,7 +1962,7 @@ select.cursor.angle = Math.PI;
     
     var device = "mouse";
 
-    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor);
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');
@@ -1935,7 +1975,7 @@ select.cursor.angle = Math.PI;
     var noPan;
     
     function transformY () {
-        var ret = Math.floor ((hh / 2 - shadowRadius) * (1 - 1 / magn));
+        var ret = Math.floor ((hh / 2 - shadowr) * (1 - 1 / magn));
         
         if (orient !== 0) {
             ret = - ret;
@@ -2066,7 +2106,7 @@ select.cursor.angle = Math.PI;
 
                     magn = curMagn * scaleD1 / scaleD0;
 
-                    var ty = (hh / 2 - shadowRadius) * (1 - 1 / uiscale);
+                    var ty = (hh / 2 - shadowr) * (1 - 1 / uiscale);
                     var magnmax = 1 * (rr - rr * shiftY + ty / squashY) / (rr) / ratio / circleSize;
                     
                     if (magn < 1)
@@ -2153,7 +2193,7 @@ select.cursor.angle = Math.PI;
                 noPan = false;
             }
             
-            var ty = (hh / 2 - shadowRadius) * (1 - 1 / uiscale);
+            var ty = (hh / 2 - shadowr) * (1 - 1 / uiscale);
             var magnmax = 1 * (rr - rr * shiftY + ty / squashY) / (rr) / ratio / circleSize;
 
             magn = magn + Math.sign(event.deltaY) * Math.sign (Math.sin(orient + Math.PI / 2)) * (magnmax - 1) / 5;
@@ -2235,6 +2275,9 @@ select.cursor.angle = Math.PI;
                 for (var i = 0; i <= idx; i++) {
                     var olddata = data;
                     if (topc2) {
+                        if (!data.children[topc2.index])
+                            topc2.index = 0;
+                            
                         cursor = {parent: parent, index: topc2.index, data: data, centerX: topc1?topc1.centerX: 0, centerY: topc1?topc1.centerY: 0, angle: topc2.angle, children: []};
                         if (!topc1)
                             alignOval (data, cursor)
@@ -2306,6 +2349,9 @@ select.cursor.angle = Math.PI;
         },
         getPathLength: function () {
             return path.length;
+        },
+        getRadius: function () {
+            return rr;
         }
     }
 }

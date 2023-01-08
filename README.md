@@ -8,7 +8,7 @@ tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-b
 > 
 > Do you want to bring a touch of adventurous spirit to your web site? An arbitrary web site made using Fractarchy-CMS is not designed so that a visitor comes, sees, leaves, and forgets about it. It is conceived as a brave adventure that the visitor embarks on from the first moment of the visit. Of course, if (s)he wants to, the visitor can also take a look at the very short instructions for navigating the contents, but this way your site does not lose its charm. On the contrary, carefully balanced ratio of fun to visit and ease of discovering useful information on your site (prevailing on the entertainment side) provides the visitor with an exceptional experience that leaves a strong impression about your content.
 > 
-> To overview an example site made with Fractarchy-CMS, please follow [this link](https://contrast-zone.github.io/fractarchy-cms/).
+> To overview an example site made with Fractarchy-CMS, please follow [this link](https://fractarchy.github.io/fractarchy-cms/).
 
 ## 1. about fractarchy-cms
 

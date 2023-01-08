@@ -144,11 +144,11 @@
             }
             
             window.addEventListener('resize', function () {
-                setSize (screen.orientation.type);
+                setSize ();
             });
 
             window.addEventListener("orientationchange", function () {
-                setSize (screen.orientation.type);
+                setSize ();
             });
 
             document.getElementById("fullscrbtn").addEventListener('click', toggleFullScreen);

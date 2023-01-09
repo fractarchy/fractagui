@@ -42,9 +42,10 @@
     - bug fixes  
 
 - v 0.5 - update  
-    - only top level navigation  
+    - only top two levels navigation  
     - each oval structure stored into separate XML - scallable dynamic loading of each XML  
     - mouse wheel event resembles pinch-zoom  
     - updated scaling policy  
     - directional shift for larger scaling  
+    - UX improvement  
 

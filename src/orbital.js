@@ -2536,17 +2536,29 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     mousemove (ongoingTouches[idx]);
                 
                 } else if (tchs.length === 2) {
-                    if (evt.detail.DY !== undefined) {
-                        evt.deltaY = evt.detail.DY;
+                    if (scaleD0 === 0) {
+                        var tx = tchs[0].pageX - tchs[1].pageX;
+                        var ty = tchs[0].pageY - tchs[1].pageY;
+                        scaleD0 = Math.sqrt(tx * tx + ty * ty);
+
+                    } else {
+                        var tx = tchs[0].pageX - tchs[1].pageX;
+                        var ty = tchs[0].pageY - tchs[1].pageY;
+                        var scaleD1 = Math.sqrt(tx * tx + ty * ty);
+
+                        var dy = scaleD1 - scaleD0;
+                    }
+                    
+                    if (dy !== undefined) {
                         noPan = true;
                     } else {
                         noPan = false;
                     }
                     
-                    if (magn === 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
+                    if (magn === 1 && dy * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
                         zoomIn ();
                         
-                    } else if (magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
+                    } else if (magn !== 1 && dy * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
                         zoomOut ();
                     }
                     

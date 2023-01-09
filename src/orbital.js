@@ -2547,20 +2547,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                         var scaleD1 = Math.sqrt(tx * tx + ty * ty);
 
                         var dy = scaleD1 - scaleD0;
+
+                        if (magn === 1 && dy * Math.sign (Math.sin(orient + Math.PI / 2)) > 0) {
+                            zoomIn ();
+                            
+                        } else if (magn !== 1 && dy * Math.sign (Math.sin(orient + Math.PI / 2)) < 0) {
+                            zoomOut ();
+                        }
                     }
                     
-                    if (dy !== undefined) {
-                        noPan = true;
-                    } else {
-                        noPan = false;
-                    }
-                    
-                    if (magn === 1 && dy * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
-                        zoomIn ();
-                        
-                    } else if (magn !== 1 && dy * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
-                        zoomOut ();
-                    }
                     
                     /*
 

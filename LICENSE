@@ -11,19 +11,21 @@ Conditions
 ----------
 * use-type: student
     100% free
-
+    
+* use-type: starter
+    personal use
+    up to 5 projects
+    free of charge
+    
 * use-type: personal
-    personal use limited to 5 projects
-    100% free
-
-* use-type: patron
     unlimited personal use
-    25$ to support development
-
-* use-type: commercial
     14 days trial before purchasing
+    25$ one-time payment per user
+    
+* use-type: commercial
     unlimited commercial use
-    50$ per developer
+    14 days trial before purchasing
+    50$ one-time payment per user
 
 Purchasing is conducted using our software official PayPal funding pages at:
 

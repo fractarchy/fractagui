@@ -47,5 +47,8 @@
     - mouse wheel event resembles pinch-zoom  
     - updated scaling policy  
     - directional shift for larger scaling  
-    - UX improvement  
+
+- v 0.7 - alpha
+    - mobile UX improvement  
+    - shadow, border, backcolor  
 

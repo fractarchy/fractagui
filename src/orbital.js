@@ -653,6 +653,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             ctx.globalAlpha = 1;
             
+            if (data.backColor)
+                fill = data.backcolor;
+
             var magn = r / (rr * ratio);
             
             var lw = lineWidth * rr / 2048 * magn;

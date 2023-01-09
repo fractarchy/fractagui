@@ -65,7 +65,7 @@
 
             wonload = function () {
                 setSize ();
-                Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, env.uishift / 100);
+                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, env.uishift / 100);
                 //Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
@@ -80,9 +80,14 @@
                         setSize ();
                         dispatchSize ();
                         divContainer.style.visibility = "visible";
+                        if (env.shadowRadius === 0)
+                            divContainer.style.filter = "";
+                        else
+                            divContainer.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.shadowRadius / 100 + "px " + env.shadowColor + ")";                        
                         
                     }, 100);
                 });
+                window.dispatchEvent(new CustomEvent('resize'));
             }
             
             function setupEnv (data) {
@@ -549,7 +554,8 @@
                         nodeTree.parent.children = [nodeTree];
                         
                         document.body.style.backgroundColor = env.backColor;
-                        divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")";
+                        //divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")";
+                        //divContainer.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.shadowRadius / 100 + "px " + env.shadowColor + ")";                        
                         window.addEventListener("load", wonload ());
                     }
                 };
@@ -558,7 +564,7 @@
                 xhttp.send();
             }
             
-            var nodeTree;
+            var nodeTree, objOrbit;
             
             var divContainer = document.getElementById ("divContainer")
             

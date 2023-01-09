@@ -2536,6 +2536,22 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     mousemove (ongoingTouches[idx]);
                 
                 } else if (tchs.length === 2) {
+                    if (evt.detail.DY !== undefined) {
+                        evt.deltaY = evt.detail.DY;
+                        noPan = true;
+                    } else {
+                        noPan = false;
+                    }
+                    
+                    if (magn === 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
+                        zoomIn ();
+                        
+                    } else if (magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
+                        zoomOut ();
+                    }
+                    
+                    /*
+
                     if (scaleD0 === 0) {
                         var tx = tchs[0].pageX - tchs[1].pageX;
                         var ty = tchs[0].pageY - tchs[1].pageY;
@@ -2560,6 +2576,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                         rescale (magn);
                         redraw();
                     }
+                    */
                 }
             }
 

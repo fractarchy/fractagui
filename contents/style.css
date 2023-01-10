@@ -9,8 +9,9 @@
 
     h1 {
         padding: 0.1em;
-        color: black;
-        background-color: rgb(180, 180, 180);
+        color: rgb(48,48,48);
+        /*background-color: rgb(180, 180, 180);*/
+        border-bottom: 1px solid rgb(48,48,48);
         font-size: 2em;
         margin-top: 0em;
         font-weight: bold;
@@ -29,8 +30,9 @@
 
         h1 {
             padding: 0.1em;
-            color: black;
-            background-color: rgb(180, 180, 180);
+            color: rgb(48,48,48);
+            /*background-color: rgb(180, 180, 180);*/
+            border-bottom: 1px solid rgb(48,48,48);
             font-size: 3.2em;
             margin-top: 0em;
             font-weight: bold;

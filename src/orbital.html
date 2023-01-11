@@ -69,6 +69,7 @@
                 //Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
+                window.addEventListener("message", msg, false);
 
                 var resizeId;
                 window.addEventListener('resize', function () {
@@ -272,6 +273,9 @@
                         } while (p);
                         
                         if (!is) {
+                            if (oldOvals[i1].data.ifr)
+                                document.body.removeChild (oldOvals[i1].data.ifr);
+                                
                             oldOvals[i1].data.ifr = null;
                             oldOvals[i1].data.children = [];
                         }
@@ -282,6 +286,8 @@
                 onIdleRunning = false;
             }
             
+            var loadedOvals = [];
+            var loadedOvalsIndex = 0;
             async function loadOval(node) {
                 return new Promise(async function(resolve, reject) {
                     if (node.ifr)
@@ -291,86 +297,89 @@
                     var ifr = document.createElement ('iframe');
                     ifr.addEventListener('load', function () {
                         /*
-                        if (loaded) {
-                            ifr.src = "";
-                            loaded = false;
-                            return;
-                        } else {
-                            loaded = true;
-
-                            ifr.width  = ifr.contentWindow.document.body.offsetWidth;
-                            ifr.height = ifr.contentWindow.document.body.offsetHeight;
-                            
-                            ifr.contentDocument.body.style.userSelect= "none";
-
-                            divContainer.addEventListener('mousedown', function (evt) {
-                                ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
-                                ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
-                            });
-                            
-                            divContainer.addEventListener('mouseup', function (evt) {
-                                ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
-                                ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
-                            });
-                            
-                            ifr.contentWindow.addEventListener('mousedown', function (evt) {
-                                ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
-                                ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
-                                
-                                handleMouseDown(evt);
-                            });
-                            
-                            function handleMouseDown(evt) {
-                                divContainer.dispatchEvent (new CustomEvent('mdown', {detail: {ifr: ifr, evt: evt}}));
-                            }
-                            
-                            function handleMouseMove(evt) {
-                                divContainer.dispatchEvent (new CustomEvent('mmove', {detail: {ifr: ifr, evt: evt}}));
-                            }
-
-                            function handleMouseUp(evt) {
-                                ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
-                                ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
-     
-                                divContainer.dispatchEvent (new CustomEvent('mup', {detail: {ifr: ifr, evt: evt}}));
-                            }
-                        
-                            divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
-                            allOvals.push (node);
-                            divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                            
-                            resolve ();
-                        }
-                        */
-
                         ifr.width  = ifr.contentWindow.document.body.offsetWidth;
                         ifr.height = ifr.contentWindow.document.body.offsetHeight;
                         
+                        ifr.contentDocument.body.style.userSelect= "none";
+
+                        divContainer.addEventListener('mousedown', function (evt) {
+                            ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
+                            ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
+                        });
+                        
+                        divContainer.addEventListener('mouseup', function (evt) {
+                            ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
+                            ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
+                        });
+                        
+                        ifr.contentWindow.addEventListener('mousedown', function (evt) {
+                            ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
+                            ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
+                            
+                            handleMouseDown(evt);
+                        });
+                        
+                        function handleMouseDown(evt) {
+                            divContainer.dispatchEvent (new CustomEvent('mdown', {detail: {ifr: ifr, evt: evt}}));
+                        }
+                        
+                        function handleMouseMove(evt) {
+                            divContainer.dispatchEvent (new CustomEvent('mmove', {detail: {ifr: ifr, evt: evt}}));
+                        }
+
+                        function handleMouseUp(evt) {
+                            ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
+                            ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
+ 
+                            divContainer.dispatchEvent (new CustomEvent('mup', {detail: {ifr: ifr, evt: evt}}));
+                        }
+                    
                         divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
                         allOvals.push (node);
                         divContainer.dispatchEvent(new CustomEvent('redraw', null));
                         
-                        // resize observer
-                        const resize_ob = new ResizeObserver(function(entries) {
-	                        // since we are observing only a single element, so we access the first element in entries array
-	                        let rect = entries[0].contentRect;
-
-                            ifr.width  = rect.width;
-                            ifr.height = rect.height;
-                        });
-
-                        // start observing for resize
-                        resize_ob.observe(ifr.contentWindow.document.body);
-
-                        //extractLinks (node);
-                        var interval = setInterval (function () {
-                            if (node.ifr) {
-                                extractLinks (node);
-                            } else {
-                                clearInterval (interval);
-                            }
-                        }, 500);
+                        resolve ();
+                        */
                         
+                        //ifr.height = ifr.contentWindow.document.body.offsetHeight;
+                        //ifr.width  = ifr.contentWindow.document.body.offsetWidth;
+                        
+                        //divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+                        ////allOvals.push (node);
+                        //divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                        
+                        if (!ifr.firstOnLoad) {
+                            ifr.firstOnLoad = true;
+
+                            //divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
+                            allOvals.push (node);
+                            //divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                            
+                            /*
+                            // resize observer
+                            const resize_ob = new ResizeObserver(function(entries) {
+	                            // since we are observing only a single element, so we access the first element in entries array
+	                            let rect = entries[0].contentRect;
+
+                                ifr.width  = rect.width;
+                                ifr.height = rect.height;
+                            });
+
+                            // start observing for resize
+                            resize_ob.observe(ifr.contentWindow.document.body);
+                            */
+
+                            //extractLinks (node);
+                            /*
+                            var interval = setInterval (function () {
+                                if (node.ifr) {
+                                    extractLinks (node);
+                                } else {
+                                    clearInterval (interval);
+                                }
+                            }, 500);
+                            */
+                        }
                         resolve ();
                     });
                     
@@ -378,30 +387,237 @@
                         reject ();
                     });
 
-                    //if (node.xml) {
-                        loadNode (node.xml, node).then ((loaded) => {
-                            //delete node.xml;
-                            node.children = loaded.children;
+                    loadNode (node.xml, node).then ((loaded) => {
+                        node.children = loaded.children;
 
-                            ifr.style.position = "absolute";
-                            ifr.style.visibility = "hidden";
-                            ifr.style.border = "none";
-                            ifr.style.overflow = "hidden";
-                            ifr.scrolling = "no";
-                            ifr.disabled = true;
-                            ifr.tabIndex = -1;
+                        ifr.style.position = "absolute";
+                        ifr.style.visibility = "hidden";
+                        ifr.style.border = "none";
+                        ifr.style.overflow = "hidden";
+                        ifr.scrolling = "no";
+                        ifr.disabled = true;
+                        ifr.tabIndex = -1;
+                        ifr.width = objOrbit.getRadius () * 1.2;
 
-                            ifr.src = loaded.src;
-                            node.ifr = ifr;
-                            document.body.appendChild (ifr);
 
-                            dispatchDraw(); //Size ();
-                        });
-                    //}
-                    //resolve ();
+                        node.ifr = ifr;
+                        document.body.appendChild (ifr);
+///////////////////
+                        var xhr = new XMLHttpRequest();
+
+                        xhr.onload = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                
+                                if (xhr.responseXML) {
+                                    var base = document.createElement('base');
+                                    base.href = xhr.responseURL;
+                                    
+                                    var head = xhr.responseXML.documentElement.getElementsByTagName('head')[0];
+                                    if (!head) {
+                                        head = document.createElement('head');
+                                        xhr.responseXML.documentElement.insertBefore (head, xhr.responseXML.documentElement.childNodes[0]);
+                                    }
+                                    head.insertBefore(base, head.childNodes[0]);
+
+                                    var body = xhr.responseXML.documentElement.getElementsByTagName('body')[0];
+                                    if (!body) {
+                                        body = document.createElement('body');
+                                        xhr.responseXML.documentElement.insertAfter (body, head.childNodes[0]);
+                                    }
+
+                                    loadedOvals[loadedOvalsIndex] = node;
+
+                                    var html = `
+                                        var width_fract_123, height_fract_123
+                                        window.addEventListener("load", function (event) {
+                                            window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: document.body.offsetWidth, height: document.body.offsetHeight}, "*");
+                                            setTimeout (function () {
+                                                width_fract_123 = document.body.offsetWidth;
+                                                height_fract_123 = document.body.offsetHeight;
+                                            }, 0)
+                                        });
+                                        
+                                        window.addEventListener("unload", function (event) {
+                                            window.parent.postMessage({msg: "unload", index: ${loadedOvalsIndex}}, "*");
+                                        });
+                                        
+                                        function extractLinks_fract_123 (node) {
+                                            var hyperlinks;
+                                            var links = node.getElementsByTagName("a");
+                                            //for (var i = 0; i < links.length; i++) {
+                                            for (var i in links) {
+try {
+                                                //alert (i);
+                                                var tg = links[i].getAttribute('target');
+                                                var hr = links[i].href;
+                                                if (hr.baseVal) hr = hr.baseVal;
+
+                                                if (!hr)
+                                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+                                              
+                                                if (hr) {
+                                                    if (!hyperlinks)
+                                                        hyperlinks = [];
+                                                    
+                                                    if (links[i].children)
+                                                    if (links[i].children.length !== 0) {
+                                                        (function traverseChildren(link, node) {
+                                                            if (link.children)
+                                                            if (link.children.length !== 0) {
+                                                                //for (var j = 0; j < link.children.length; j++) {
+                                                                for (var j in link.children) {
+                                                                    traverseChildren(link.children[j], node);
+                                                                }
+                                                            }
+                                                            
+                                                            var rects = link.getClientRects();
+                                                            for (var j in rects) {
+try {
+                                                                if (rects[j].right)
+                                                                    hyperlinks.push (
+                                                                        {
+                                                                            "type": "rect",
+                                                                            "target": tg,
+                                                                            "href": hr,
+                                                                            "left": rects[j].left,
+                                                                            "top": rects[j].top,
+                                                                            "right": rects[j].right,
+                                                                            "bottom": rects[j].bottom
+                                                                        }
+                                                                    );
+} catch (e) {}
+                                                            }
+                                                        }) (links[i], node);
+                                                    } else {
+                                                        var rects = links[i].getClientRects();
+                                                        for (var j in rects) {
+try {
+                                                            hyperlinks.push (
+                                                                {
+                                                                    "type": "rect",
+                                                                    "target": tg,
+                                                                    "href": hr,
+                                                                    "left": rects[j].left,
+                                                                    "top": rects[j].top,
+                                                                    "right": rects[j].right,
+                                                                    "bottom": rects[j].bottom
+                                                                }
+                                                            );
+} catch (e) {}
+                                                        }
+                                                    }
+                                                }
+} catch (e) {}
+                                            }
+                                            
+                                            if (hyperlinks)
+                                                window.parent.postMessage({msg: "relink", index: ${loadedOvalsIndex}, hyperlinks: hyperlinks}, "*");
+                                        }
+                                        
+                                        
+                                        extractLinks_fract_123 (document);
+                                        
+                                        setInterval (function () {
+                                            extractLinks_fract_123 (document);
+                                            
+                                            if (document.body.offsetWidth !== width_fract_123)
+                                            if (document.body.offsetHeight !== height_fract_123) {
+                                                window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: document.body.offsetWidth, height: document.body.offsetHeight}, "*");
+                                                setTimeout (function () {
+                                                    width_fract_123 = document.body.offsetWidth;
+                                                    height_fract_123 = document.body.offsetHeight;
+                                                }, 0)
+                                            }
+                                        }, 500);
+                                        
+                                        
+                                    `;
+                                    loadedOvalsIndex++;
+                                    
+                                    //html = html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+
+                                    var script= document.createElement("script");
+                                    script.type = "text/javascript";
+                                    script.innerHTML = ` ${html} `;
+                                    body.appendChild( script );
+                                    //var script = document.createRange().createContextualFragment(html)
+                                    //body.append (script);
+                                    /*
+                                    var newScript = document.createElement('script');
+                                    newScript.type = 'text/javascript';
+                                    var inlineScript = document.createTextNode(html);
+                                    newScript.appendChild (inlineScript);
+                                    body.appendChild (newScript);
+                                    */
+                                    /*
+                                    script = document.createElement('script');
+                                    script.type = "text/javascript";
+                                    script.textContent = "<script>" + html + "</ script >";
+                                    body.appendChild (script);
+                                    */
+                                    /*
+                                    var script = document.createElement('div');
+                                    script.innerHTML = "<script>" + html + "</ script >";
+                                    body.appendChild (script);
+                                    */
+                                    ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
+                                    //ifr.innerHTML = xhr.responseXML.documentElement.innerHTML;//.responseText;
+                                    node.ifr = ifr;
+                                    document.body.appendChild (ifr);
+
+                                    //dispatchDraw(); //Size ();
+                                    //resolve (getNode (xhr.responseXML));
+
+                                } else {
+                                    alert (`Error processing '${loaded.src}'`);
+                                    reject ();
+                                }
+                            }
+                        }
+
+                        xhr.onerror = function() {
+                            alert (`Error while getting '${loaded.src}'`);
+                            reject ();
+                        }
+
+                        xhr.open("GET", loaded.src + "?" + Date.now(), true);
+                        xhr.responseType = "document";
+                        xhr.overrideMimeType('text/xml');
+                        xhr.send();
+///////////////////
+
+//                        ifr.src = loaded.src;
+
+//                        node.ifr = ifr;
+//                        document.body.appendChild (ifr);
+                        dispatchDraw(); //Size ();
+
+                    });
                 });
             }
             
+            var msg = (event) => {
+                if (event.data.msg === "resize") {
+                    //if (loadedOvals[event.data.index]) {
+                        loadedOvals[event.data.index].ifr.width = event.data.width
+                        loadedOvals[event.data.index].ifr.height = event.data.height
+                        
+                        divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
+                        divContainer.dispatchEvent(new CustomEvent('redraw', null));
+                    //}
+                
+                } else if (event.data.msg === "relink") {
+                    //if (loadedOvals[event.data.index]) {
+                    //    delete loadedOvals[event.data.index].hyperlinks;
+                        loadedOvals[event.data.index].hyperlinks = event.data.hyperlinks;
+                    //}
+
+                } else if (event.data.msg === "unload") {
+                    delete loadedOvals[event.data.index];
+                    //loadedOvals.splice(event.data.index, 1);
+                }
+            }
+            /*
             function extractLinks (node) {
                 delete node.hyperlinks;
                 var links = node.ifr.contentWindow.document.getElementsByTagName("a");
@@ -460,6 +676,7 @@
                     }
                 }
             }
+            */
 
             async function loadNode (fileName, node) {
                 return new Promise(async function(resolve, reject) {

@@ -2435,6 +2435,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 mousemove (evt)
             }
         }, false);
+
         window.addEventListener('mousedown',  function (evt) {
             if (receiveMouseEvents) {
                 device = "mouse";
@@ -2449,6 +2450,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 mousedown (evt)
             }
         }, false);
+
         window.addEventListener('mouseup',  function (evt) {
             if (receiveMouseEvents) {
                 device = "mouse";
@@ -2463,6 +2465,28 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 mouseup (evt)
             }
         }, false);
+
+        /*
+        function getIfrMouse(e) {
+            return {
+                pageX: e.detail.evt.pageX * e.detail.ifr.magn + e.detail.ifr.offsetLeft,
+                pageY: e.detail.evt.pageY * e.detail.ifr.magn + e.detail.ifr.offsetTop,
+                which: e.detail.evt.which
+            };
+        }
+        
+        divContainer.addEventListener('mmove', function (e) {
+            mousemove (getIfrMouse(e));
+        });
+        
+        divContainer.addEventListener('mdown', function (e) {
+            mousedown (getIfrMouse(e));
+        });
+        
+        divContainer.addEventListener('mup', function (e) {
+            mouseup (getIfrMouse(e));
+        });
+        */
     }
 
     function setupTouchEvents () {
@@ -2558,35 +2582,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                             zoomOut ();
                         }
                     }
-                    
-                    
-                    /*
-
-                    if (scaleD0 === 0) {
-                        var tx = tchs[0].pageX - tchs[1].pageX;
-                        var ty = tchs[0].pageY - tchs[1].pageY;
-                        scaleD0 = Math.sqrt(tx * tx + ty * ty);
-
-                    } else {
-                        var tx = tchs[0].pageX - tchs[1].pageX;
-                        var ty = tchs[0].pageY - tchs[1].pageY;
-                        var scaleD1 = Math.sqrt(tx * tx + ty * ty);
-
-                        magn = curMagn * scaleD1 / scaleD0;
-
-                        var ty = (hh / 2 - shadowr) * (1 - 1 / uiscale);
-                        var magnmax = 1 * (rr - rr * shiftY + ty / squashY) / (rr) / ratio / circleSize;
-                        
-                        if (magn < 1)
-                            magn = 1;
-                            
-                        else if (magn > magnmax)
-                            magn = magnmax;
-                                
-                        rescale (magn);
-                        redraw();
-                    }
-                    */
                 }
             }
 
@@ -2671,22 +2666,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             } else if (magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
                 zoomOut ();
             }
-            
-            /*
- 
-            var magnmax = getMagnMax ();
 
-            magn = magn + Math.sign(event.deltaY) * Math.sign (Math.sin(orient + Math.PI / 2)) * (magnmax - 1) / 5;
-
-            if (magn < 1)
-                magn = 1;
-                
-            else if (magn > magnmax)
-                magn = magnmax;
-
-            rescale (magn);
-            redraw();
-            */
         }, { passive: false });
     }
     
@@ -2809,28 +2789,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         idle ();
         //resize (divContainer.clientWidth, divContainer.clientHeight);
     });
-
-    /*    
-    function getIfrMouse(e) {
-        return {
-            pageX: e.detail.evt.pageX * e.detail.ifr.magn + e.detail.ifr.offsetLeft,
-            pageY: e.detail.evt.pageY * e.detail.ifr.magn + e.detail.ifr.offsetTop,
-            which: e.detail.evt.which
-        };
-    }
-    
-    divContainer.addEventListener('mmove', function (e) {
-        mousemove (getIfrMouse(e));
-    });
-    
-    divContainer.addEventListener('mdown', function (e) {
-        mousedown (getIfrMouse(e));
-    });
-    
-    divContainer.addEventListener('mup', function (e) {
-        mouseup (getIfrMouse(e));
-    });
-    */
     
     return {
         getData: function () {

@@ -59,18 +59,13 @@ body {
     font-weight: normal;
 }
 
-pre {
-    color: black;
-    background-color: lightgray;
-    border-style: solid;
-    border-width: 1px;
-}
-
-.c1 {
-    color: black;
-    background-color: lightgray;
-    border-style: solid;
-    border-width: 1px;
+pre, .c1 {
+    color: white;
+    background-color: gray;
+    border-radius: 0.25em;
+    padding: 0.1em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
 }
 
 a {
@@ -78,3 +73,6 @@ a {
     text-decoration:underline;
 }
 
+img {
+    border-radius: 0.25em;
+}

@@ -294,6 +294,7 @@
                         resolve();
                     
                     //var loaded = false;
+                    var idiv = document.createElement ('div');
                     var ifr = document.createElement ('iframe');
                     ifr.addEventListener('load', function () {
                         /*
@@ -399,9 +400,9 @@
                         ifr.tabIndex = -1;
                         ifr.width = objOrbit.getRadius () * 1.2;
 
-
-                        node.ifr = ifr;
-                        document.body.appendChild (ifr);
+                        idiv.appendChild (ifr);
+                        node.ifr = idiv;
+                        document.body.appendChild (idiv);
 ///////////////////
                         var xhr = new XMLHttpRequest();
 

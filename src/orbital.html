@@ -391,14 +391,14 @@
                     loadNode (node.xml, node).then ((loaded) => {
                         node.children = loaded.children;
 
-                        ifr.style.position = "absolute";
-                        ifr.style.visibility = "hidden";
-                        ifr.style.border = "none";
-                        ifr.style.overflow = "hidden";
-                        ifr.scrolling = "no";
-                        ifr.disabled = true;
-                        ifr.tabIndex = -1;
-                        ifr.width = objOrbit.getRadius () * 1.2;
+                        idiv.style.position = "absolute";
+                        idiv.style.visibility = "hidden";
+                        idiv.style.border = "none";
+                        idiv.style.overflow = "hidden";
+                        idiv.scrolling = "no";
+                        idiv.disabled = true;
+                        idiv.tabIndex = -1;
+                        idiv.width = objOrbit.getRadius () * 1.2;
 
                         idiv.appendChild (ifr);
                         node.ifr = idiv;

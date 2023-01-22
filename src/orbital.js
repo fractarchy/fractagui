@@ -1889,7 +1889,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         cnv.height = Math.ceil (hh);
         cnv.setAttribute ("width", Math.ceil (ww));
         cnv.setAttribute ("height", Math.ceil (hh));
-        //cnv.style.clipPath = "url(#clip128)";
+        cnv.style.clipPath = "url(#clip128)";
+        cnv.style..webkitClipPath = "url(#clip128)";
 
         function updateCursor (c) {
             if (c) {

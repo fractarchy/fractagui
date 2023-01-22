@@ -391,6 +391,8 @@
                     loadNode (node.xml, node).then ((loaded) => {
                         node.children = loaded.children;
 
+			ifr.style.width = "100%"
+			ifr.style.height = "100%"
                         idiv.style.position = "absolute";
                         idiv.style.visibility = "hidden";
                         idiv.style.border = "none";

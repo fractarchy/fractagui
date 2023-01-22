@@ -391,8 +391,6 @@
                     loadNode (node.xml, node).then ((loaded) => {
                         node.children = loaded.children;
 
-			ifr.style.width = "100%"
-			ifr.style.height = "100%"
                         idiv.style.position = "absolute";
                         idiv.style.visibility = "hidden";
                         idiv.style.border = "none";
@@ -401,10 +399,21 @@
                         idiv.disabled = true;
                         idiv.tabIndex = -1;
                         idiv.width = objOrbit.getRadius () * 1.2;
+                        
+                        //ifr.style.position = "absolute";
+                        //ifr.style.visibility = "hidden";
+                        ifr.style.border = "none";
+                        ifr.style.overflow = "hidden";
+                        ifr.scrolling = "no";
+                        ifr.disabled = true;
+                        ifr.tabIndex = -1;
+                        ifr.width = objOrbit.getRadius () * 1.2;
 
                         idiv.appendChild (ifr);
                         node.ifr = idiv;
+                        node.wrappedifr = ifr;
                         document.body.appendChild (idiv);
+
 ///////////////////
                         var xhr = new XMLHttpRequest();
 
@@ -604,6 +613,8 @@ try {
                     //if (loadedOvals[event.data.index]) {
                         loadedOvals[event.data.index].ifr.width = event.data.width
                         loadedOvals[event.data.index].ifr.height = event.data.height
+                        loadedOvals[event.data.index].wrappedifr.width = event.data.width
+                        loadedOvals[event.data.index].wrappedifr.height = event.data.height
                         
                         divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
                         divContainer.dispatchEvent(new CustomEvent('redraw', null));

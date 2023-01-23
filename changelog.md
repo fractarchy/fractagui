@@ -48,7 +48,9 @@
     - updated scaling policy  
     - directional shift for larger scaling  
 
+- - -
+
 - v 0.7 - alpha
     - mobile UX improvement  
     - shadow, border, backcolor  
-
+    - should now work on Safari too

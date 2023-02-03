@@ -53,8 +53,10 @@
             }
 
             function setSize () {
-                divContainer.clientWidth = window.innerWidth;
-                divContainer.clientHeight = window.innerHeight;
+                //divContainer.clientWidth = window.innerWidth;
+                //divContainer.clientHeight = window.innerHeight;
+                divContainer.style.width = window.innerWidth + "px";
+                divContainer.style.height = window.innerHeight + "px";
             }
 
             function dispatchSize () {

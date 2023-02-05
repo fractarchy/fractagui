@@ -278,7 +278,8 @@
                         
                         if (!is) {
                             if (oldOvals[i1].data.ifr)
-                                document.body.removeChild (oldOvals[i1].data.ifr);
+                                //document.body.removeChild (oldOvals[i1].data.ifr);
+                                divContainer.removeChild (oldOvals[i1].data.ifr);
                                 
                             oldOvals[i1].data.ifr = null;
                             oldOvals[i1].data.children = [];
@@ -416,7 +417,8 @@
                         idiv.appendChild (ifr);
                         node.ifr = idiv;
                         node.wrappedifr = ifr;
-                        document.body.appendChild (idiv);
+                        //document.body.appendChild (idiv);
+                        divContainer.appendChild (idiv);
 
 ///////////////////
                         var xhr = new XMLHttpRequest();
@@ -579,7 +581,8 @@ try {
                                     ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
                                     //ifr.innerHTML = xhr.responseXML.documentElement.innerHTML;//.responseText;
                                     node.ifr = idiv;
-                                    document.body.appendChild (idiv);
+                                    //document.body.appendChild (idiv);
+                                    divContainer.appendChild (idiv);
 
                                     //dispatchDraw(); //Size ();
                                     //resolve (getNode (xhr.responseXML));

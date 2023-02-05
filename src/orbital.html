@@ -69,7 +69,7 @@
 
             wonload = function () {
                 setSize ();
-                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, env.uishift / 100);
+                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.ovalFilter, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, env.uishift / 100);
                 //Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
@@ -192,6 +192,7 @@
                     backColor: data["background-color"],
                     shadowRadius: sradius,
                     shadowColor: data["oval-shadow-color"],
+                    ovalFilter: data["oval-filter"],
                     contentScale: cscale,
                     uiscale: uiscale,
                     uishift: uishift,

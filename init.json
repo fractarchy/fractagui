@@ -1,10 +1,11 @@
 {
     "background-color": "gray",
-    "oval-color": "rgb(208,208,208)",
     "rod-length": "5%",
+    "oval-color": "rgb(208,208,208)",
     "oval-border-color": "rgb(48,48,48)",
     "oval-shadow-color": "rgb(48,48,48)",
     "oval-shadow-radius": "5%",
+    "oval-filter": "Opacity(1)",
     "contents-scale": "100%",
     "ui-scale": "140%",
     "ui-shift": "14%",

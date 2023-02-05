@@ -52,6 +52,6 @@
 
 - v 0.7 - alpha
     - mobile UX improvement  
-    - shadow, border, backcolor  
-    - should now work on Safari too
+    - shadow, border, backcolor, filter  
+    - Safari support
 

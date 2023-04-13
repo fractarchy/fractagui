@@ -1,6 +1,6 @@
 @media (max-device-width: 640px), (max-device-height: 640px) {
     body {
-        width: 400px;
+        width: 380px;
         color: rgb(48,48,48);
         font-size: 2.2em;
         font-family: sans-serif;

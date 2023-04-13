@@ -1,4 +1,4 @@
-# Fractarchy-CMS (v0.7 - alpha)
+# Fractarchy-CMS (v0.7 - beta)
 
 tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
 

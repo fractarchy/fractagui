@@ -5,6 +5,5 @@
         <child src="c-0-1.xml"/>
         <child src="c-0-2.xml"/>
         <child src="c-0-3.xml"/>
-        <child src="c-0-4.xml"/>
     </children>
 </contents>

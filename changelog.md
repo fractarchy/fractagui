@@ -50,8 +50,10 @@
 
 - - -
 
-- v 0.7 - alpha
+- v 0.7 - beta
     - mobile UX improvement  
-    - shadow, border, backcolor, filter  
     - Safari support
-
+    - fixed font blur on zoom
+    - navigation buttons
+    - command buttons
+    

@@ -529,15 +529,6 @@
                                     loadedOvals[loadedOvalsIndex] = node;
 
                                     var html = `
-                                        var width_fract_123, height_fract_123
-                                        window.addEventListener("load", function (event) {
-                                            window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: document.body.offsetWidth, height: document.body.offsetHeight}, "*");
-                                            setTimeout (function () {
-                                                width_fract_123 = document.body.offsetWidth;
-                                                height_fract_123 = document.body.offsetHeight;
-                                            }, 0)
-                                        });
-                                        
                                         window.addEventListener("unload", function (event) {
                                             window.parent.postMessage({msg: "unload", index: ${loadedOvalsIndex}}, "*");
                                         });
@@ -620,17 +611,15 @@ try {
                                         
                                         setInterval (function () {
                                             extractLinks_fract_123 (document);
-                                            
-                                            if (document.body.offsetWidth !== width_fract_123)
-                                            if (document.body.offsetHeight !== height_fract_123) {
-                                                window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: document.body.offsetWidth, height: document.body.offsetHeight}, "*");
-                                                setTimeout (function () {
-                                                    width_fract_123 = document.body.offsetWidth;
-                                                    height_fract_123 = document.body.offsetHeight;
-                                                }, 0)
-                                            }
                                         }, 500);
                                         
+var ro_fract_123 = new ResizeObserver(function (entries) {
+  for (let entry of entries) {
+    const cr = entry.contentRect;
+    window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: cr.width, height: cr.height}, "*");    
+  }
+})
+ro_fract_123.observe(document.body);
                                         
                                     `;
                                     loadedOvalsIndex++;
@@ -681,11 +670,11 @@ try {
                 if (event.data.msg === "resize") {
                     //if (loadedOvals[event.data.index]) {
                     if (loadedOvals[event.data.index].ifr) {
-                        loadedOvals[event.data.index].ifr.width = event.data.width;
+                        loadedOvals[event.data.index].ifr.width = window.innerWidth;//event.data.width;
                         loadedOvals[event.data.index].ifr.height = event.data.height;
-                    }
-                        loadedOvals[event.data.index].wrappedifr.width = event.data.width;
+                        loadedOvals[event.data.index].wrappedifr.width = window.innerWidth;//event.data.width;
                         loadedOvals[event.data.index].wrappedifr.height = event.data.height;
+                    }
                         
                         divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
                         divContainer.dispatchEvent(new CustomEvent('redraw', null));

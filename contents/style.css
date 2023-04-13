@@ -1,10 +1,10 @@
-@media (max-device-width: 479px), (max-device-height: 479px) {
+@media (max-device-width: 540px) {
     body {
-        width: 450px;
+        width: 50%;
         color: rgb(48,48,48);
         font-size: 2.2em;
         font-family: sans-serif;
-        margin: 0;
+        margin: 0 auto;
         padding: 0;
     }
 
@@ -18,51 +18,25 @@
     }
 }
 
-@media (min-device-width: 480px) {
-    @media (min-device-height: 480px) {
-        @media (max-device-width: 639px), (max-device-height: 639px) {
-            body {
-                width: 450px;
-                color: rgb(48,48,48);
-                font-size: 2.2em;
-                font-family: sans-serif;
-                margin: 0;
-                padding: 0;
-            }
-
-            h1 {
-                padding: 0.1em;
-                color: rgb(48,48,48);
-                border-bottom: 1px solid rgb(48,48,48);
-                font-size: 2em;
-                margin-top: 0em;
-                font-weight: bold;
-            }
-        }
+@media (min-device-width: 540px) {
+    body {
+        width: 540px;
+        color: rgb(48,48,48);
+        font-size: 1.1em;
+        font-family: sans-serif;
+        margin: 0 auto;
+        padding: 0;
     }
-}
 
-@media (min-device-width: 640px) {
-    @media (min-device-height: 640px) {
-        body {
-            width: 540px;
-            color: rgb(48,48,48);
-            font-size: 1.1em;
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            padding: 0.1em;
-            color: rgb(48,48,48);
-            border-bottom: 1px solid rgb(48,48,48);
-            font-size: 3.2em;
-            margin-top: 0em;
-            font-weight: bold;
-        }
-        
+    h1 {
+        padding: 0.1em;
+        color: rgb(48,48,48);
+        border-bottom: 1px solid rgb(48,48,48);
+        font-size: 3.2em;
+        margin-top: 0em;
+        font-weight: bold;
     }
+    
 }
 
 body {

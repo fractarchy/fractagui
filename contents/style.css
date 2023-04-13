@@ -1,4 +1,4 @@
-@media (max-device-width: 479px), (max-device-height: 479px) {
+@media (max-device-width: 360px), (max-device-height: 360px) {
     body {
         width: 350px;
         color: rgb(48,48,48);
@@ -18,8 +18,8 @@
     }
 }
 
-@media (min-device-width: 480px) {
-    @media (min-device-height: 480px) {
+@media (min-device-width: 361px) {
+    @media (min-device-height: 361px) {
         @media (max-device-width: 639px), (max-device-height: 639px) {
             body {
                 width: 450px;

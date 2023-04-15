@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <head>
         <style media="screen">
             section {
@@ -509,6 +509,25 @@
                         xhr.onload = function() {
                             if (this.readyState == 4 && this.status == 200) {
                                 
+var parser = new DOMParser();
+var xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");                                
+                                if (xmlDoc) {
+                                    var base = document.createElement('base');
+                                    base.href = xhr.responseURL;
+                                    
+                                    var head = xmlDoc.documentElement.getElementsByTagName('head')[0];
+                                    if (!head) {
+                                        head = document.createElement('head');
+                                        xmlDoc.documentElement.insertBefore (head, xhr.responseXML.documentElement.childNodes[0]);
+                                    }
+                                    head.insertBefore(base, head.childNodes[0]);
+
+                                    var body = xmlDoc.documentElement.getElementsByTagName('body')[0];
+                                    if (!body) {
+                                        body = document.createElement('body');
+                                        xmlDoc.documentElement.insertAfter (body, head.childNodes[0]);
+                                    }
+/*
                                 if (xhr.responseXML) {
                                     var base = document.createElement('base');
                                     base.href = xhr.responseURL;
@@ -525,7 +544,7 @@
                                         body = document.createElement('body');
                                         xhr.responseXML.documentElement.insertAfter (body, head.childNodes[0]);
                                     }
-
+*/
                                     loadedOvals[loadedOvalsIndex] = node;
 
                                     var html = `
@@ -630,7 +649,8 @@ ro_fract_123.observe(document.body);
                                     script.type = "text/javascript";
                                     script.innerHTML = ` ${html} `;
                                     body.appendChild( script );
-                                    ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
+//                                    ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
+                                    ifr.srcdoc = xmlDoc.documentElement.innerHTML;//.responseText;
                                     //ifr.innerHTML = xhr.responseXML.documentElement.innerHTML;//.responseText;
                                     node.ifr = idiv;
 
@@ -650,9 +670,9 @@ ro_fract_123.observe(document.body);
                             reject ();
                         }
 
-                        xhr.open("GET", loaded.src + "?" + Date.now(), true);
-                        xhr.responseType = "document";
-                        xhr.overrideMimeType('text/xml');
+                        xhr.open("GET", loaded.src /*+ "?" + Date.now()*/, true);
+                        //xhr.responseType = "document";
+                        //xhr.overrideMimeType('text/xml');
                         xhr.send();
 ///////////////////
 

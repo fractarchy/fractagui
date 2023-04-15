@@ -839,7 +839,7 @@ ro_fract_123.observe(document.body);
                         reject ();
                     }
 
-                    xhr.open("GET", fileName + "?" + Date.now(), true);
+                    xhr.open("GET", fileName /*+ "?" + Date.now()*/, true);
                     xhr.responseType = "document";
                     xhr.overrideMimeType('text/xml');
                     xhr.send();
@@ -876,7 +876,7 @@ ro_fract_123.observe(document.body);
                         window.addEventListener("load", wonload ());
                     }
                 };
-                xhttp.open("GET", "../init.json?" + Date.now(), true);
+                xhttp.open("GET", "../init.json"/* + "?" + Date.now()*/, true);
                 xhttp.overrideMimeType("text/plain");
                 xhttp.send();
             }

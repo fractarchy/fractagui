@@ -10,8 +10,8 @@
 
     "ovals-rod-length": "5%",
     "ovals-background-color": "rgb(208,208,208)",
-    "ovals-shadow-color": "black",
-    "ovals-shadow-radius": "5%",
+    "ovals-shadow-color": "",
+    "ovals-shadow-radius": "0%",
 
     "buttons-color" : "rgb(208,208,208)",
     "buttons-background-color" : "rgb(48,48,48)",

@@ -91,7 +91,10 @@
                         if (env.ovalShadowRadius === 0)
                             divContainerWrapper.style.filter = "";
                         else
-                            divContainerWrapper.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ")";
+                            divContainerWrapper.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
+                            
+                        if (env.ovalOpacity)
+                            objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
 
                     }, 100);
                 });
@@ -179,6 +182,7 @@
                 else
                     ovalRodLength = 5;
 
+                data["oval-opacity"] = 1;
                 if (!data["ovals-background-color"])
                     data["ovals-background-color"] = "white";
                 
@@ -186,15 +190,20 @@
                     try {
                         if (data["ovals-background-color"].substr(0, 1) === "#") {
                             if (data["ovals-background-color"].length === 9) {
-                                if (!data["ovals-border-color"])
-                                    throw new error ();
+                                data["oval-opacity"] = parseInt (data["ovals-background-color"].substr(7, 2), 16) / 255;
+                                data["ovals-background-color"] = data["ovals-background-color"].substr(0, 7);
+                                //if (!data["ovals-border-color"])
+                                //    throw new error ();
                             }
                         } else {
                             if (data["ovals-background-color"].substr(0, 3) === "rgb") {
                                 const parts = data["ovals-background-color"].match(/[\d.]+/g);
-                                if (parts.length === 4)
-                                    if (!data["ovals-border-color"])
-                                        throw new error ();
+                                if (parts.length === 4) {
+                                //    if (!data["ovals-border-color"])
+                                //        throw new error ();
+                                    data["oval-opacity"] = parts[3];
+                                    data["ovals-background-color"] = "rgb(" + parts[0] + "," + parts[1] + "," + parts[2] + ")";
+                                }
                             }
                         }
                     } catch (e) {
@@ -273,6 +282,7 @@
                     ovalRodLength: ovalRodLength,
                     ovalBackColor: data["ovals-background-color"],
                     ovalBorderColor: data["ovals-border-color"],
+                    ovalOpacity: data["oval-opacity"],
                     ovalShadowRadius: sradius,
                     ovalShadowColor: data["ovals-shadow-color"],
                     butsColor: data["buttons-color"],

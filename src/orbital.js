@@ -3045,6 +3045,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     });
     
     return {
+        getCnv: function () {
+            return cnv;
+        },
         getData: function () {
             return data;
         },

@@ -95,6 +95,12 @@
                             
                         if (env.ovalOpacity)
                             objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
+                        
+                        if (env.backImage) {
+                            document.body.style.backgroundImage = "url('../" + env.backImage + "')";
+                            document.body.style.backgroundSize = "cover";
+                            document.body.style.backgroundPosition = "center";
+                        }
 
                     }, 100);
                 });
@@ -274,6 +280,7 @@
                 return {
                     topNode: data["home"],
                     
+                    backImage: data["background-image"],
                     contentScale: cscale,
                     uiscale: uiscale,
                     uishift: uishift,

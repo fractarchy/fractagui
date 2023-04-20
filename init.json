@@ -1,15 +1,16 @@
 {
     "home": "contents/a-0.xml",
-
+    
     "contents-scale": "100%",
     "ui-scale": "140%",
     "ui-shift": "10%",
     "power-consumption-optimisation": "75%",
 
     "background-color": "gray",
+    "background-image": "",
 
     "ovals-rod-length": "5%",
-    "ovals-background-color": "rgb(208,208,208)",
+    "ovals-background-color": "rgb(208,208,208,0.8)",
     "ovals-shadow-color": "",
     "ovals-shadow-radius": "0%",
 

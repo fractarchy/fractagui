@@ -443,7 +443,7 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
     };
 }
 
-function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength, orient, shiftY, cZoomedIn, cZoomedOut, cZoomingOut) {
+function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeColor, backColor, shadowRadius, shadowColor, ovalFilter, uiscale, onIdle, onBusy, rodLength, orient, shiftY, cZoomedIn, cZoomedOut, cZoomingOut) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -513,6 +513,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     // main screen
     var cnv = document.createElement ("canvas");
     cnv.style.display = "block";
+    cnv.style.filter = ovalFilter;
     divContainer.appendChild (cnv);
     cnv.draggable = false;
     cnv.ondragstart = function () {return false};

@@ -131,7 +131,7 @@ if (rec === 1) {
                 clear();
                 hideOvals(data);
                 
-                ctx.save ();
+//                ctx.save ();
                 //gclip ();
             }
 //            }
@@ -458,7 +458,7 @@ if (rec === 1) {
                         if (siblings[si]) siblings[si].parent = pass;
                     
                     if (rec === 1) {
-                        ctx.restore ();
+//                        ctx.restore ();
                     }
                     
                     return pass;
@@ -466,7 +466,7 @@ if (rec === 1) {
             }
         }
         if (rec === 1) {
-            ctx.restore ();
+//            ctx.restore ();
         }
     };
     

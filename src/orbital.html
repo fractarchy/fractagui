@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--?xml version="1.0"?-->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <head>
         <style media="screen">
             section {
@@ -22,10 +22,14 @@
                 touch-action: none;
                 user-select: none;
             }
-
+            /*
             a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
             a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
             a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
+            */
+            .hvr1 {opacity : 0.7; cursor: default;}
+            .hvr {opacity : 0.7;}
+            .hvr:hover {cursor: default/*pointer*/; opacity :1;}
         </style>
         <script src="orbital.js"></script>
     </head>
@@ -35,12 +39,12 @@
         <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; /*filter: drop-shadow(0px 0px 20px black);*/">
         </div>
         </div>
-        
+
         <script>
             var error;
             function getDesign() {
                 var design;
-                if (window.matchMedia('only screen and (max-device-width: 320px)').matches) {
+                if (window.matchMedia('only screen and (max-device-width: 360px)').matches) {
                     design = 'touch';
                  } else if (window.matchMedia('only screen and (max-device-width: 1024px)').matches) {
                     design = 'tablet';
@@ -53,8 +57,6 @@
             }
 
             function setSize () {
-                //divContainer.clientWidth = window.innerWidth;
-                //divContainer.clientHeight = window.innerHeight;
                 divContainer.style.width = window.innerWidth + "px";
                 divContainer.style.height = window.innerHeight + "px";
             }
@@ -69,8 +71,8 @@
 
             wonload = function () {
                 setSize ();
-                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.ovalFilter, env.uiscale / 100, onIdle, onBusy, env.rodLength, 0, env.uishift / 100);
-                //Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.shadowRadius, env.shadowRadius? env.shadowColor: null, env.uiscale / 100, onIdle, onBusy, env.rodLength);
+                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalRodLength, 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
+
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
                 window.addEventListener("message", msg, false);
@@ -85,17 +87,43 @@
                         setSize ();
                         dispatchSize ();
                         divContainer.style.visibility = "visible";
-                        if (env.shadowRadius === 0)
+
+                        if (env.ovalShadowRadius === 0)
                             divContainerWrapper.style.filter = "";
                         else
-                            divContainerWrapper.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.shadowRadius / 100 + "px " + env.shadowColor + ")";
+                            divContainerWrapper.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
+                            
+                        if (env.ovalOpacity)
+                            objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
                         
+                        if (env.backImage) {
+                            document.body.style.backgroundImage = "url('../" + env.backImage + "')";
+                            document.body.style.backgroundSize = "cover";
+                            document.body.style.backgroundPosition = "center";
+                        }
+
                     }, 100);
                 });
                 window.dispatchEvent(new CustomEvent('resize'));
             }
             
             function setupEnv (data) {
+                if (data["power-consumption-optimisation"])
+                    try {
+                        if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
+                        if (quant <= 0 || quant > 300)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        quant = 80;
+                        console.log ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%" and less than "300%"');
+                    }
+                else
+                    quant = 80;
+                
                 if (data["contents-scale"])
                     try {
                         if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
@@ -106,8 +134,8 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in init.json: "contents-scale" hast to be a percent greater than "0%"');
-                        throw new error ();
+                        cscale = 100;
+                        console.log ('Error in init.json: "contents-scale" hast to be a percent greater than "0%"');
                     }
                 else
                     cscale = 100;
@@ -122,8 +150,8 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in init.json: "ui-scale" has to be a percent greater than "0%"');
-                        throw new error ();
+                        uiscale = 100;
+                        console.log ('Error in init.json: "ui-scale" has to be a percent greater than "0%"');
                     }
                 else
                     uiscale = 100;
@@ -138,67 +166,139 @@
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in init.json: "ui-shift" has to be a percent greater than "0%"');
-                        throw new error ();
+                        uishift = 0;
+                        console.log ('Error in init.json: "ui-shift" has to be a percent greater than "0%"');
                     }
                 else
                     uishift = 0;
 
-                if (data["rod-length"])
+                if (data["ovals-rod-length"])
                     try {
-                        if (data["rod-length"].substr(data["rod-length"].length - 1, 1) !== "%")
+                        if (data["ovals-rod-length"].substr(data["ovals-rod-length"].length - 1, 1) !== "%")
                             throw new error ();
                         
-                        var rodlength = parseFloat (data["rod-length"].substr(0, data["rod-length"].length - 1));
-                        if (rodlength < 0 || rodlength >= 100)
+                        var ovalRodLength = parseFloat (data["ovals-rod-length"].substr(0, data["ovals-rod-length"].length - 1));
+                        if (ovalRodLength < 0 || ovalRodLength >= 100)
                             throw new error ();
                         
                     } catch (e) {
-                        alert ('Error in init.json: "rod-length" has to be a percent between "0%" and "100%"');
-                        throw new error ();
+                        ovalRodLength = 5;
+                        console.log ('Error in init.json: "ovals-rod-length" has to be a percent between "0%" and "100%"');
                     }
                 else
-                    rodlength = 5;
+                    ovalRodLength = 5;
 
-                if (data["power-consumption-optimisation"])
-                    try {
-                        if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
-                        if (quant <= 0 || quant > 300)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        alert ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%" and less than "300%"');
-                        throw new error ();
-                    }
-                else
-                    quant = 80;
+                data["oval-opacity"] = 1;
+                if (!data["ovals-background-color"])
+                    data["ovals-background-color"] = "white";
                 
-                if (data["oval-shadow-radius"]) {
-                    var sradius = parseFloat (data["oval-shadow-radius"]) * window.devicePixelRatio;
+                else {
+                    try {
+                        if (data["ovals-background-color"].substr(0, 1) === "#") {
+                            if (data["ovals-background-color"].length === 9) {
+                                data["oval-opacity"] = parseInt (data["ovals-background-color"].substr(7, 2), 16) / 255;
+                                data["ovals-background-color"] = data["ovals-background-color"].substr(0, 7);
+                                //if (!data["ovals-border-color"])
+                                //    throw new error ();
+                            }
+                        } else {
+                            if (data["ovals-background-color"].substr(0, 3) === "rgb") {
+                                const parts = data["ovals-background-color"].match(/[\d.]+/g);
+                                if (parts.length === 4) {
+                                //    if (!data["ovals-border-color"])
+                                //        throw new error ();
+                                    data["oval-opacity"] = parts[3];
+                                    data["ovals-background-color"] = "rgb(" + parts[0] + "," + parts[1] + "," + parts[2] + ")";
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log ('Error in init.json: if "ovals-background-color" has an alpha component then "ovals-border-color" has to be specified');
+                        data["ovals-background-color"] = "white";
+                    }
+                }
+
+                if (!data["ovals-border-color"])
+                    data["ovals-border-color"] = data["ovals-background-color"];
+                
+                else {
+                    try {
+                        if (data["ovals-border-color"].substr(0, 1) === "#") {
+                            if (data["ovals-border-color"].length !== 7) {
+                                throw new error ();
+                            }
+                        } else {
+                            if (data["ovals-border-color"].substr(0, 3) === "rgb") {
+                                const parts = data["ovals-border-color"].match(/[\d.]+/g);
+                                if (parts.length !== 3) {
+                                    throw new error ();
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log ('Error in init.json: "ovals-border-color" takes only rgb without alpha component');
+                        data["ovals-border-color"] = "white";
+                    }
+                }
+
+                if (data["buttons-border-color"]) {
+                    try {
+                        if (data["buttons-border-color"].substr(0, 1) === "#") {
+                            if (data["buttons-border-color"].length !== 7) {
+                                throw new error ();
+                            }
+                        } else {
+                            if (data["buttons-border-color"].substr(0, 3) === "rgb") {
+                                const parts = data["buttons-border-color"].match(/[\d.]+/g);
+                                if (parts.length !== 3) {
+                                    throw new error ();
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log ('Error in init.json: "buttons-border-color" takes only rgb components');
+                        data["buttons-border-color"] = undefined;
+                    }
+                }
+
+                var sradius
+                if (data["ovals-shadow-radius"]) {
+                    sradius = parseFloat (data["ovals-shadow-radius"]) * window.devicePixelRatio;
                     
                 } else {
                     sradius = 0;
                 }
                 
-                if (!data["oval-border-color"])
-                    data["oval-border-color"] = data["oval-color"];
+                var bsradius;
+                if (data["buttons-shadow-radius"]) {
+                    bsradius = parseFloat (data["buttons-shadow-radius"]);
                     
+                } else {
+                    bsradius = 0;
+                }
+                
                 return {
-                    ovalBackColor: data["oval-color"],
-                    ovalBorderColor: data["oval-border-color"],
-                    backColor: data["background-color"],
-                    shadowRadius: sradius,
-                    shadowColor: data["oval-shadow-color"],
-                    ovalFilter: data["oval-filter"],
+                    topNode: data["home"],
+                    
+                    backImage: data["background-image"],
                     contentScale: cscale,
                     uiscale: uiscale,
                     uishift: uishift,
-                    quant: quant,
-                    rodLength: rodlength,
-                    topNode: data["top-node"]
+                    quant: quant,                    
+                    backColor: data["background-color"],
+                    ovalRodLength: ovalRodLength,
+                    ovalBackColor: data["ovals-background-color"],
+                    ovalBorderColor: data["ovals-border-color"],
+                    ovalOpacity: data["oval-opacity"],
+                    ovalShadowRadius: sradius,
+                    ovalShadowColor: data["ovals-shadow-color"],
+                    butsColor: data["buttons-color"],
+                    butsBackColor: data["buttons-background-color"],
+                    butsBorderColor: data["buttons-border-color"],
+                    butShadowRadius: bsradius,
+                    butShadowColor: data["buttons-shadow-color"],
+                    lftBut: data["left-button"],
+                    midButs: data["mid-buttons"]
                 }
             }
 
@@ -279,7 +379,6 @@
                         
                         if (!is) {
                             if (oldOvals[i1].data.ifr)
-                                //document.body.removeChild (oldOvals[i1].data.ifr);
                                 divContainer.removeChild (oldOvals[i1].data.ifr);
                                 
                             oldOvals[i1].data.ifr = null;
@@ -427,6 +526,25 @@
                         xhr.onload = function() {
                             if (this.readyState == 4 && this.status == 200) {
                                 
+var parser = new DOMParser();
+var xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");                                
+                                if (xmlDoc) {
+                                    var base = document.createElement('base');
+                                    base.href = xhr.responseURL;
+                                    
+                                    var head = xmlDoc.documentElement.getElementsByTagName('head')[0];
+                                    if (!head) {
+                                        head = document.createElement('head');
+                                        xmlDoc.documentElement.insertBefore (head, xhr.responseXML.documentElement.childNodes[0]);
+                                    }
+                                    head.insertBefore(base, head.childNodes[0]);
+
+                                    var body = xmlDoc.documentElement.getElementsByTagName('body')[0];
+                                    if (!body) {
+                                        body = document.createElement('body');
+                                        xmlDoc.documentElement.insertAfter (body, head.childNodes[0]);
+                                    }
+/*
                                 if (xhr.responseXML) {
                                     var base = document.createElement('base');
                                     base.href = xhr.responseURL;
@@ -443,19 +561,10 @@
                                         body = document.createElement('body');
                                         xhr.responseXML.documentElement.insertAfter (body, head.childNodes[0]);
                                     }
-
+*/
                                     loadedOvals[loadedOvalsIndex] = node;
 
                                     var html = `
-                                        var width_fract_123, height_fract_123
-                                        window.addEventListener("load", function (event) {
-                                            window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: document.body.offsetWidth, height: document.body.offsetHeight}, "*");
-                                            setTimeout (function () {
-                                                width_fract_123 = document.body.offsetWidth;
-                                                height_fract_123 = document.body.offsetHeight;
-                                            }, 0)
-                                        });
-                                        
                                         window.addEventListener("unload", function (event) {
                                             window.parent.postMessage({msg: "unload", index: ${loadedOvalsIndex}}, "*");
                                         });
@@ -538,17 +647,15 @@ try {
                                         
                                         setInterval (function () {
                                             extractLinks_fract_123 (document);
-                                            
-                                            if (document.body.offsetWidth !== width_fract_123)
-                                            if (document.body.offsetHeight !== height_fract_123) {
-                                                window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: document.body.offsetWidth, height: document.body.offsetHeight}, "*");
-                                                setTimeout (function () {
-                                                    width_fract_123 = document.body.offsetWidth;
-                                                    height_fract_123 = document.body.offsetHeight;
-                                                }, 0)
-                                            }
                                         }, 500);
                                         
+var ro_fract_123 = new ResizeObserver(function (entries) {
+  for (let entry of entries) {
+    const cr = entry.contentRect;
+    window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: cr.width, height: cr.height}, "*");    
+  }
+})
+ro_fract_123.observe(document.body);
                                         
                                     `;
                                     loadedOvalsIndex++;
@@ -559,33 +666,13 @@ try {
                                     script.type = "text/javascript";
                                     script.innerHTML = ` ${html} `;
                                     body.appendChild( script );
-                                    //var script = document.createRange().createContextualFragment(html)
-                                    //body.append (script);
-                                    /*
-                                    var newScript = document.createElement('script');
-                                    newScript.type = 'text/javascript';
-                                    var inlineScript = document.createTextNode(html);
-                                    newScript.appendChild (inlineScript);
-                                    body.appendChild (newScript);
-                                    */
-                                    /*
-                                    script = document.createElement('script');
-                                    script.type = "text/javascript";
-                                    script.textContent = "<script>" + html + "</ script >";
-                                    body.appendChild (script);
-                                    */
-                                    /*
-                                    var script = document.createElement('div');
-                                    script.innerHTML = "<script>" + html + "</ script >";
-                                    body.appendChild (script);
-                                    */
-                                    ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
+//                                    ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
+                                    ifr.srcdoc = xmlDoc.documentElement.innerHTML;//.responseText;
                                     //ifr.innerHTML = xhr.responseXML.documentElement.innerHTML;//.responseText;
                                     node.ifr = idiv;
-                                    //document.body.appendChild (idiv);
+
                                     divContainer.appendChild (idiv);
 
-                                    //dispatchDraw(); //Size ();
                                     //resolve (getNode (xhr.responseXML));
 
                                 } else {
@@ -600,9 +687,9 @@ try {
                             reject ();
                         }
 
-                        xhr.open("GET", loaded.src + "?" + Date.now(), true);
-                        xhr.responseType = "document";
-                        xhr.overrideMimeType('text/xml');
+                        xhr.open("GET", loaded.src /*+ "?" + Date.now()*/, true);
+                        //xhr.responseType = "document";
+                        //xhr.overrideMimeType('text/xml');
                         xhr.send();
 ///////////////////
 
@@ -619,10 +706,12 @@ try {
             var msg = (event) => {
                 if (event.data.msg === "resize") {
                     //if (loadedOvals[event.data.index]) {
-                        loadedOvals[event.data.index].ifr.width = event.data.width
-                        loadedOvals[event.data.index].ifr.height = event.data.height
-                        loadedOvals[event.data.index].wrappedifr.width = event.data.width
-                        loadedOvals[event.data.index].wrappedifr.height = event.data.height
+                    if (loadedOvals[event.data.index].ifr) {
+                        loadedOvals[event.data.index].ifr.width = window.innerWidth;//event.data.width;
+                        loadedOvals[event.data.index].ifr.height = event.data.height;
+                        loadedOvals[event.data.index].wrappedifr.width = window.innerWidth;//event.data.width;
+                        loadedOvals[event.data.index].wrappedifr.height = event.data.height;
+                    }
                         
                         divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
                         divContainer.dispatchEvent(new CustomEvent('redraw', null));
@@ -767,7 +856,7 @@ try {
                         reject ();
                     }
 
-                    xhr.open("GET", fileName + "?" + Date.now(), true);
+                    xhr.open("GET", fileName /*+ "?" + Date.now()*/, true);
                     xhr.responseType = "document";
                     xhr.overrideMimeType('text/xml');
                     xhr.send();
@@ -775,8 +864,9 @@ try {
             }
                         
             var env;
+            var xhttp;
             function init () {
-                var xhttp = new XMLHttpRequest ();
+                xhttp = new XMLHttpRequest ();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         try {
@@ -788,17 +878,22 @@ try {
                         
                         env = setupEnv (init);
                         
+                        if (env.midButs && env.midButs[0].action === env.topNode)
+                            midbutindex = 0;
+                        else
+                            midbutindex = -1;
+
+                        initButtons ();
+                        
                         var url = new URL(env.topNode, xhttp.responseURL).href
                         nodeTree = {xml: url, parent: {index: 0}};
                         nodeTree.parent.children = [nodeTree];
                         
                         document.body.style.backgroundColor = env.backColor;
-                        //divContainer.style.filter = "drop-shadow(0px 0px " + env.shadowRadius + "px " + env.shadowColor + ")";
-                        //divContainer.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.shadowRadius / 100 + "px " + env.shadowColor + ")";                        
                         window.addEventListener("load", wonload ());
                     }
                 };
-                xhttp.open("GET", "../init.json?" + Date.now(), true);
+                xhttp.open("GET", "../init.json"/* + "?" + Date.now()*/, true);
                 xhttp.overrideMimeType("text/plain");
                 xhttp.send();
             }
@@ -808,13 +903,409 @@ try {
             var divContainer = document.getElementById ("divContainer")
             var divContainerWrapper = document.getElementById ("divContainerWrapper")
             
-            var pixelRatioBox = document.querySelector(".pixel-ratio");
-            var mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-            matchMedia(mqString).addListener(() => {
-                window.top.document.body.innerHTML = "Please refresh the web page.";
-                return;
+            window.addEventListener('mousedown', function () {
+                var el = document.getElementsByClassName ("hvr");
+                for (i = 0; i < el.length; i++) {
+                    el[i].classList.add ("hvr1");
+                }
+                var el = document.getElementsByClassName ("hvr1");
+                for (i = 0; i < el.length; i++) {
+                    el[i].classList.remove ("hvr");
+                }
             });
             
+            window.addEventListener('mouseup', function () {
+                var el = document.getElementsByClassName ("hvr1");
+                for (i = 0; i < el.length; i++) {
+                    el[i].classList.add ("hvr");
+                }
+                var el = document.getElementsByClassName ("hvr");
+                for (i = 0; i < el.length; i++) {
+                    el[i].classList.remove ("hvr1");
+                }
+                /*
+                var el = document.getElementsByTagName ("path");
+                for (i = 0; i < el.length; i++) {
+                    el[i].style.fill = "red";
+                    el[i].style.stroke = "blue";
+                }
+                */
+            });
+            
+            var mqString = `(device-width: ${window.screen.width}px)`;
+            
+            matchMedia(mqString).addListener(() => {
+                //window.top.document.body.innerHTML = "Please refresh the web page.";
+                //window.parent.location.replace("../index.html");
+                //window.parent.location.reload();
+                for (var i = 0; i < allOvals.length; i++) {
+                    if (allOvals[i].ifr) {
+                        divContainer.removeChild (allOvals[i].ifr);
+                        delete (allOvals[i].ifr);
+                    }
+                }
+                
+                return;
+            });
+        </script>
+
+        <div id="lftbut" style="opacity: 1; visibility: hidden; z-index: 4000000000; position: absolute; background-color: rgb(48,48,48); left: 1px; bottom: 1px; width: 144px; height: 144px; border-radius: 72px;">
+            <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; transform: scale(2.5);">
+                <img id= "lftbuti" width="48"/>
+            </a>
+        </div>
+
+        <script>
+            document.getElementById("lftbuta").addEventListener("click", function (evt) {
+                if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
+                    eval (env.lftBut["action"]);
+                
+                else {
+                    var k = document.getElementById('knot');
+                    k.style.visibility = 'hidden';
+                    reload (env.lftBut["action"]);
+                }
+                //javascript:window.open('mailto:info@apartments-vodisek-tribunj.com', 'mail')
+            }, false);
+            
+            document.getElementById("lftbuta").onmousedown = function (evt) {
+                objOrbit.setMouseOff ();
+            };
+
+            document.getElementById("lftbuta").addEventListener("touchstart", function (evt) {
+                objOrbit.setMouseOff ();
+                document.getElementById("lftbuta").dispatchEvent(new CustomEvent('click'));
+                evt.preventDefault ();
+            }, false);
+
+            document.getElementById("lftbut").ondragstart = function (evt) {
+                evt.preventDefault ();
+            };
+
+            window.addEventListener('resize', function () {
+                if (env.lftBut) {
+                    var lb = document.getElementById("lftbut");
+                    lb.style.left =  "0.5em";
+                    lb.style.bottom = "0.5em";
+                    lb.style.visibility = "visible";
+                }
+            });
+        </script>
+
+        <div id="rgtbut" style="z-index: 4000000000; opacity: 1; visibility: hidden; position: absolute; background-color: rgb(48,48,48); right: 1px; bottom: 1px; width: 144px; height: 144px; border-radius: 72px;">
+            <a class="hvr" id="zoomr" style="position: absolute; border-radius: 24px; top: 48px; left: 48px;">
+                <svg id="zoominr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: block; transform: scale(0.8);">
+                    <title>zoom in</title>
+                    <path id="rb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M7.2 43.25 4.75 40.8l7.15-7.15H5.7v-3.4h12.05V42.3h-3.4v-6.2Zm33.6 0-7.15-7.15v6.2h-3.4V30.25H42.3v3.4h-6.2l7.15 7.15ZM5.7 17.75v-3.4h6.2L4.75 7.2 7.2 4.75l7.15 7.15V5.7h3.4v12.05Zm24.55 0V5.7h3.4v6.2l7.2-7.2 2.45 2.45-7.2 7.2h6.2v3.4Z"/>
+                </svg>
+                <svg id="zoomoutr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: none; transform: scale(0.8);">
+                    <title>zoom out</title>
+                    <path id="rb2" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M5.7 42.3V30.25h3.4v6.2l7.2-7.2 2.45 2.45-7.2 7.2h6.2v3.4Zm24.55 0v-3.4h6.2l-7.15-7.15 2.45-2.45 7.15 7.15v-6.2h3.4V42.3Zm-14-23.6L9.1 11.55v6.2H5.7V5.7h12.05v3.4h-6.2l7.15 7.15Zm15.5 0-2.45-2.45 7.15-7.15h-6.2V5.7H42.3v12.05h-3.4v-6.2Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="northr" style="position: absolute; border-radius: 24px; top: 0px; left: 48px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go north</title>
+                    <path id="rb3" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M433 907V425L216 643l-67-67 331-331 331 331-66 67-218-218v482h-94Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="westr" style="position: absolute; border-radius: 24px; bottom: 48px; left: 0px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go west</title>
+                    <path id="rb4" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M480 907 149 576l331-331 67 66-217 218h481v94H330l217 217-67 67Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="eastr" style="position: absolute; border-radius: 24px; top: 48px; right: 0px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go east</title>
+                    <path id="rb5" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="m480 907-67-68 217-216H149v-94h481L413 312l67-67 331 331-331 331Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="southr" style="position: absolute; border-radius: 24px; bottom: 0px; right: 48px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go south</title>
+                    <path id="rb6" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M480 907 149 576l67-67 217 217V245h94v481l218-217 66 67-331 331Z"/>
+                </svg>
+            </a>
+        </div>
+
+        <script>
+            var magnFactorNav = 1;
+            // --- navigator --- //
+            
+                document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorNav / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorNav / 2) + "px)" + " scale(" + magnFactorNav + ") ";
+
+                // --- zooming start --- //
+                    
+                    document.getElementById("zoominr").addEventListener("touchstart", function (evt) {
+                        document.getElementById("zoominr").dispatchEvent(new CustomEvent('click'));
+                        evt.preventDefault ();
+                    }, false);
+
+                    document.getElementById("zoomoutr").addEventListener("touchstart", function (evt) {
+                        document.getElementById("zoomoutr").dispatchEvent(new CustomEvent('click'));
+                        evt.preventDefault ();
+                    }, false);
+
+                    document.getElementById("zoominr").addEventListener('click', () => {
+                        objOrbit.zoomIn ();
+                    }, false);
+
+                    document.getElementById("zoomoutr").addEventListener('click', () => {
+                        objOrbit.zoomOut ();
+                    }, false);
+                    
+                    function zoomedInR () {
+                        document.getElementById("zoominr").style.display = "none";
+                        document.getElementById("zoomoutr").style.display = "block";
+                    }
+                    
+                    function zoomedOutR () {
+                        document.getElementById("zoomoutr").style.display = "none";
+                        document.getElementById("zoominr").style.display = "block";
+                    }
+                    
+                    function zoomingOutR () {
+                    }
+                    
+                    function zoomingInR () {
+                    }
+                    
+                // --- zooming end --- //
+                
+                // --- movement --- //
+
+                    document.getElementById("northr").addEventListener("touchstart", function (evt) {
+                        document.getElementById("northr").dispatchEvent(new CustomEvent('click'));
+                        evt.preventDefault ();
+                    }, false);
+
+                    document.getElementById("southr").addEventListener("touchstart", function (evt) {
+                        document.getElementById("southr").dispatchEvent(new CustomEvent('click'));
+                        evt.preventDefault ();
+                    }, false);
+
+                    document.getElementById("eastr").addEventListener("touchstart", function (evt) {
+                        document.getElementById("eastr").dispatchEvent(new CustomEvent('click'));
+                        evt.preventDefault ();
+                    }, false);
+
+                    document.getElementById("westr").addEventListener("touchstart", function (evt) {
+                        document.getElementById("westr").dispatchEvent(new CustomEvent('click'));
+                        evt.preventDefault ();
+                    }, false);
+
+                    document.getElementById("northr").addEventListener('click', () => {
+                        if (objOrbit.getMagn() === 1)
+                            objOrbit.levelUp ();
+                        else
+                            objOrbit.slideUp ();
+                    }, false);
+                    
+                    document.getElementById("southr").addEventListener('click', () => {
+                        if (objOrbit.getMagn() === 1)
+                            objOrbit.levelDown ();
+                        else
+                            objOrbit.slideDown ()
+                    }, false);
+
+                    document.getElementById("eastr").addEventListener('click', () => {
+                        if (objOrbit.getMagn() === 1)
+                            objOrbit.rotCounterClockwise ();
+                        else
+                            objOrbit.slideRight ();
+                    }, false);
+                    
+                    document.getElementById("westr").addEventListener('click', () => {
+                        if (objOrbit.getMagn() === 1)
+                            objOrbit.rotClockwise ();
+                        else
+                            objOrbit.slideLeft ();
+                    }, false);
+
+                // --- movement end --- //
+
+                window.addEventListener('resize', function () {
+                    var rn = document.getElementById("rgtbut");
+                    rn.style.right =  "0.5em";
+                    rn.style.bottom = "0.5em";
+                    rn.style.visibility = "visible";
+                });
+
+                document.getElementById("rgtbut").onmousedown = function (evt) {
+                    objOrbit.setMouseOff ();
+                };
+                
+                document.getElementById("rgtbut").addEventListener("touchstart", function (evt) {
+                    objOrbit.setMouseOff ();
+                }, false);
+
+                window.addEventListener("touchend", function (evt) {
+                    objOrbit.setMouseOn ();
+                    divContainer.dispatchEvent(new CustomEvent('mouseup', null));
+                }, false);
+                
+                window.addEventListener("mouseup", function (evt) {
+                    objOrbit.setMouseOn ();
+                    divContainer.dispatchEvent(new CustomEvent('mouseup', null));
+                }, false);
+                
+            // --- navigator end --- //
+        </script>
+        
+        <div id="midbuts" style="opacity: 1; visibility: hidden; z-index: 4000000000; position: absolute; background-color: rgb(48,48,48); left: 0px; bottom: 0px; height: 72px; border-radius: 36px; padding-left: 12px; padding-right: 12px; margin: 0;">
+        </div>
+        <script>
+            function fadein (obj) {
+                var steps = 1;
+                var fade = 0;
+                var fadein1 = function () {
+                    if (fade < 1) {
+                        obj.style.opacity = `${fade}`;
+                        setTimeout (fadein1, 200 / steps);
+                    } else {
+                        obj.style.opacity = `1`;
+                    }
+                    fade += 1 / steps;
+                }
+                fadein1 ();
+            }
+            
+            function onmidbut (index) {
+                if (index >=0 && env.midButs[index].action.substr(0, "javascript:".length) !== "javascript:") {
+                    midbutindex = index;
+                    var k = document.getElementById('knot');
+                    //k.style.opacity = `0`;
+                    obj = document.getElementById("midbut" + index);
+                    k.style.visibility = 'visible';
+                    k.style.bottom = "calc(0.5em - " + (k.clientHeight / 2) + 'px)';
+                    k.style.left = obj.offsetLeft + obj.clientWidth / 2 - (k.clientWidth) / 2 + 'px';
+                    fadein (k);
+                }
+            }
+            
+            function midbutresize () {
+                if (env.midButs) {
+                    var mb = document.getElementById("midbuts");
+
+                    //mb.style.width = env.midButs.length * 72 + "px";
+                    mb.style.left =  window.innerWidth / 2 - mb.clientWidth / 2 + "px";
+                    mb.style.bottom = "0.5em";
+                
+                    onmidbut(midbutindex);
+                }
+            }
+            
+            var nmidbutcount = 0;
+            function loadmidbuts () {
+                if (env.midButs) {
+                    var mb = document.getElementById("midbuts");
+
+                    var buts = `<div id="knot" style="opacity: 1; visibility: hidden; z-index: 4000000000; position: absolute; background-color: rgb(208,208,208); width: 24px; height: 5px; border-radius: 3px;"></div>`
+                    for (var i = 0; i < env.midButs.length; i++) {
+                        var script =  `alert(this.clientTop);`
+                        buts += `<img id="midbut${i}" class="hvr" height="48" src="../${env.midButs[i].icon}" title="${env.midButs[i].tooltip}" style="margin:12px" onclick="javascript:onmidbut(${i});reload('${env.midButs[i].action}')"/>`;
+                    }
+                    
+                    mb.innerHTML = buts;
+                    
+                    for (var i = 0; i < env.midButs.length; i++) {
+                        document.getElementById("midbut" + i).addEventListener("load", function (evt) {
+                            nmidbutcount++;
+                            if (nmidbutcount >= env.midButs.length) {
+                                midbutresize(midbutindex);
+                                mb.style.visibility = "visible";
+                            }
+                        });
+                        
+                        document.getElementById("midbut" + i).addEventListener("touchstart", function (evt) {
+                            this.dispatchEvent(new CustomEvent('click'));
+                        });
+                    }
+                }
+            }
+                    
+            window.addEventListener('resize', midbutresize);
+
+            document.getElementById("midbuts").ondragstart = function (evt) {
+                evt.preventDefault();
+            };
+
+            document.getElementById("midbuts").onmousedown = function (evt) {
+                objOrbit.setMouseOff ();
+            };
+            
+            document.getElementById("midbuts").addEventListener("touchstart", function (evt) {
+                objOrbit.setMouseOff ();
+            }, false);
+            
+            function reload (topNode) {
+                if (topNode.substr(0, "javascript:".length) !== "javascript:") {
+                    var url = new URL(topNode, xhttp.responseURL).href
+                    nodeTree = {xml: url, parent: {index: 0}};
+                    nodeTree.parent.children = [nodeTree];
+                    //divContainer.style.opacity = "0";
+                    objOrbit.setMagn (1);
+                    zoomedOutR ();
+                    divContainer.dispatchEvent(new CustomEvent('redefineData', {detail: nodeTree}));
+                    fadein (divContainer);
+                } else {
+                    eval (topNode);
+                }
+            }
+        </script>
+        
+        <script>
+            function initButtons () {
+                if (env.lftBut) {
+                    if (env.butShadowRadius > 0)
+                        document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                        
+                    document.getElementById("lftbut").style.backgroundColor = env.butsBackColor;
+                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
+                        document.getElementById("lftbut").style.border = "2px solid " + env.butsBorderColor;
+                        
+                    document.getElementById("lftbuti").src = "../" + env.lftBut["icon"];
+                    document.getElementById("lftbuti").title = env.lftBut["tooltip"];
+                }
+                
+                if (env.midButs) {
+                    if (env.butShadowRadius > 0)
+                        document.getElementById("midbuts").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                        
+                    loadmidbuts ();
+                    document.getElementById("midbuts").style.backgroundColor = env.butsBackColor;
+                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
+                        document.getElementById("midbuts").style.border = "2px solid " + env.butsBorderColor;
+
+                    document.getElementById("knot").style.backgroundColor = env.butsColor;
+                }
+                
+                // env.rgtBut
+                    if (env.butShadowRadius > 0)
+                        document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                        
+                    document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
+                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
+                        document.getElementById("rgtbut").style.border = "2px solid " + env.butsBorderColor;
+
+                    document.getElementById("rb1").style.fill = env.butsColor;
+                    document.getElementById("rb2").style.fill = env.butsColor;
+                    document.getElementById("rb3").style.stroke = env.butsColor;
+                    document.getElementById("rb3").style.fill = env.butsColor;
+                    document.getElementById("rb4").style.stroke = env.butsColor;
+                    document.getElementById("rb4").style.fill = env.butsColor;
+                    document.getElementById("rb5").style.stroke = env.butsColor;
+                    document.getElementById("rb5").style.fill = env.butsColor;
+                    document.getElementById("rb6").style.stroke = env.butsColor;
+                    document.getElementById("rb6").style.fill = env.butsColor;
+                // end env.rgtBut
+            }
+            
+            var midbutindex;
+        </script>
+        
+        <script>
             init ();
         </script>
       </section>

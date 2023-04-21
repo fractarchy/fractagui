@@ -1,4 +1,4 @@
-function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor, circleSize, ngonsides) {
+function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor, circleSize) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
     var qang = 0.025 * Math.PI;
 
@@ -9,11 +9,11 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
     
     var shadow;
 
-    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, gclip, zoom) {
-        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, 0, gclip, zoom);
+    var render = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData) {
+        return render1 (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData);
     }
     
-    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, parentR, gclip, zoom) {
+    var render1 = function (minRadius, x1, y1, r1, angle, rec, mouse, data, index, cursor, selectedCursor, renderHint, renderData, parentR) {
         function getCircle (alpha, x0, y0, r0, x1, y1, r1) {
             var beta = angle + alpha - Math.PI / 2;
             
@@ -106,41 +106,24 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
         }
         
         var i;
-/*
-    xx = (xx - xx * zoom) + xx * zoom;
-    yy = yy * zoom;
-    rr = rr * zoom;
-*/
-if (rec === 1) {
-    x1 = (xx - xx * zoom) + x1 * zoom;
-    y1 = y1 * zoom;
-    r1 = r1 * zoom;
-}
-
+        
         var r0 = r1 * ratio;
         var x0 = x1 + (r1 - r0) * Math.cos (angle - Math.PI / 2);
         var y0 = y1 + (r1 - r0) * Math.sin (angle - Math.PI / 2);
-/*        
-    x0 = (xx - xx * zoom) + x0 * zoom;
-    y0 = y0 * zoom;
-    r0= r0 * zoom;
-*/    
+        
 //        if (shadow) {
 //            if (rec === 1 && renderHint !== "1") {
             if (rec === 1) {
                 clear();
                 hideOvals(data);
-                
-//                ctx.save ();
-                //gclip ();
             }
 //            }
 //        }
         
+            
         var siblings
-        var prevAngle, nextAngle
         if (
-            (rec > 1 && zoom > 1) || !(Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr)
+            !(Math.sqrt ((x1 - xx) * (x1 - xx) + (y1 - yy) * (y1 - yy)) < r1 + rr)
         ) {
             //if (data.ifr)
             //    data.ifr.style.visibility = "hidden";
@@ -180,7 +163,7 @@ if (rec === 1) {
                     ci = (cursor?cursor.index:0);
                     cursib = 0;
                     if (c0.r * squashX * squashY >= minRadius) {
-                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, r1, gclip, zoom);
+                        got = render1 (minRadius, x0 + c0.x, y0 + c0.y, c0.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, r1);
                         if (got && got.mouseIn) {
                             idx = ci;
                             alp = alpha;
@@ -201,10 +184,7 @@ if (rec === 1) {
                         cursib++;
                         
                         if (c1.r * squashX * squashY >= minRadius) {
-                            if (!prevAngle)
-                                prevAngle = alpha;
-                                
-                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, r1, gclip, zoom);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, r1);
                             if (!ret && got && got.mouseIn) {
                                 idx = ci;
                                 alp = alpha;
@@ -236,10 +216,7 @@ if (rec === 1) {
                         cursib--;
 
                         if (c1.r * squashX * squashY >= minRadius) {
-                            if (!nextAngle)
-                                nextAngle = alpha;
-                                
-                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, r1, gclip, zoom);
+                            got = render1 (minRadius, x0 + c1.x, y0 + c1.y, c1.r, angle + alpha - Math.PI, rec + 1, mouse, data.children[ci], ci, (cursor?cursor.children[ci]:null), selectedCursor, null, renderData, r1);
                             if (!ret && got && got.mouseIn) {
                                 idx = ci;
                                 alp = alpha;
@@ -274,8 +251,6 @@ if (rec === 1) {
                     cursor.data = data;
                     cursor.minIndex = 0;
                     cursor.maxIndex = data.children.length - 1;
-                    cursor.nextAngle = nextAngle;
-                    cursor.prevAngle = prevAngle;
                 }
                 
                 if (ret || cond) {
@@ -457,16 +432,9 @@ if (rec === 1) {
                     for (var si in siblings)
                         if (siblings[si]) siblings[si].parent = pass;
                     
-                    if (rec === 1) {
-//                        ctx.restore ();
-                    }
-                    
                     return pass;
                 }
             }
-        }
-        if (rec === 1) {
-//            ctx.restore ();
         }
     };
     
@@ -512,17 +480,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         
         return data;
     } 
-
-    function gclip () {
-        var n = ngonsides;
-        ctx.beginPath ();
-        ctx.moveTo(xx * squashX + (rr * squashX * zoom) * Math.cos (2 * Math.PI / n * -0.5), yy * squashY + (rr * squashY * zoom) * Math.sin (2 * Math.PI / n * -0.5));
-        for (var i = 0.5; i < n + 1.5; i++){
-            ctx.lineTo(xx * squashX + (rr * squashX * zoom) * Math.cos (2 * Math.PI / n * i), yy * squashY + (rr * squashY * zoom) * Math.sin (2 * Math.PI / n * i));
-        }
-        ctx.closePath ();
-        ctx.clip ();
-    }
 
     data = prepareData (data);
     
@@ -586,7 +543,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     tooltip.style.visibility = "hidden";
     tooltip.style.fontFamily = "Arial, Helvetica, sans-serif";
     tooltip.style.fontSize = "10pt";
-    tooltip.style.padding = "0px";
     tooltip.innerText = "";
     document.body.appendChild(tooltip);
     
@@ -636,67 +592,61 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         ctx.fill ();
     }
 
-    function Polygon() {
-        var pointList = [];
-
-        this.node = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-
-        function build(arg) {
-            var res = [];
-            for (var i = 0, l = arg.length; i < l; i++) {
-                res.push(arg[i].join(','));
-            }
-            return res.join(' ');
-        }
-
-        this.attribute = function (key, val) {
-            if (val === undefined) return this.node.getAttribute(key);
-            this.node.setAttribute(key, val);
-        };
-
-        this.getPoint = function (i) {
-            return pointList[i]
-        };
-
-        this.setPoint = function (i, x, y) {
-            pointList[i] = [x, y];
-            this.attribute('points', build(pointList));
-        };
-
-        this.points = function (arg) {
-            for (var i = 0, l = arg.length; i < l; i += 2) {
-                pointList.push([arg[i], arg[i + 1]]);
-            }
-            this.attribute('points', build(pointList));
-        };
-
-        this.points.apply(this, arguments);
-    }
-
-    function round (x, y, r1, r2, s) {
-        var polygon = new Polygon (0, 0, 0, 0);
-
-        var p = [];
-        for (var i = 0.5; i < s; i++) {
-            p.push (x + Math.cos (2 * Math.PI / s * i) * r1);
-            p.push (y + Math.sin (2 * Math.PI / s * i) * r2);
-        }
-        polygon.points (p);
-        polygon.attribute('style', 'fill:red');
-        
-        return polygon;
-    }
-    //////////////////////
     function drawCircle (data, angle, parentR, x, y, r, fill, stroke, cursor, renderHint, level, shadow) {
+
+        function Polygon() {
+            var pointList = [];
+
+            this.node = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+
+            function build(arg) {
+                var res = [];
+                for (var i = 0, l = arg.length; i < l; i++) {
+                    res.push(arg[i].join(','));
+                }
+                return res.join(' ');
+            }
+
+            this.attribute = function (key, val) {
+                if (val === undefined) return this.node.getAttribute(key);
+                this.node.setAttribute(key, val);
+            };
+
+            this.getPoint = function (i) {
+                return pointList[i]
+            };
+
+            this.setPoint = function (i, x, y) {
+                pointList[i] = [x, y];
+                this.attribute('points', build(pointList));
+            };
+
+            this.points = function (arg) {
+                for (var i = 0, l = arg.length; i < l; i += 2) {
+                    pointList.push([arg[i], arg[i + 1]]);
+                }
+                this.attribute('points', build(pointList));
+            };
+
+            this.points.apply(this, arguments);
+        }
+
+        function round (x, y, r1, r2, s) {
+            var polygon = new Polygon (0, 0, 0, 0);
+
+            var p = [];
+            for (var i = 0.5; i < s; i++) {
+                p.push (x + Math.cos (2 * Math.PI / s * i) * r1);
+                p.push (y + Math.sin (2 * Math.PI / s * i) * r2);
+            }
+            polygon.points (p);
+            polygon.attribute('style', 'fill:red');
+            
+            return polygon;
+        }
+    //////////////////////
     var diff;
     if (renderHint === "1") diff = 1; else diff = 1;
-
-    /*
-    clip.setAttribute('cx', x1 * squashX);
-    clip.setAttribute('cy', y1 * squashY);
-    clip.setAttribute('rx', (r1) * squashX + shadowr);
-    clip.setAttribute('ry', (r1) * squashY + shadowr);
-    */
     if (r * squashX - diff <= 0 || r * squashY - diff <= 0) return;
     //////////////////////
         if (r * squashX > 0.5 && r * squashY > 0.5) {
@@ -872,27 +822,24 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                 var magn = ~~(scale * r / (rr * ratio) * 100) / 100 //* window.devicePixelRatio;
                 data.ifr.magn = magn;
-                //data.ifr.style.willChange = "transform";
                 
                 //var l2 = ~~((data.ifr.width / 2 + cx));
                 //var t2 = ~~((data.ifr.height / 2 + cy));
                 //var tr = "scale(" + magn + ") " + (level === 1?"": "translate(" + l2 + "px, " + t2 + "px) " + "scale("+ squashX + ", " + squashY + ") " + " rotate(" + (anglea - Math.PI / 2) + "rad) " + "scale(" + 1 / squashX + ", " + 1 / squashY + ") " + "translate(" + (-l2) + "px, " + (-t2) + "px) ");
 
                 if (data.ifr.style.transformOrigin !== "0px 0px 0px") data.ifr.style.transformOrigin = "0px 0px 0px";
-//                data.ifr.style.display = "inline-table"
                 var tr = "scale(" + magn.toFixed(2) + ")";
                 //if (data.ifr.style.transform !== tr) data.ifr.style.transform = tr;
                 
                 var l = ~~((xa * squashX - magn * (data.ifr.width / 2 + cx)));
                 var t = ~~((ya * squashY - magn * (data.ifr.height / 2 + cy)));
-
                 if (data.ifr.style.left === ~~(cnv.parentNode.clientLeft + l) + "px" && data.ifr.style.top === ~~(cnv.parentNode.clientLeft + t) + "px" && data.ifr.style.transform === tr) { // it was scaling bug
                     //alert ("skip the same position");
                 } else {
                     data.ifr.style.left = ~~(cnv.parentNode.clientLeft + l) + "px";
                     data.ifr.style.top = ~~(cnv.parentNode.clientTop + t) + "px";
                     data.ifr.style.transform = tr;
-                    
+
                     if (data.clip1) data.clip1.remove();
                     if (data.clip2) data.clip2.remove();
                     if (data.clip3) data.clip3.remove();
@@ -910,7 +857,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clipPath2 = document.createElementNS(svgns, 'clipPath');
                     clipPath2.setAttributeNS(null, 'id', "cl2" + rand2);
                     svg.appendChild(clipPath2);
-                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
+                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t) / magn, (rr * squashX + shadowr) / magn, (rr * squashY + shadowr) / magn, n).node;
                     clipPath2.appendChild(clip2);
 
                     // global
@@ -925,18 +872,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     newRect.setAttribute("height", cnv.clientHeight / magn);
                     clipPath3.appendChild(newRect);
 
-                    
                     // intersect
                     clip2.style.clipPath = "url(#cl3" + rand3 + ")";
                     clip1.style.clipPath = "url(#cl2" + rand2 + ")";
                     data.ifr.style.clipPath = "url(#cl1" + rand1 + ")";
-                    
-                    /*
-                    // intersect
-                    //clip2.style.clipPath = "url(#cl3" + rand3 + ")";
-                    //clip1.style.clipPath = "url(#cl2" + rand2 + ")";
-                    data.ifr.style.clipPath = "url(#cl1" + rand1 + ")";
-                    */
 
                     data.clip1 = clipPath1;
                     data.clip2 = clipPath2;
@@ -944,7 +883,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 }
 
                 data.ifr.style.visibility = "visible";
-
                 //if (level === 1)
                 //    data.ifr.style.pointerEvents = "auto"
                 //else
@@ -993,7 +931,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         div.style.zIndex = 2000000000;//Math.pow(2, 31);
         
         renderData = [];
-        var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData, gclip, zoom);
+        var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData);
+            
         return ret;
     }
 
@@ -1019,8 +958,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
       else
       {
         //IE
-        //xpos = window.event.x + document.body.scrollLeft - 2;
-        //ypos = window.event.y + document.body.scrollTop - 2;
+        xpos = window.event.x + document.body.scrollLeft - 2;
+        ypos = window.event.y + document.body.scrollTop - 2;
       }
       
       xpos -= obj_left;
@@ -1028,6 +967,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
       var cw2 = divContainer.clientWidth / 2;
       var ch2 = divContainer.clientHeight / 2;
+        xpos = cw2 + (xpos - cw2) / magn;
+        ypos = ch2 + (ypos - ch2) / magn - transformY();
       
       return {x: Math.floor (xpos), y: Math.floor (ypos)};
     }
@@ -1066,21 +1007,13 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             } else {
                 //var r0 = r1 * ratio;
-                if (zoom === 1) {
-                    var r0 = r1 * ratio * circleSize;
+                var r0 = r1 * ratio * circleSize;
 
-                    var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
-                    var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
-                    
-                } else {
-                    var r0 = r1 * ratio * circleSize * zoom;
-
-                    var x0 = ww / 2;
-                    var y0 = hh / 2;
-                }
+                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
 
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                    setCenter (select, oldCenterX + ((dragX - x0) - (x - x0)) / scale / zoom/* window.devicePixelRatio*/, oldCenterY + ((dragY - y0) - (y - y0)) / scale / zoom/* window.devicePixelRatio*/);
+                    setCenter (select, oldCenterX + ((dragX - x0) - (x - x0)) / scale /* window.devicePixelRatio*/, oldCenterY + ((dragY - y0) - (y - y0)) / scale /* window.devicePixelRatio*/);
 
                 } else {
                     if (select.cursor.data && select.cursor.data.ifr) {
@@ -1107,22 +1040,14 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         var found = false;
         if (cursor && cursor.data.ifr) {
             if (!dragging && !panning && !animating) {
-                if (zoom === 1) {
-                    var r0 = r1 * ratio * circleSize;
+                var r0 = r1 * ratio;
 
-                    var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
-                    var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
-                    
-                } else {
-                    var r0 = r1 * ratio * circleSize * zoom;
-
-                    var x0 = ww / 2;
-                    var y0 = hh / 2;
-                }
+                var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0 + r0 * (1 - circleSize))) * squashX);
+                var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0 + r0 * (1 - circleSize))) * squashY);
 
                 if (Math.ceil (Math.sqrt((x - x0) / squashX * (x - x0) / squashX + (y - y0) / squashY * (y - y0) / squashY)) < Math.floor (r0)) {
-                    var hx = cursor.centerX + cursor.data.ifr.width / 2 + (x - x0) / scale / zoom;// / window.devicePixelRatio;
-                    var hy = cursor.centerY + cursor.data.ifr.height / 2 + (y - y0) / scale / zoom;// / window.devicePixelRatio;
+                    var hx = cursor.centerX + cursor.data.ifr.width / 2 + (x - x0) / scale;// / window.devicePixelRatio;
+                    var hy = cursor.centerY + cursor.data.ifr.height / 2 + (y - y0) / scale;// / window.devicePixelRatio;
 
                     if (cursor.data.hyperlinks) {
                         for (var i = 0; i < cursor.data.hyperlinks.length; i++) {
@@ -1141,9 +1066,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             }
         }
         if (!found) {
-            div.style.cursor = "";
+            div.style.cursor = "default";
             tooltip.style.visibility = "hidden";
-            tooltip.style.zIndex = 8000000000;
             tooltip.innerText = "";
         }
     }
@@ -1155,14 +1079,12 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         if (e.pageX > 0 && e.pageY > 0 && e.pageX < window.innerWidth && e.pageY < window.innerHeight) {
             globalt0 = (new Date()).getTime();
             
-            var r0 = r1 * ratio * zoom;
+            var r0 = r1 * ratio;
             
             var x0 = Math.floor ((x1 + Math.sin (orientation) * (r1 - r0)) * squashX);
             var y0 = Math.floor ((y1 - Math.cos (orientation) * (r1 - r0)) * squashY);
 
             mouse = getMouse (e);
-            //x = (xx - xx * zoom) + x * zoom;
-            //y = y * zoom;
             lastMouseEvent = e;        
 
             if (!panning && !dragging) {
@@ -1172,13 +1094,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             
                         var angle = Math.PI;
                         var ra = r0 * circleSize;
-                        var xa = x0 + (r0 - ra) * Math.cos (angle - Math.PI / 2);
-                        var ya = y0 + (r0 - ra) * Math.sin (angle - Math.PI / 2);
-                        /*
-                        xa = (xx - xx * zoom) + xa * zoom;
-                        ya = ya * zoom;
-                        ra = ra * zoom;
-                        */
+                        var xa = x0 + (r0 - ra) * Math.cos (angle - Math.PI / 2)
+                        var ya = y0 + (r0 - ra) * Math.sin (angle - Math.PI / 2)
                         //if (!animating && select && Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY) < r0) {
                         if (!animating && select && Math.sqrt((mouse.x - xa) / squashX * (mouse.x - xa) / squashX + (mouse.y - ya) / squashY * (mouse.y - ya) / squashY) < ra) {
                             panning = true;
@@ -1271,8 +1188,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     }
                 }
                 */
-                
-                maxR = maxR;
 
                 if (!animating && dragging && select.parent && !isOnParent && mouseDistance < maxR) {
                     //select.parent.setAngle (ang[1], dr);
@@ -1300,7 +1215,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                             if (!panning) {
                                 renderData = [];
                                 if (qang1 !== qang2) {
-                                    setupSelect (n.render (minRadius, x1, y1, r1, orientation, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+", renderData, gclip, zoom));
+                                    setupSelect (n.render (minRadius, x1, y1, r1, orientation, 1, mouse, data, cursor.parent.index, cursor, sel.cursor, "1+", renderData));
                                     qang2 = qang1;
                                 }
                                 if (!select.mouseIn)
@@ -1386,7 +1301,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     animateAng2 = Math.min (animateAng2, angMax);
                     animateAng2 = Math.max (animateAng2, angMin);
 
-                    if (zoom === 1 && !animating) {
+                    if (!animating) {
                         
                         var topc = select;
                         while (topc.parent)
@@ -1804,7 +1719,75 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                 if (Math.ceil (Math.sqrt((mouse.x - x0) / squashX * (mouse.x - x0) / squashX + (mouse.y - y0) / squashY * (mouse.y - y0) / squashY)) < Math.floor (r0)) {
                     if ((new Date()).getTime() - newPan.time < 250) {
-                        pan (newPan.centerX - oldPan.centerX, newPan.centerY - oldPan.centerY, newPan.time - oldPan.time);
+                        var avgX = newPan.centerX - oldPan.centerX;
+                        var avgY = newPan.centerY - oldPan.centerY;
+                        var avgt = newPan.time - oldPan.time;
+                        if (avgt < 250) {
+                            var t0 = globalt0;
+                            var di = 1;
+                            var globalSel = select;
+                            function dInert () {
+                                if (animating === true) {
+                                    var dt = (new Date()).getTime() - t0;
+                                    t0 = (new Date()).getTime();
+                                    if (dt === 0) dt = 1;
+
+                                    di = di - dt / 384;
+                                    var sindi = Math.pow(di, 2);
+                                    if (di > 0){
+                                        var oldx = cursor.centerX;
+                                        var oldy = cursor.centerY;
+                                        var px = Math.round (cursor.centerX / qpan) * qpan;
+                                        var py = Math.round (cursor.centerY / qpan) * qpan;
+                                        setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
+                                        if (oldx != cursor.centerX || oldy != cursor.centerY) {
+                                            if (px !== globalSel.px || py !== globalSel.py) {
+                                                redraw (null, "1", globalSel.cursor);
+                                                globalSel.px = px;
+                                                globalSel.py = py;
+                                            }
+                                                
+                                            window.requestAnimationFrame(dInert);
+                                            
+                                        } else {
+                                            panning = false;
+                                            animating = false;
+                                            redraw ({x: mouse.x, y: mouse.y});
+                                            if (div.style.cursor !== "grabbing")
+                                                setMouseHyperlink (mouse.x, mouse.y);
+
+                                            idle ();
+                                        }
+
+                                    } else {
+                                        panning = false;
+                                        animating = false;
+                                        redraw ({x: mouse.x, y: mouse.y});
+                                        if (div.style.cursor !== "grabbing")
+                                            setMouseHyperlink (mouse.x, mouse.y);
+
+                                        idle ();
+                                    }
+                                } else if (mouseDown === 1) {
+                                    var r0 = r1 * ratio;
+                                    var x0 = Math.floor (x1 * squashX);
+                                    var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
+                                    
+                                    if (!(Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) < r0)) {
+                                        panning = false;
+                                        animating = false;
+                                        cursor.cachedCnv = false;
+                                        preSelect = redraw ({x: mouse.x, y: mouse.y});
+                                        
+                                        idle ();
+                                    }
+                                    if (div.style.cursor !== "grabbing")
+                                        setMouseHyperlink (mouse.x, mouse.y);
+                                }
+                            }
+                            animating = true;
+                            window.requestAnimationFrame(dInert);
+                        }
                     }
                 }
                     
@@ -1891,49 +1874,26 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         alignX = squashX * rr * circleSize * 1 / 2.4 / scale;// / window.devicePixelRatio;
         alignY = squashY * rr * circleSize * 1 / 2.4 / scale;// / window.devicePixelRatio;
     
-        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides);
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize);
         
         //minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
         minRadius = Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount) * window.devicePixelRatio);
 
-        cnv.width = Math.ceil (ww);
-        cnv.height = Math.ceil (hh);
-        cnv.setAttribute ("width", Math.ceil (ww));
-        cnv.setAttribute ("height", Math.ceil (hh));
-        
-        /*
-        --------
         clip.setAttribute('cx', x1 * squashX);
         clip.setAttribute('cy', y1 * squashY);
         clip.setAttribute('rx', (r1) * squashX + shadowr);
         clip.setAttribute('ry', (r1) * squashY + shadowr);
         clip.setAttribute('stroke-width',  1);
-        */
-        
-        /*
-        clip.setAttribute('cx', xx * squashX);
-        clip.setAttribute('cy', yy * squashY - rr * shiftY * squashY);
-        clip.setAttribute('rx', (rr) * squashX);
-        clip.setAttribute('ry', (rr) * squashY);
-        clip.setAttribute('stroke-width',  1);
-        */
-        if (clip) clipPath.removeChild(clip);
-        var magn1 = r1 / (rr * ratio);
-        var lw = 2 * lineWidth * rr / 2048 * uiscale;
-        clip = round (xx * squashX, yy * squashY - rr * shiftY * squashY, (rr + lw) * squashX, (rr + lw) * squashY, ngonsides).node;
-        clipPath.appendChild(clip);
 
-        /*
-        -----
-        clip.setAttribute('cx', ww/2);
-        clip.setAttribute('cy', hh/2);
-        clip.setAttribute('rx', (getMagnMax () * rr * ratio * circleSize) * squashX);
-        clip.setAttribute('ry', (getMagnMax () * rr * ratio * circleSize) * squashY);
-        clip.setAttribute('stroke-width',  1);
-        */
-        //cnv.style.clipPath = "url(#clip128)"; // not for safari - wrap it inside div        
+        cnv.width = Math.ceil (ww);
+        cnv.height = Math.ceil (hh);
+        cnv.setAttribute ("width", Math.ceil (ww));
+        cnv.setAttribute ("height", Math.ceil (hh));
+        //cnv.style.clipPath = "url(#clip128)";
         divContainer.style.clipPath = "url(#clip128)";
         
+        //cnv.style.webkitClipPath = "url(#clip128)";
+
         function updateCursor (c) {
             if (c) {
                 if (c.data && c.data.ifr) {
@@ -2001,15 +1961,12 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     
     function rescale (m) {
         magn = m;
-        zoom = m;
-        /*
         if (m === 1) {
             document.body.style.transform = "";
 
         } else {
              document.body.style.transform = "scale(" + magn + ") translateY(" + transformY() + "px)";
         }
-        */
     }
     
     function busy () {
@@ -2065,14 +2022,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                     setTimeout (() => {
                         animating = false;
-                        setMouseHyperlink (mouse.x, mouse.y);
                     }, 0);
                 }
             }
             
-            div.style.cursor = "";
-            tooltip.style.visibility = "hidden";
-            tooltip.innerText = "";
             animating = "zoom";
             window.requestAnimationFrame(aZoomIn)
         }
@@ -2124,14 +2077,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                     setTimeout (() => {
                         animating = false;
-                        setMouseHyperlink (mouse.x, mouse.y);
                     }, 0);
                 }
             }
             
-            div.style.cursor = "";
-            tooltip.style.visibility = "hidden";
-            tooltip.innerText = "";
             animating = "zoom";
             window.requestAnimationFrame(aZoomOut)
         }
@@ -2211,7 +2160,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                         var xo = x1 + r1 * Math.cos(ang);
                         var yo = y1 + r1 * Math.sin(ang);
                         
-                        var r2 = r1 * r1 / r0 * zoom;
+                        var r2 = r1 * r1 / r0;
                         var x2 = xo + r2 * Math.cos(mang);
                         var y2 = yo + r2 * Math.sin(mang);
 
@@ -2226,7 +2175,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                         renderData = [];
                         if (tmpi !== i1 || i === 1)
-                            var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData, gclip, zoom);
+                            var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.parent.data, cursor.parent.parent.index, cursor.parent, select.cursor, "0", renderData);
 
                         tmpi = i1;
 
@@ -2355,8 +2304,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                         
                         var xo = x1 + r1 * Math.cos(ang);
                         var yo = y1 + r1 * Math.sin(ang);
-
-                        var r2 = r1 * r1 / r0 * zoom;
+                        
+                        var r2 = r1 * r1 / r0;
                         var x2 = xo + r2 * Math.cos(mang);
                         var y2 = yo + r2 * Math.sin(mang);
 
@@ -2371,7 +2320,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                         renderData = [];
                         if (tmpi !== i1 || i === 1)
-                            var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData, gclip, zoom);
+                            var atCur = n.render (minRadius, x, y, r, orientation, 1, null, cursor.data, topc.index, cursor, select.cursor, "0", renderData);
 
                         tmpi = i1;
 
@@ -2431,206 +2380,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         }
     }
     
-    function clockwise () {
-        if (!animating) {
-            busy ();
-
-            var startAng
-            if (cursor.angle - Math.PI < 0.05)
-                if (cursor.index > 0) {
-                    cursor.index--;
-                    startAng = cursor.nextAngle;
-                } else {
-                    startAng = cursor.angle;
-                }
-                
-            else
-                startAng = cursor.angle;
-                
-            var endAng = Math.PI;
-            var i = 0;
-            var tmpi;
-            var t0 = (new Date()).getTime();
-            function aCw () {
-                var i1 = Math.round (i * qlevel) / qlevel;
-                if (i1 > 1) i1 = 1;
-                
-                var i0 = (Math.cos ((1 - i1) * Math.PI / 2));
-                var ang = startAng * (1 - i0) + endAng * i0;
-                ang = Math.round (ang * 100) / 100;
-
-                if (tmpi !== i1 || i === 1) {
-                    cursor.angle = ang;
-                    redraw();
-                }
-
-                tmpi = i1;
-
-                if (i < 1) {
-                    var t1 = (new Date()).getTime();
-                    i += (t1 - t0) / 384;
-                    if (t1 - t0 === 0) i += 1 / 384;
-                    if (i > 1) i = 1;
-                    t0 = t1;
-                    
-                    window.requestAnimationFrame(aCw)
-                } else {
-                    idle ();
-                    animating = false;
-                }
-            }
-            
-            div.style.cursor = "";
-            tooltip.style.visibility = "hidden";
-            tooltip.innerText = "";
-            animating = "cw";
-            window.requestAnimationFrame(aCw)
-        }
-    }
-    
-    function counterClockwise () {
-        if (!animating) {
-            busy ();
-            
-            var startAng
-            if (cursor.angle - Math.PI > -0.05)
-                if (cursor.index < cursor.maxIndex) {
-                    cursor.index++;
-                    startAng = cursor.prevAngle;
-                } else {
-                    startAng = cursor.angle;
-                }
-                
-            else
-                startAng = cursor.angle;
-                
-            var endAng = Math.PI;
-            var i = 0;
-            var tmpi;
-            var t0 = (new Date()).getTime();
-            function aCcw () {
-                var i1 = Math.round (i * qlevel) / qlevel;
-                if (i1 > 1) i1 = 1;
-                
-                var i0 = (Math.cos ((1 - i1) * Math.PI / 2));
-                var ang = startAng * (1 - i0) + endAng * i0;
-                ang = Math.round (ang * 100) / 100;
-
-                if (tmpi !== i1 || i === 1) {
-                    cursor.angle = ang;
-                    redraw();
-                }
-
-                tmpi = i1;
-
-                if (i < 1) {
-                    var t1 = (new Date()).getTime();
-                    i += (t1 - t0) / 384;
-                    if (t1 - t0 === 0) i += 1 / 384;
-                    if (i > 1) i = 1;
-                    t0 = t1;
-                    
-                    window.requestAnimationFrame(aCcw)
-                } else {
-                    idle ();
-                    animating = false;
-                }
-            }
-            
-            div.style.cursor = "";
-            tooltip.style.visibility = "hidden";
-            tooltip.innerText = "";
-            animating = "ccw";
-            window.requestAnimationFrame(aCcw)
-        }
-    }
-    
-    function pan (avgX, avgY, avgt) {
-        /*
-        var avgX = newPan.centerX - oldPan.centerX;
-        var avgY = newPan.centerY - oldPan.centerY;
-        var avgt = newPan.time - oldPan.time;
-        */
-        globalPan++;
-        if (globalPan > 1000000)
-            globalPan = 0;
-            
-        var curPan = globalPan;
-        if (avgt < 250) {
-            setupSelect (redraw (null, null, cursor));                
-            var globalSel = select;
-
-            globalt0 = (new Date()).getTime();
-            var t0 = globalt0;
-            var di = 1;
-            function dInert () {
-                if (animating === true) {
-                    var dt = (new Date()).getTime() - t0;
-                    t0 = (new Date()).getTime();
-                    if (dt === 0) dt = 1;
-
-                    di = di - dt / 384;
-                    var sindi = Math.pow(di, 2);
-                    if (di > 0 && globalPan === curPan){
-                        var oldx = cursor.centerX;
-                        var oldy = cursor.centerY;
-                        var px = Math.round (cursor.centerX / qpan) * qpan;
-                        var py = Math.round (cursor.centerY / qpan) * qpan;
-                        setCenter (globalSel, cursor.centerX + avgX * sindi, cursor.centerY + avgY * sindi);
-                        if (oldx != cursor.centerX || oldy != cursor.centerY) {
-                            if (px !== globalSel.px || py !== globalSel.py) {
-                                redraw (null, "1", globalSel.cursor);
-                                globalSel.px = px;
-                                globalSel.py = py;
-                            }
-                                
-                            window.requestAnimationFrame(dInert);
-                            
-                        } else {
-                            panning = false;
-                            animating = false;
-                            redraw ({x: mouse.x, y: mouse.y});
-                            if (div.style.cursor !== "grabbing")
-                                setMouseHyperlink (mouse.x, mouse.y);
-                                
-                            idle ();
-                        }
-
-                    } else {
-                        if (globalPan === curPan) {
-                            panning = false;
-                            animating = false;
-                            redraw ({x: mouse.x, y: mouse.y});
-                            if (div.style.cursor !== "grabbing")
-                                setMouseHyperlink (mouse.x, mouse.y);
-
-                            idle ();
-                        }
-                    }
-                } else if (mouseDown === 1) {
-                    var r0 = r1 * ratio;
-                    var x0 = Math.floor (x1 * squashX);
-                    var y0 = Math.floor ((y1 - (r1 - r0)) * squashY);
-                    
-                    if (!(Math.sqrt((dragX - x0) / squashX * (dragX - x0) / squashX + (dragY - y0) / squashY * (dragY - y0) / squashY) < r0)) {
-                        panning = false;
-                        animating = false;
-                        cursor.cachedCnv = false;
-                        preSelect = redraw ({x: mouse.x, y: mouse.y});
-                        
-                        idle ();
-                    }
-                    if (div.style.cursor !== "grabbing")
-                        setMouseHyperlink (mouse.x, mouse.y);
-                }
-            }
-            animating = true;
-            window.requestAnimationFrame(dInert);
-        }
-    }
-    
+    var onStop;
     var receiveMouseEvents = true;
-    var magn = 1, zoom = 1;
+    var magn = 1;
     var oldAng, newAng, oldPan, newPan;
     var renderData;
     var mouse = {};
@@ -2643,24 +2395,22 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     cursor.parent = {index: 0, children: [cursor]};
 
     var level, levelrr, gettingLevel, animateAng0, animateAng0Start, animateAng2, animateAng2Start, curAnimateAng2;
-    var lastMouseEvent, globalt0, globalSel, globalPan = 0;
-    var lastRedraw;
+    var lastMouseEvent, globalt0, globalSel;
 
     var mouseDown = 0;
     var dragX, dragY, dragging = false, oldCenterX, oldCenterY;
     
     var device = "mouse";
 
-    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides);
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');
     clipPath.setAttributeNS(null, 'id', 'clip128');
     svg.appendChild(clipPath);
-    var clip;
 
-    //var clip = document.createElementNS(svgns, 'ellipse');
-    //clipPath.appendChild(clip);   
+    var clip = document.createElementNS(svgns, 'ellipse');
+    clipPath.appendChild(clip);   
     
     var noPan;
     
@@ -2693,8 +2443,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             if (receiveMouseEvents) {
                 device = "mouse";
                 if (evt.detail.W !== undefined) {
-                    evt.pageX = evt.detail.X / zoom;
-                    evt.pageY = evt.detail.Y / zoom;
+                    evt.pageX = evt.detail.X;
+                    evt.pageY = evt.detail.Y;
                     evt.which = evt.detail.W;
                     noPan = true;
                 } else {
@@ -2913,10 +2663,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 noPan = false;
             }
             
-            if (evt.buttons === 0 && magn === 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
+            if (magn === 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
                 zoomIn ();
                 
-            } else if (evt.buttons === 0 && magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
+            } else if (magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
                 zoomOut ();
             }
 
@@ -2973,7 +2723,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         cursor.parent = {index: 0, children: [cursor]};
         path = [];
         resize (divContainer.clientWidth, divContainer.clientHeight);
-        setupSelect (redraw (null, null, cursor));
     });
 
     divContainer.addEventListener('redefineCursor', function (e) {
@@ -3006,7 +2755,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                         if (!data.children[topc2.index])
                             topc2.index = 0;
                             
-                        cursor = {parent: parent, index: topc2.index, data: data, centerX: topc1?topc1.centerX: 0, centerY: topc1?topc1.centerY: 0, angle: topc2.angle, prevAngle: topc2.prevAngle, nextAngle: topc2.nextAngle, children: []};
+                        cursor = {parent: parent, index: topc2.index, data: data, centerX: topc1?topc1.centerX: 0, centerY: topc1?topc1.centerY: 0, angle: topc2.angle, children: []};
                         if (!topc1)
                             alignOval (data, cursor)
                     
@@ -3045,9 +2794,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     });
     
     return {
-        getCnv: function () {
-            return cnv;
-        },
         getData: function () {
             return data;
         },
@@ -3077,38 +2823,11 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             busy ();
             levelDown ();
         },
-        rotClockwise: function () {
-            clockwise ();
-        },
-        rotCounterClockwise: function () {
-            counterClockwise ();
-        },
-        slideUp: function () {
-            pan (0, -20 * window.devicePixelRatio, 50);
-        },
-        slideDown: function () {
-            pan (0, 20 * window.devicePixelRatio, 50);
-        },
-        slideLeft: function () {
-            pan (-20 * window.devicePixelRatio, 0, 50);
-        },
-        slideRight: function () {
-            pan (20 * window.devicePixelRatio, 0, 50);
-        },
-        setMagn: function (magn) {
-            rescale (magn);
-        },
         getMagn: function () {
             return magn;
         },
         getMagnMax: function () {
             return getMagnMax ();
-        },
-        setMouseOn: function () {
-            receiveMouseEvents = true;
-        },
-        setMouseOff: function () {
-            receiveMouseEvents = false;
         }
     }
 }

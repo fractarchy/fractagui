@@ -32,7 +32,7 @@ The final result brings all the imported content pages to be shown inside orbita
 
 ### 4.1. case study
 
-![](media/ssh-480-apv.png)
+![](media/ssh-480-apv.png) ![](media/ssh-152-apv.png)
 
 We built an independent web site using Fractarchy-CMS. To get info about this particular case study, please refer to [this document](case-study.md).
 

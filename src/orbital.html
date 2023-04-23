@@ -648,7 +648,7 @@ try {
                                         setInterval (function () {
                                             extractLinks_fract_123 (document);
                                         }, 500);
-/*                                        
+
 var ro_fract_123 = new ResizeObserver(function (entries) {
   for (let entry of entries) {
     const cr = entry.contentRect;
@@ -656,8 +656,6 @@ var ro_fract_123 = new ResizeObserver(function (entries) {
   }
 })
 ro_fract_123.observe(document.body);
-*/
-window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: 400, height: 400}, "*");    
                                     `;
                                     loadedOvalsIndex++;
                                     

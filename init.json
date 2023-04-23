@@ -2,8 +2,8 @@
     "home": "contents/a-0.xml",
     
     "contents-scale": "100%",
-    "ui-scale": "140%",
-    "ui-shift": "10%",
+    "ui-scale": "100%",
+    "ui-shift": "0%",
     "power-consumption-optimisation": "75%",
 
     "background-color": "gray",

@@ -910,7 +910,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clipPath2 = document.createElementNS(svgns, 'clipPath');
                     clipPath2.setAttributeNS(null, 'id', "cl2" + rand2);
                     svg.appendChild(clipPath2);
-                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t /*- rr * shiftY * squashY*/) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
+                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
                     clipPath2.appendChild(clip2);
 
                     // global
@@ -1019,8 +1019,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
       else
       {
         //IE
-        //xpos = window.event.x + document.body.scrollLeft - 2;
-        //ypos = window.event.y + document.body.scrollTop - 2;
+        xpos = window.event.x + document.body.scrollLeft - 2;
+        ypos = window.event.y + document.body.scrollTop - 2;
       }
       
       xpos -= obj_left;
@@ -1272,7 +1272,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 }
                 */
                 
-                maxR = maxR;
+                //maxR = maxR;
 
                 if (!animating && dragging && select.parent && !isOnParent && mouseDistance < maxR) {
                     //select.parent.setAngle (ang[1], dr);

@@ -573,8 +573,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     div.style.right = "0px";
     div.draggable = false;
     div.ondragstart = function () {return false};
-    document.body.appendChild (div);
+    //document.body.appendChild (div);
     //document.getElementById ("topsect").appendChild (div); // for zIndex
+    divContainer.appendChild (div); // for zIndex
 
     var onHyperlink;
     var tooltip = document.createElement("DIV");

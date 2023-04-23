@@ -992,7 +992,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         //clear ();
         hideOvals(data);
                     
-        div.style.zIndex = 4000000;//Math.pow(2, 31);
+        div.style.zIndex = 2000000;//Math.pow(2, 31);
         
         renderData = [];
         var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData, gclip, zoom);

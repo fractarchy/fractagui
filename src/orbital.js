@@ -1143,7 +1143,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         if (!found) {
             div.style.cursor = "";
             tooltip.style.visibility = "hidden";
-            tooltip.style.zIndex = 8000000000;
+            tooltip.style.zIndex = 8000000;
             tooltip.innerText = "";
         }
     }

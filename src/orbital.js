@@ -131,7 +131,7 @@ if (rec === 1) {
                 clear();
                 hideOvals(data);
                 
-                ctx.save ();
+//                ctx.save ();
                 //gclip ();
             }
 //            }
@@ -458,7 +458,7 @@ if (rec === 1) {
                         if (siblings[si]) siblings[si].parent = pass;
                     
                     if (rec === 1) {
-                        ctx.restore ();
+//                        ctx.restore ();
                     }
                     
                     return pass;
@@ -466,7 +466,7 @@ if (rec === 1) {
             }
         }
         if (rec === 1) {
-            ctx.restore ();
+//            ctx.restore ();
         }
     };
     
@@ -910,7 +910,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clipPath2 = document.createElementNS(svgns, 'clipPath');
                     clipPath2.setAttributeNS(null, 'id', "cl2" + rand2);
                     svg.appendChild(clipPath2);
-                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
+                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t /*- rr * shiftY * squashY*/) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
                     clipPath2.appendChild(clip2);
 
                     // global

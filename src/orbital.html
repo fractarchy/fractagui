@@ -953,8 +953,12 @@ ro_fract_123.observe(document.body);
                 <img id= "lftbuti" width="48"/>
             </a>
         </div>
-
         <script>
+            var magnFactorBut = 1.25;
+            // --- navigator --- //
+            
+                document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+
             document.getElementById("lftbuta").addEventListener("click", function (evt) {
                 if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
                     eval (env.lftBut["action"]);
@@ -1029,10 +1033,9 @@ ro_fract_123.observe(document.body);
         </div>
 
         <script>
-            var magnFactorNav = 1;
             // --- navigator --- //
             
-                document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorNav / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorNav / 2) + "px)" + " scale(" + magnFactorNav + ") ";
+                document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
 
                 // --- zooming start --- //
                     

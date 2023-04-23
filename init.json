@@ -10,7 +10,7 @@
     "background-image": "",
 
     "ovals-rod-length": "5%",
-    "ovals-background-color": "rgb(208,208,208,0.8)",
+    "ovals-background-color": "rgb(208,208,208)",
     "ovals-shadow-color": "",
     "ovals-shadow-radius": "0%",
 
@@ -23,24 +23,6 @@
         "icon": "media/github-mark-white.svg",
         "tooltip": "visit me on GitHub",
         "action": "javascript:window.open('https://github.com/fractarchy/fractarchy-cms/', '_blank')"
-    },
-    
-    "mid-buttons": [
-        {
-            "icon": "media/home300.svg",
-            "tooltip": "home",
-            "action": "contents/a-0.xml"
-        },
-        {
-            "icon": "media/help300.svg",
-            "tooltip": "instructions",
-            "action": "contents/c-0.xml"
-        },
-        {
-            "icon": "media/shopping_bag300.svg",
-            "tooltip": "own a copy",
-            "action": "contents/c-0-4.xml"
-        }
-    ]
+    }
 }
 

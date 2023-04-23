@@ -298,8 +298,7 @@
                     butsBorderColor: data["buttons-border-color"],
                     butShadowRadius: bsradius,
                     butShadowColor: data["buttons-shadow-color"],
-                    lftBut: data["left-button"],
-                    midButs: data["mid-buttons"]
+                    lftBut: data["left-button"]
                 }
             }
 
@@ -1170,7 +1169,7 @@ ro_fract_123.observe(document.body);
                 }
                 fadein1 ();
             }
-            
+            /*
             function onmidbut (index) {
                 if (index >=0 && env.midButs[index].action.substr(0, "javascript:".length) !== "javascript:") {
                     midbutindex = index;
@@ -1224,7 +1223,8 @@ ro_fract_123.observe(document.body);
                     }
                 }
             }
-           /*     
+            
+                 
             window.addEventListener('resize', midbutresize);
 
             document.getElementById("midbuts").ondragstart = function (evt) {
@@ -1239,6 +1239,7 @@ ro_fract_123.observe(document.body);
                 objOrbit.setMouseOff ();
             }, false);
             */
+            
             function reload (topNode) {
                 if (topNode.substr(0, "javascript:".length) !== "javascript:") {
                     var url = new URL(topNode, xhttp.responseURL).href
@@ -1302,7 +1303,7 @@ ro_fract_123.observe(document.body);
                 // end env.rgtBut
             }
             
-            var midbutindex;
+            //var midbutindex;
         </script>
         
         <script>

@@ -573,7 +573,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     div.style.right = "0px";
     div.draggable = false;
     div.ondragstart = function () {return false};
-    document.body.appendChild (div);
+    //document.body.appendChild (div);
+    document.getElementById ("topsect").appendChild (div); // for zIndex
 
     var onHyperlink;
     var tooltip = document.createElement("DIV");
@@ -990,7 +991,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         //clear ();
         hideOvals(data);
                     
-        div.style.zIndex = 2000000000;//Math.pow(2, 31);
+        div.style.zIndex = 2000000;//Math.pow(2, 31);
         
         renderData = [];
         var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData, gclip, zoom);

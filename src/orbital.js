@@ -564,6 +564,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     
     // event overlay
+    var div = document.getElementById ("divEventOverlay");
+    /*
     var div = document.createElement ("DIV");
     div.style.position = "absolute";
     div.style.backgroundColor = "rgb(255, 0, 0, 0)";
@@ -576,6 +578,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     //document.body.appendChild (div);
     //document.getElementById ("topsect").appendChild (div); // for zIndex
     divContainer.appendChild (div); // for zIndex
+    */
 
     var onHyperlink;
     var tooltip = document.createElement("DIV");
@@ -992,7 +995,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         //clear ();
         hideOvals(data);
                     
-        div.style.zIndex = 2000000;//Math.pow(2, 31);
+        //div.style.zIndex = 2000000;//Math.pow(2, 31);
         
         renderData = [];
         var ret = n.render (minRadius, x1, y1, r1, orientation, 1, m, data, cursor?cursor.parent.index:null, cursor, selectedCursor, renderHint, renderData, gclip, zoom);

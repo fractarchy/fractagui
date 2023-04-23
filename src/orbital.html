@@ -1153,8 +1153,8 @@ ro_fract_123.observe(document.body);
             // --- navigator end --- //
         </script>
         
-        <div id="midbuts" style="opacity: 1; visibility: hidden; position: absolute; background-color: rgb(48,48,48); left: 0px; bottom: 0px; height: 72px; border-radius: 36px; padding-left: 12px; padding-right: 12px; margin: 0;">
-        </div>
+        <!--div id="midbuts" style="opacity: 1; visibility: hidden; position: absolute; background-color: rgb(48,48,48); left: 0px; bottom: 0px; height: 72px; border-radius: 36px; padding-left: 12px; padding-right: 12px; margin: 0;">
+        </div-->
         <script>
             function fadein (obj) {
                 var steps = 1;
@@ -1224,7 +1224,7 @@ ro_fract_123.observe(document.body);
                     }
                 }
             }
-                    
+           /*     
             window.addEventListener('resize', midbutresize);
 
             document.getElementById("midbuts").ondragstart = function (evt) {
@@ -1238,7 +1238,7 @@ ro_fract_123.observe(document.body);
             document.getElementById("midbuts").addEventListener("touchstart", function (evt) {
                 objOrbit.setMouseOff ();
             }, false);
-            
+            */
             function reload (topNode) {
                 if (topNode.substr(0, "javascript:".length) !== "javascript:") {
                     var url = new URL(topNode, xhttp.responseURL).href
@@ -1268,7 +1268,7 @@ ro_fract_123.observe(document.body);
                     document.getElementById("lftbuti").src = "../" + env.lftBut["icon"];
                     document.getElementById("lftbuti").title = env.lftBut["tooltip"];
                 }
-                
+                /*
                 if (env.midButs) {
                     if (env.butShadowRadius > 0)
                         document.getElementById("midbuts").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
@@ -1280,7 +1280,7 @@ ro_fract_123.observe(document.body);
 
                     document.getElementById("knot").style.backgroundColor = env.butsColor;
                 }
-                
+                */
                 // env.rgtBut
                     if (env.butShadowRadius > 0)
                         document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";

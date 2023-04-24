@@ -964,8 +964,6 @@ ro_fract_123.observe(document.body);
                     eval (env.lftBut["action"]);
                 
                 else {
-                    var k = document.getElementById('knot');
-                    k.style.visibility = 'hidden';
                     reload (env.lftBut["action"]);
                 }
                 //javascript:window.open('mailto:info@apartments-vodisek-tribunj.com', 'mail')
@@ -1155,8 +1153,6 @@ ro_fract_123.observe(document.body);
             // --- navigator end --- //
         </script>
         
-        <!--div id="midbuts" style="opacity: 1; visibility: hidden; position: absolute; background-color: rgb(48,48,48); left: 0px; bottom: 0px; height: 72px; border-radius: 36px; padding-left: 12px; padding-right: 12px; margin: 0;">
-        </div-->
         <script>
             function fadein (obj) {
                 var steps = 1;
@@ -1172,76 +1168,6 @@ ro_fract_123.observe(document.body);
                 }
                 fadein1 ();
             }
-            /*
-            function onmidbut (index) {
-                if (index >=0 && env.midButs[index].action.substr(0, "javascript:".length) !== "javascript:") {
-                    midbutindex = index;
-                    var k = document.getElementById('knot');
-                    //k.style.opacity = `0`;
-                    obj = document.getElementById("midbut" + index);
-                    k.style.visibility = 'visible';
-                    k.style.bottom = "calc(0.5em - " + (k.clientHeight / 2) + 'px)';
-                    k.style.left = obj.offsetLeft + obj.clientWidth / 2 - (k.clientWidth) / 2 + 'px';
-                    fadein (k);
-                }
-            }
-            
-            function midbutresize () {
-                if (env.midButs) {
-                    var mb = document.getElementById("midbuts");
-
-                    //mb.style.width = env.midButs.length * 72 + "px";
-                    mb.style.left =  window.innerWidth / 2 - mb.clientWidth / 2 + "px";
-                    mb.style.bottom = "0.5em";
-                
-                    onmidbut(midbutindex);
-                }
-            }
-            
-            var nmidbutcount = 0;
-            function loadmidbuts () {
-                if (env.midButs) {
-                    var mb = document.getElementById("midbuts");
-
-                    var buts = `<div id="knot" style="opacity: 1; visibility: hidden; position: absolute; background-color: rgb(208,208,208); width: 24px; height: 5px; border-radius: 3px;"></div>`
-                    for (var i = 0; i < env.midButs.length; i++) {
-                        var script =  `alert(this.clientTop);`
-                        buts += `<img id="midbut${i}" class="hvr" height="48" src="../${env.midButs[i].icon}" title="${env.midButs[i].tooltip}" style="margin:12px" onclick="javascript:onmidbut(${i});reload('${env.midButs[i].action}')"/>`;
-                    }
-                    
-                    mb.innerHTML = buts;
-                    
-                    for (var i = 0; i < env.midButs.length; i++) {
-                        document.getElementById("midbut" + i).addEventListener("load", function (evt) {
-                            nmidbutcount++;
-                            if (nmidbutcount >= env.midButs.length) {
-                                midbutresize(midbutindex);
-                                mb.style.visibility = "visible";
-                            }
-                        });
-                        
-                        document.getElementById("midbut" + i).addEventListener("touchstart", function (evt) {
-                            this.dispatchEvent(new CustomEvent('click'));
-                        });
-                    }
-                }
-            }
-            
-                 
-            window.addEventListener('resize', midbutresize);
-
-            document.getElementById("midbuts").ondragstart = function (evt) {
-                evt.preventDefault();
-            };
-
-            document.getElementById("midbuts").onmousedown = function (evt) {
-                objOrbit.setMouseOff ();
-            };
-            
-            document.getElementById("midbuts").addEventListener("touchstart", function (evt) {
-                objOrbit.setMouseOff ();
-            }, false);
-            */
             
             function reload (topNode) {
                 if (topNode.substr(0, "javascript:".length) !== "javascript:") {
@@ -1272,19 +1198,7 @@ ro_fract_123.observe(document.body);
                     document.getElementById("lftbuti").src = "../" + env.lftBut["icon"];
                     document.getElementById("lftbuti").title = env.lftBut["tooltip"];
                 }
-                /*
-                if (env.midButs) {
-                    if (env.butShadowRadius > 0)
-                        document.getElementById("midbuts").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                        
-                    loadmidbuts ();
-                    document.getElementById("midbuts").style.backgroundColor = env.butsBackColor;
-                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
-                        document.getElementById("midbuts").style.border = "2px solid " + env.butsBorderColor;
 
-                    document.getElementById("knot").style.backgroundColor = env.butsColor;
-                }
-                */
                 // env.rgtBut
                     if (env.butShadowRadius > 0)
                         document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
@@ -1305,8 +1219,6 @@ ro_fract_123.observe(document.body);
                     document.getElementById("rb6").style.fill = env.butsColor;
                 // end env.rgtBut
             }
-            
-            //var midbutindex;
         </script>
         
         <script>

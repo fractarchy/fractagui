@@ -30,17 +30,11 @@ The final result brings all the imported content pages to be shown inside orbita
 
 ## 4. using fractarchy-cms
 
-### 4.1. case study
-
-![](media/ssh-480-apv.png) ![](media/ssh-152-apv.png)
-
-We built an independent web site using Fractarchy-CMS. To get info about this particular case study, please refer to [this document](case-study.md).
-
-### 4.2. giving it a try
+### 4.1. giving it a try
 
 To get started with site creation using Fractarchy-CMS, please refer to the [example site](https://fractarchy.github.io/fractarchy-cms/) containing use instructions.
 
-### 4.3. licensing
+### 4.2. licensing
 
 This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free for students and for limited personal use, but if you use it a lot, or your plans meet commercial use, please refer to the licence file for details about pricing.
 

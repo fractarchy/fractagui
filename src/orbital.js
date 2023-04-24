@@ -2575,7 +2575,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     if (dt === 0) dt = 1;
 
                     di = di - dt / 384;
-                    var sindi = Math.pow(di, 2);
+                    var sindi = Math.pow(di, 2) * zoom * 2;
                     if (di > 0 && globalPan === curPan){
                         var oldx = cursor.centerX;
                         var oldy = cursor.centerY;

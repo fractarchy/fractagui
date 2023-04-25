@@ -55,5 +55,5 @@
     - Safari support
     - fixed font blur on zoom
     - navigation buttons
-    - command buttons
+    - command button
     

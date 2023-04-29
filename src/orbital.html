@@ -22,11 +22,7 @@
                 touch-action: none;
                 user-select: none;
             }
-            /*
-            a, a.exHover:visited, a.exHover:link {cursor: pointer; color: lightgray; text-decoration:none; border:0px solid #4466DD;}
-            a.exHover:hover {cursor: pointer; color:white; text-decoration:none; border:0px solid #6699FF;}
-            a.exHover:active {cursor: pointer; color:white; text-decoration:none; border:0px solid #DDDDFF;}
-            */
+
             .hvr1 {opacity : 0.7; cursor: default;}
             .hvr {opacity : 0.7;}
             .hvr:hover {cursor: default/*pointer*/; opacity :1;}
@@ -199,15 +195,11 @@
                             if (data["ovals-background-color"].length === 9) {
                                 data["oval-opacity"] = parseInt (data["ovals-background-color"].substr(7, 2), 16) / 255;
                                 data["ovals-background-color"] = data["ovals-background-color"].substr(0, 7);
-                                //if (!data["ovals-border-color"])
-                                //    throw new error ();
                             }
                         } else {
                             if (data["ovals-background-color"].substr(0, 3) === "rgb") {
                                 const parts = data["ovals-background-color"].match(/[\d.]+/g);
                                 if (parts.length === 4) {
-                                //    if (!data["ovals-border-color"])
-                                //        throw new error ();
                                     data["oval-opacity"] = parts[3];
                                     data["ovals-background-color"] = "rgb(" + parts[0] + "," + parts[1] + "," + parts[2] + ")";
                                 }
@@ -398,93 +390,12 @@
                     if (node.ifr)
                         resolve();
                     
-                    //var loaded = false;
                     var idiv = document.createElement ('div');
                     var ifr = document.createElement ('iframe');
                     ifr.addEventListener('load', function () {
-                        /*
-                        ifr.width  = ifr.contentWindow.document.body.offsetWidth;
-                        ifr.height = ifr.contentWindow.document.body.offsetHeight;
-                        
-                        ifr.contentDocument.body.style.userSelect= "none";
-
-                        divContainer.addEventListener('mousedown', function (evt) {
-                            ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
-                            ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
-                        });
-                        
-                        divContainer.addEventListener('mouseup', function (evt) {
-                            ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
-                            ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
-                        });
-                        
-                        ifr.contentWindow.addEventListener('mousedown', function (evt) {
-                            ifr.contentWindow.addEventListener('mousemove', handleMouseMove);
-                            ifr.contentWindow.addEventListener('mouseup', handleMouseUp);
-                            
-                            handleMouseDown(evt);
-                        });
-                        
-                        function handleMouseDown(evt) {
-                            divContainer.dispatchEvent (new CustomEvent('mdown', {detail: {ifr: ifr, evt: evt}}));
-                        }
-                        
-                        function handleMouseMove(evt) {
-                            divContainer.dispatchEvent (new CustomEvent('mmove', {detail: {ifr: ifr, evt: evt}}));
-                        }
-
-                        function handleMouseUp(evt) {
-                            ifr.contentWindow.removeEventListener('mousemove', handleMouseMove);
-                            ifr.contentWindow.removeEventListener('mouseup', handleMouseUp);
- 
-                            divContainer.dispatchEvent (new CustomEvent('mup', {detail: {ifr: ifr, evt: evt}}));
-                        }
-                    
-                        divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
-                        allOvals.push (node);
-                        divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                        
-                        resolve ();
-                        */
-                        
-                        //ifr.height = ifr.contentWindow.document.body.offsetHeight;
-                        //ifr.width  = ifr.contentWindow.document.body.offsetWidth;
-                        
-                        //divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
-                        ////allOvals.push (node);
-                        //divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                        
                         if (!ifr.firstOnLoad) {
                             ifr.firstOnLoad = true;
-
-                            //divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: node}));
                             allOvals.push (node);
-                            //divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                            
-                            /*
-                            // resize observer
-                            const resize_ob = new ResizeObserver(function(entries) {
-	                            // since we are observing only a single element, so we access the first element in entries array
-	                            let rect = entries[0].contentRect;
-
-                                ifr.width  = rect.width;
-                                ifr.height = rect.height;
-                            });
-
-                            // start observing for resize
-                            resize_ob.observe(ifr.contentWindow.document.body);
-                            */
-
-                            //extractLinks (node);
-                            /*
-                            var interval = setInterval (function () {
-                                if (node.ifr) {
-                                    extractLinks (node);
-                                } else {
-                                    clearInterval (interval);
-                                }
-                            }, 500);
-                            */
                         }
                         resolve ();
                     });
@@ -505,8 +416,6 @@
                         idiv.tabIndex = -1;
                         idiv.width = objOrbit.getRadius () * 1.2;
                         
-                        //ifr.style.position = "absolute";
-                        //ifr.style.visibility = "hidden";
                         ifr.style.border = "none";
                         ifr.style.overflow = "hidden";
                         ifr.scrolling = "no";
@@ -520,14 +429,13 @@
                         //document.body.appendChild (idiv);
                         divContainer.appendChild (idiv);
 
-///////////////////
                         var xhr = new XMLHttpRequest();
 
                         xhr.onload = function() {
                             if (this.readyState == 4 && this.status == 200) {
                                 
-var parser = new DOMParser();
-var xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");                                
+                                var parser = new DOMParser();
+                                var xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");                                
                                 if (xmlDoc) {
                                     var base = document.createElement('base');
                                     base.href = xhr.responseURL;
@@ -544,24 +452,6 @@ var xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
                                         body = document.createElement('body');
                                         xmlDoc.documentElement.insertAfter (body, head.childNodes[0]);
                                     }
-/*
-                                if (xhr.responseXML) {
-                                    var base = document.createElement('base');
-                                    base.href = xhr.responseURL;
-                                    
-                                    var head = xhr.responseXML.documentElement.getElementsByTagName('head')[0];
-                                    if (!head) {
-                                        head = document.createElement('head');
-                                        xhr.responseXML.documentElement.insertBefore (head, xhr.responseXML.documentElement.childNodes[0]);
-                                    }
-                                    head.insertBefore(base, head.childNodes[0]);
-
-                                    var body = xhr.responseXML.documentElement.getElementsByTagName('body')[0];
-                                    if (!body) {
-                                        body = document.createElement('body');
-                                        xhr.responseXML.documentElement.insertAfter (body, head.childNodes[0]);
-                                    }
-*/
                                     loadedOvals[loadedOvalsIndex] = node;
 
                                     var html = `
@@ -659,15 +549,11 @@ ro_fract_123.observe(document.body);
                                     `;
                                     loadedOvalsIndex++;
                                     
-                                    //html = html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-
                                     var script= document.createElement("script");
                                     script.type = "text/javascript";
                                     script.innerHTML = ` ${html} `;
                                     body.appendChild( script );
-//                                    ifr.srcdoc = xhr.responseXML.documentElement.innerHTML;//.responseText;
-                                    ifr.srcdoc = xmlDoc.documentElement.innerHTML;//.responseText;
-                                    //ifr.innerHTML = xhr.responseXML.documentElement.innerHTML;//.responseText;
+                                    ifr.srcdoc = xmlDoc.documentElement.innerHTML;
                                     node.ifr = idiv;
 
                                     divContainer.appendChild (idiv);
@@ -687,24 +573,14 @@ ro_fract_123.observe(document.body);
                         }
 
                         xhr.open("GET", loaded.src /*+ "?" + Date.now()*/, true);
-                        //xhr.responseType = "document";
-                        //xhr.overrideMimeType('text/xml');
                         xhr.send();
-///////////////////
-
-//                        ifr.src = loaded.src;
-
-//                        node.ifr = ifr;
-//                        document.body.appendChild (ifr);
-                        dispatchDraw(); //Size ();
-
+                        dispatchDraw();
                     });
                 });
             }
             
             var msg = (event) => {
                 if (event.data.msg === "resize") {
-                    //if (loadedOvals[event.data.index]) {
                     if (loadedOvals[event.data.index].ifr) {
                         loadedOvals[event.data.index].ifr.width = window.innerWidth;//event.data.width;
                         loadedOvals[event.data.index].ifr.height = event.data.height;
@@ -712,81 +588,16 @@ ro_fract_123.observe(document.body);
                         loadedOvals[event.data.index].wrappedifr.height = event.data.height;
                     }
                         
-                        divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
-                        divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                    //}
+                    divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
+                    divContainer.dispatchEvent(new CustomEvent('redraw', null));
                 
                 } else if (event.data.msg === "relink") {
-                    //if (loadedOvals[event.data.index]) {
-                    //    delete loadedOvals[event.data.index].hyperlinks;
-                        loadedOvals[event.data.index].hyperlinks = event.data.hyperlinks;
-                    //}
+                    loadedOvals[event.data.index].hyperlinks = event.data.hyperlinks;
 
                 } else if (event.data.msg === "unload") {
                     delete loadedOvals[event.data.index];
-                    //loadedOvals.splice(event.data.index, 1);
                 }
             }
-            /*
-            function extractLinks (node) {
-                delete node.hyperlinks;
-                var links = node.ifr.contentWindow.document.getElementsByTagName("a");
-                for (var i = 0; i < links.length; i++) {
-                    var tg = links[i].getAttribute('target');
-                    var hr = links[i].href;
-                    if (hr.baseVal) hr = hr.baseVal;
-
-                    if (!hr)
-                        hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                  
-                    if (hr) {
-                        if (!node.hyperlinks)
-                            node.hyperlinks = [];
-                        
-                        if (links[i].children && links[i].children.length > 0) {
-                            (function traverseChildren(link, node) {
-                                if (link.children && link.children.length > 0) {
-                                    for (var j = 0; j < link.children.length; j++) {
-                                        traverseChildren(link.children[j], node)
-                                    }
-                                }
-                                
-                                var rects = link.getClientRects();
-                                for (var j in rects) {
-                                    if (rects[j].right)
-                                        node.hyperlinks.push (
-                                            {
-                                                "type": "rect",
-                                                "target": tg,
-                                                "href": hr,
-                                                "left": rects[j].left,
-                                                "top": rects[j].top,
-                                                "right": rects[j].right,
-                                                "bottom": rects[j].bottom
-                                            }
-                                        );
-                                }
-                            }) (links[i], node);
-                        } else {
-                            var rects = links[i].getClientRects();
-                            for (var j in rects) {
-                                node.hyperlinks.push (
-                                    {
-                                        "type": "rect",
-                                        "target": tg,
-                                        "href": hr,
-                                        "left": rects[j].left,
-                                        "top": rects[j].top,
-                                        "right": rects[j].right,
-                                        "bottom": rects[j].bottom
-                                    }
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-            */
 
             async function loadNode (fileName, node) {
                 return new Promise(async function(resolve, reject) {
@@ -922,21 +733,11 @@ ro_fract_123.observe(document.body);
                 for (i = 0; i < el.length; i++) {
                     el[i].classList.remove ("hvr1");
                 }
-                /*
-                var el = document.getElementsByTagName ("path");
-                for (i = 0; i < el.length; i++) {
-                    el[i].style.fill = "red";
-                    el[i].style.stroke = "blue";
-                }
-                */
             });
             
             var mqString = `(device-width: ${window.screen.width}px)`;
             
             matchMedia(mqString).addListener(() => {
-                //window.top.document.body.innerHTML = "Please refresh the web page.";
-                //window.parent.location.replace("../index.html");
-                //window.parent.location.reload();
                 for (var i = 0; i < allOvals.length; i++) {
                     if (allOvals[i].ifr) {
                         divContainer.removeChild (allOvals[i].ifr);
@@ -955,9 +756,8 @@ ro_fract_123.observe(document.body);
         </div>
         <script>
             var magnFactorBut = 1.25;
-            // --- navigator --- //
-            
-                document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+
+            document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
 
             document.getElementById("lftbuta").addEventListener("click", function (evt) {
                 if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
@@ -966,7 +766,6 @@ ro_fract_123.observe(document.body);
                 else {
                     reload (env.lftBut["action"]);
                 }
-                //javascript:window.open('mailto:info@apartments-vodisek-tribunj.com', 'mail')
             }, false);
             
             document.getElementById("lftbuta").onmousedown = function (evt) {
@@ -1174,7 +973,6 @@ ro_fract_123.observe(document.body);
                     var url = new URL(topNode, xhttp.responseURL).href
                     nodeTree = {xml: url, parent: {index: 0}};
                     nodeTree.parent.children = [nodeTree];
-                    //divContainer.style.opacity = "0";
                     objOrbit.setMagn (1);
                     zoomedOutR ();
                     divContainer.dispatchEvent(new CustomEvent('redefineData', {detail: nodeTree}));
@@ -1199,25 +997,23 @@ ro_fract_123.observe(document.body);
                     document.getElementById("lftbuti").title = env.lftBut["tooltip"];
                 }
 
-                // env.rgtBut
-                    if (env.butShadowRadius > 0)
-                        document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                        
-                    document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
-                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
-                        document.getElementById("rgtbut").style.border = "2px solid " + env.butsBorderColor;
+                if (env.butShadowRadius > 0)
+                    document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                    
+                document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
+                if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
+                    document.getElementById("rgtbut").style.border = "2px solid " + env.butsBorderColor;
 
-                    document.getElementById("rb1").style.fill = env.butsColor;
-                    document.getElementById("rb2").style.fill = env.butsColor;
-                    document.getElementById("rb3").style.stroke = env.butsColor;
-                    document.getElementById("rb3").style.fill = env.butsColor;
-                    document.getElementById("rb4").style.stroke = env.butsColor;
-                    document.getElementById("rb4").style.fill = env.butsColor;
-                    document.getElementById("rb5").style.stroke = env.butsColor;
-                    document.getElementById("rb5").style.fill = env.butsColor;
-                    document.getElementById("rb6").style.stroke = env.butsColor;
-                    document.getElementById("rb6").style.fill = env.butsColor;
-                // end env.rgtBut
+                document.getElementById("rb1").style.fill = env.butsColor;
+                document.getElementById("rb2").style.fill = env.butsColor;
+                document.getElementById("rb3").style.stroke = env.butsColor;
+                document.getElementById("rb3").style.fill = env.butsColor;
+                document.getElementById("rb4").style.stroke = env.butsColor;
+                document.getElementById("rb4").style.fill = env.butsColor;
+                document.getElementById("rb5").style.stroke = env.butsColor;
+                document.getElementById("rb5").style.fill = env.butsColor;
+                document.getElementById("rb6").style.stroke = env.butsColor;
+                document.getElementById("rb6").style.fill = env.butsColor;
             }
         </script>
         

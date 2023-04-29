@@ -1,4 +1,4 @@
-# Fractarchy-CMS (v0.7 - beta)
+# Fractarchy-CMS (v0.7 - latest)
 
 tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
 
@@ -16,7 +16,7 @@ Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zoomi
 
 ## 2. contents creation
 
-Fractarchy-CMS is a kind of headless and flat-file CMS. Composing contents in Fractarchy-CMS is consisted of editing external content pages and arranging them using parent-children structure described in a set of XML files. Supported content pages include static HTML, XHTML, SVG, PNG, GIF, and JPG files (whatever can be loaded in a web browser frame).
+Fractarchy-CMS is a kind of headless and flat-file CMS. Composing contents in Fractarchy-CMS consists of editing external content pages and arranging them using parent-children structure described in a set of XML files. Supported content pages include static HTML, XHTML, SVG, PNG, GIF, and JPG files (whatever can be loaded in a web browser frame).
 
 ## 3. contents navigation
 
@@ -27,6 +27,8 @@ The final result brings all the imported content pages to be shown inside orbita
 3. dragging orbiting ovals towards center to zoom them in
 4. dragging central oval out towards orbit to zoom it out
 5. using mouse wheel to zoom the central oval in or out
+
+These actions are also achievable by clicking arrow buttons in the bottom right screen corner.
 
 ## 4. using fractarchy-cms
 

@@ -1,6 +1,8 @@
 {
     "home": "contents/c-0.xml",
     
+    "orientation": "south",
+    
     "contents-scale": "100%",
     "ui-scale": "140%",
     "ui-shift": "10%",
@@ -11,11 +13,13 @@
 
     "ovals-rod-length": "5%",
     "ovals-background-color": "rgb(208,208,208)",
+    "ovals-border-color": "",
     "ovals-shadow-color": "",
     "ovals-shadow-radius": "0%",
 
     "buttons-color" : "rgb(208,208,208)",
     "buttons-background-color" : "rgb(48,48,48)",
+    "buttons-border-color": "",
     "buttons-shadow-color" : "",
     "buttons-shadow-radius" : "0px",
 

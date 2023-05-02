@@ -928,7 +928,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clipPath2 = document.createElementNS(svgns, 'clipPath');
                     clipPath2.setAttributeNS(null, 'id', "cl2" + rand2);
                     svg.appendChild(clipPath2);
-                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
+                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - Math.sin (orientation + Math.PI / 2) * rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
                     clipPath2.appendChild(clip2);
 
                     // global
@@ -1919,22 +1919,6 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         cnv.setAttribute ("width", Math.ceil (ww));
         cnv.setAttribute ("height", Math.ceil (hh));
         
-        /*
-        --------
-        clip.setAttribute('cx', x1 * squashX);
-        clip.setAttribute('cy', y1 * squashY);
-        clip.setAttribute('rx', (r1) * squashX + shadowr);
-        clip.setAttribute('ry', (r1) * squashY + shadowr);
-        clip.setAttribute('stroke-width',  1);
-        */
-        
-        /*
-        clip.setAttribute('cx', xx * squashX);
-        clip.setAttribute('cy', yy * squashY - rr * shiftY * squashY);
-        clip.setAttribute('rx', (rr) * squashX);
-        clip.setAttribute('ry', (rr) * squashY);
-        clip.setAttribute('stroke-width',  1);
-        */
         if (clip) clipPath.removeChild(clip);
         var magn1 = r1 / (rr * ratio);
         var lw = 2 * lineWidth * rr / 2048 * uiscale;
@@ -2174,6 +2158,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             var i, t0, tmpi;
             //alert ("level up");
             if (!(path.length > 0)) {
+                alignOval (cursor.data, cursor);
+                setupSelect (redraw (null, null, cursor));
                 idle ();
                 
             } else {
@@ -2291,7 +2277,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                         panning = false;
                         animating = "level";
                         if (cursor.data.ifr) {
-                            alignOval (cursor.data, cursor)
+                            alignOval (cursor.data, cursor);
                         }
 
                         window.requestAnimationFrame (aEnsmall);

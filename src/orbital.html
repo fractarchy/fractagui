@@ -68,7 +68,8 @@
 
             wonload = function () {
                 setSize ();
-                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalRodLength, 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
+                document.getElementById("rgtbut").style.transform = document.getElementById("rgtbut").style.transform + " " + (env.orientation === "north" ? "rotate(" + Math.PI + "rad) " : "")
+                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalRodLength, env.orientation === "north" ? Math.PI: 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
 
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
@@ -274,6 +275,7 @@
                     topNode: data["home"],
                     
                     backImage: data["background-image"],
+                    orientation: data["orientation"] === "north" ? "north": "south",
                     contentScale: cscale,
                     uiscale: uiscale,
                     uishift: uishift,
@@ -831,7 +833,7 @@ ro_fract_123.observe(document.body);
 
         <script>
             // --- navigator --- //
-            
+
                 document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
 
                 // --- zooming start --- //

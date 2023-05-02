@@ -56,4 +56,6 @@
     - fixed font blur on zoom
     - navigation buttons
     - command button
-    
+
+- v 0.7 - latest
+    - orbital orientation

@@ -1,4 +1,4 @@
-function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor, circleSize, ngonsides) {
+function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, str1, shadowr, shadowColor, circleSize, ngonsides, shiftY, uiscale) {
     var pixelPrecision = 1 / Math.pow (2, 1); /* set it to less and you are doomed */
     var qang = 0.025 * Math.PI;
 
@@ -113,7 +113,20 @@ function fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCir
 */
 if (rec === 1) {
     x1 = (xx - xx * zoom) + x1 * zoom;
-    y1 = y1 * zoom;
+    if (angle === 0)
+        y1 = y1 * zoom;
+    
+    else {
+        if (renderHint === "0") {
+            
+        } else {
+            var ma = rr;
+            var mb = rr * shiftY;
+            var mc = hh * (uiscale - 1) / 2;
+            //y1 = hh / squashY + (mb - ma) * zoom /* + (-(hh / squashY + (mb - ma)) + y1) * 2*/;
+            y1 = hh / squashY + (mc / squashY - mb - ma) * zoom;
+        }
+    }
     r1 = r1 * zoom;
 }
 
@@ -1896,7 +1909,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         alignX = squashX * rr * circleSize * 1 / 2.4 / scale;// / window.devicePixelRatio;
         alignY = squashY * rr * circleSize * 1 / 2.4 / scale;// / window.devicePixelRatio;
     
-        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides);
+        n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides, shiftY, uiscale);
         
         //minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
         minRadius = Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount) * window.devicePixelRatio);
@@ -1925,7 +1938,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         if (clip) clipPath.removeChild(clip);
         var magn1 = r1 / (rr * ratio);
         var lw = 2 * lineWidth * rr / 2048 * uiscale;
-        clip = round (xx * squashX, yy * squashY - rr * shiftY * squashY, (rr + lw) * squashX, (rr + lw) * squashY, ngonsides).node;
+        clip = round (xx * squashX, yy * squashY - Math.sin (orientation + Math.PI / 2) * rr * shiftY * squashY, (rr + lw) * squashX, (rr + lw) * squashY, ngonsides).node;
         clipPath.appendChild(clip);
 
         /*
@@ -2656,7 +2669,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     
     var device = "mouse";
 
-    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides);
+    var n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides, shiftY, uiscale);
     var movingNode = null;
 
     var clipPath = document.createElementNS(svgns, 'clipPath');

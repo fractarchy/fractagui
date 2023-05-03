@@ -1052,25 +1052,58 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     
     function setCenter (select, x, y) {
         if (select.cursor && select.cursor.data && select.cursor.data.ifr) {
-            if (select.cursor.data.hLock !== "true") {
-                select.cursor.centerX = x;
-                var minmaxW = (select.cursor.data.ifr.width / 2);
-                if (select.cursor.centerX > ~~(minmaxW - alignX))
-                    select.cursor.centerX = ~~(minmaxW - alignX);
-                if (select.cursor.centerX < ~~(-minmaxW + alignX))
-                    select.cursor.centerX = ~~(-minmaxW + alignX);
+            /*
+            var minmaxW, minmaxH
+            if (select.cursor.data.hAlign === "left")
+                minmaxW = ~~Math.max (o.ifr.width / 2 + alignX, o.ifr.width / 2);
+                
+            else if (select.cursor.data.hAlign === "right")
+                minmaxW = ~~Math.min (o.ifr.width / 2 - alignX, o.ifr.width / 2);
+                
+            else
+                minmaxW = 0;
+                
+            if (select.cursor.data.vAlign === "bottom")
+                minmaxH = ~~Math.min (o.ifr.height / 2 - alignY, o.ifr.height / 2);
 
+            else if (select.cursor.data.vAlign === "middle")
+                minmaxH =  0;
+
+            else
+                minmaxH = ~~Math.max (o.ifr.height / 2 + alignY, o.ifr.height / 2);
+            */
+            if (select.cursor.data.hLock !== "true") {
+                var minmaxW = (select.cursor.data.ifr.width / 2);
+                select.cursor.centerX = x;
+                if (select.cursor.data.hAlign === "middle") {
+                    if (select.cursor.centerX > ~~(minmaxW))
+                        select.cursor.centerX = ~~(minmaxW);
+                    if (select.cursor.centerX < ~~(-minmaxW))
+                        select.cursor.centerX = ~~(-minmaxW);
+                        
+                } else {
+                    if (select.cursor.centerX > ~~(minmaxW - alignX))
+                        select.cursor.centerX = ~~(minmaxW - alignX);
+                    if (select.cursor.centerX < ~~(-minmaxW + alignX))
+                        select.cursor.centerX = ~~(-minmaxW + alignX);
+                }
                 select.cursor.centerX = Math.floor (select.cursor.centerX)
             }
             
             if (select.cursor.data.vLock !== "true") {
-                select.cursor.centerY = y;
                 var minmaxH = (select.cursor.data.ifr.height / 2);
-                if (select.cursor.centerY > ~~(minmaxH - alignY))
-                    select.cursor.centerY = ~~(minmaxH - alignY);
-                if (select.cursor.centerY < ~~(-minmaxH + alignY))
-                    select.cursor.centerY = ~~(-minmaxH + alignY);
-
+                select.cursor.centerY = y;
+                if (select.cursor.data.vAlign === "middle") {
+                    if (select.cursor.centerY > ~~(minmaxH))
+                        select.cursor.centerY = ~~(minmaxH);
+                    if (select.cursor.centerY < ~~(-minmaxH))
+                        select.cursor.centerY = ~~(-minmaxH);
+                } else {
+                    if (select.cursor.centerY > ~~(minmaxH - alignY))
+                        select.cursor.centerY = ~~(minmaxH - alignY);
+                    if (select.cursor.centerY < ~~(-minmaxH + alignY))
+                        select.cursor.centerY = ~~(-minmaxH + alignY);
+                }
                 select.cursor.centerY = Math.floor (select.cursor.centerY)
             }
         }

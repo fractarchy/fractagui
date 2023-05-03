@@ -31,7 +31,7 @@
     </head>
     <body>
       <section id="topsect">
-        <div id="divContainerWrapper">
+        <div id="divContainerWrapper" style="/*position: relative; z-index: 0;*/">
             <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; /*filter: drop-shadow(0px 0px 20px black);*/">
             </div>
             <div id="divEventOverlay" ondragstart="return false" style="position: absolute; background-color: rgb(255, 0, 0, 0); top: 0px; bottom: 0px; left: 0px; right: 0px; draggable: false;">
@@ -86,11 +86,12 @@
                         dispatchSize ();
                         divContainer.style.visibility = "visible";
 
-                        if (env.ovalShadowRadius === 0)
-                            divContainerWrapper.style.filter = "";
-                        else
-                            divContainerWrapper.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
-                            
+                        if (env.ovalShadowRadius === 0) {
+                            divContainer.style.filter = "";
+                        } else {
+                            divContainer.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
+                        }
+                        
                         if (env.ovalOpacity)
                             objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
                         
@@ -717,6 +718,8 @@ ro_fract_123.observe(document.body);
             var divContainer = document.getElementById ("divContainer")
             var divContainerWrapper = document.getElementById ("divContainerWrapper")
             
+//divContainerWrapper.style.filter = "drop-shadow(0px 0px 50px black) ";
+            
             window.addEventListener('mousedown', function () {
                 var el = document.getElementsByClassName ("hvr");
                 for (i = 0; i < el.length; i++) {
@@ -753,7 +756,7 @@ ro_fract_123.observe(document.body);
             });
         </script>
 
-        <div id="lftbut" style="opacity: 1; visibility: hidden; position: absolute; background-color: rgb(48,48,48); left: 1px; bottom: 1px; width: 144px; height: 144px; border-radius: 72px;">
+        <div id="lftbut" style="position: absolute; background-color: rgb(48,48,48); left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
             <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; transform: scale(2.5);">
                 <img id= "lftbuti" width="48"/>
             </a>

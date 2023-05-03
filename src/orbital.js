@@ -1921,7 +1921,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         
         if (clip) clipPath.removeChild(clip);
         var magn1 = r1 / (rr * ratio);
-        var lw = 2 * lineWidth * rr / 2048 * uiscale;
+        var lw = shiftY > 0? 2 * lineWidth * rr / 2048 * uiscale: 1;
         clip = round (xx * squashX, yy * squashY - Math.sin (orientation + Math.PI / 2) * rr * shiftY * squashY, (rr + lw) * squashX, (rr + lw) * squashY, ngonsides).node;
         clipPath.appendChild(clip);
 

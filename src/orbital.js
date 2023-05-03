@@ -1054,22 +1054,22 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         if (select.cursor && select.cursor.data && select.cursor.data.ifr) {
             if (select.cursor.data.hLock !== "true") {
                 select.cursor.centerX = x;
-                var minmaxW = Math.floor (select.cursor.data.ifr.width / 2);
-                if (select.cursor.centerX > minmaxW)
-                    select.cursor.centerX = minmaxW;
-                if (select.cursor.centerX < -minmaxW)
-                    select.cursor.centerX = -minmaxW;
+                var minmaxW = (select.cursor.data.ifr.width / 2);
+                if (select.cursor.centerX > ~~(minmaxW - alignX))
+                    select.cursor.centerX = ~~(minmaxW - alignX);
+                if (select.cursor.centerX < ~~(-minmaxW + alignX))
+                    select.cursor.centerX = ~~(-minmaxW + alignX);
 
                 select.cursor.centerX = Math.floor (select.cursor.centerX)
             }
             
             if (select.cursor.data.vLock !== "true") {
                 select.cursor.centerY = y;
-                var minmaxH = Math.floor (select.cursor.data.ifr.height / 2);
-                if (select.cursor.centerY > minmaxH)
-                    select.cursor.centerY = minmaxH;
-                if (select.cursor.centerY < -minmaxH)
-                    select.cursor.centerY = -minmaxH;
+                var minmaxH = (select.cursor.data.ifr.height / 2);
+                if (select.cursor.centerY > ~~(minmaxH - alignY))
+                    select.cursor.centerY = ~~(minmaxH - alignY);
+                if (select.cursor.centerY < ~~(-minmaxH + alignY))
+                    select.cursor.centerY = ~~(-minmaxH + alignY);
 
                 select.cursor.centerY = Math.floor (select.cursor.centerY)
             }

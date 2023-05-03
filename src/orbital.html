@@ -549,10 +549,11 @@ try {
 var ro_fract_123 = new ResizeObserver(function (entries) {
   for (let entry of entries) {
     const cr = entry.contentRect;
-    window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: cr.width, height: cr.height}, "*");    
+    window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: cr.width, height: cr.height}, "*");
   }
 })
 ro_fract_123.observe(document.body);
+
                                     `;
                                     loadedOvalsIndex++;
                                     
@@ -589,10 +590,10 @@ ro_fract_123.observe(document.body);
             var msg = (event) => {
                 if (event.data.msg === "resize") {
                     if (loadedOvals[event.data.index].ifr) {
-                        loadedOvals[event.data.index].ifr.width = window.innerWidth;//event.data.width;
                         loadedOvals[event.data.index].ifr.height = event.data.height;
-                        loadedOvals[event.data.index].wrappedifr.width = window.innerWidth;//event.data.width;
+                        loadedOvals[event.data.index].ifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
                         loadedOvals[event.data.index].wrappedifr.height = event.data.height;
+                        loadedOvals[event.data.index].wrappedifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
                     }
                         
                     divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));

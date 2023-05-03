@@ -3149,6 +3149,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         },
         setMouseOff: function () {
             receiveMouseEvents = false;
+        },
+        getOvalWidth: function () {
+            return rr * squashX;
         }
     }
 }

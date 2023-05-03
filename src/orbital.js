@@ -3088,16 +3088,16 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             counterClockwise ();
         },
         slideUp: function () {
-            pan (0, -20 * window.devicePixelRatio, 50);
+            pan (0, rr / 800 * -20, 50);
         },
         slideDown: function () {
-            pan (0, 20 * window.devicePixelRatio, 50);
+            pan (0, rr / 800 * 20, 50);
         },
         slideLeft: function () {
-            pan (-20 * window.devicePixelRatio, 0, 50);
+            pan (rr / 800 * -20, 0, 50);
         },
         slideRight: function () {
-            pan (20 * window.devicePixelRatio, 0, 50);
+            pan (rr / 800 * 20, 0, 50);
         },
         setMagn: function (magn) {
             rescale (magn);

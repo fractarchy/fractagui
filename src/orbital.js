@@ -1020,8 +1020,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
       var obj = divContainer;
       var obj_left = 0;
       var obj_top = 0;
-      var xpos;
-      var ypos;
+      var xpos = 0;
+      var ypos = 0;
       while (obj.offsetParent)
       {
         obj_left += obj.offsetLeft;
@@ -1033,16 +1033,19 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         //FireFox
         xpos = mouseEvent.pageX;
         ypos = mouseEvent.pageY;
+      xpos -= obj_left;
+      ypos -= obj_top;
       }
+      /*
       else
       {
         //IE
         xpos = window.event.x + document.body.scrollLeft - 2;
         ypos = window.event.y + document.body.scrollTop - 2;
-      }
-      
       xpos -= obj_left;
       ypos -= obj_top;
+      }
+      */
 
       var cw2 = divContainer.clientWidth / 2;
       var ch2 = divContainer.clientHeight / 2;

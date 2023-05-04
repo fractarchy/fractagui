@@ -32,6 +32,8 @@ These actions are also achievable by clicking arrow buttons in the bottom right 
 
 ## 4. using fractarchy-cms
 
+![](media/ssh-3x400.png)
+
 ### 4.1. giving it a try
 
 To get started with site creation using Fractarchy-CMS, please refer to the [example site](https://fractarchy.github.io/fractarchy-cms/) containing use instructions.

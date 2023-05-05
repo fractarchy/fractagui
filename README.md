@@ -16,7 +16,7 @@ Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zoomi
 
 ## 2. contents creation
 
-Fractarchy-CMS is a kind of headless and flat-file CMS. Composing contents in Fractarchy-CMS consists of editing external content pages and arranging them using parent-children structure described in a set of XML files. Supported content pages include static HTML, XHTML, SVG, PNG, GIF, and JPG files (whatever can be loaded in a web browser frame).
+Fractarchy-CMS is a kind of headless and flat-file CMS. Composing contents in Fractarchy-CMS consists of editing external content pages and arranging them using parent-children structure described in a set of XML files. Supported content pages include static XHTML files.
 
 ## 3. contents navigation
 

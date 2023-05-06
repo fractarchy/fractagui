@@ -26,7 +26,7 @@ The final result brings all the imported content pages to be shown inside orbita
 2. dragging orbiting ovals around the central oval to rotate them
 3. dragging orbiting ovals towards center to zoom them in
 4. dragging central oval out towards orbit to zoom it out
-5. using mouse wheel to zoom the central oval in or out
+5. using mouse wheel to switch between navigating and panning mode
 
 These actions are also achievable by clicking arrow buttons in the bottom right screen corner.
 

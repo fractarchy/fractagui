@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<contents>
-    <item src="a-0.html" hlock="true"/>
-    <children>
-        <child src="a-0-1.xml"/>
-        <child src="a-0-2.xml"/>
-        <child src="a-0-3.xml"/>
-    </children>
-</contents>

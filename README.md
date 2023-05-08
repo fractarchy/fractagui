@@ -6,11 +6,11 @@ tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-b
 > 
 > ![](contents/image1.jpg)
 > 
-> Do you want to bring a touch of adventurous spirit to your web site? An arbitrary web site made using Fractarchy-CMS is not designed so that a visitor comes, sees, leaves, and forgets about it. It is conceived as a brave adventure that the visitor embarks on from the first moment of the visit. Carefully balanced ratio of fun to visit and ease of discovering useful information on your site (prevailing on the entertainment side) strives to provide the visitor with an exceptional experience of leaving a strong impression on your content.
+> Would you like to bring a touch of adventurous spirit to your web site? Leaving a strong impression on your content, Fractarchy-CMS does things a bit differently. As an original content navigating environment, it provides a user with entertaining experience of having fun in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by the creativity child in you.
 
 ## 1. about fractarchy-cms
 
-Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zooming-elements based content management system (CMS). A CMS is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites, but it can also be used for other purposes such as organizing data and documentation.
+Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zooming-elements based content management system (CMS). A CMS is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites, but it can also be used for other purposes such as organizing data and documentation. Fractarchy-CMS is best used in HTML pages where visitors often return, like in a curated selection of web links, searchable hierarchical catalog of arbitrary items, or maybe even some cool mobile content start pages if someone decides to go in PWA direction.
 
 ## 2. contents creation
 

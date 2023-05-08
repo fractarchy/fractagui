@@ -6,7 +6,7 @@ tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-b
 > 
 > ![](contents/image1.jpg)
 > 
-> Would you like to bring a touch of adventurous spirit to your web site? Leaving a strong impression on your content, Fractarchy-CMS does things a bit differently. As an original content navigating environment, it provides a user with entertaining experience of having fun in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by the creativity child in you.
+> Would you like to bring a touch of adventurous spirit to your web site? Leaving a strong impression on your content, Fractarchy-CMS does things a bit differently. As an original content navigating environment, it provides a user with an entertaining experience in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by the creativity child in you.
 
 ## 1. about fractarchy-cms
 

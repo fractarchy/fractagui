@@ -10,7 +10,7 @@ tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-b
 
 ## 1. about fractarchy-cms
 
-Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zooming-elements based content management system (CMS). A CMS is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites, but it can also be used for other purposes such as organizing data and documentation. Fractarchy-CMS is best used in HTML pages where visitors often return, like in a curated selection of web links, searchable hierarchical catalog of arbitrary items, or maybe even some cool mobile content start pages if someone decides to go in PWA direction.
+Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zooming-elements based content management system (CMS). A CMS is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites, but it can also be used for other purposes such as organizing data and documentation. Fractarchy-CMS is best used in HTML pages where visitors often return, like in a curated selection of web links, searchable hierarchical catalog of arbitrary items, or maybe even some cool mobile content start pages if someone decides to go in PWA (progressive web application) direction.
 
 ## 2. contents creation
 

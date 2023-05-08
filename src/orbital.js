@@ -823,7 +823,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             // line
             var lw = lineWidth * rr / 1024 * magn;
-            if (level !== 1 && data.parent.parent){
+            if (circleSize < 1 && level !== 1 && data.parent.parent){
                 
                 ctx.globalCompositeOperation = "source-over";
                 ctx.lineWidth = lw;//lineWidth * rr / 500 * magn;

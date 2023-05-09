@@ -14,14 +14,14 @@
     "ovals-rod-length": "5%",
     "ovals-background-color": "rgb(208,208,208)",
     "ovals-border-color": "",
-    "ovals-shadow-color": "",
-    "ovals-shadow-radius": "0%",
+    "ovals-shadow-color": "rgb(48,48,48)",
+    "ovals-shadow-radius": "5%",
 
     "buttons-color": "rgb(208,208,208)",
     "buttons-background-color": "rgb(48,48,48)",
     "buttons-border-color": "",
-    "buttons-shadow-color": "",
-    "buttons-shadow-radius": "0px",
+    "buttons-shadow-color": "rgb(208,208,208)",
+    "buttons-shadow-radius": "30px",
 
     "left-button": {
         "icon": "media/github-mark-white.svg",

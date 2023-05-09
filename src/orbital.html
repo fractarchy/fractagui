@@ -33,7 +33,7 @@
       <section id="topsect">
         <div id="divContainerWrapperAll">
             <div id="divContainerWrapper">
-                <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; /*filter: drop-shadow(0px 0px 20px black);*/">
+                <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;">
                 </div>
                 <div id="divEventOverlay" ondragstart="return false" style="position: absolute; background-color: rgb(255, 0, 0, 0); top: 0px; bottom: 0px; left: 0px; right: 0px; draggable: false;">
             </div>
@@ -102,7 +102,8 @@
                             document.body.style.backgroundSize = "cover";
                             document.body.style.backgroundPosition = "center";
                         }
-
+                        
+                        //document.getElementById("div1").style.backdropFilter = "blur(10px)";
                     }, 100);
                 });
                 window.dispatchEvent(new CustomEvent('resize'));
@@ -255,17 +256,17 @@
                             }
                         }
                     } catch (e) {
-                        console.log ('Error in init.json: "buttons-border-color" takes only rgb components');
+                        console.log ('Error in init.json: "buttons-border-color" takes only rgb without alpha components');
                         data["buttons-border-color"] = undefined;
                     }
                 }
 
-                var sradius
+                var osradius
                 if (data["ovals-shadow-radius"]) {
-                    sradius = parseFloat (data["ovals-shadow-radius"]) * window.devicePixelRatio;
+                    osradius = parseFloat (data["ovals-shadow-radius"]);
                     
                 } else {
-                    sradius = 0;
+                    osradius = 0;
                 }
                 
                 var bsradius;
@@ -290,7 +291,7 @@
                     ovalBackColor: data["ovals-background-color"],
                     ovalBorderColor: data["ovals-border-color"],
                     ovalOpacity: data["oval-opacity"],
-                    ovalShadowRadius: sradius,
+                    ovalShadowRadius: osradius,
                     ovalShadowColor: data["ovals-shadow-color"],
                     butsColor: data["buttons-color"],
                     butsBackColor: data["buttons-background-color"],

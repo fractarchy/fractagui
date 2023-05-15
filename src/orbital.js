@@ -2082,7 +2082,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                 if (tmpi !== i1 || i === 1) {
                     rescale (magn);
-                    redraw();
+                    redraw ();
                 }
 
                 tmpi = i1;
@@ -2141,7 +2141,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                 if (tmpi !== i1 || i === 1) {
                     rescale (magn);
-                    redraw();
+                    redraw ();
                 }
 
                 tmpi = i1;
@@ -3152,6 +3152,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
         },
         getOvalWidth: function () {
             return rr * squashX;
-        }
+        },
+        redraw: redraw,
+        mousedown: mousedown,
+        mouseup: mouseup
     }
 }

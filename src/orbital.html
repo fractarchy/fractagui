@@ -35,8 +35,9 @@
             <div id="divContainerWrapper">
                 <div id="divContainer" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;">
                 </div>
-                <div id="divEventOverlay" ondragstart="return false" style="position: absolute; background-color: rgb(255, 0, 0, 0); top: 0px; bottom: 0px; left: 0px; right: 0px; draggable: false;">
             </div>
+        </div>
+        <div id="divEventOverlay" ondragstart="return false" style="position: absolute; background-color: rgb(255, 0, 0, 0); top: 0px; bottom: 0px; left: 0px; right: 0px; draggable: false;">
         </div>
 
         <script>
@@ -435,8 +436,8 @@
                         node.ifr = idiv;
                         node.wrappedifr = ifr;
                         //document.body.appendChild (idiv);
-                        divContainer.appendChild (idiv);
-
+                        //divContainer.appendChild (idiv);
+                        
                         var xhr = new XMLHttpRequest();
 
                         xhr.onload = function() {

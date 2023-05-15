@@ -1,20 +1,20 @@
-# Fractarchy-CMS (v0.7-release)
+# FractaGUI (v0.7-release)
 
-tags: content-management-system, headless-cms, flat-file-cms, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
+tags: graph-user-interface, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
 
 > ## promotional material
 > 
 > ![](contents/image1.jpg)
 > 
-> Would you like to bring a touch of adventurous spirit to your web site? Presenting your contents, Fractarchy-CMS does things a bit differently. As an original content navigating environment, it provides unusual experience in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by that awesome child of creativity in you.
+> Would you like to bring a touch of adventurous spirit to your contents? Presenting your contents, FractaGUI does things a bit differently. As an original content navigating environment, it provides unusual experience in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by that awesome child of creativity in you.
 
-## 1. about fractarchy-cms
+## 1. about fractagui
 
-Fractarchy-CMS is a fractal-structure inspired, parent-child orbiting, and zooming-elements based content management system (CMS). A CMS is a software application that can be used to manage the creation and modification of digital content. Its usual application is building web sites, but it can also be used for other purposes such as organizing data and documentation. Fractarchy-CMS is best used in HTML pages where visitors often return, like in a curated selection of web links, searchable hierarchical catalog of arbitrary items, or maybe even some cool mobile content start pages if someone decides to go in PWA (progressive web application) direction.
+FractaGUI is a fractal-structure inspired, parent-child orbiting, and zooming-elements based graph user interface. Javascript based FractaGUI is best used in HTML pages where visitors often return, like in a curated selection of web links, searchable hierarchical catalog of arbitrary items, or maybe even some cool mobile content start pages if someone decides to go in PWA (progressive web application) direction.
 
 ## 2. contents creation
 
-Fractarchy-CMS is a kind of headless and flat-file CMS. Composing contents in Fractarchy-CMS consists of editing external content pages and arranging them using parent-children structure described in a set of XML files. Supported content pages include static XHTML files.
+Composing contents in FractaGUI consists of editing external content XHTML pages and arranging them using parent-children structure described in a set of XML files. Supported interaction includes navigating graph content nodes and following hyperlinks inside nodes.
 
 ## 3. contents navigation
 
@@ -30,7 +30,7 @@ These actions are also achievable by clicking arrow buttons in the bottom right 
 
 ## 4. giving it a try
 
-To get started with site creation using Fractarchy-CMS, please refer to the [example site](https://fractarchy.github.io/fractarchy-cms/) containing use instructions.
+To get started with site creation using FractaGUI, please refer to the [example site](https://fractarchy.github.io/fractagui/) containing use instructions.
 
 ## 5. licensing
 

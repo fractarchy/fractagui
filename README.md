@@ -1,12 +1,12 @@
 # FractaGUI (v0.7-release)
 
-tags: graph-user-interface, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
+tags: graph-user-interface, graph-visualization, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
 
 > ## promotional material
 > 
 > ![](contents/image1.jpg)
 > 
-> Would you like to bring a touch of adventurous spirit to your contents? Presenting your contents, FractaGUI does things a bit differently. As an original content navigating environment, it provides unusual experience in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by that awesome child of creativity in you.
+> Would you like to bring a touch of adventurous spirit to your contents? Presenting your contents, FractaGUI does things a bit differently. As an original graph content navigating environment, it provides unusual experience in discovering information among your content selection. Possible applications are surely endless, and they are waiting to be discovered by that awesome child of creativity in you.
 
 ## 1. about fractagui
 

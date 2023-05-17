@@ -57,5 +57,6 @@
     - navigation buttons
     - command button
 
-- v 0.7 - latest
+- v 0.7 - release
     - orbital orientation
+    - bug fixes

@@ -928,7 +928,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                     var clipPath2 = document.createElementNS(svgns, 'clipPath');
                     clipPath2.setAttributeNS(null, 'id', "cl2" + rand2);
                     svg.appendChild(clipPath2);
-                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - Math.sin (orientation + Math.PI / 2) * rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom+ shadowr) / magn, n).node;
+                    var clip2 = round ((xx * squashX - l) / magn, (yy * squashY - t - Math.sin (orientation + Math.PI / 2) * rr * shiftY * squashY) / magn, (rr * squashX * zoom + shadowr) / magn, (rr * squashY * zoom + shadowr) / magn, n).node;
                     clipPath2.appendChild(clip2);
 
                     // global
@@ -945,8 +945,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
                     
                     // intersect
-                    clip2.style.clipPath = "url(#cl3" + rand3 + ")";
-                    clip1.style.clipPath = "url(#cl2" + rand2 + ")";
+                    //clip2.style.clipPath = "url(#cl3" + rand3 + ")"; // commented for webkit
+                    //clip1.style.clipPath = "url(#cl2" + rand2 + ")"; // commented for webkit
                     data.ifr.style.clipPath = "url(#cl1" + rand1 + ")";
                     
                     /*

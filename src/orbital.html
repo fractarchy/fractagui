@@ -59,6 +59,15 @@
             function setSize () {
                 divContainer.style.width = window.innerWidth + "px";
                 divContainer.style.height = window.innerHeight + "px";
+                
+                if (document.body.clientWidth > document.body.clientHeight) {
+                    magnFactorBut = 1.25 * document.body.clientWidth / 1920;
+                }
+                else {
+                    magnFactorBut = 1.25 * document.body.clientHeight / 1920;
+                }
+                rescaleLftBut ();
+                rescaleRgtBut ();
             }
 
             function dispatchSize () {
@@ -767,10 +776,12 @@ ro_fract_123.observe(document.body);
             </a>
         </div>
         <script>
-            var magnFactorBut = 1.25;
-
-            document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
-
+            var magnFactorBut;// = 1.25 * document.body.clientHeight / 1420;
+            
+            function rescaleLftBut () {
+                document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+            }
+            
             document.getElementById("lftbuta").addEventListener("click", function (evt) {
                 if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
                     eval (env.lftBut["action"]);
@@ -847,8 +858,10 @@ ro_fract_123.observe(document.body);
         <script>
             // --- navigator --- //
 
-                document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
-
+                function rescaleRgtBut () {
+                    document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+                }
+                
                 // --- zooming start --- //
                     
                     document.getElementById("zoominr").addEventListener("touchstart", function (evt) {

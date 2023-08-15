@@ -66,6 +66,9 @@
                 else {
                     magnFactorBut = 1.25 * document.body.clientHeight / 1920;
                 }
+                if (window.devicePixelRatio > 1) {
+                    magnFactorBut *= 1.5;
+                }
                 rescaleLftBut ();
                 rescaleRgtBut ();
             }

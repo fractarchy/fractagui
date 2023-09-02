@@ -1,6 +1,6 @@
 # FractaGUI (v0.7-release)
 
-tags: user-interface, graph-visualization, zooming-elements-based, parent-child-orbiting, fractal-structure-inspired
+tags: user-interface, graph-visualization, zooming-elements-based, parent-children-orbiting, fractal-structure-inspired
 
 > ## promotional material
 > 

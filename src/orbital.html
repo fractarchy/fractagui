@@ -203,7 +203,7 @@
                         console.log ('Error in init.json: "ovals-rod-length" has to be a percent between "0%" and "100%"');
                     }
                 else
-                    ovalRodLength = 5;
+                    ovalRodLength = 0;
 
                 data["oval-opacity"] = 1;
                 if (!data["ovals-background-color"])
@@ -773,7 +773,9 @@ ro_fract_123.observe(document.body);
             });
         </script>
 
-        <div id="lftbut" style="position: absolute; background-color: rgb(48,48,48); left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
+        <div id="lftbut" style="position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
+            <svg id="lftbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
+
             <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; transform: scale(2.5);">
                 <img id= "lftbuti" width="48"/>
             </a>
@@ -821,7 +823,9 @@ ro_fract_123.observe(document.body);
             });
         </script>
 
-        <div id="rgtbut" style="opacity: 1; visibility: hidden; position: absolute; background-color: rgb(48,48,48); right: 1px; bottom: 1px; width: 144px; height: 144px; border-radius: 72px;">
+        <div id="rgtbut" style="opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ right: 1px; bottom: 1px; width: 144px; height: 144px; border-radius: 72px;">
+            <svg id="rgtbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
+            
             <a class="hvr" id="zoomr" style="position: absolute; border-radius: 24px; top: 48px; left: 48px;">
                 <svg id="zoominr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: block; transform: scale(0.8);">
                     <title>zoom in to enter panning mode</title>
@@ -1020,7 +1024,7 @@ ro_fract_123.observe(document.body);
                     if (env.butShadowRadius > 0)
                         document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
                         
-                    document.getElementById("lftbut").style.backgroundColor = env.butsBackColor;
+                    //document.getElementById("lftbut").style.backgroundColor = env.butsBackColor;
                     if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
                         document.getElementById("lftbut").style.border = "2px solid " + env.butsBorderColor;
                         
@@ -1031,7 +1035,7 @@ ro_fract_123.observe(document.body);
                 if (env.butShadowRadius > 0)
                     document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
                     
-                document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
+                //document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
                 if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
                     document.getElementById("rgtbut").style.border = "2px solid " + env.butsBorderColor;
 
@@ -1045,11 +1049,35 @@ ro_fract_123.observe(document.body);
                 document.getElementById("rb5").style.fill = env.butsColor;
                 document.getElementById("rb6").style.stroke = env.butsColor;
                 document.getElementById("rb6").style.fill = env.butsColor;
+
+                var ngonsides = 4 * Math.round (8 / (env.quant / 100) * 0.7);
+                if (ngonsides > 100) ngonsides = 100;
+                round (72, 72, 72, 72, ngonsides, document.getElementById("rgtbutsvg"), env.butsBackColor);
+                round (72, 72, 72, 72, ngonsides, document.getElementById("lftbutsvg"), env.butsBackColor);
             }
         </script>
         
         <script>
             init ();
+
+            function round (x, y, r1, r2, s, svg, backcolor) {
+                var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                svg.appendChild(polygon);
+
+                var p = [];
+                for (var i = 0.5; i < s; i++) {
+                    p.push ([x + Math.cos (2 * Math.PI / s * i) * r1, y + Math.sin (2 * Math.PI / s * i) * r2]);
+                }
+
+                for (value of p) {
+                    var point = svg.createSVGPoint();
+                    point.x = value[0];
+                    point.y = value[1];
+                    polygon.points.appendItem(point);
+                }
+
+                polygon.style.fill = backcolor;
+            }
         </script>
       </section>
     </body>

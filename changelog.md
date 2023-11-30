@@ -60,3 +60,4 @@
 - v 0.7 - release
     - orbital orientation
     - bug fixes
+    - removed unnecessary features

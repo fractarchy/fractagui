@@ -290,6 +290,22 @@
                     bsradius = 0;
                 }
                 
+                var lftBut;
+                if (data["left-button"]) {
+                    lftBut =  data["left-button"];
+                    
+                } else {
+                    lftBut = {visibility: "hidden"};
+                }
+                
+                var rgtBut;
+                if (data["right-button"]) {
+                    rgtBut =  data["right-button"];
+                    
+                } else {
+                    rgtBut = {visibility: "hidden"};
+                }
+                
                 return {
                     topNode: data["home"],
                     
@@ -311,7 +327,8 @@
                     butsBorderColor: data["buttons-border-color"],
                     butShadowRadius: bsradius,
                     butShadowColor: data["buttons-shadow-color"],
-                    lftBut: data["left-button"]
+                    lftBut: lftBut,
+                    rgtBut: rgtBut
                 }
             }
 
@@ -815,10 +832,6 @@ ro_fract_123.observe(document.body);
                     var lb = document.getElementById("lftbut");
                     lb.style.left =  "0.5em";
                     lb.style.bottom = "0.5em";
-                    lb.style.visibility = "visible";
-                } else {
-                    var lb = document.getElementById("lftbut");
-                    lb.style.visibility = "hidden";
                 }
             });
         </script>
@@ -963,7 +976,6 @@ ro_fract_123.observe(document.body);
                     var rn = document.getElementById("rgtbut");
                     rn.style.right =  "0.5em";
                     rn.style.bottom = "0.5em";
-                    rn.style.visibility = "visible";
                 });
 
                 document.getElementById("rgtbut").onmousedown = function (evt) {
@@ -1019,7 +1031,19 @@ ro_fract_123.observe(document.body);
         </script>
         
         <script>
-            function initButtons () {
+                function initButtons () {
+                if (env.lftBut["visibility"] === "hidden") {
+                    document.getElementById("lftbut").style.visibility = "hidden";
+                } else {
+                    document.getElementById("lftbut").style.visibility = "visible";
+                }
+                
+                if (env.rgtBut["visibility"] === "hidden") {
+                    document.getElementById("rgtbut").style.visibility = "hidden";
+                } else {
+                    document.getElementById("rgtbut").style.visibility = "visible";
+                }
+            
                 if (env.lftBut) {
                     if (env.butShadowRadius > 0)
                         document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";

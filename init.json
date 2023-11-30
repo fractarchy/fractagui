@@ -14,6 +14,7 @@
     "buttons-background-color": "rgb(48,48,48)",
 
     "left-button": {
+        "visibility": "visible",
         "icon": "media/github-mark-white.svg",
         "tooltip": "visit me on GitHub",
         "action": "javascript:window.open('https://github.com/fractarchy/fractarchy-cms/', '_blank')"

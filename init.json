@@ -1,23 +1,10 @@
 {
     "home": "contents/c-0.xml",
-    
-    "orientation": "south",
-    
-    "contents-scale": "100%",
-    "ui-scale": "140%",
-    
-    "power-consumption-optimisation": "75%",
-
+    "orientation": "north",
     "background-color": "gray",
     "ovals-background-color": "rgb(208,208,208)",
-    "buttons-color": "rgb(208,208,208)",
-    "buttons-background-color": "rgb(48,48,48)",
-
-    "left-button": {
-        "visibility": "visible",
-        "icon": "media/github-mark-white.svg",
-        "tooltip": "visit me on GitHub",
-        "action": "javascript:window.open('https://github.com/fractarchy/fractarchy-cms/', '_blank')"
-    }
+    "contents-scale": "100%",
+    "ui-scale": "140%",
+    "power-consumption-optimisation": "75%"
 }
 

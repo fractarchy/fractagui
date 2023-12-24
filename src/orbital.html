@@ -1044,7 +1044,7 @@ ro_fract_123.observe(document.body);
                     document.getElementById("rgtbut").style.visibility = "visible";
                 }
             
-                if (env.lftBut) {
+                if (env.lftBut["visibility"] === "visible") {
                     if (env.butShadowRadius > 0)
                         document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
                         

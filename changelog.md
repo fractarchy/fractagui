@@ -50,14 +50,19 @@
 
 - - -
 
-- v 0.7 - beta
+- v 0.7 - beta  
     - mobile UX improvement  
-    - Safari support
-    - fixed font blur on zoom
-    - navigation buttons
-    - command button
+    - Safari support  
+    - fixed font blur on zoom  
+    - navigation buttons  
+    - command button  
 
-- v 0.7 - release
-    - orbital orientation
-    - bug fixes
-    - removed unnecessary features
+- v 0.7 - release  
+    - orbital orientation  
+    - bug fixes  
+    - removed unnecessary features  
+
+- v 0.7 - update  
+    - compacting experience  
+
+    

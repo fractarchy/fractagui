@@ -23,11 +23,12 @@
                 user-select: none;
             }
 
-            .hvr1 {opacity : 0.7; cursor: default;}
-            .hvr {opacity : 0.7;}
+            .hvr1 {opacity : 0.85; cursor: default;}
+            .hvr {opacity : 0.85;}
             .hvr:hover {cursor: default/*pointer*/; opacity :1;}
         </style>
         <script src="orbital.js"></script>
+        <script src="loader.js"></script>
     </head>
     <body>
       <section id="topsect">
@@ -60,6 +61,11 @@
                 divContainer.style.width = window.innerWidth + "px";
                 divContainer.style.height = window.innerHeight + "px";
                 
+                for (var i = 0; i < loadedOvals.length; i++) {
+                    if (loadedOvals[i] && loadedOvals[i].ifr)
+                        window.postMessage({msg: "resize", index: i, width: loadedOvals[i].ifr.clientWidth, height: loadedOvals[i].ifr.clientHeight}, "*");
+                }
+
                 if (document.body.clientWidth > document.body.clientHeight) {
                     magnFactorBut = 1.25 * document.body.clientWidth / 1920;
                 }
@@ -84,16 +90,24 @@
             wonload = function () {
                 setSize ();
                 document.getElementById("rgtbut").style.transform = document.getElementById("rgtbut").style.transform + " " + (env.orientation === "north" ? "rotate(" + Math.PI + "rad) " : "")
-                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorderColor, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalRodLength, env.orientation === "north" ? Math.PI: 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
+                objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorder, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalSpacing / 100, env.orientation === "north" ? Math.PI: 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
+                
 
                 dispatchSize ();
                 divContainer.style.visibility = "visible";
                 window.addEventListener("message", msg, false);
 
+                initScreen ();
+
                 var resizeId;
                 window.addEventListener('resize', function () {
                     document.getElementById("tooltip").style.visibility = "hidden"
                     divContainer.style.visibility = "hidden";
+
+                    //for (var i = 0; i < loadedOvals.length; i++) {
+                    //    if (loadedOvals[i] && loadedOvals[i].ifr)
+                    //        loadedOvals[i].ifr.style.visibility = "hidden";
+                    //}
                     
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
@@ -101,28 +115,25 @@
                         dispatchSize ();
                         divContainer.style.visibility = "visible";
 
-                        if (env.ovalShadowRadius === 0) {
-                            divContainerWrapper.style.filter = "";
-                        } else {
-                            divContainerWrapper.style.filter = "drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
+                        for (var i = 0; i < loadedOvals.length; i++) {
+                            if (loadedOvals[i] && loadedOvals[i].ifr)
+                                loadedOvals[i].ifr.style.visibility = "hidden";
                         }
-                        
-                        if (env.ovalOpacity)
-                            objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
-                        
-                        if (env.backImage) {
-                            document.body.style.backgroundImage = "url('../" + env.backImage + "')";
-                            document.body.style.backgroundSize = "cover";
-                            document.body.style.backgroundPosition = "center";
-                        }
-                        
                         //document.getElementById("div1").style.backdropFilter = "blur(10px)";
                     }, 100);
                 });
+                
                 window.dispatchEvent(new CustomEvent('resize'));
             }
             
             function setupEnv (data) {
+                data["power-consumption-optimisation"] = "75%";
+                data["ovals-border"] = "false";
+                data["ovals-shadow-radius"] = undefined;
+                data["ovals-shadow-color"] = undefined;
+                data["buttons-shadow-radius"] = undefined;
+                data["buttons-shadow-color"] = undefined;
+
                 if (data["power-consumption-optimisation"])
                     try {
                         if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
@@ -133,12 +144,12 @@
                             throw new error ();
                         
                     } catch (e) {
-                        quant = 80;
+                        quant = 75;
                         console.log ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%" and less than "300%"');
                     }
                 else
-                    quant = 80;
-                
+                    quant = 75;
+
                 if (data["contents-scale"])
                     try {
                         if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
@@ -189,91 +200,33 @@
                     uishift = 0;
                 */
 
-                if (data["ovals-rod-length"])
+                if (data["ovals-spacing"])
                     try {
-                        if (data["ovals-rod-length"].substr(data["ovals-rod-length"].length - 1, 1) !== "%")
+                        if (data["ovals-spacing"].substr(data["ovals-spacing"].length - 1, 1) !== "%")
                             throw new error ();
                         
-                        var ovalRodLength = parseFloat (data["ovals-rod-length"].substr(0, data["ovals-rod-length"].length - 1));
-                        if (ovalRodLength < 0 || ovalRodLength >= 100)
+                        var ovalSpacing = parseFloat (data["ovals-spacing"].substr(0, data["ovals-spacing"].length - 1));
+                        if (ovalSpacing < 0 || ovalSpacing >= 100)
                             throw new error ();
                         
                     } catch (e) {
-                        ovalRodLength = 5;
-                        console.log ('Error in init.json: "ovals-rod-length" has to be a percent between "0%" and "100%"');
+                        ovalSpacing = 0;
+                        console.log ('Error in init.json: "ovals-spacing" has to be a percent between "0%" and "100%"');
                     }
                 else
-                    ovalRodLength = 0;
+                    ovalSpacing = 0;
 
                 data["oval-opacity"] = 1;
-                if (!data["ovals-background-color"])
-                    data["ovals-background-color"] = "white";
+                if (!data["color-1"])
+                    data["color-1"] = "white";
                 
-                else {
-                    try {
-                        if (data["ovals-background-color"].substr(0, 1) === "#") {
-                            if (data["ovals-background-color"].length === 9) {
-                                data["oval-opacity"] = parseInt (data["ovals-background-color"].substr(7, 2), 16) / 255;
-                                data["ovals-background-color"] = data["ovals-background-color"].substr(0, 7);
-                            }
-                        } else {
-                            if (data["ovals-background-color"].substr(0, 3) === "rgb") {
-                                const parts = data["ovals-background-color"].match(/[\d.]+/g);
-                                if (parts.length === 4) {
-                                    data["oval-opacity"] = parts[3];
-                                    data["ovals-background-color"] = "rgb(" + parts[0] + "," + parts[1] + "," + parts[2] + ")";
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.log ('Error in init.json: if "ovals-background-color" has an alpha component then "ovals-border-color" has to be specified');
-                        data["ovals-background-color"] = "white";
-                    }
-                }
-
-                if (!data["ovals-border-color"])
-                    data["ovals-border-color"] = data["ovals-background-color"];
+                if (!data["color-2"])
+                    data["color-2"] = "black";
                 
-                else {
-                    try {
-                        if (data["ovals-border-color"].substr(0, 1) === "#") {
-                            if (data["ovals-border-color"].length !== 7) {
-                                throw new error ();
-                            }
-                        } else {
-                            if (data["ovals-border-color"].substr(0, 3) === "rgb") {
-                                const parts = data["ovals-border-color"].match(/[\d.]+/g);
-                                if (parts.length !== 3) {
-                                    throw new error ();
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.log ('Error in init.json: "ovals-border-color" takes only rgb without alpha component');
-                        data["ovals-border-color"] = "white";
-                    }
-                }
 
-                if (data["buttons-border-color"]) {
-                    try {
-                        if (data["buttons-border-color"].substr(0, 1) === "#") {
-                            if (data["buttons-border-color"].length !== 7) {
-                                throw new error ();
-                            }
-                        } else {
-                            if (data["buttons-border-color"].substr(0, 3) === "rgb") {
-                                const parts = data["buttons-border-color"].match(/[\d.]+/g);
-                                if (parts.length !== 3) {
-                                    throw new error ();
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.log ('Error in init.json: "buttons-border-color" takes only rgb without alpha components');
-                        data["buttons-border-color"] = undefined;
-                    }
-                }
-
+                if (!data["ovals-border"])
+                    data["ovals-border"] = "false";
+                
                 var osradius
                 if (data["ovals-shadow-radius"]) {
                     osradius = parseFloat (data["ovals-shadow-radius"]);
@@ -290,45 +243,36 @@
                     bsradius = 0;
                 }
                 
-                var lftBut;
-                if (data["left-button"]) {
-                    lftBut =  data["left-button"];
+                if (data["buttons-visible"]) {
+                    butVisibility =  data["buttons-visible"];
                     
                 } else {
-                    lftBut = {visibility: "hidden"};
-                }
-                
-                var rgtBut;
-                if (data["right-button"]) {
-                    rgtBut =  data["right-button"];
-                    
-                } else {
-                    rgtBut = {visibility: "hidden"};
+                    butVisibility = "true";
                 }
                 
                 return {
                     topNode: data["home"],
                     
-                    backImage: data["background-image"],
+                    color1: data["color-1"],
+                    color2: data["color-2"],
+
                     orientation: data["orientation"] === "north" ? "north": "south",
                     contentScale: cscale,
                     uiscale: uiscale,
                     uishift: uiscale <= 100 ? 0 : ((uiscale - 100) / 4),
-                    quant: quant,                    
-                    backColor: data["background-color"],
-                    ovalRodLength: ovalRodLength,
-                    ovalBackColor: data["ovals-background-color"],
-                    ovalBorderColor: data["ovals-border-color"],
+                    quant: quant,
+                    ovalSpacing: ovalSpacing,
+                    ovalBackColor: data["color-1"],
+                    ovalBorder: (data["ovals-border"] === "false" ? "false" : data["color-2"]),
                     ovalOpacity: data["oval-opacity"],
                     ovalShadowRadius: osradius,
                     ovalShadowColor: data["ovals-shadow-color"],
-                    butsColor: data["buttons-color"],
-                    butsBackColor: data["buttons-background-color"],
-                    butsBorderColor: data["buttons-border-color"],
+                    butsColor: data["color-1"],
+                    butsBackColor: data["color-2"],
+                    butsBorderColor: (data["ovals-border"] === "false" ? "false" : data["color-1"]),
                     butShadowRadius: bsradius,
                     butShadowColor: data["buttons-shadow-color"],
-                    lftBut: lftBut,
-                    rgtBut: rgtBut
+                    butVisibility: butVisibility
                 }
             }
 
@@ -421,203 +365,6 @@
                 onIdleRunning = false;
             }
             
-            var loadedOvals = [];
-            var loadedOvalsIndex = 0;
-            async function loadOval(node) {
-                return new Promise(async function(resolve, reject) {
-                    if (node.ifr)
-                        resolve();
-                    
-                    var idiv = document.createElement ('div');
-                    var ifr = document.createElement ('iframe');
-                    ifr.addEventListener('load', function () {
-                        if (!ifr.firstOnLoad) {
-                            ifr.firstOnLoad = true;
-                            allOvals.push (node);
-                        }
-                        resolve ();
-                    });
-                    
-                    ifr.addEventListener('error', function () {
-                        reject ();
-                    });
-
-                    loadNode (node.xml, node).then ((loaded) => {
-                        node.children = loaded.children;
-
-                        idiv.style.position = "absolute";
-                        idiv.style.visibility = "hidden";
-                        idiv.style.border = "none";
-                        idiv.style.overflow = "hidden";
-                        idiv.scrolling = "no";
-                        idiv.disabled = true;
-                        idiv.tabIndex = -1;
-                        idiv.width = objOrbit.getRadius () * 1.2;
-                        
-                        ifr.style.border = "none";
-                        ifr.style.overflow = "hidden";
-                        ifr.scrolling = "no";
-                        ifr.disabled = true;
-                        ifr.tabIndex = -1;
-                        ifr.width = objOrbit.getRadius () * 1.2;
-
-                        idiv.appendChild (ifr);
-                        node.ifr = idiv;
-                        node.wrappedifr = ifr;
-                        //document.body.appendChild (idiv);
-                        //divContainer.appendChild (idiv);
-                        
-                        var xhr = new XMLHttpRequest();
-
-                        xhr.onload = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                                
-                                var parser = new DOMParser();
-                                var xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");                                
-                                if (xmlDoc) {
-                                    var base = document.createElement('base');
-                                    base.href = xhr.responseURL;
-                                    
-                                    var head = xmlDoc.documentElement.getElementsByTagName('head')[0];
-                                    if (!head) {
-                                        head = document.createElement('head');
-                                        xmlDoc.documentElement.insertBefore (head, xhr.responseXML.documentElement.childNodes[0]);
-                                    }
-                                    head.insertBefore(base, head.childNodes[0]);
-
-                                    var body = xmlDoc.documentElement.getElementsByTagName('body')[0];
-                                    if (!body) {
-                                        body = document.createElement('body');
-                                        xmlDoc.documentElement.insertAfter (body, head.childNodes[0]);
-                                    }
-                                    loadedOvals[loadedOvalsIndex] = node;
-
-                                    var html = `
-                                        window.addEventListener("unload", function (event) {
-                                            window.parent.postMessage({msg: "unload", index: ${loadedOvalsIndex}}, "*");
-                                        });
-                                        
-                                        function extractLinks_fract_123 (node) {
-                                            var hyperlinks;
-                                            var links = node.getElementsByTagName("a");
-                                            //for (var i = 0; i < links.length; i++) {
-                                            for (var i in links) {
-try {
-                                                //alert (i);
-                                                var tg = links[i].getAttribute('target');
-                                                var hr = links[i].href;
-                                                if (hr.baseVal) hr = hr.baseVal;
-
-                                                if (!hr)
-                                                    hr = links[i].getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-                                              
-                                                if (hr) {
-                                                    if (!hyperlinks)
-                                                        hyperlinks = [];
-                                                    
-                                                    if (links[i].children)
-                                                    if (links[i].children.length !== 0) {
-                                                        (function traverseChildren(link, node) {
-                                                            if (link.children)
-                                                            if (link.children.length !== 0) {
-                                                                //for (var j = 0; j < link.children.length; j++) {
-                                                                for (var j in link.children) {
-                                                                    traverseChildren(link.children[j], node);
-                                                                }
-                                                            }
-                                                            
-                                                            var rects = link.getClientRects();
-                                                            for (var j in rects) {
-try {
-                                                                if (rects[j].right)
-                                                                    hyperlinks.push (
-                                                                        {
-                                                                            "type": "rect",
-                                                                            "target": tg,
-                                                                            "href": hr,
-                                                                            "left": rects[j].left,
-                                                                            "top": rects[j].top,
-                                                                            "right": rects[j].right,
-                                                                            "bottom": rects[j].bottom
-                                                                        }
-                                                                    );
-} catch (e) {}
-                                                            }
-                                                        }) (links[i], node);
-                                                    } else {
-                                                        var rects = links[i].getClientRects();
-                                                        for (var j in rects) {
-try {
-                                                            hyperlinks.push (
-                                                                {
-                                                                    "type": "rect",
-                                                                    "target": tg,
-                                                                    "href": hr,
-                                                                    "left": rects[j].left,
-                                                                    "top": rects[j].top,
-                                                                    "right": rects[j].right,
-                                                                    "bottom": rects[j].bottom
-                                                                }
-                                                            );
-} catch (e) {}
-                                                        }
-                                                    }
-                                                }
-} catch (e) {}
-                                            }
-                                            
-                                            if (hyperlinks)
-                                                window.parent.postMessage({msg: "relink", index: ${loadedOvalsIndex}, hyperlinks: hyperlinks}, "*");
-                                        }
-                                        
-                                        
-                                        extractLinks_fract_123 (document);
-                                        
-                                        setInterval (function () {
-                                            extractLinks_fract_123 (document);
-                                        }, 500);
-
-var ro_fract_123 = new ResizeObserver(function (entries) {
-  for (let entry of entries) {
-    const cr = entry.contentRect;
-    window.parent.postMessage({msg: "resize", index: ${loadedOvalsIndex}, width: cr.width, height: cr.height}, "*");
-  }
-})
-ro_fract_123.observe(document.body);
-
-                                    `;
-                                    loadedOvalsIndex++;
-                                    
-                                    var script= document.createElement("script");
-                                    script.type = "text/javascript";
-                                    script.innerHTML = ` ${html} `;
-                                    body.appendChild( script );
-                                    ifr.srcdoc = xmlDoc.documentElement.innerHTML;
-                                    node.ifr = idiv;
-
-                                    divContainer.appendChild (idiv);
-
-                                    //resolve (getNode (xhr.responseXML));
-
-                                } else {
-                                    alert (`Error processing '${loaded.src}'`);
-                                    reject ();
-                                }
-                            }
-                        }
-
-                        xhr.onerror = function() {
-                            alert (`Error while getting '${loaded.src}'`);
-                            reject ();
-                        }
-
-                        xhr.open("GET", loaded.src /*+ "?" + Date.now()*/, true);
-                        xhr.send();
-                        dispatchDraw();
-                    });
-                });
-            }
-            
             var msg = (event) => {
                 if (event.data.msg === "resize") {
                     if (loadedOvals[event.data.index].ifr) {
@@ -638,80 +385,6 @@ ro_fract_123.observe(document.body);
                 }
             }
 
-            async function loadNode (fileName, node) {
-                return new Promise(async function(resolve, reject) {
-                    function getNode (topNode) {
-                        
-                        var xmlNode = topNode.children[0].children[0];
-                        
-                        var url = new URL(xmlNode.attributes.getNamedItem("src").nodeValue, xhr.responseURL).href
-                        var att = xmlNode.attributes.getNamedItem("type");
-                        if (att)
-                            var type = att.nodeValue;
-                        else
-                            var type = "html";
-
-                        node.type = type;
-                        node.src = url;
-
-                        att = xmlNode.attributes.getNamedItem("vlock");
-                        if (att)
-                            node.vLock = att.nodeValue;
-
-                        att = xmlNode.attributes.getNamedItem("hlock");
-                        if (att)
-                            node.hLock = att.nodeValue;
-
-                        att = xmlNode.attributes.getNamedItem("valign");
-                        if (att)
-                            node.vAlign = att.nodeValue;
-
-                        att = xmlNode.attributes.getNamedItem("halign");
-                        if (att)
-                            node.hAlign = att.nodeValue;
-
-                        att = xmlNode.attributes.getNamedItem("backcolor");
-                        if (att)
-                            node.backColor = att.nodeValue;
-                        
-                        node.children = [];
-                        xmlNode = topNode.children[0].children[1];
-                        if (xmlNode)
-                            for (var i = 0; i < xmlNode.children.length; i++) {
-                                var fn = new URL (xmlNode.children[i].attributes.getNamedItem("src").nodeValue, xhr.responseURL).href;
-                                node.children.push ({parent: node, children: [], index: i, xml: fn});
-                            }
-
-                        return node;
-                    }
-                    
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.onload = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            
-                            if (xhr.responseXML) {
-                                resolve (getNode (xhr.responseXML));
-
-                            } else {
-                                alert (`Error processing '${fileName}'`);
-                                reject ();
-                            }
-                        }
-                    }
-
-                    xhr.onerror = function() {
-                        alert (`Error while getting '${fileName}'`);
-                        reject ();
-                    }
-
-                    xhr.open("GET", fileName /*+ "?" + Date.now()*/, true);
-                    xhr.responseType = "document";
-                    xhr.overrideMimeType('text/xml');
-                    xhr.send();
-                });
-            }
-                        
             var env;
             var xhttp;
             function init () {
@@ -794,7 +467,10 @@ ro_fract_123.observe(document.body);
             <svg id="lftbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
 
             <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; transform: scale(2.5);">
-                <img id= "lftbuti" width="48"/>
+                <svg id="home" xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 142 960 960">
+                    <title>home</title>
+                    <path id="lb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M225.385 870.615h155.77v-245h197.69v245h155.77V488.693L480 296.77 225.385 488.564v382.051Zm-45.384 45.384V466.001L480 240.233l299.999 225.768v449.998H533.462v-245H426.538v245H180.001ZM480 583.385Z"/>
+                </svg>
             </a>
         </div>
         <script>
@@ -805,12 +481,12 @@ ro_fract_123.observe(document.body);
             }
             
             document.getElementById("lftbuta").addEventListener("click", function (evt) {
-                if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
-                    eval (env.lftBut["action"]);
-                
-                else {
-                    reload (env.lftBut["action"]);
-                }
+                //if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
+                //    eval (env.lftBut["action"]);
+                //
+                //else {
+                    reload (env["topNode"]);
+                //}
             }, false);
             
             document.getElementById("lftbuta").onmousedown = function (evt) {
@@ -822,7 +498,7 @@ ro_fract_123.observe(document.body);
                 document.getElementById("lftbuta").dispatchEvent(new CustomEvent('click'));
                 evt.preventDefault ();
             }, false);
-
+            
             document.getElementById("lftbut").ondragstart = function (evt) {
                 evt.preventDefault ();
             };
@@ -879,7 +555,7 @@ ro_fract_123.observe(document.body);
             // --- navigator --- //
 
                 function rescaleRgtBut () {
-                    document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+                    document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") " + (env["orientation"] === "north" ? " rotate(180deg)" : "");
                 }
                 
                 // --- zooming start --- //
@@ -1031,37 +707,46 @@ ro_fract_123.observe(document.body);
         </script>
         
         <script>
-                function initButtons () {
-                if (env.lftBut["visibility"] === "hidden") {
+            function initButtons () {
+                if (env.butVisibility === "false") {
                     document.getElementById("lftbut").style.visibility = "hidden";
                 } else {
                     document.getElementById("lftbut").style.visibility = "visible";
                 }
                 
-                if (env.rgtBut["visibility"] === "hidden") {
+                if (env.butVisibility === "false") {
                     document.getElementById("rgtbut").style.visibility = "hidden";
                 } else {
                     document.getElementById("rgtbut").style.visibility = "visible";
                 }
             
-                if (env.lftBut["visibility"] === "visible") {
+                if (env.butVisibility !== "false") {
                     if (env.butShadowRadius > 0)
                         document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
                         
                     //document.getElementById("lftbut").style.backgroundColor = env.butsBackColor;
-                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
-                        document.getElementById("lftbut").style.border = "2px solid " + env.butsBorderColor;
+                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor) {
+                        //document.getElementById("lftbut").style.border = "3px solid " + env.butsBorderColor;
+                        document.getElementById("lftbutsvg").style.stroke = env.butsBorderColor;
+                        document.getElementById("lftbutsvg").style.strokeWidth = "3px";
                         
-                    document.getElementById("lftbuti").src = "../" + env.lftBut["icon"];
-                    document.getElementById("lftbuti").title = env.lftBut["tooltip"];
+                        document.getElementById("rgtbutsvg").style.stroke = env.butsBorderColor;
+                        document.getElementById("rgtbutsvg").style.strokeWidth = "3px";
+                    }
+                    //document.getElementById("lftbuti").src = "../" + env.lftBut["icon"];
+                    //document.getElementById("lftbuti").title = env.lftBut["tooltip"];
+
+                    if (env.butShadowRadius > 0)
+                        document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                        
+                    //document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
+                    //if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
+                    //    document.getElementById("rgtbut").style.border = "3px solid " + env.butsBorderColor;
                 }
 
-                if (env.butShadowRadius > 0)
-                    document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                    
-                //document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
-                if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
-                    document.getElementById("rgtbut").style.border = "2px solid " + env.butsBorderColor;
+
+                //document.getElementById("lb1").style.stroke = env.butsColor;
+                document.getElementById("lb1").style.fill = env.butsColor;
 
                 document.getElementById("rb1").style.fill = env.butsColor;
                 document.getElementById("rb2").style.fill = env.butsColor;
@@ -1078,6 +763,51 @@ ro_fract_123.observe(document.body);
                 if (ngonsides > 100) ngonsides = 100;
                 round (72, 72, 72, 72, ngonsides, document.getElementById("rgtbutsvg"), env.butsBackColor);
                 round (72, 72, 72, 72, ngonsides, document.getElementById("lftbutsvg"), env.butsBackColor);
+            }
+            
+            function initScreen () {
+                if (env.ovalShadowRadius === 0) {
+                    divContainerWrapper.style.filter = "";
+                } else {
+                    divContainerWrapper.style.filter = " drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
+                }
+                
+                if (env.ovalOpacity)
+                    objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
+
+                /*
+                if (env.backImage) {
+                    //document.body.style.backgroundImage = "url('../" + env.backImage + "')";
+                    //document.body.style.backgroundSize = "cover";
+                    //document.body.style.backgroundPosition = "center";
+                }
+                */
+
+                document.body.style.backgroundImage = "url('" + getRaster (env.quant, env.color1, env.color2).src + "')";
+                document.body.style.backgroundRepeat = "repeat";
+            }
+            
+            function getRaster (quant, color1, color2) {
+                var cnv = document.createElement ("canvas");
+                var pr = Math.min (window.devicePixelRatio, 2)
+                var ps = Math.round (quant / 100 * 4 * Math.max (screen.width, 1920) / 1920);
+                
+                if (ps < pr)
+                    ps = pr;
+                    
+                cnv.width = ps * 2;
+                cnv.height = ps * 2;
+                var ctx = cnv.getContext('2d');
+                ctx.fillStyle = color1
+                ctx.fillRect (0, 0, ps, ps);
+                ctx.fillRect (ps, ps, ps, ps);
+                ctx.fillStyle = color2
+                ctx.fillRect (0, ps, ps, ps);
+                ctx.fillRect (ps, 0, ps, ps);
+                
+                var img = document.createElement ("img");
+                img.src = cnv.toDataURL('image/png');
+                return img;
             }
         </script>
         

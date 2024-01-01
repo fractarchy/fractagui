@@ -1,10 +1,11 @@
 {
     "home": "contents/c-0.xml",
     "orientation": "south",
-    "background-color": "gray",
-    "ovals-background-color": "rgb(208,208,208)",
+    "color-1": "rgb(208,208,208)",
+    "color-2": "rgb(48,48,48)",
+    "ovals-spacing": "0.5%",
+    "buttons-visible": "true",
     "contents-scale": "100%",
-    "ui-scale": "140%",
-    "power-consumption-optimisation": "75%"
+    "ui-scale": "140%"
 }
 

@@ -1,4 +1,4 @@
-# FractaGUI (v0.7-release)
+# FractaGUI (v0.9-alpha)
 
 tags: user-interface, graph-visualization, zooming-elements-based, parent-children-orbiting, fractal-structure-inspired
 
@@ -25,6 +25,8 @@ The final result brings all the imported content pages to be shown inside orbita
 3. dragging orbiting ovals towards center to zoom them in
 4. dragging central oval out towards orbit to zoom it out
 5. using mouse wheel to switch between navigating and panning mode
+
+These actions are also achievable by clicking arrow buttons in the bottom right screen corner.
 
 ## 4. giving it a try
 

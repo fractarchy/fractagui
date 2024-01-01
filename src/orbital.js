@@ -488,7 +488,7 @@ if (rec === 1) {
     };
 }
 
-function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeColor, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, rodLength, orient, shiftY, cZoomedIn, cZoomedOut, cZoomingOut) {
+function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, backColor, shadowRadius, shadowColor, uiscale, onIdle, onBusy, ovalSpacing, orient, shiftY, cZoomedIn, cZoomedOut, cZoomingOut) {
     "use strict";
     
     function prepareData (canvasScape, parent, index) {
@@ -540,7 +540,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
     data = prepareData (data);
     
     var fill1 = ovalFillColor;
-    var stroke1 = ovalStrokeColor;
+    var stroke1 = ovalBorder;
     var back1 = backColor;
     var orientation = orient;
     var curvature = 1 / 8;
@@ -625,7 +625,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
 
     var ratio = 1 / 1.61803398875;
-    var circleSize = 1 - rodLength / 100;
+    var circleSize = 1 - ovalSpacing;
     var lineWidth = 40;
 
     var minRadius;
@@ -727,7 +727,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             var magn = r / (rr * ratio);
             
             var lw = lineWidth * rr / 2048 * magn;
-            if (fill === stroke)
+            if (ovalBorder === "false") //fill === stroke)
                 lw = 0;
             
             var ra = r * circleSize;
@@ -807,7 +807,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             ctx.fill ();
             ctx.closePath ();
 
-            if (fill !== stroke) {
+            if (ovalBorder !== "false") { //fill !== stroke) {
                 ctx.beginPath ();
                 ctx.moveTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * -0.5), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * -0.5));
                 for (var i = 0.5; i < n + 1.5; i++){
@@ -823,8 +823,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
 
             // line
             var lw = lineWidth * rr / 1024 * magn;
-            if (circleSize < 1 && level !== 1 && data.parent.parent){
-                
+            if (ovalBorder !== "false" && data.parent.parent) {//circleSize < 1 && level !== 1 && data.parent.parent){
                 ctx.globalCompositeOperation = "source-over";
                 ctx.lineWidth = lw;//lineWidth * rr / 500 * magn;
                 //ctx.lineCap = "round"
@@ -874,7 +873,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             */
 
             var lw = lineWidth * rr / 2048 * magn;
-            if (fill === stroke)
+            if (ovalBorder === "false")//fill === stroke)
                 lw = 0;
 
             if (data.ifr && data.ifr.width > 0 && data.ifr.height > 0) {
@@ -2010,6 +2009,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
                 alignOval (d, d)
                 //d.ifr.remove();
                 //d.ifr = null;
+                
             }
                             
             for (var i = 0; i < d.children.length; i++)
@@ -3145,16 +3145,28 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalStrokeCol
             counterClockwise ();
         },
         slideUp: function () {
-            pan (0, rr / 800 * -20, 50);
+            if (orientation === Math.PI)
+                pan (0, rr / 800 * 20, 50);
+            else
+                pan (0, rr / 800 * -20, 50);
         },
         slideDown: function () {
-            pan (0, rr / 800 * 20, 50);
+            if (orientation === Math.PI)
+                pan (0, rr / 800 * -20, 50);
+            else
+                pan (0, rr / 800 * 20, 50);
         },
         slideLeft: function () {
-            pan (rr / 800 * -20, 0, 50);
+            if (orientation === Math.PI)
+                pan (rr / 800 * 20, 0, 50);
+            else
+                pan (rr / 800 * -20, 0, 50);
         },
         slideRight: function () {
-            pan (rr / 800 * 20, 0, 50);
+            if (orientation === Math.PI)
+                pan (rr / 800 * -20, 0, 50);
+            else
+                pan (rr / 800 * 20, 0, 50);
         },
         setMagn: function (magn) {
             rescale (magn);

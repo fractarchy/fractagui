@@ -26,7 +26,7 @@ The final result brings all the imported content pages to be shown inside orbita
 4. dragging central oval out towards orbit to zoom it out
 5. using mouse wheel to switch between navigating and panning mode
 
-These actions are also achievable by clicking arrow buttons in the bottom right screen corner.
+These actions are also achievable by clicking arrow buttons in the bottom right screen corner. In any moment of browsing, clicking home button in the bottom left corner brings us back to the root node.
 
 ## 4. giving it a try
 

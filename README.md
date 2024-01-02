@@ -1,4 +1,4 @@
-# FractaGUI (v0.7-update)
+# FractaGUI (v0.9-alpha)
 
 tags: user-interface, graph-visualization, zooming-elements-based, parent-children-orbiting, fractal-structure-inspired
 

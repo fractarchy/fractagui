@@ -62,7 +62,9 @@
     - bug fixes  
     - removed unnecessary features  
 
-- v 0.7 - update  
+- - -
+
+- v 0.9 - alpha  
     - compacting experience  
 
     

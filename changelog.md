@@ -64,7 +64,7 @@
 
 - - -
 
-- v 0.9 - alpha  
-    - compacting experience  
+- v 0.9 - beta  
+    - compacting designer experience  
 
     

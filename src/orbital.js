@@ -3146,27 +3146,27 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
         },
         slideUp: function () {
             if (orientation === Math.PI)
-                pan (0, rr / 800 * 20, 50);
+                pan (0, rr / 800 * 20 * squashY, 50);
             else
-                pan (0, rr / 800 * -20, 50);
+                pan (0, rr / 800 * -20 * squashY, 50);
         },
         slideDown: function () {
             if (orientation === Math.PI)
-                pan (0, rr / 800 * -20, 50);
+                pan (0, rr / 800 * -20 * squashY, 50);
             else
-                pan (0, rr / 800 * 20, 50);
+                pan (0, rr / 800 * 20 * squashY, 50);
         },
         slideLeft: function () {
             if (orientation === Math.PI)
-                pan (rr / 800 * 20, 0, 50);
+                pan (rr / 800 * 20 * squashX, 0, 50);
             else
-                pan (rr / 800 * -20, 0, 50);
+                pan (rr / 800 * -20 * squashX, 0, 50);
         },
         slideRight: function () {
             if (orientation === Math.PI)
-                pan (rr / 800 * -20, 0, 50);
+                pan (rr / 800 * -20 * squashX, 0, 50);
             else
-                pan (rr / 800 * 20, 0, 50);
+                pan (rr / 800 * 20 * squashX, 0, 50);
         },
         setMagn: function (magn) {
             rescale (magn);

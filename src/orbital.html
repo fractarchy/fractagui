@@ -184,24 +184,6 @@
                 else
                     uiscale = 100;
 
-                /*
-                if (data["ui-shift"])
-                    try {
-                        if (data["ui-shift"].substr(data["ui-shift"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var uishift = parseFloat (data["ui-shift"].substr(0, data["ui-shift"].length - 1));
-                        if (uishift < 0)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        uishift = 0;
-                        console.log ('Error in init.json: "ui-shift" has to be a percent greater than "0%"');
-                    }
-                else
-                    uishift = 0;
-                */
-
                 if (data["ovals-spacing"])
                     try {
                         if (data["ovals-spacing"].substr(data["ovals-spacing"].length - 1, 1) !== "%")
@@ -465,7 +447,7 @@
             });
         </script>
 
-        <div id="lftbut" style="position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
+        <div id="lftbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
             <svg id="lftbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
 
             <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; transform: scale(2.5);">
@@ -475,46 +457,8 @@
                 </svg>
             </a>
         </div>
-        <script>
-            var magnFactorBut;// = 1.25 * document.body.clientHeight / 1420;
-            
-            function rescaleLftBut () {
-                document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
-            }
-            
-            document.getElementById("lftbuta").addEventListener("click", function (evt) {
-                //if (env.lftBut["action"].substr(0, "javascript:".length) === "javascript:")
-                //    eval (env.lftBut["action"]);
-                //
-                //else {
-                    reload (env["topNode"]);
-                //}
-            }, false);
-            
-            document.getElementById("lftbuta").onmousedown = function (evt) {
-                objOrbit.setMouseOff ();
-            };
 
-            document.getElementById("lftbuta").addEventListener("touchstart", function (evt) {
-                objOrbit.setMouseOff ();
-                document.getElementById("lftbuta").dispatchEvent(new CustomEvent('click'));
-                evt.preventDefault ();
-            }, false);
-            
-            document.getElementById("lftbut").ondragstart = function (evt) {
-                evt.preventDefault ();
-            };
-
-            window.addEventListener('resize', function () {
-                if (env.lftBut) {
-                    var lb = document.getElementById("lftbut");
-                    lb.style.left =  "0.5em";
-                    lb.style.bottom = "0.5em";
-                }
-            });
-        </script>
-
-        <div id="rgtbut" style="opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ right: 1px; bottom: 1px; width: 144px; height: 144px; border-radius: 72px;">
+        <div id="rgtbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ right: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
             <svg id="rgtbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
             
             <a class="hvr" id="zoomr" style="position: absolute; border-radius: 24px; top: 48px; left: 48px;">
@@ -552,8 +496,183 @@
                 </svg>
             </a>
         </div>
-
+        
         <script>
+            function fadein (obj) {
+                var steps = 1;
+                var fade = 0;
+                var fadein1 = function () {
+                    if (fade < 1) {
+                        obj.style.opacity = `${fade}`;
+                        setTimeout (fadein1, 200 / steps);
+                    } else {
+                        obj.style.opacity = `1`;
+                    }
+                    fade += 1 / steps;
+                }
+                fadein1 ();
+            }
+            
+            function reload (topNode) {
+                if (topNode.substr(0, "javascript:".length) !== "javascript:") {
+                    var url = new URL(topNode, xhttp.responseURL).href
+                    nodeTree = {xml: url, parent: {index: 0}};
+                    nodeTree.parent.children = [nodeTree];
+                    objOrbit.setMagn (1);
+                    zoomedOutR ();
+                    divContainer.dispatchEvent(new CustomEvent('redefineData', {detail: nodeTree}));
+                    fadein (divContainer);
+                } else {
+                    eval (topNode);
+                }
+            }
+        </script>
+        
+        <script>
+            function initScreen () {
+                if (env.ovalShadowRadius === 0) {
+                    divContainerWrapper.style.filter = "";
+                } else {
+                    divContainerWrapper.style.filter = " drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
+                }
+                
+                if (env.ovalOpacity)
+                    objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
+
+                /*
+                if (env.backImage) {
+                    //document.body.style.backgroundImage = "url('../" + env.backImage + "')";
+                    //document.body.style.backgroundSize = "cover";
+                    //document.body.style.backgroundPosition = "center";
+                }
+                */
+
+                document.body.style.backgroundImage = "url('" + getRaster (env.quant, env.color1, env.color2).src + "')";
+                document.body.style.backgroundRepeat = "repeat";
+            }
+            
+            function getRaster (quant, color1, color2) {
+                var cnv = document.createElement ("canvas");
+                var pr = Math.min (window.devicePixelRatio, 2)
+                var ps = Math.round (quant / 100 * 4 * Math.max (screen.width, 1920) / 1920);
+                
+                if (ps < pr)
+                    ps = pr;
+                    
+                cnv.width = ps * 2;
+                cnv.height = ps * 2;
+                var ctx = cnv.getContext('2d');
+                ctx.fillStyle = color1
+                ctx.fillRect (0, 0, ps, ps);
+                ctx.fillRect (ps, ps, ps, ps);
+                ctx.fillStyle = color2
+                ctx.fillRect (0, ps, ps, ps);
+                ctx.fillRect (ps, 0, ps, ps);
+                
+                var img = document.createElement ("img");
+                img.src = cnv.toDataURL('image/png');
+                return img;
+            }
+        </script>
+        
+        <script>
+            function initButtons () {
+                if (env.butVisibility === "false") {
+                    document.getElementById("lftbut").style.visibility = "hidden";
+                    document.getElementById("rgtbut").style.visibility = "hidden";
+                } else {
+                    document.getElementById("lftbut").style.visibility = "visible";
+                    document.getElementById("rgtbut").style.visibility = "visible";
+                }
+
+                if (env.butVisibility !== "false") {
+                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor) {
+                        document.getElementById("lftbutsvg").style.stroke = env.butsBorderColor;
+                        document.getElementById("lftbutsvg").style.strokeWidth = "3px";
+                        
+                        document.getElementById("rgtbutsvg").style.stroke = env.butsBorderColor;
+                        document.getElementById("rgtbutsvg").style.strokeWidth = "3px";
+                    }
+
+                    if (env.butShadowRadius > 0) {
+                        document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                        document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
+                    }
+                }
+
+
+                //document.getElementById("lb1").style.stroke = env.butsColor;
+                document.getElementById("lb1").style.fill = env.butsColor;
+
+                document.getElementById("rb1").style.fill = env.butsColor;
+                document.getElementById("rb2").style.fill = env.butsColor;
+                document.getElementById("rb3").style.stroke = env.butsColor;
+                document.getElementById("rb3").style.fill = env.butsColor;
+                document.getElementById("rb4").style.stroke = env.butsColor;
+                document.getElementById("rb4").style.fill = env.butsColor;
+                document.getElementById("rb5").style.stroke = env.butsColor;
+                document.getElementById("rb5").style.fill = env.butsColor;
+                document.getElementById("rb6").style.stroke = env.butsColor;
+                document.getElementById("rb6").style.fill = env.butsColor;
+
+                var ngonsides = 4 * Math.round (8 / (env.quant / 100) * 0.7);
+                if (ngonsides > 100) ngonsides = 100;
+                round (72, 72, 72, 72, ngonsides, document.getElementById("rgtbutsvg"), env.butsBackColor);
+                round (72, 72, 72, 72, ngonsides, document.getElementById("lftbutsvg"), env.butsBackColor);
+            }
+
+            function round (x, y, r1, r2, s, svg, backcolor) {
+                var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                svg.appendChild(polygon);
+
+                var p = [];
+                for (var i = 0.5; i < s; i++) {
+                    p.push ([x + Math.cos (2 * Math.PI / s * i) * r1, y + Math.sin (2 * Math.PI / s * i) * r2]);
+                }
+
+                for (value of p) {
+                    var point = svg.createSVGPoint();
+                    point.x = value[0];
+                    point.y = value[1];
+                    polygon.points.appendItem(point);
+                }
+
+                polygon.style.fill = backcolor;
+            }
+
+            var magnFactorBut;// = 1.25 * document.body.clientHeight / 1420;
+
+            // --- home button --- //
+                function rescaleLftBut () {
+                    document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+                }
+                
+                document.getElementById("lftbuta").addEventListener("click", function (evt) {
+                    reload (env["topNode"]);
+                }, false);
+                
+                document.getElementById("lftbuta").onmousedown = function (evt) {
+                    objOrbit.setMouseOff ();
+                };
+
+                document.getElementById("lftbuta").addEventListener("touchstart", function (evt) {
+                    objOrbit.setMouseOff ();
+                    document.getElementById("lftbuta").dispatchEvent(new CustomEvent('click'));
+                    evt.preventDefault ();
+                }, false);
+                
+                document.getElementById("lftbut").ondragstart = function (evt) {
+                    evt.preventDefault ();
+                };
+
+                window.addEventListener('resize', function () {
+                    var lb = document.getElementById("lftbut");
+                    lb.style.left =  "0.5em";
+                    lb.style.bottom = "0.5em";
+                });
+
+            // --- home button end --- //
+
             // --- navigator --- //
 
                 function rescaleRgtBut () {
@@ -673,167 +792,11 @@
                     objOrbit.setMouseOn ();
                     divContainer.dispatchEvent(new CustomEvent('mouseup', null));
                 }, false);
-                
             // --- navigator end --- //
         </script>
-        
-        <script>
-            function fadein (obj) {
-                var steps = 1;
-                var fade = 0;
-                var fadein1 = function () {
-                    if (fade < 1) {
-                        obj.style.opacity = `${fade}`;
-                        setTimeout (fadein1, 200 / steps);
-                    } else {
-                        obj.style.opacity = `1`;
-                    }
-                    fade += 1 / steps;
-                }
-                fadein1 ();
-            }
-            
-            function reload (topNode) {
-                if (topNode.substr(0, "javascript:".length) !== "javascript:") {
-                    var url = new URL(topNode, xhttp.responseURL).href
-                    nodeTree = {xml: url, parent: {index: 0}};
-                    nodeTree.parent.children = [nodeTree];
-                    objOrbit.setMagn (1);
-                    zoomedOutR ();
-                    divContainer.dispatchEvent(new CustomEvent('redefineData', {detail: nodeTree}));
-                    fadein (divContainer);
-                } else {
-                    eval (topNode);
-                }
-            }
-        </script>
-        
-        <script>
-            function initButtons () {
-                if (env.butVisibility === "false") {
-                    document.getElementById("lftbut").style.visibility = "hidden";
-                } else {
-                    document.getElementById("lftbut").style.visibility = "visible";
-                }
-                
-                if (env.butVisibility === "false") {
-                    document.getElementById("rgtbut").style.visibility = "hidden";
-                } else {
-                    document.getElementById("rgtbut").style.visibility = "visible";
-                }
-            
-                if (env.butVisibility !== "false") {
-                    if (env.butShadowRadius > 0)
-                        document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                        
-                    //document.getElementById("lftbut").style.backgroundColor = env.butsBackColor;
-                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor) {
-                        //document.getElementById("lftbut").style.border = "3px solid " + env.butsBorderColor;
-                        document.getElementById("lftbutsvg").style.stroke = env.butsBorderColor;
-                        document.getElementById("lftbutsvg").style.strokeWidth = "3px";
-                        
-                        document.getElementById("rgtbutsvg").style.stroke = env.butsBorderColor;
-                        document.getElementById("rgtbutsvg").style.strokeWidth = "3px";
-                    }
-                    //document.getElementById("lftbuti").src = "../" + env.lftBut["icon"];
-                    //document.getElementById("lftbuti").title = env.lftBut["tooltip"];
 
-                    if (env.butShadowRadius > 0)
-                        document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                        
-                    //document.getElementById("rgtbut").style.backgroundColor = env.butsBackColor;
-                    //if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor)
-                    //    document.getElementById("rgtbut").style.border = "3px solid " + env.butsBorderColor;
-                }
-
-
-                //document.getElementById("lb1").style.stroke = env.butsColor;
-                document.getElementById("lb1").style.fill = env.butsColor;
-
-                document.getElementById("rb1").style.fill = env.butsColor;
-                document.getElementById("rb2").style.fill = env.butsColor;
-                document.getElementById("rb3").style.stroke = env.butsColor;
-                document.getElementById("rb3").style.fill = env.butsColor;
-                document.getElementById("rb4").style.stroke = env.butsColor;
-                document.getElementById("rb4").style.fill = env.butsColor;
-                document.getElementById("rb5").style.stroke = env.butsColor;
-                document.getElementById("rb5").style.fill = env.butsColor;
-                document.getElementById("rb6").style.stroke = env.butsColor;
-                document.getElementById("rb6").style.fill = env.butsColor;
-
-                var ngonsides = 4 * Math.round (8 / (env.quant / 100) * 0.7);
-                if (ngonsides > 100) ngonsides = 100;
-                round (72, 72, 72, 72, ngonsides, document.getElementById("rgtbutsvg"), env.butsBackColor);
-                round (72, 72, 72, 72, ngonsides, document.getElementById("lftbutsvg"), env.butsBackColor);
-            }
-            
-            function initScreen () {
-                if (env.ovalShadowRadius === 0) {
-                    divContainerWrapper.style.filter = "";
-                } else {
-                    divContainerWrapper.style.filter = " drop-shadow(0px 0px " + objOrbit.getRadius () * env.ovalShadowRadius / 100 + "px " + env.ovalShadowColor + ") ";
-                }
-                
-                if (env.ovalOpacity)
-                    objOrbit.getCnv().style.filter = "opacity(" + env.ovalOpacity + ")";
-
-                /*
-                if (env.backImage) {
-                    //document.body.style.backgroundImage = "url('../" + env.backImage + "')";
-                    //document.body.style.backgroundSize = "cover";
-                    //document.body.style.backgroundPosition = "center";
-                }
-                */
-
-                document.body.style.backgroundImage = "url('" + getRaster (env.quant, env.color1, env.color2).src + "')";
-                document.body.style.backgroundRepeat = "repeat";
-            }
-            
-            function getRaster (quant, color1, color2) {
-                var cnv = document.createElement ("canvas");
-                var pr = Math.min (window.devicePixelRatio, 2)
-                var ps = Math.round (quant / 100 * 4 * Math.max (screen.width, 1920) / 1920);
-                
-                if (ps < pr)
-                    ps = pr;
-                    
-                cnv.width = ps * 2;
-                cnv.height = ps * 2;
-                var ctx = cnv.getContext('2d');
-                ctx.fillStyle = color1
-                ctx.fillRect (0, 0, ps, ps);
-                ctx.fillRect (ps, ps, ps, ps);
-                ctx.fillStyle = color2
-                ctx.fillRect (0, ps, ps, ps);
-                ctx.fillRect (ps, 0, ps, ps);
-                
-                var img = document.createElement ("img");
-                img.src = cnv.toDataURL('image/png');
-                return img;
-            }
-        </script>
-        
         <script>
             init ();
-
-            function round (x, y, r1, r2, s, svg, backcolor) {
-                var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                svg.appendChild(polygon);
-
-                var p = [];
-                for (var i = 0.5; i < s; i++) {
-                    p.push ([x + Math.cos (2 * Math.PI / s * i) * r1, y + Math.sin (2 * Math.PI / s * i) * r2]);
-                }
-
-                for (value of p) {
-                    var point = svg.createSVGPoint();
-                    point.x = value[0];
-                    point.y = value[1];
-                    polygon.points.appendItem(point);
-                }
-
-                polygon.style.fill = backcolor;
-            }
         </script>
       </section>
     </body>

@@ -66,5 +66,5 @@
 
 - v 0.9 - beta  
     - compacting designer experience  
-
+    - updated scaling policy  
     

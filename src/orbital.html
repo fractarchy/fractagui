@@ -70,11 +70,12 @@
                     magnFactorBut = 1.25 * document.body.clientWidth / 1920;
                 }
                 else {
-                    magnFactorBut = 1.25 * document.body.clientHeight / 1080 / 2;
+                    magnFactorBut = 1.25 * document.body.clientHeight / 1920;
                 }
                 if (window.devicePixelRatio > 1) {
                     magnFactorBut *= 1.5;
                 }
+                
                 rescaleLftBut ();
                 rescaleRgtBut ();
             }
@@ -135,7 +136,6 @@
                 data["buttons-shadow-color"] = undefined;
                 data["color-1"] = "rgb(208,208,208)";
                 data["color-2"] = "rgb(48,48,48)";
-                data["buttons-visible"] = "false"
 
                 if (data["power-consumption-optimisation"])
                     try {

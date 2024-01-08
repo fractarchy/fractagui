@@ -1,6 +1,7 @@
 {
     "home": "contents/c-0.xml",
     "orientation": "south",
+    "buttons-visible": "true",
     "ovals-spacing": "0.5%",
     "contents-scale": "100%",
     "ui-scale": "140%"

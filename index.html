@@ -71,19 +71,233 @@
                 bd.style.height = "100%";
             };
 
-            window.addEventListener('resize', function () {
+            window.addEventListener ('resize', function () {
                 setSize ();
             });
 
-            window.addEventListener("orientationchange", function () {
+            window.addEventListener ("orientationchange", function () {
                 setSize ();
             });
             
-            document.getElementById("body").addEventListener("touchstart", function (evt) {
+            document.getElementById ("body").addEventListener ("touchstart", function (evt) {
                 evt.preventDefault ();
             }, false);
 
             setSize();
+        </script>
+        
+        <div id="lftbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
+            <svg id="lftbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
+
+            <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; border-radius: 24px; transform: scale(2.5);">
+                <svg id="home" xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 120 960 960">
+                    <title>home</title>
+                    <path id="lb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M225.385 870.615h155.77v-245h197.69v245h155.77V488.693L480 296.77 225.385 488.564v382.051Zm-45.384 45.384V466.001L480 240.233l299.999 225.768v449.998H533.462v-245H426.538v245H180.001ZM480 583.385Z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div id="rgtbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ right: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
+            <svg id="rgtbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
+            
+            <a class="hvr" id="zoomr" style="position: absolute; border-radius: 24px; top: 48px; left: 48px;">
+                <svg id="zoominr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: block; transform: scale(0.8);">
+                    <title>zoom in to enter panning mode</title>
+                    <path id="rb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M7.2 43.25 4.75 40.8l7.15-7.15H5.7v-3.4h12.05V42.3h-3.4v-6.2Zm33.6 0-7.15-7.15v6.2h-3.4V30.25H42.3v3.4h-6.2l7.15 7.15ZM5.7 17.75v-3.4h6.2L4.75 7.2 7.2 4.75l7.15 7.15V5.7h3.4v12.05Zm24.55 0V5.7h3.4v6.2l7.2-7.2 2.45 2.45-7.2 7.2h6.2v3.4Z"/>
+                </svg>
+                <svg id="zoomoutr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: none; transform: scale(0.8);">
+                    <title>zoom out to enter navigating mode</title>
+                    <path id="rb2" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M5.7 42.3V30.25h3.4v6.2l7.2-7.2 2.45 2.45-7.2 7.2h6.2v3.4Zm24.55 0v-3.4h6.2l-7.15-7.15 2.45-2.45 7.15 7.15v-6.2h3.4V42.3Zm-14-23.6L9.1 11.55v6.2H5.7V5.7h12.05v3.4h-6.2l7.15 7.15Zm15.5 0-2.45-2.45 7.15-7.15h-6.2V5.7H42.3v12.05h-3.4v-6.2Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="northr" style="position: absolute; border-radius: 24px; top: 0px; left: 48px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go north</title>
+                    <path id="rb3" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M433 907V425L216 643l-67-67 331-331 331 331-66 67-218-218v482h-94Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="westr" style="position: absolute; border-radius: 24px; bottom: 48px; left: 0px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go west</title>
+                    <path id="rb4" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M480 907 149 576l331-331 67 66-217 218h481v94H330l217 217-67 67Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="eastr" style="position: absolute; border-radius: 24px; top: 48px; right: 0px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go east</title>
+                    <path id="rb5" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="m480 907-67-68 217-216H149v-94h481L413 312l67-67 331 331-331 331Z"/>
+                </svg>
+            </a>
+            <a class="hvr" id="southr" style="position: absolute; border-radius: 24px; bottom: 0px; right: 48px;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
+                    <title>go south</title>
+                    <path id="rb6" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M480 907 149 576l67-67 217 217V245h94v481l218-217 66 67-331 331Z"/>
+                </svg>
+            </a>
+        </div>
+        
+        <script src="src/buttons.js"></script>
+        
+        
+        <script>
+            var msgOverlay = (event) => {
+                if (event.data.msg === "zoomedInR") {
+                    zoomedInR ();
+
+                } else if (event.data.msg === "zoomedOutR") {
+                    zoomedOutR ();
+                }
+            };
+            
+            window.addEventListener("message", msgOverlay, false);
+        </script>
+
+        <script src="src/init.js"></script>
+        
+        <script>
+            function initEnv (data) {
+                data["power-consumption-optimisation"] = "75%";
+                data["ovals-border"] = "false";
+                data["ovals-shadow-radius"] = undefined;
+                data["ovals-shadow-color"] = undefined;
+                data["buttons-shadow-radius"] = undefined;
+                data["buttons-shadow-color"] = undefined;
+                data["foreground-color"] = "rgb(48,48,48)";
+                data["background-color"] = "rgb(208,208,208)";
+
+                if (data["power-consumption-optimisation"])
+                    try {
+                        if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
+                        if (quant <= 0 || quant > 300)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        quant = 75;
+                        console.log ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%" and less than "300%"');
+                    }
+                else
+                    quant = 75;
+
+                if (data["contents-scale"])
+                    try {
+                        if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var cscale = parseFloat (data["contents-scale"].substr(0, data["contents-scale"].length - 1));
+                        if (cscale <= 0)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        cscale = 100;
+                        console.log ('Error in init.json: "contents-scale" hast to be a percent greater than "0%"');
+                    }
+                else
+                    cscale = 100;
+                
+                if (data["ui-scale"])
+                    try {
+                        if (data["ui-scale"].substr(data["ui-scale"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var uiscale = parseFloat (data["ui-scale"].substr(0, data["ui-scale"].length - 1));
+                        if (uiscale <= 0 || uiscale > 150)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        uiscale = 100;
+                        console.log ('Error in init.json: "ui-scale" has to be a percent between than "0%" and "150%"');
+                    }
+                else
+                    uiscale = 100;
+
+                if (data["ovals-spacing"])
+                    try {
+                        if (data["ovals-spacing"].substr(data["ovals-spacing"].length - 1, 1) !== "%")
+                            throw new error ();
+                        
+                        var ovalSpacing = parseFloat (data["ovals-spacing"].substr(0, data["ovals-spacing"].length - 1));
+                        if (ovalSpacing < 0 || ovalSpacing >= 100)
+                            throw new error ();
+                        
+                    } catch (e) {
+                        ovalSpacing = 0;
+                        console.log ('Error in init.json: "ovals-spacing" has to be a percent between "0%" and "100%"');
+                    }
+                else
+                    ovalSpacing = 0;
+
+                data["oval-opacity"] = 1;
+                if (!data["background-color"])
+                    data["background-color"] = "rgb(208,208,208)";
+                
+                if (!data["foreground-color"])
+                    data["foreground-color"] = "rgb(48,48,48)";
+                
+
+                if (!data["ovals-border"])
+                    data["ovals-border"] = "false";
+                
+                var osradius
+                if (data["ovals-shadow-radius"]) {
+                    osradius = parseFloat (data["ovals-shadow-radius"]);
+                    
+                } else {
+                    osradius = 0;
+                }
+                
+                var bsradius;
+                if (data["buttons-shadow-radius"]) {
+                    bsradius = parseFloat (data["buttons-shadow-radius"]);
+                    
+                } else {
+                    bsradius = 0;
+                }
+                
+                if (data["buttons-visible"]) {
+                    butVisibility =  data["buttons-visible"];
+                    
+                } else {
+                    butVisibility = "false";
+                }
+                
+                return {
+                    topNode: data["home"],
+                    
+                    color1: data["background-color"],
+                    color2: data["foreground-color"],
+
+                    orientation: data["orientation"] === "north" ? "north": "south",
+                    contentScale: cscale,
+                    uiscale: uiscale,
+                    uishift: uiscale <= 100 ? 0 : ((uiscale - 100) / 4),
+                    quant: quant,
+                    ovalSpacing: ovalSpacing,
+                    ovalBackColor: data["background-color"],
+                    ovalBorder: (data["ovals-border"] === "false" ? "false" : data["color-2"]),
+                    ovalOpacity: data["oval-opacity"],
+                    ovalShadowRadius: osradius,
+                    ovalShadowColor: data["ovals-shadow-color"],
+                    butsColor: data["background-color"],
+                    butsBackColor: data["foreground-color"],
+                    butsBorderColor: (data["ovals-border"] === "false" ? false : data["background-color"]),
+                    butShadowRadius: bsradius,
+                    butShadowColor: data["buttons-shadow-color"],
+                    butVisibility: butVisibility
+                }
+            }
+        </script>
+        
+        <script>
+            document.getElementById ("body").onload = function () {
+                initProps ((fileJSON, home) => {
+                    var env = initEnv (fileJSON);
+                    initButtons (env);
+                    document.getElementById ("body").contentWindow.postMessage({msg: "init", home: home, env: env}, "*");
+                });
+            }
         </script>
     </body>
 </html>

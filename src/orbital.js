@@ -801,10 +801,12 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                 ctx.lineTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * i), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * i));
             }
             ctx.lineWidth = lw;
+            ctx.fillStyle = "rgb(208,208,208)"
             if (data.backColor)
                 ctx.fillStyle = data.backColor;
             else
                 ctx.fillStyle = fill;
+                
             ctx.fill ();
             ctx.closePath ();
 
@@ -815,6 +817,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                     ctx.lineTo(xa + (ra - lw / 2) * Math.cos (2 * Math.PI / n * i), ya + (ra - lw / 2) * Math.sin (2 * Math.PI / n * i));
                 }
                 ctx.lineWidth = lw;
+                ctx.strokeStyle = "rgb(48,48,48)";
                 ctx.strokeStyle = stroke;
                 ctx.stroke ();
                 ctx.closePath ();

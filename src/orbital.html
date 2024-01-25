@@ -65,19 +65,6 @@
                     if (loadedOvals[i] && loadedOvals[i].ifr)
                         window.postMessage({msg: "resize", index: i, width: loadedOvals[i].ifr.clientWidth, height: loadedOvals[i].ifr.clientHeight}, "*");
                 }
-
-                if (document.body.clientWidth > document.body.clientHeight) {
-                    magnFactorBut = 1.25 * document.body.clientWidth / 1920;
-                }
-                else {
-                    magnFactorBut = 1.25 * document.body.clientHeight / 1920;
-                }
-                if (window.devicePixelRatio > 1) {
-                    magnFactorBut *= 1.5;
-                }
-                
-                rescaleLftBut ();
-                rescaleRgtBut ();
             }
 
             function dispatchSize () {
@@ -90,7 +77,6 @@
 
             wonload = function () {
                 setSize ();
-                document.getElementById("rgtbut").style.transform = document.getElementById("rgtbut").style.transform + " " + (env.orientation === "north" ? "rotate(" + Math.PI + "rad) " : "")
                 objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorder, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalSpacing / 100, env.orientation === "north" ? Math.PI: 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
                 
 
@@ -125,140 +111,6 @@
                 });
                 
                 window.dispatchEvent(new CustomEvent('resize'));
-            }
-            
-            function setupEnv (data) {
-                data["power-consumption-optimisation"] = "75%";
-                data["ovals-border"] = "false";
-                data["ovals-shadow-radius"] = undefined;
-                data["ovals-shadow-color"] = undefined;
-                data["buttons-shadow-radius"] = undefined;
-                data["buttons-shadow-color"] = undefined;
-                data["color-1"] = "rgb(208,208,208)";
-                data["color-2"] = "rgb(48,48,48)";
-
-                if (data["power-consumption-optimisation"])
-                    try {
-                        if (data["power-consumption-optimisation"].substr(data["power-consumption-optimisation"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var quant = parseFloat (data["power-consumption-optimisation"].substr(0, data["power-consumption-optimisation"].length - 1));
-                        if (quant <= 0 || quant > 300)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        quant = 75;
-                        console.log ('Error in init.json: "power-consumption-optimisation" has to be a percent greater than "0%" and less than "300%"');
-                    }
-                else
-                    quant = 75;
-
-                if (data["contents-scale"])
-                    try {
-                        if (data["contents-scale"].substr(data["contents-scale"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var cscale = parseFloat (data["contents-scale"].substr(0, data["contents-scale"].length - 1));
-                        if (cscale <= 0)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        cscale = 100;
-                        console.log ('Error in init.json: "contents-scale" hast to be a percent greater than "0%"');
-                    }
-                else
-                    cscale = 100;
-                
-                if (data["ui-scale"])
-                    try {
-                        if (data["ui-scale"].substr(data["ui-scale"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var uiscale = parseFloat (data["ui-scale"].substr(0, data["ui-scale"].length - 1));
-                        if (uiscale <= 0 || uiscale > 150)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        uiscale = 100;
-                        console.log ('Error in init.json: "ui-scale" has to be a percent between than "0%" and "150%"');
-                    }
-                else
-                    uiscale = 100;
-
-                if (data["ovals-spacing"])
-                    try {
-                        if (data["ovals-spacing"].substr(data["ovals-spacing"].length - 1, 1) !== "%")
-                            throw new error ();
-                        
-                        var ovalSpacing = parseFloat (data["ovals-spacing"].substr(0, data["ovals-spacing"].length - 1));
-                        if (ovalSpacing < 0 || ovalSpacing >= 100)
-                            throw new error ();
-                        
-                    } catch (e) {
-                        ovalSpacing = 0;
-                        console.log ('Error in init.json: "ovals-spacing" has to be a percent between "0%" and "100%"');
-                    }
-                else
-                    ovalSpacing = 0;
-
-                data["oval-opacity"] = 1;
-                if (!data["color-1"])
-                    data["color-1"] = "white";
-                
-                if (!data["color-2"])
-                    data["color-2"] = "black";
-                
-
-                if (!data["ovals-border"])
-                    data["ovals-border"] = "false";
-                
-                var osradius
-                if (data["ovals-shadow-radius"]) {
-                    osradius = parseFloat (data["ovals-shadow-radius"]);
-                    
-                } else {
-                    osradius = 0;
-                }
-                
-                var bsradius;
-                if (data["buttons-shadow-radius"]) {
-                    bsradius = parseFloat (data["buttons-shadow-radius"]);
-                    
-                } else {
-                    bsradius = 0;
-                }
-                
-                if (data["buttons-visible"]) {
-                    butVisibility =  data["buttons-visible"];
-                    
-                } else {
-                    butVisibility = "false";
-                }
-                
-                return {
-                    topNode: data["home"],
-                    
-                    color1: data["color-1"],
-                    color2: data["color-2"],
-
-                    orientation: data["orientation"] === "north" ? "north": "south",
-                    contentScale: cscale,
-                    uiscale: uiscale,
-                    uishift: uiscale <= 100 ? 0 : ((uiscale - 100) / 4),
-                    quant: quant,
-                    ovalSpacing: ovalSpacing,
-                    ovalBackColor: data["color-1"],
-                    ovalBorder: (data["ovals-border"] === "false" ? "false" : data["color-2"]),
-                    ovalOpacity: data["oval-opacity"],
-                    ovalShadowRadius: osradius,
-                    ovalShadowColor: data["ovals-shadow-color"],
-                    butsColor: data["color-1"],
-                    butsBackColor: data["color-2"],
-                    butsBorderColor: (data["ovals-border"] === "false" ? "false" : data["color-1"]),
-                    butShadowRadius: bsradius,
-                    butShadowColor: data["buttons-shadow-color"],
-                    butVisibility: butVisibility
-                }
             }
 
             var pauseLoading;
@@ -370,40 +222,6 @@
                 }
             }
 
-            var env;
-            var xhttp;
-            function init () {
-                xhttp = new XMLHttpRequest ();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        try {
-                            init = JSON.parse (this.responseText);
-                        } catch (e) {
-                            alert ('Error:\n' + e.message);
-                            throw e;
-                        }
-                        
-                        env = setupEnv (init);
-                        
-                        if (env.midButs && env.midButs[0].action === env.topNode)
-                            midbutindex = 0;
-                        else
-                            midbutindex = -1;
-
-                        initButtons ();
-                        
-                        var url = new URL(env.topNode, xhttp.responseURL).href
-                        nodeTree = {xml: url, parent: {index: 0}};
-                        nodeTree.parent.children = [nodeTree];
-                        
-                        document.body.style.backgroundColor = env.backColor;
-                        window.addEventListener("load", wonload ());
-                    }
-                };
-                xhttp.open("GET", "../init.json"/* + "?" + Date.now()*/, true);
-                xhttp.overrideMimeType("text/plain");
-                xhttp.send();
-            }
             
             var nodeTree, objOrbit;
             
@@ -448,56 +266,6 @@
             });
         </script>
 
-        <div id="lftbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
-            <svg id="lftbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
-
-            <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; transform: scale(2.5);">
-                <svg id="home" xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 142 960 960">
-                    <title>home</title>
-                    <path id="lb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M225.385 870.615h155.77v-245h197.69v245h155.77V488.693L480 296.77 225.385 488.564v382.051Zm-45.384 45.384V466.001L480 240.233l299.999 225.768v449.998H533.462v-245H426.538v245H180.001ZM480 583.385Z"/>
-                </svg>
-            </a>
-        </div>
-
-        <div id="rgtbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ right: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
-            <svg id="rgtbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
-            
-            <a class="hvr" id="zoomr" style="position: absolute; border-radius: 24px; top: 48px; left: 48px;">
-                <svg id="zoominr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: block; transform: scale(0.8);">
-                    <title>zoom in to enter panning mode</title>
-                    <path id="rb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M7.2 43.25 4.75 40.8l7.15-7.15H5.7v-3.4h12.05V42.3h-3.4v-6.2Zm33.6 0-7.15-7.15v6.2h-3.4V30.25H42.3v3.4h-6.2l7.15 7.15ZM5.7 17.75v-3.4h6.2L4.75 7.2 7.2 4.75l7.15 7.15V5.7h3.4v12.05Zm24.55 0V5.7h3.4v6.2l7.2-7.2 2.45 2.45-7.2 7.2h6.2v3.4Z"/>
-                </svg>
-                <svg id="zoomoutr" xmlns="http://www.w3.org/2000/svg" height="48" width="48" style="display: none; transform: scale(0.8);">
-                    <title>zoom out to enter navigating mode</title>
-                    <path id="rb2" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M5.7 42.3V30.25h3.4v6.2l7.2-7.2 2.45 2.45-7.2 7.2h6.2v3.4Zm24.55 0v-3.4h6.2l-7.15-7.15 2.45-2.45 7.15 7.15v-6.2h3.4V42.3Zm-14-23.6L9.1 11.55v6.2H5.7V5.7h12.05v3.4h-6.2l7.15 7.15Zm15.5 0-2.45-2.45 7.15-7.15h-6.2V5.7H42.3v12.05h-3.4v-6.2Z"/>
-                </svg>
-            </a>
-            <a class="hvr" id="northr" style="position: absolute; border-radius: 24px; top: 0px; left: 48px;">
-                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
-                    <title>go north</title>
-                    <path id="rb3" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M433 907V425L216 643l-67-67 331-331 331 331-66 67-218-218v482h-94Z"/>
-                </svg>
-            </a>
-            <a class="hvr" id="westr" style="position: absolute; border-radius: 24px; bottom: 48px; left: 0px;">
-                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
-                    <title>go west</title>
-                    <path id="rb4" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M480 907 149 576l331-331 67 66-217 218h481v94H330l217 217-67 67Z"/>
-                </svg>
-            </a>
-            <a class="hvr" id="eastr" style="position: absolute; border-radius: 24px; top: 48px; right: 0px;">
-                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
-                    <title>go east</title>
-                    <path id="rb5" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="m480 907-67-68 217-216H149v-94h481L413 312l67-67 331 331-331 331Z"/>
-                </svg>
-            </a>
-            <a class="hvr" id="southr" style="position: absolute; border-radius: 24px; bottom: 0px; right: 48px;">
-                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 96 960 960" style="display: block; transform: scale(0.8);">
-                    <title>go south</title>
-                    <path id="rb6" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M480 907 149 576l67-67 217 217V245h94v481l218-217 66 67-331 331Z"/>
-                </svg>
-            </a>
-        </div>
-        
         <script>
             function fadein (obj) {
                 var steps = 1;
@@ -516,8 +284,7 @@
             
             function reload (topNode) {
                 if (topNode.substr(0, "javascript:".length) !== "javascript:") {
-                    var url = new URL(topNode, xhttp.responseURL).href
-                    nodeTree = {xml: url, parent: {index: 0}};
+                    nodeTree = {xml: home, parent: {index: 0}};
                     nodeTree.parent.children = [nodeTree];
                     objOrbit.setMagn (1);
                     zoomedOutR ();
@@ -563,10 +330,12 @@
                 cnv.width = ps * 2;
                 cnv.height = ps * 2;
                 var ctx = cnv.getContext('2d');
-                ctx.fillStyle = color1
+                ctx.fillStyle = "rgb(208,208,208)";
+                ctx.fillStyle = color1;
                 ctx.fillRect (0, 0, ps, ps);
                 ctx.fillRect (ps, ps, ps, ps);
-                ctx.fillStyle = color2
+                ctx.fillStyle = "rgb(48,48,48)";
+                ctx.fillStyle = color2;
                 ctx.fillRect (0, ps, ps, ps);
                 ctx.fillRect (ps, 0, ps, ps);
                 
@@ -577,227 +346,126 @@
         </script>
         
         <script>
-            function initButtons () {
-                if (env.butVisibility === "false") {
-                    document.getElementById("lftbut").style.visibility = "hidden";
-                    document.getElementById("rgtbut").style.visibility = "hidden";
-                } else {
-                    document.getElementById("lftbut").style.visibility = "visible";
-                    document.getElementById("rgtbut").style.visibility = "visible";
-                }
-
-                if (env.butVisibility !== "false") {
-                    if (env.butsBorderColor && env.butsBorderColor !== env.butsBackColor) {
-                        document.getElementById("lftbutsvg").style.stroke = env.butsBorderColor;
-                        document.getElementById("lftbutsvg").style.strokeWidth = "3px";
-                        
-                        document.getElementById("rgtbutsvg").style.stroke = env.butsBorderColor;
-                        document.getElementById("rgtbutsvg").style.strokeWidth = "3px";
-                    }
-
-                    if (env.butShadowRadius > 0) {
-                        document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                        document.getElementById("rgtbut").style.filter += " drop-shadow(0px 0px " + env.butShadowRadius + "px " + env.butShadowColor + ")";
-                    }
-                }
-
-
-                //document.getElementById("lb1").style.stroke = env.butsColor;
-                document.getElementById("lb1").style.fill = env.butsColor;
-
-                document.getElementById("rb1").style.fill = env.butsColor;
-                document.getElementById("rb2").style.fill = env.butsColor;
-                document.getElementById("rb3").style.stroke = env.butsColor;
-                document.getElementById("rb3").style.fill = env.butsColor;
-                document.getElementById("rb4").style.stroke = env.butsColor;
-                document.getElementById("rb4").style.fill = env.butsColor;
-                document.getElementById("rb5").style.stroke = env.butsColor;
-                document.getElementById("rb5").style.fill = env.butsColor;
-                document.getElementById("rb6").style.stroke = env.butsColor;
-                document.getElementById("rb6").style.fill = env.butsColor;
-
-                var ngonsides = 4 * Math.round (8 / (env.quant / 100) * 0.7);
-                if (ngonsides > 100) ngonsides = 100;
-                round (72, 72, 72, 72, ngonsides, document.getElementById("rgtbutsvg"), env.butsBackColor);
-                round (72, 72, 72, 72, ngonsides, document.getElementById("lftbutsvg"), env.butsBackColor);
-            }
-
-            function round (x, y, r1, r2, s, svg, backcolor) {
-                var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                svg.appendChild(polygon);
-
-                var p = [];
-                for (var i = 0.5; i < s; i++) {
-                    p.push ([x + Math.cos (2 * Math.PI / s * i) * r1, y + Math.sin (2 * Math.PI / s * i) * r2]);
-                }
-
-                for (value of p) {
-                    var point = svg.createSVGPoint();
-                    point.x = value[0];
-                    point.y = value[1];
-                    polygon.points.appendItem(point);
-                }
-
-                polygon.style.fill = backcolor;
-            }
-
-            var magnFactorBut;// = 1.25 * document.body.clientHeight / 1420;
-
-            // --- home button --- //
-                function rescaleLftBut () {
-                    document.getElementById("lftbut").style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
-                }
-                
-                document.getElementById("lftbuta").addEventListener("click", function (evt) {
+            var msgOverlay = (event) => {
+                if (event.data.msg === "lftbutaClick") {
                     reload (env["topNode"]);
-                }, false);
-                
-                document.getElementById("lftbuta").onmousedown = function (evt) {
+
+                } else if (event.data.msg === "lftbutaMouseDown") {
                     objOrbit.setMouseOff ();
-                };
 
-                document.getElementById("lftbuta").addEventListener("touchstart", function (evt) {
+                } else if (event.data.msg === "lftbutaTouchstart") {
                     objOrbit.setMouseOff ();
-                    document.getElementById("lftbuta").dispatchEvent(new CustomEvent('click'));
-                    evt.preventDefault ();
-                }, false);
-                
-                document.getElementById("lftbut").ondragstart = function (evt) {
-                    evt.preventDefault ();
-                };
 
-                window.addEventListener('resize', function () {
-                    var lb = document.getElementById("lftbut");
-                    lb.style.left =  "0.5em";
-                    lb.style.bottom = "0.5em";
-                });
+                } else if (event.data.msg === "lftbutaDragstart") {
 
-            // --- home button end --- //
-
-            // --- navigator --- //
-
-                function rescaleRgtBut () {
-                    document.getElementById("rgtbut").style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") " + (env["orientation"] === "north" ? " rotate(180deg)" : "");
                 }
                 
-                // --- zooming start --- //
-                    
-                    document.getElementById("zoominr").addEventListener("touchstart", function (evt) {
-                        document.getElementById("zoominr").dispatchEvent(new CustomEvent('click'));
-                        evt.preventDefault ();
-                    }, false);
+                if (event.data.msg === "zoominrClick") {
+                    objOrbit.zoomIn ();
 
-                    document.getElementById("zoomoutr").addEventListener("touchstart", function (evt) {
-                        document.getElementById("zoomoutr").dispatchEvent(new CustomEvent('click'));
-                        evt.preventDefault ();
-                    }, false);
-
-                    document.getElementById("zoominr").addEventListener('click', () => {
-                        objOrbit.zoomIn ();
-                    }, false);
-
-                    document.getElementById("zoomoutr").addEventListener('click', () => {
-                        objOrbit.zoomOut ();
-                    }, false);
-                    
-                    function zoomedInR () {
-                        document.getElementById("zoominr").style.display = "none";
-                        document.getElementById("zoomoutr").style.display = "block";
-                    }
-                    
-                    function zoomedOutR () {
-                        document.getElementById("zoomoutr").style.display = "none";
-                        document.getElementById("zoominr").style.display = "block";
-                    }
-                    
-                    function zoomingOutR () {
-                    }
-                    
-                    function zoomingInR () {
-                    }
-                    
-                // --- zooming end --- //
+                } else if (event.data.msg === "zoomoutrClick") {
+                    objOrbit.zoomOut ();
+                }
                 
-                // --- movement --- //
+                if (event.data.msg === "northrTouchstart") {
+                    document.getElementById("northr").dispatchEvent(new CustomEvent('touchstart'));
+                    evt.preventDefault ();
 
-                    document.getElementById("northr").addEventListener("touchstart", function (evt) {
-                        document.getElementById("northr").dispatchEvent(new CustomEvent('click'));
-                        evt.preventDefault ();
-                    }, false);
+                } else if (event.data.msg === "southTouchstart") {
+                    document.getElementById("southr").dispatchEvent(new CustomEvent('touchstart'));
+                    evt.preventDefault ();
 
-                    document.getElementById("southr").addEventListener("touchstart", function (evt) {
-                        document.getElementById("southr").dispatchEvent(new CustomEvent('click'));
-                        evt.preventDefault ();
-                    }, false);
+                } else if (event.data.msg === "eastrTouchstart") {
+                    document.getElementById("eastr").dispatchEvent(new CustomEvent('touchstart'));
+                    evt.preventDefault ();
 
-                    document.getElementById("eastr").addEventListener("touchstart", function (evt) {
-                        document.getElementById("eastr").dispatchEvent(new CustomEvent('click'));
-                        evt.preventDefault ();
-                    }, false);
+                } else if (event.data.msg === "westrTouchstart") {
+                    document.getElementById("westr").dispatchEvent(new CustomEvent('touchstart'));
+                    evt.preventDefault ();
+                }
 
-                    document.getElementById("westr").addEventListener("touchstart", function (evt) {
-                        document.getElementById("westr").dispatchEvent(new CustomEvent('click'));
-                        evt.preventDefault ();
-                    }, false);
+                if (event.data.msg === "northrClick") {
+                    if (objOrbit.getMagn() === 1)
+                        objOrbit.levelUp ();
+                    else
+                        objOrbit.slideUp ();
+                
+                } else if (event.data.msg === "southrClick") {
+                    if (objOrbit.getMagn() === 1)
+                        objOrbit.levelDown ();
+                    else
+                        objOrbit.slideDown ()
 
-                    document.getElementById("northr").addEventListener('click', () => {
-                        if (objOrbit.getMagn() === 1)
-                            objOrbit.levelUp ();
-                        else
-                            objOrbit.slideUp ();
-                    }, false);
-                    
-                    document.getElementById("southr").addEventListener('click', () => {
-                        if (objOrbit.getMagn() === 1)
-                            objOrbit.levelDown ();
-                        else
-                            objOrbit.slideDown ()
-                    }, false);
+                } else if (event.data.msg === "eastrClick") {
+                    if (objOrbit.getMagn() === 1)
+                        objOrbit.rotCounterClockwise ();
+                    else
+                        objOrbit.slideRight ();
+                
+                } else if (event.data.msg === "westrClick") {
+                    if (objOrbit.getMagn() === 1)
+                        objOrbit.rotClockwise ();
+                    else
+                        objOrbit.slideLeft ();
+                }
 
-                    document.getElementById("eastr").addEventListener('click', () => {
-                        if (objOrbit.getMagn() === 1)
-                            objOrbit.rotCounterClockwise ();
-                        else
-                            objOrbit.slideRight ();
-                    }, false);
-                    
-                    document.getElementById("westr").addEventListener('click', () => {
-                        if (objOrbit.getMagn() === 1)
-                            objOrbit.rotClockwise ();
-                        else
-                            objOrbit.slideLeft ();
-                    }, false);
-
-                // --- movement end --- //
-
-                window.addEventListener('resize', function () {
-                    var rn = document.getElementById("rgtbut");
-                    rn.style.right =  "0.5em";
-                    rn.style.bottom = "0.5em";
-                });
-
-                document.getElementById("rgtbut").onmousedown = function (evt) {
+                if (event.data.msg === "rgtbutMouseDown") {
                     objOrbit.setMouseOff ();
-                };
-                
-                document.getElementById("rgtbut").addEventListener("touchstart", function (evt) {
-                    objOrbit.setMouseOff ();
-                }, false);
 
-                window.addEventListener("touchend", function (evt) {
-                    objOrbit.setMouseOn ();
-                    divContainer.dispatchEvent(new CustomEvent('mouseup', null));
-                }, false);
-                
-                window.addEventListener("mouseup", function (evt) {
-                    objOrbit.setMouseOn ();
-                    divContainer.dispatchEvent(new CustomEvent('mouseup', null));
-                }, false);
-            // --- navigator end --- //
+                } else if (event.data.msg === "rgtbutClick") {
+                    objOrbit.setMouseOff ();
+
+                }
+            }
+
+            function zoomedInR () {
+                window.parent.postMessage({msg: "zoomedInR"}, "*");
+            }
+            
+            function zoomedOutR () {
+                window.parent.postMessage({msg: "zoomedOutR"}, "*");
+            }
+            
+            function zoomingOutR () {
+            }
+            
+            function zoomingInR () {
+            }
+
+            window.addEventListener("message", msgOverlay, false);
+
+            window.addEventListener("touchend", function (evt) {
+                objOrbit.setMouseOn ();
+                divContainer.dispatchEvent(new CustomEvent('mouseup', null));
+            }, false);
+            
+            window.addEventListener("mouseup", function (evt) {
+                objOrbit.setMouseOn ();
+                divContainer.dispatchEvent(new CustomEvent('mouseup', null));
+            }, false);
+
         </script>
-
+        
         <script>
-            init ();
+            var env, home;
+            function init(processedHome, processedEnv) {
+                home = processedHome;
+                env = processedEnv;
+                
+                nodeTree = {xml: home, parent: {index: 0}};
+                nodeTree.parent.children = [nodeTree];
+                
+                document.body.style.backgroundColor = env.backColor;
+                window.addEventListener("load", wonload ());
+            }
+            
+            var msgInit = (event) => {
+                if (event.data.msg === "init") {
+                    init (event.data.home, event.data.env);
+                }
+            }
+            
+            window.addEventListener("message", msgInit, false);
         </script>
       </section>
     </body>

@@ -122,7 +122,6 @@ function round (x, y, r1, r2, s, svg, backcolor) {
     };
 
     document.getElementById("lftbuta").addEventListener("touchstart", function (evt) {
-        document.getElementById ("body").contentWindow.postMessage({msg: "lftbutaTouchstart"}, "*");
         document.getElementById("lftbuta").dispatchEvent(new CustomEvent('click'));
         evt.preventDefault ();
     }, false);
@@ -320,8 +319,16 @@ function round (x, y, r1, r2, s, svg, backcolor) {
         document.getElementById ("body").contentWindow.postMessage({msg: "rgtbutMouseDown"}, "*");
     };
 
-    document.getElementById("rgtbut").addEventListener("click", function (evt) {
-        document.getElementById ("body").contentWindow.postMessage({msg: "rgtbutClick"}, "*");
+    document.getElementById("rgtbut").addEventListener("touchstart", function (evt) {
+        document.getElementById ("body").contentWindow.postMessage({msg: "rgtbutTouchstart"}, "*");
     }, false);
 // --- navigator end --- //
+
+window.addEventListener("touchend", function (evt) {
+    document.getElementById ("body").contentWindow.postMessage({msg: "windowTouchend"}, "*");
+}, false);
+
+window.addEventListener("mouseup", function (evt) {
+    document.getElementById ("body").contentWindow.postMessage({msg: "windowMouseup"}, "*");
+}, false);
 

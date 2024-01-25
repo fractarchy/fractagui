@@ -1,6 +1,7 @@
 {
     "home": "contents/c-0.xml",
     "orientation": "south",
+    "tab-bar-visible": "false",
     "buttons-visible": "true",
     "ovals-spacing": "0.5%",
     "contents-scale": "100%",

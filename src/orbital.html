@@ -367,23 +367,6 @@
                     objOrbit.zoomOut ();
                 }
                 
-                if (event.data.msg === "northrTouchstart") {
-                    document.getElementById("northr").dispatchEvent(new CustomEvent('touchstart'));
-                    evt.preventDefault ();
-
-                } else if (event.data.msg === "southTouchstart") {
-                    document.getElementById("southr").dispatchEvent(new CustomEvent('touchstart'));
-                    evt.preventDefault ();
-
-                } else if (event.data.msg === "eastrTouchstart") {
-                    document.getElementById("eastr").dispatchEvent(new CustomEvent('touchstart'));
-                    evt.preventDefault ();
-
-                } else if (event.data.msg === "westrTouchstart") {
-                    document.getElementById("westr").dispatchEvent(new CustomEvent('touchstart'));
-                    evt.preventDefault ();
-                }
-
                 if (event.data.msg === "northrClick") {
                     if (objOrbit.getMagn() === 1)
                         objOrbit.levelUp ();
@@ -412,9 +395,18 @@
                 if (event.data.msg === "rgtbutMouseDown") {
                     objOrbit.setMouseOff ();
 
-                } else if (event.data.msg === "rgtbutClick") {
+                } else if (event.data.msg === "rgtbutTouchstart") {
                     objOrbit.setMouseOff ();
 
+                }
+
+                if (event.data.msg === "windowTouchend") {
+                    objOrbit.setMouseOn ();
+                    divContainer.dispatchEvent(new CustomEvent('mouseup', null));
+                
+                } else if (event.data.msg === "windowMouseup") {
+                    objOrbit.setMouseOn ();
+                    divContainer.dispatchEvent(new CustomEvent('mouseup', null));
                 }
             }
 
@@ -433,7 +425,8 @@
             }
 
             window.addEventListener("message", msgOverlay, false);
-
+            
+            /*
             window.addEventListener("touchend", function (evt) {
                 objOrbit.setMouseOn ();
                 divContainer.dispatchEvent(new CustomEvent('mouseup', null));
@@ -443,6 +436,7 @@
                 objOrbit.setMouseOn ();
                 divContainer.dispatchEvent(new CustomEvent('mouseup', null));
             }, false);
+            */
 
         </script>
         

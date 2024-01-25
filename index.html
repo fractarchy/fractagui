@@ -60,15 +60,42 @@
             tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms
             powered with ❤ by fractarchy-cms
         </noscript>
+
+        <div id="tabbar" style="width: 100%; height: 48px; background-color: rgb(48,48,48);">
+        </div>
+        
+        <script>
+            function initTabs(env) {
+                if (env.tabVisibility === "false") {
+                    document.getElementById("tabbar").style.visibility = "hidden";
+                
+                } else {
+                    document.getElementById("tabbar").style.visibility = "visible";
+                }
+            }
+        </script>
+        
         <iframe id="body" src="src/orbital.html" style="border-style:none; position:fixed;/* top:0; left:0; bottom:0; right:0; width:100%; height:100%;*/ border:none; background-color: gray;"></iframe>
+        
         <script>
             var setSize = function (orientation) {
-                var bd = document.getElementById("body");
+                var tb = document.getElementById("tabbar");
                 
-                bd.style.top = "0px";
+                var tbheight = Math.floor (48 * magnFactorBut);
+                
+                if (document.getElementById("tabbar").style.visibility === "visible")
+                    tb.style.height = tbheight + "px";
+
+                var bd = document.getElementById("body");                
                 bd.style.left = "0px";
                 bd.style.width = "100%";
-                bd.style.height = "100%";
+                if (document.getElementById("tabbar").style.visibility === "visible") {
+                    bd.style.top = tbheight + "px";
+                    bd.style.height = document.body.clientHeight - tbheight + "px";
+                } else {
+                    bd.style.top = "0px";
+                    bd.style.height = "100%";
+                }
             };
 
             window.addEventListener ('resize', function () {
@@ -82,8 +109,6 @@
             document.getElementById ("body").addEventListener ("touchstart", function (evt) {
                 evt.preventDefault ();
             }, false);
-
-            setSize();
         </script>
         
         <div id="lftbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
@@ -263,6 +288,13 @@
                     butVisibility = "false";
                 }
                 
+                if (data["tab-bar-visible"]) {
+                    tabVisibility = data["tab-bar-visible"];
+                    
+                } else {
+                    tabVisibility = "false";
+                }
+                
                 return {
                     topNode: data["home"],
                     
@@ -285,7 +317,8 @@
                     butsBorderColor: (data["ovals-border"] === "false" ? false : data["background-color"]),
                     butShadowRadius: bsradius,
                     butShadowColor: data["buttons-shadow-color"],
-                    butVisibility: butVisibility
+                    butVisibility: butVisibility,
+                    tabVisibility: tabVisibility
                 }
             }
         </script>
@@ -293,8 +326,16 @@
         <script>
             document.getElementById ("body").onload = function () {
                 initProps ((fileJSON, home) => {
+                    
                     var env = initEnv (fileJSON);
                     initButtons (env);
+                    initTabs (env);
+                    
+                    window.addEventListener('resize', function () {
+                        setSize ();
+                    });
+                    setSize();
+                    
                     document.getElementById ("body").contentWindow.postMessage({msg: "init", home: home, env: env}, "*");
                 });
             }

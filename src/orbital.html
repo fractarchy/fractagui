@@ -22,10 +22,6 @@
                 touch-action: none;
                 user-select: none;
             }
-
-            .hvr1 {opacity : 0.85; cursor: default;}
-            .hvr {opacity : 0.85;}
-            .hvr:hover {cursor: default/*pointer*/; opacity :1;}
         </style>
         <script src="orbital.js"></script>
         <script src="loader.js"></script>
@@ -107,7 +103,7 @@
                                 loadedOvals[i].ifr.style.visibility = "hidden";
                         }
                         //document.getElementById("div1").style.backdropFilter = "blur(10px)";
-                    }, 100);
+                    }, 150);
                 });
                 
                 window.dispatchEvent(new CustomEvent('resize'));
@@ -231,25 +227,11 @@
 //divContainerWrapper.style.filter = "drop-shadow(0px 0px 50px black) ";
             
             window.addEventListener('mousedown', function () {
-                var el = document.getElementsByClassName ("hvr");
-                for (i = 0; i < el.length; i++) {
-                    el[i].classList.add ("hvr1");
-                }
-                var el = document.getElementsByClassName ("hvr1");
-                for (i = 0; i < el.length; i++) {
-                    el[i].classList.remove ("hvr");
-                }
+                window.parent.postMessage({msg: "windowMousedown"}, "*");
             });
             
             window.addEventListener('mouseup', function () {
-                var el = document.getElementsByClassName ("hvr1");
-                for (i = 0; i < el.length; i++) {
-                    el[i].classList.add ("hvr");
-                }
-                var el = document.getElementsByClassName ("hvr");
-                for (i = 0; i < el.length; i++) {
-                    el[i].classList.remove ("hvr1");
-                }
+                window.parent.postMessage({msg: "windowMouseup"}, "*");
             });
             
             var mqString = `(device-width: ${window.screen.width}px)`;

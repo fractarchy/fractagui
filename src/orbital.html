@@ -237,15 +237,19 @@
             var mqString = `(device-width: ${window.screen.width}px)`;
             
             matchMedia(mqString).addListener(() => {
+                /*
                 for (var i = 0; i < allOvals.length; i++) {
                     if (allOvals[i].ifr) {
                         divContainer.removeChild (allOvals[i].ifr);
                         delete (allOvals[i].ifr);
                     }
                 }
-                
+
+                dispatchDraw ();
+                */
                 return;
             });
+            
         </script>
 
         <script>

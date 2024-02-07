@@ -38,6 +38,7 @@ function initButtons (env) {
 
     butsBorderWidth = 4;
     if (envButtons.butVisibility !== "false") {
+        /*
         if (envButtons.butsBorderColor && envButtons.butsBorderColor !== envButtons.butsBackColor) {
             document.getElementById("lftbutsvg").style.stroke = envButtons.butsBorderColor;
             document.getElementById("lftbutsvg").style.strokeWidth = butsBorderWidth + "px";
@@ -45,6 +46,7 @@ function initButtons (env) {
             document.getElementById("rgtbutsvg").style.stroke = envButtons.butsBorderColor;
             document.getElementById("rgtbutsvg").style.strokeWidth = butsBorderWidth + "px";
         }
+        */
 
         if (envButtons.butShadowRadius > 0) {
             document.getElementById("lftbut").style.filter += " drop-shadow(0px 0px " + envButtons.butShadowRadius + "px " + envButtons.butShadowColor + ")";
@@ -80,11 +82,12 @@ function initButtons (env) {
 }
 
 function round (x, y, r1, r2, s, svg, backcolor) {
+/*
     if (envButtons.butsBorderColor && envButtons.butsBorderColor !== envButtons.butsBackColor) {
         r1 -= butsBorderWidth;
         r2 -= butsBorderWidth;
     }
-    
+*/    
     var polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
     svg.appendChild(polygon);
 
@@ -107,10 +110,20 @@ function round (x, y, r1, r2, s, svg, backcolor) {
     function rescaleLftBut () {
         var lb = document.getElementById("lftbut");
 
-        lb.style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
-        var lb = document.getElementById("lftbut");
-        lb.style.left = 0.5 * magnFactorBut + "em";
-        lb.style.bottom = 0.5 * magnFactorBut + "em";
+
+        if (envButtons["orientation"] === "south") {
+            lb.style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+            lb.style.right = "";
+            lb.style.top = "";
+            lb.style.left = 0.5 * magnFactorBut + "em";
+            lb.style.bottom = 0.5 * magnFactorBut + "em";
+        } else {
+            lb.style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
+            lb.style.left = "";
+            lb.style.bottom = "";
+            lb.style.right = 2 * 0.5 * magnFactorBut + "em";
+            lb.style.top = 2 * 0.5 * magnFactorBut + "em";
+        }
     }
     
     document.getElementById("lftbuta").addEventListener("click", function (evt) {
@@ -157,9 +170,21 @@ function round (x, y, r1, r2, s, svg, backcolor) {
     function rescaleRgtBut () {
         var rb = document.getElementById("rgtbut");
 
-        rb.style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") " + (envButtons["orientation"] === "north" ? " rotate(180deg)" : "");
-        rb.style.right = 0.5 * magnFactorBut + "em";
-        rb.style.bottom = 0.5 * magnFactorBut + "em";
+        if (envButtons["orientation"] === "south") {
+            rb.style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") " + (envButtons["orientation"] === "north" ? " rotate(180deg)" : "");
+
+            rb.style.left = "";
+            rb.style.top = "";
+            rb.style.right = 0.5 * magnFactorBut + "em";
+            rb.style.bottom = 0.5 * magnFactorBut + "em";
+        } else {
+            rb.style.transform = "translateX(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") " + (envButtons["orientation"] === "north" ? " rotate(180deg)" : "");
+
+            rb.style.right = "";
+            rb.style.bottom = "";
+            rb.style.left = 2 * 0.5 * magnFactorBut + "em";
+            rb.style.top = 2 * 0.5 * magnFactorBut + "em";
+        }
     }
     
     // --- zooming start --- //

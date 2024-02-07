@@ -48,7 +48,7 @@
 
 @media (min-resolution: 2dppx) {
     body {
-        width: 63%;
+        width: 50%;
         font-size: 0.8em;
     }
 
@@ -58,7 +58,7 @@
 
     @media (min-device-width: 800px) and (min-device-height: 600px) {
         body {
-            width: 70%;
+            width: 50%;
             font-size: 1.2em;
         }
 
@@ -69,7 +69,7 @@
 
     @media (min-device-width: 600px) and (min-device-height: 800px) {
         body {
-            width: 70%;
+            width: 50%;
             font-size: 1.2em;
         }
 
@@ -88,7 +88,6 @@ body {
 
 h1 {
     padding: 0.1em;
-    color: rgb(48,48,48);
     border-bottom: 1px solid rgb(48,48,48);
     margin-top: 0em;
     font-weight: bold;
@@ -112,7 +111,7 @@ body {
     font-weight: normal;
 }
 
-pre, .c1 {
+code, pre {
     color: white;
     background-color: gray;
     border-radius: 0.25em;
@@ -122,8 +121,8 @@ pre, .c1 {
 }
 
 a {
-    color:blue;
-    text-decoration:underline;
+    color: blue;
+    text-decoration: underline;
 }
 
 img {

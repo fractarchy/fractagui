@@ -62,9 +62,8 @@
     - bug fixes  
     - removed unnecessary features  
 
-- - -
-
-- v 0.9 - beta  
+- v 0.7 - update  
     - compacting designer experience  
+    - revised necessary features  
     - updated scaling policy  
     

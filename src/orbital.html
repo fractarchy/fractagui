@@ -17,7 +17,6 @@
                 margin-top: 0px;
                 margin-left: 0px;
                 pointer-events: auto;
-                background-color: gray;
                 /*touch-action: pinch-zoom;*/
                 touch-action: none;
                 user-select: none;
@@ -34,10 +33,14 @@
                 </div>
             </div>
         </div>
-        <div id="divEventOverlay" ondragstart="return false" style="position: absolute; background-color: rgb(255, 0, 0, 0); top: 0px; bottom: 0px; left: 0px; right: 0px; draggable: false;">
+        <div id="divEventOverlay" ondragstart="return false" style="position: absolute; background-color: rgba(255, 0, 0, 0); top: 0px; bottom: 0px; left: 0px; right: 0px; draggable: false;">
         </div>
 
         <script>
+            document.addEventListener('contextmenu', function (event) {
+                event.preventDefault();
+            });
+
             var error;
             function getDesign() {
                 var design;
@@ -87,11 +90,6 @@
                     document.getElementById("tooltip").style.visibility = "hidden"
                     divContainer.style.visibility = "hidden";
 
-                    //for (var i = 0; i < loadedOvals.length; i++) {
-                    //    if (loadedOvals[i] && loadedOvals[i].ifr)
-                    //        loadedOvals[i].ifr.style.visibility = "hidden";
-                    //}
-                    
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
                         setSize ();
@@ -200,11 +198,13 @@
             
             var msg = (event) => {
                 if (event.data.msg === "resize") {
-                    if (loadedOvals[event.data.index].ifr) {
-                        loadedOvals[event.data.index].ifr.height = event.data.height;
+                    if (loadedOvals[event.data.index].ifr && loadedOvals[event.data.index].wrappedifr.contentWindow.document.body) {
                         loadedOvals[event.data.index].ifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
-                        loadedOvals[event.data.index].wrappedifr.height = event.data.height;
+                        //loadedOvals[event.data.index].ifr.width = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollWidth;
+                        loadedOvals[event.data.index].ifr.height = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollHeight;//.scrollHeight;//event.data.height;
                         loadedOvals[event.data.index].wrappedifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
+                        //loadedOvals[event.data.index].wrappedifr.width = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollWidth;
+                        loadedOvals[event.data.index].wrappedifr.height = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollHeight;//.scrollHeight;//event.data.height;
                     }
                         
                     divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
@@ -223,8 +223,6 @@
             
             var divContainer = document.getElementById ("divContainer")
             var divContainerWrapper = document.getElementById ("divContainerWrapper")
-            
-//divContainerWrapper.style.filter = "drop-shadow(0px 0px 50px black) ";
             
             window.addEventListener('mousedown', function () {
                 window.parent.postMessage({msg: "windowMousedown"}, "*");
@@ -247,6 +245,9 @@
 
                 dispatchDraw ();
                 */
+                initScreen ();
+                window.parent.postMessage({msg: "resolutionChange"}, "*");
+
                 return;
             });
             
@@ -300,34 +301,6 @@
                     //document.body.style.backgroundPosition = "center";
                 }
                 */
-
-                document.body.style.backgroundImage = "url('" + getRaster (env.quant, env.color1, env.color2).src + "')";
-                document.body.style.backgroundRepeat = "repeat";
-            }
-            
-            function getRaster (quant, color1, color2) {
-                var cnv = document.createElement ("canvas");
-                var pr = Math.min (window.devicePixelRatio, 2)
-                var ps = Math.round (quant / 100 * 4 * Math.max (screen.width, 1920) / 1920);
-                
-                if (ps < pr)
-                    ps = pr;
-                    
-                cnv.width = ps * 2;
-                cnv.height = ps * 2;
-                var ctx = cnv.getContext('2d');
-                ctx.fillStyle = "rgb(208,208,208)";
-                ctx.fillStyle = color1;
-                ctx.fillRect (0, 0, ps, ps);
-                ctx.fillRect (ps, ps, ps, ps);
-                ctx.fillStyle = "rgb(48,48,48)";
-                ctx.fillStyle = color2;
-                ctx.fillRect (0, ps, ps, ps);
-                ctx.fillRect (ps, 0, ps, ps);
-                
-                var img = document.createElement ("img");
-                img.src = cnv.toDataURL('image/png');
-                return img;
             }
         </script>
         
@@ -411,19 +384,6 @@
             }
 
             window.addEventListener("message", msgOverlay, false);
-            
-            /*
-            window.addEventListener("touchend", function (evt) {
-                objOrbit.setMouseOn ();
-                divContainer.dispatchEvent(new CustomEvent('mouseup', null));
-            }, false);
-            
-            window.addEventListener("mouseup", function (evt) {
-                objOrbit.setMouseOn ();
-                divContainer.dispatchEvent(new CustomEvent('mouseup', null));
-            }, false);
-            */
-
         </script>
         
         <script>

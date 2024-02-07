@@ -29,14 +29,14 @@ async function loadOval(node) {
             idiv.scrolling = "no";
             idiv.disabled = true;
             idiv.tabIndex = -1;
-            idiv.width = objOrbit.getRadius () * 1.2;
+            //idiv.width = objOrbit.getOvalWidth ();//objOrbit.getRadius () * 1.2;
             
             ifr.style.border = "none";
             ifr.style.overflow = "hidden";
             ifr.scrolling = "no";
             ifr.disabled = true;
             ifr.tabIndex = -1;
-            ifr.width = objOrbit.getRadius () * 1.2;
+            //ifr.width = objOrbit.getOvalWidth ();//objOrbit.getRadius () * 1.2;
 
             idiv.appendChild (ifr);
             node.ifr = idiv;

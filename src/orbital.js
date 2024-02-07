@@ -853,6 +853,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                 //if (data.backColor)
                 //  ctx.strokeStyle = data.backColor;
                 //else
+                    ctx.strokeStyle = "rgb(48,48,48)";
                     ctx.strokeStyle = stroke//fill;
 
                 ctx.stroke();
@@ -2978,11 +2979,11 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                 noPan = false;
             }
             
-            if (evt.buttons === 0 && magn === 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
-                zoomIn ();
-                
-            } else if (evt.buttons === 0 && magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
+            if (evt.buttons === 0 && magn !== 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))> 0) {
                 zoomOut ();
+                
+            } else if (evt.buttons === 0 && magn === 1 && evt.deltaY * Math.sign (Math.sin(orient + Math.PI / 2))< 0) {
+                zoomIn ();
             }
 
         }, { passive: false });
@@ -3188,7 +3189,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
             receiveMouseEvents = false;
         },
         getOvalWidth: function () {
-            return rr * squashX;
+            return 2 * rr * squashX * ratio;
         },
         redraw: redraw,
         mousedown: mousedown,

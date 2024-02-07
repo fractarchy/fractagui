@@ -3,31 +3,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     
-    <title>Fractarchy CMS</title>
+    <title>FractaGUI</title>
     <link rel="icon" type="image/png" href="./media/icon-192.png"/>
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Fractarchy CMS"/>
-    <meta name="description" content="fractal-structure inspired, parent-child orbiting, zooming-elements based content management system"/>
+    <meta name="title" content="FractaGUI"/>
+    <meta name="description" content="deviant fractal-structure inspired, parent-child orbiting, zooming-elements based graph visualization user interface"/>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="https://fractarchy.github.io/fractarchy-cms/"/>
-    <meta property="og:title" content="Fractarchy CMS"/>
-    <meta property="og:description" content="fractal-structure inspired, parent-child orbiting, zooming-elements based content management system"/>
-    <meta property="og:image" content="https://fractarchy.github.io/fractarchy-cms/media/socmedia.png"/>
+    <meta property="og:url" content="https://fractarchy.github.io/fractagui/"/>
+    <meta property="og:title" content="FractaGUI"/>
+    <meta property="og:description" content="deviant fractal-structure inspired, parent-child orbiting, zooming-elements based graph visualization user interface"/>
+    <meta property="og:image" content="https://fractarchy.github.io/fractagui/media/socmedia.png"/>
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image"/>
-    <meta property="twitter:url" content="https://fractarchy.github.io/fractarchy-cms/"/>
-    <meta property="twitter:title" content="Fractarchy CMS"/>
-    <meta property="twitter:description" content="fractal-structure inspired, parent-child orbiting, zooming-elements based content management system"/>
-    <meta property="twitter:image" content="https://fractarchy.github.io/fractarchy-cms/media/socmedia.png"/>
+    <meta property="twitter:url" content="https://fractarchy.github.io/fractagui/"/>
+    <meta property="twitter:title" content="FractaGUI"/>
+    <meta property="twitter:description" content="deviant fractal-structure inspired, parent-child orbiting, zooming-elements based graph visualization user interface"/>
+    <meta property="twitter:image" content="https://fractarchy.github.io/fractagui/media/socmedia.png"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
     
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   
     <head>
         <style media="screen">
             html, body
@@ -38,6 +36,7 @@
                 margin-top: 0px;
                 margin-left: 0px;
                 pointer-events: auto;
+                /*background-color: gray;*/
                 /*touch-action: pinch-zoom;*/
                 touch-action: none;
                 user-select: none;
@@ -60,42 +59,48 @@
     </head>
     <body>
         <noscript>
-            title: Fractarchy-CMS
-            tags: content-management-system, fractal-structure-inspired, parent-child-orbiting, zooming-elements-based, headless-cms, flat-file-cms
-            powered with ❤ by fractarchy-cms
+            title: FractaGUI
+            tags: user-interface graph-visualization fractal-structure-inspired zooming-elements-based parent-children-orbiting
+            Powered with ❤ by FractaGUI
         </noscript>
 
-        <div id="tabbar" style="display: flex;  flex-direction: row;  flex-wrap: wrap; font-family: Lucida Console, Courier New, monospace; font-size: 32px; padding-top: 4px; width: 100%; height: 48px; color: rgb(208,208,208); background-color: rgb(48,48,48);">
-            <div style="display: flex;  flex-direction: row;  flex-wrap: wrap;">
-                &nbsp;
-                <div class="hvr" style="text-decoration: underline;">
+        <div id="tabbar" style="position: absolute; visibility: hidden; display: flex;  flex-direction: row;  flex-wrap: wrap; font-family: Lucida Console, Courier New, monospace; font-size: 2.5em; padding-top: 4px; width: 100%; height: 48px; color: rgb(208,208,208); background-color: rgb(48,48,48);">
+            &nbsp;
+            <!--div class="hvr" id="selected-tab" style="display: flex;  flex-direction: row;  flex-wrap: wrap;">
+                (
+                <div style="display: block;">
                     1
                 </div>
                 &nbsp;
                 <div class="hvr">
                     ×
                 </div>
-                &nbsp;
+                )
             </div>
-            |
-            <div style="display: flex;  flex-direction: row;  flex-wrap: wrap;">
-                &nbsp;
-                <div class="hvr" style="">
+            &nbsp;
+            <div class="hvr" style="display: flex;  flex-direction: row;  flex-wrap: wrap;">
+                (
+                <div style="display: block;">
                     2
                 </div>
                 &nbsp;
                 <div class="hvr">
                     ×
                 </div>
-                &nbsp;
+                )
             </div>
-            |&nbsp;
+            &nbsp;
             <div class="hvr">
                 +
-            </div>
+            </div-->
         </div>
         
         <script>
+            document.addEventListener('contextmenu', function (event) {
+                event.preventDefault();
+            });
+            //if (window.matchMedia('(display-mode: standalone)').matches)
+            
             var msgHvr = (event) => {
                 if (event.data.msg === "windowMousedown") {
                     unhvr ();
@@ -133,34 +138,60 @@
             }
             
             function initTabs(env) {
+                var tb = document.getElementById("tabbar");
                 if (env.tabVisibility === "false") {
-                    document.getElementById("tabbar").style.visibility = "hidden";
+                    tb.style.visibility = "hidden";
                 
                 } else {
-                    document.getElementById("tabbar").style.visibility = "visible";
+                    tb.style.visibility = "visible";
+                    tb.style.color = env.tabsColor;
+                    tb.style.backgroundColor = env.tabsBackColor;
                 }
             }
         </script>
         
-        <iframe id="body" src="src/orbital.html" style="border-style:none; position:fixed;/* top:0; left:0; bottom:0; right:0; width:100%; height:100%;*/ border:none; background-color: gray;"></iframe>
+        <iframe id="body" src="src/orbital.html" style="border-style:none; position:fixed;/* top:0; left:0; bottom:0; right:0; width:100%; height:100%;*/ border:none; background-color: rgba(0,0,0,0);"></iframe>
         
         <script>
             var setSize = function (orientation) {
                 var tb = document.getElementById("tabbar");
+
+                var tbheight = Math.floor (42 * magnFactorBut);
+                //tbheight = tbheight - (tbheight % Math.round (envButtons["quant"] / 100 * 4 * Math.max (screen.width, 1920) / 1920));
+                /*
+                if (envButtons["orientation"] === "south") {
+                    document.body.style.backgroundPositionY = tbheight + "px";
                 
-                var tbheight = Math.floor (48 * magnFactorBut);
+                } else {
+                    document.body.style.backgroundPositionY = window.document.body.clientHeight - tbheight + "px";
+                }
+                */
                 
                 if (document.getElementById("tabbar").style.visibility === "visible") {
-                    tb.style.height = tbheight + "px";
-                    tb.style.paddingTop = Math.floor (tbheight / 8) + "px";
-                    tb.style.fontSize = Math.floor (tbheight * 2.75 / 4) + "px";
+                    if (envButtons["orientation"] === "south") {
+                        tb.style.top = 0;
+                        
+                    } else {
+                        tb.style.bottom = 0;
+                    }
+                    
+                    tb.style.height = Math.ceil (tbheight * 3 / 4) + "px";
+                    tb.style.paddingTop = Math.floor (tbheight / 4) + "px";
+                    tb.style.fontSize = /*Math.floor (*/tbheight * 1 / 2/*)*/ + "px";
+                    //document.getElementById("selected-tab").style.height = Math.floor (tbheight * 3 / 4 - tbheight * 1 / 8) - Math.floor (tbheight / 44) + "px";  
+                    //document.getElementById("selected-tab").style.borderBottom = Math.floor(tbheight / 22) + "px solid rgb(208,208,208)";
                 }
                 
                 var bd = document.getElementById("body");                
                 bd.style.left = "0px";
                 bd.style.width = "100%";
                 if (document.getElementById("tabbar").style.visibility === "visible") {
-                    bd.style.top = tbheight + "px";
+                    if (envButtons["orientation"] === "south") {
+                        bd.style.top = tbheight + "px";
+                    } else {
+                        bd.style.top = 0;
+                    }
+                    
                     bd.style.height = document.body.clientHeight - tbheight + "px";
                 } else {
                     bd.style.top = "0px";
@@ -241,6 +272,11 @@
 
                 } else if (event.data.msg === "zoomedOutR") {
                     zoomedOutR ();
+
+                } else if (event.data.msg === "resolutionChange") {
+                    rescaleLftBut ();
+                    rescaleRgtBut ();
+                    setSize();
                 }
             };
             
@@ -251,14 +287,29 @@
         
         <script>
             function initEnv (data) {
-                data["power-consumption-optimisation"] = "75%";
+                data["tab-bar-visible"] = "false",
+                data["power-consumption-optimisation"] = "100%";
                 data["ovals-border"] = "false";
                 data["ovals-shadow-radius"] = undefined;
                 data["ovals-shadow-color"] = undefined;
                 data["buttons-shadow-radius"] = undefined;
                 data["buttons-shadow-color"] = undefined;
-                data["foreground-color"] = "rgb(48,48,48)";
+                data["orientation"] = "south",
+                data["foreground-color"] = "rgb(40,48,48)";
                 data["background-color"] = "rgb(208,208,208)";
+                /*
+                data["invert"] =  "false";
+                
+                if (data["invert"] === "true") {
+                    data["orientation"] = "north",
+                    data["foreground-color"] = "rgb(208,208,208)";
+                    data["background-color"] = "rgb(48,48,48)";
+                } else {
+                    data["orientation"] = "south",
+                    data["foreground-color"] = "rgb(40,48,48)";
+                    data["background-color"] = "rgb(208,208,208)";
+                }
+                */
 
                 if (data["power-consumption-optimisation"])
                     try {
@@ -292,18 +343,18 @@
                 else
                     cscale = 100;
                 
-                if (data["ui-scale"])
+                if (data["ovals-scale"])
                     try {
-                        if (data["ui-scale"].substr(data["ui-scale"].length - 1, 1) !== "%")
+                        if (data["ovals-scale"].substr(data["ovals-scale"].length - 1, 1) !== "%")
                             throw new error ();
                         
-                        var uiscale = parseFloat (data["ui-scale"].substr(0, data["ui-scale"].length - 1));
+                        var uiscale = parseFloat (data["ovals-scale"].substr(0, data["ovals-scale"].length - 1));
                         if (uiscale <= 0 || uiscale > 150)
                             throw new error ();
                         
                     } catch (e) {
                         uiscale = 100;
-                        console.log ('Error in init.json: "ui-scale" has to be a percent between than "0%" and "150%"');
+                        console.log ('Error in init.json: "ovals-scale" has to be a percent between than "0%" and "150%"');
                     }
                 else
                     uiscale = 100;
@@ -378,10 +429,12 @@
                     quant: quant,
                     ovalSpacing: ovalSpacing,
                     ovalBackColor: data["background-color"],
-                    ovalBorder: (data["ovals-border"] === "false" ? "false" : data["color-2"]),
+                    ovalBorder: (data["ovals-border"] === "false" ? "false" : data["foreground-color"]),
                     ovalOpacity: data["oval-opacity"],
                     ovalShadowRadius: osradius,
                     ovalShadowColor: data["ovals-shadow-color"],
+                    tabsColor: data["background-color"],
+                    tabsBackColor: data["foreground-color"],
                     butsColor: data["background-color"],
                     butsBackColor: data["foreground-color"],
                     butsBorderColor: (data["ovals-border"] === "false" ? false : data["background-color"]),
@@ -398,6 +451,8 @@
                 initProps ((fileJSON, home) => {
                     
                     var env = initEnv (fileJSON);
+                    document.body.style.backgroundImage = "url('" + getRaster (env.quant, env.color1, env.color2).src + "')";
+                    document.body.style.backgroundRepeat = "repeat";
                     initButtons (env);
                     initTabs (env);
                     
@@ -408,6 +463,33 @@
                     
                     document.getElementById ("body").contentWindow.postMessage({msg: "init", home: home, env: env}, "*");
                 });
+            }
+        </script>
+
+        <script>
+            function getRaster (quant, color1, color2) {
+                var cnv = document.createElement ("canvas");
+                var pr = Math.min (window.devicePixelRatio, 2)
+                var ps = Math.round (quant / 100 * 4 * Math.max (screen.width, 1920) / 1920);
+                
+                if (ps < pr)
+                    ps = pr;
+                    
+                cnv.width = ps * 2;
+                cnv.height = ps * 2;
+                var ctx = cnv.getContext('2d');
+                ctx.fillStyle = "rgb(208,208,208)";
+                ctx.fillStyle = color1;
+                ctx.fillRect (0, 0, ps, ps);
+                ctx.fillRect (ps, ps, ps, ps);
+                ctx.fillStyle = "rgb(48,48,48)";
+                ctx.fillStyle = color2;
+                ctx.fillRect (0, ps, ps, ps);
+                ctx.fillRect (ps, 0, ps, ps);
+                
+                var img = document.createElement ("img");
+                img.src = cnv.toDataURL('image/png');
+                return img;
             }
         </script>
     </body>

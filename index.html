@@ -287,7 +287,6 @@
         
         <script>
             function initEnv (data) {
-                data["tab-bar-visible"] = "false",
                 data["power-consumption-optimisation"] = "75%";
                 data["ovals-border"] = "false";
                 data["ovals-shadow-radius"] = undefined;
@@ -453,6 +452,7 @@
                     var env = initEnv (fileJSON);
                     document.body.style.backgroundImage = "url('" + getRaster (env.quant, env.color1, env.color2).src + "')";
                     document.body.style.backgroundRepeat = "repeat";
+                    document.body.style.imageRendering = "pixelated";
                     initButtons (env);
                     initTabs (env);
                     

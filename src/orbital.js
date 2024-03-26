@@ -574,8 +574,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
     cnv.draggable = false;
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
-    const dpr = Math.ceil(window.devicePixelRatio);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    //const dpr = Math.ceil(window.devicePixelRatio);
+    //ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     //ctx.scale(1, 1);
     
     // event overlay
@@ -1987,12 +1987,14 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
         //minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
         minRadius = Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount) * window.devicePixelRatio);
 
-        cnv.width = Math.ceil (ww);
-        cnv.height = Math.ceil (hh);
-        cnv.style.width = Math.ceil (ww * dpr) + "px";
-        cnv.style.height = Math.ceil (hh * dpr) + "px";
+        const dpr = Math.ceil(window.devicePixelRatio);
+        cnv.width = Math.ceil (ww * dpr);
+        cnv.height = Math.ceil (hh * dpr);
+        cnv.style.width = Math.ceil (ww) + "px";
+        cnv.style.height = Math.ceil (hh) + "px";
         //cnv.setAttribute ("width", Math.ceil (ww));
         //cnv.setAttribute ("height", Math.ceil (hh));
+        cnv.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
         
         if (clip) clipPath.removeChild(clip);
         //var magn1 = r1 / (rr * ratio);

@@ -1989,8 +1989,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
 
         cnv.width = Math.ceil (ww);
         cnv.height = Math.ceil (hh);
-        cnv.setAttribute ("width", Math.ceil (ww));
-        cnv.setAttribute ("height", Math.ceil (hh));
+        cnv.style.width = Math.ceil (ww * dpr) + "px";
+        cnv.style.height = Math.ceil (hh * dpr) + "px";
+        //cnv.setAttribute ("width", Math.ceil (ww));
+        //cnv.setAttribute ("height", Math.ceil (hh));
         
         if (clip) clipPath.removeChild(clip);
         //var magn1 = r1 / (rr * ratio);

@@ -543,6 +543,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
     var stroke1 = ovalBorder;
     var back1 = backColor;
     var orientation = orient;
+    var borderSize = 0.5;
     var curvature = 1 / 8;
     
     var qang = quant * 0.0192 * Math.PI;              
@@ -595,7 +596,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
     */
 
     var onHyperlink;
-    var tooltip = document.createElement("DIV");
+    var tooltip = window.top.document.createElement("DIV");
     tooltip.id = "tooltip";
     tooltip.style.position = "absolute";
     tooltip.style.bottom = "0px";
@@ -604,8 +605,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
     tooltip.style.color = "rgb(48, 48, 48)";
     tooltip.style.visibility = "hidden";
     tooltip.style.fontFamily = "Arial, Helvetica, sans-serif";
-    tooltip.style.fontSize = "10pt";
+    tooltip.style.fontSize = "1em";
     tooltip.style.padding = "0px";
+    tooltip.style.display = "none";
     tooltip.innerText = "";
     document.body.appendChild(tooltip);
     
@@ -627,7 +629,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
 
     var ratio = 1 / 1.61803398875;
     var circleSize = 1 - ovalSpacing;
-    var lineWidth = 40;
+    var lineWidth = 18;
 
     var minRadius;
     var shadowr = 0;// shadowRadius;
@@ -725,9 +727,11 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
             if (data.backColor)
                 fill = data.backcolor;
 
-            var magn = r / (rr * ratio);
+            //var magn = r / (rr * ratio);
+            var magn = r / rr;
             
-            var lw = lineWidth * rr / 2048 * magn;
+            //var lw = lineWidth * rr / 2048 * magn * zoom;
+            var lw = lineWidth * magn * uiscale * screen.height / 1080 * borderSize;
             if (ovalBorder === "false") //fill === stroke)
                 lw = 0;
             
@@ -739,13 +743,15 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
             data.currYA = ya;
             data.currRA = ra;
             data.currMagn = magn;
-            data.lineWidth = lineWidth * rr / 2048 * magn;
+            //data.lineWidth = lineWidth * rr / 2048 * magn;
+            data.lineWidth = lineWidth * magn * uiscale * screen.height / 1080 * borderSize;
             if (!data.parent.currXA) {
                 data.parent.currXA = xx;
                 data.parent.currYA = yy * ratio;
                 data.parent.currRA = rr * ratio;
                 data.parent.currAngleA = Math.PI / 2;
-                data.parent.lineWidth = lineWidth * rr / 2048 * magn * ratio * 2;
+                //data.parent.lineWidth = lineWidth * rr / 2048 * magn * ratio * 2;
+                data.parent.lineWidth = lineWidth * uiscale * screen.height / 1080 * borderSize;
             }
 
             var anglea = Math.atan2(ya - data.parent.currYA, xa - data.parent.currXA);
@@ -826,7 +832,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
             ctx.restore ();
 
             // line
-            var lw = lineWidth * rr / 1024 * magn;
+            //var lw = lineWidth * rr / 1024 * magn * zoom;
+            var lw = lineWidth * magn * uiscale * screen.height / 1080 * borderSize;
             if (ovalBorder !== "false" && data.parent.parent) {//circleSize < 1 && level !== 1 && data.parent.parent){
                 ctx.globalCompositeOperation = "source-over";
                 ctx.lineWidth = lw;//lineWidth * rr / 500 * magn;
@@ -877,7 +884,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
             ctx.fill ();
             */
 
-            var lw = lineWidth * rr / 2048 * magn;
+            //var lw = lineWidth * rr / 2048 * magn;
+            var lw = lineWidth * magn * uiscale * screen.height / 1080 * borderSize;
             if (ovalBorder === "false")//fill === stroke)
                 lw = 0;
 
@@ -1085,7 +1093,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
             */
 
             if (select.cursor.data.hLock !== "true") {
-                var minmaxW = (select.cursor.data.ifr.width / 2);
+                var minmaxW = (o.ifr.width / 2);
                 select.cursor.centerX = x;
                 
                 if (select.cursor.data.hAlign === "middle") {
@@ -1095,23 +1103,25 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                         select.cursor.centerX = ~~(-minmaxW);
                         
                 } else {
-                    /*
+                    
                     if (select.cursor.centerX > ~~(minmaxW - alignX))
                         select.cursor.centerX = ~~(minmaxW - alignX);
                     if (select.cursor.centerX < ~~(-minmaxW + alignX))
                         select.cursor.centerX = ~~(-minmaxW + alignX);
-                    */
+                    
+                    /*
                     if (select.cursor.centerX > ~~Math.min ((minmaxW - alignX), o.ifr.width / 2))
                         select.cursor.centerX = ~~Math.min ((minmaxW - alignX), o.ifr.width / 2);
                     if (select.cursor.centerX < ~~Math.min ((-minmaxW + alignX), o.ifrWidth / 2))
                         select.cursor.centerX = ~~Math.min ((-minmaxW + alignX), o.ifrWidth / 2);
+                    */
                 }
                 
                 select.cursor.centerX = Math.floor (select.cursor.centerX)
             }
             
             if (select.cursor.data.vLock !== "true") {
-                var minmaxH = (select.cursor.data.ifr.height / 2);
+                var minmaxH = (o.ifr.height / 2);
                 select.cursor.centerY = y;
                 
                 if (select.cursor.data.vAlign === "middle") {
@@ -1120,16 +1130,18 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                     if (select.cursor.centerY < ~~(-minmaxH))
                         select.cursor.centerY = ~~(-minmaxH);
                 } else {
-                    /*
+                    
                     if (select.cursor.centerY > ~~(minmaxH - alignY))
                         select.cursor.centerY = ~~(minmaxH - alignY);
                     if (select.cursor.centerY < ~~(-minmaxH + alignY))
                         select.cursor.centerY = ~~(-minmaxH + alignY);
-                    */
+                    
+                    /*
                     if (select.cursor.centerY > ~~Math.min ((minmaxH - alignY), o.ifr.height / 2))
                         select.cursor.centerY = ~~Math.min ((minmaxH - alignY), o.ifr.height / 2);
                     if (select.cursor.centerY < ~~Math.min ((-minmaxH + alignY), o.ifr.height / 2))
                         select.cursor.centerY = ~~Math.min ((-minmaxH + alignY), o.ifr.height / 2);
+                    */
                 }
                 
                 select.cursor.centerY = Math.floor (select.cursor.centerY)
@@ -1981,8 +1993,10 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
         cnv.setAttribute ("height", Math.ceil (hh));
         
         if (clip) clipPath.removeChild(clip);
-        var magn1 = r1 / (rr * ratio);
-        var lw = shiftY > 0? 2 * lineWidth * rr / 2048 * uiscale: 1;
+        //var magn1 = r1 / (rr * ratio);
+        var magn1 = r1 / rr;
+        //var lw = shiftY > 0? 2 * lineWidth * rr / 2048 * uiscale: 1;
+        var lw = shiftY > 0? lineWidth * uiscale * screen.height / 1080: 1;
         clip = round (xx * squashX, yy * squashY - Math.sin (orientation + Math.PI / 2) * rr * shiftY * squashY, (rr + lw) * squashX, (rr + lw) * squashY, ngonsides).node;
         clipPath.appendChild(clip);
 
@@ -2041,22 +2055,27 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
     function alignOval (o, c) {
         if (o.ifr) {
             if (o.hAlign === "left")
-                c.centerX = ~~Math.min (/*center*/ -o.ifr.width / 2 + alignX, o.ifr.width / 2);
+                //c.centerX = ~~Math.min (/*center*/ -o.ifr.width / 2 + alignX, o.ifr.width / 2);
+                c.centerX = ~~(/*center*/ -o.ifr.width / 2 + alignX);
                 
             else if (o.hAlign === "right")
-                c.centerX = ~~Math.min (/*center*/ +o.ifr.width / 2 - alignX, o.ifr.width / 2);
+                //c.centerX = ~~Math.min (/*center*/ +o.ifr.width / 2 - alignX, o.ifr.width / 2);
+                c.centerX = ~~(/*center*/ +o.ifr.width / 2 - alignX);
                 
             else
                 c.centerX = 0;
                 
             if (o.vAlign === "bottom")
-                c.centerY = ~~Math.min (/*center*/ +o.ifr.height / 2 - alignY, o.ifr.height / 2);
+                //c.centerY = ~~Math.min (/*center*/ +o.ifr.height / 2 - alignY, o.ifr.height / 2);
+                c.centerY = ~~(/*center*/ +o.ifr.height / 2 - alignY);
 
             else if (o.vAlign === "middle")
                 c.centerY =  0;
 
             else
-                c.centerY = ~~Math.min (/*center*/ -o.ifr.height / 2 + alignY, o.ifr.height / 2);
+                //c.centerY = ~~Math.min (/*center*/ -o.ifr.height / 2 + alignY, o.ifr.height / 2);
+                c.centerY = ~~(/*center*/ -o.ifr.height / 2 + alignY);
+                
         } else {
             c.centerX = 0;
             c.centerY = 0;

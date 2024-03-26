@@ -121,8 +121,9 @@ code, pre {
 }
 
 a {
-    color: blue;
+    color: rgb(48,48,48);
     text-decoration: underline;
+    font-weight: bold;
 }
 
 img {

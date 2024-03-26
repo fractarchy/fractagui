@@ -33,7 +33,7 @@
 
 - v 0.5 - beta  
     - UX improvement  
-    - halign, valign, hlock, vlock, backcolor for each oval. Find use example in `contents/contents.xml`  
+    - halign, valign, hlock, vlock, backcolor for each oval.  
     - native HTML renderer, improved loading speed at the expense of rendering speed  
     - CSS animations support  
     - responsive mode matches native appearance in scale  

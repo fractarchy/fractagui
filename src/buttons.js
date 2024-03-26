@@ -5,13 +5,15 @@ function setSizeBut () {
     //    magnFactorBut = 1.25 * document.body.clientWidth / 1920;
     //}
     //else {
-        magnFactorBut = 1.25 * document.body.clientHeight / 1080;
+    //    magnFactorBut = 1.25 * document.body.clientHeight / 1080;
     //}
     
-    if (window.devicePixelRatio > 1) {
-        magnFactorBut *= 0.8;
-    }
+    //if (window.devicePixelRatio > 1) {
+    //    magnFactorBut *= 0.8;
+    //}
     
+    magnFactorBut = document.body.clientHeight / 1080;
+
     //if (magnFactorBut > 1) {
     //    magnFactorBut = 1;
     //}
@@ -121,8 +123,8 @@ function round (x, y, r1, r2, s, svg, backcolor) {
             lb.style.transform = "translateX(" +  Math.floor (144 / 2 - 144 * magnFactorBut / 2) + "px)" + " translateY(" +  Math.floor (-144 / 2 + 144 * magnFactorBut / 2) + "px)" + " scale(" + magnFactorBut + ") ";
             lb.style.left = "";
             lb.style.bottom = "";
-            lb.style.right = 2 * 0.5 * magnFactorBut + "em";
-            lb.style.top = 2 * 0.5 * magnFactorBut + "em";
+            lb.style.right = 0.5 * magnFactorBut + "em";
+            lb.style.top = 0.5 * magnFactorBut + "em";
         }
     }
     
@@ -182,8 +184,8 @@ function round (x, y, r1, r2, s, svg, backcolor) {
 
             rb.style.right = "";
             rb.style.bottom = "";
-            rb.style.left = 2 * 0.5 * magnFactorBut + "em";
-            rb.style.top = 2 * 0.5 * magnFactorBut + "em";
+            rb.style.left = 0.5 * magnFactorBut + "em";
+            rb.style.top = 0.5 * magnFactorBut + "em";
         }
     }
     

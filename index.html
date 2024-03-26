@@ -64,7 +64,7 @@
             Powered with ❤ by FractaGUI
         </noscript>
 
-        <div id="tabbar" style="position: absolute; visibility: hidden; display: flex;  flex-direction: row;  flex-wrap: wrap; font-family: Lucida Console, Courier New, monospace; font-size: 2.5em; padding-top: 4px; width: 100%; height: 48px; color: rgb(208,208,208); background-color: rgb(48,48,48);">
+        <div id="tabbar" style="justify-content: center; position: absolute; visibility: hidden; display: flex;  flex-direction: row;  flex-wrap: wrap; font-family: Lucida Console, Courier New, monospace; font-size: 2.5em; padding-top: 4px; width: 100%; height: 48px; color: rgb(208,208,208); background-color: rgb(48,48,48);">
             &nbsp;
             <!--div class="hvr" id="selected-tab" style="display: flex;  flex-direction: row;  flex-wrap: wrap;">
                 (
@@ -155,8 +155,9 @@
         <script>
             var setSize = function (orientation) {
                 var tb = document.getElementById("tabbar");
+                tb.innerHTML = document.title;
 
-                var tbheight = Math.floor (42 * magnFactorBut);
+                var tbheight = Math.floor (48 * magnFactorBut);
                 //tbheight = tbheight - (tbheight % Math.round (envButtons["quant"] / 100 * 4 * Math.max (screen.width, 1920) / 1920));
                 /*
                 if (envButtons["orientation"] === "south") {
@@ -178,8 +179,8 @@
                     tb.style.height = Math.ceil (tbheight * 3 / 4) + "px";
                     tb.style.paddingTop = Math.floor (tbheight / 4) + "px";
                     tb.style.fontSize = /*Math.floor (*/tbheight * 1 / 2/*)*/ + "px";
-                    //document.getElementById("selected-tab").style.height = Math.floor (tbheight * 3 / 4 - tbheight * 1 / 8) - Math.floor (tbheight / 44) + "px";  
-                    //document.getElementById("selected-tab").style.borderBottom = Math.floor(tbheight / 22) + "px solid rgb(208,208,208)";
+                    //document.getElementById("selected-tab").style.height = Math.ceil (tbheight * 3 / 4) - Math.floor (tbheight * 1 / 8) - Math.ceil (tbheight / 48 - 0.25) + "px";  
+                    //document.getElementById("selected-tab").style.borderBottom = Math.ceil(tbheight / 24 - 0.25) + "px solid";
                 }
                 
                 var bd = document.getElementById("body");                
@@ -274,8 +275,9 @@
                     zoomedOutR ();
 
                 } else if (event.data.msg === "resolutionChange") {
-                    rescaleLftBut ();
-                    rescaleRgtBut ();
+                    setSizeBut ()
+                    //rescaleLftBut ();
+                    //rescaleRgtBut ();
                     setSize();
                 }
             };
@@ -288,15 +290,15 @@
         <script>
             function initEnv (data) {
                 data["power-consumption-optimisation"] = "75%";
-                data["ovals-border"] = "false";
+                //data["ovals-border"] = "false";
                 data["ovals-shadow-radius"] = undefined;
                 data["ovals-shadow-color"] = undefined;
                 data["buttons-shadow-radius"] = undefined;
                 data["buttons-shadow-color"] = undefined;
                 data["orientation"] = "south",
-                data["foreground-color"] = "rgb(40,48,48)";
+                data["foreground-color"] = "rgb(48,48,48)";
                 data["background-color"] = "rgb(208,208,208)";
-                /*
+                
                 data["invert"] =  "false";
                 
                 if (data["invert"] === "true") {
@@ -308,7 +310,7 @@
                     data["foreground-color"] = "rgb(40,48,48)";
                     data["background-color"] = "rgb(208,208,208)";
                 }
-                */
+                
 
                 if (data["power-consumption-optimisation"])
                     try {
@@ -408,8 +410,8 @@
                     butVisibility = "false";
                 }
                 
-                if (data["tab-bar-visible"]) {
-                    tabVisibility = data["tab-bar-visible"];
+                if (data["top-bar-visible"]) {
+                    tabVisibility = data["top-bar-visible"];
                     
                 } else {
                     tabVisibility = "false";
@@ -424,7 +426,7 @@
                     orientation: data["orientation"] === "north" ? "north": "south",
                     contentScale: cscale,
                     uiscale: uiscale,
-                    uishift: uiscale <= 100 ? 0 : ((uiscale - 100) / 4),
+                    uishift: uiscale <= 100 ? 0 : ((uiscale - 100) / 4 - 0.5),
                     quant: quant,
                     ovalSpacing: ovalSpacing,
                     ovalBackColor: data["background-color"],

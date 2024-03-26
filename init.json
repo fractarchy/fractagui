@@ -1,7 +1,9 @@
 {
     "home": "contents/c-0.xml",
+    "top-bar-visible": "true",
     "buttons-visible": "true",
-    "ovals-spacing": "0.5%",
+    "ovals-border": "true",
+    "ovals-spacing": "1%",
     "ovals-scale": "140%",
     "contents-scale": "100%"
 }

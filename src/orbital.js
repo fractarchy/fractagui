@@ -574,9 +574,9 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
     cnv.draggable = false;
     cnv.ondragstart = function () {return false};
     var ctx = cnv.getContext('2d');
-    const dpr = 1;//Math.min(2, Math.ceil(window.devicePixelRatio));
+    const dpr = Math.ceil(window.devicePixelRatio);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.scale(1, 1);
+    //ctx.scale(1, 1);
     
     // event overlay
     var div = document.getElementById ("divEventOverlay");

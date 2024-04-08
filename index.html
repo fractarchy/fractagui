@@ -51,10 +51,11 @@
             
             a, a.btn:visited, a.btn:link {cursor: pointer; color: rgb(226, 226, 226); text-decoration:underline;}
             a.btn:hover, a.btn:active {cursor: pointer; color:white; text-decoration:underline;}
-
-            .hvr1 {opacity : 0.85; cursor: default;}
-            .hvr {opacity : 0.85;}
-            .hvr:hover {cursor: default/*pointer*/; opacity :1;}
+            
+            .hvr1 {cursor: default; border: 1px dashed rgb(48,48,48)}
+            .hvr {cursor: default;  border: 1px dashed rgb(48,48,48)}
+            .hvr:hover {cursor: default; border: 1px dashed rgb(208,208,208)}
+            
         </style>
     </head>
     <body>
@@ -198,6 +199,16 @@
                     bd.style.top = "0px";
                     bd.style.height = "100%";
                 }
+                /*
+                var fact = magnFactorBut / 8;
+                var pr = Math.min (window.devicePixelRatio, 2)
+                var ps = Math.round (envButtons.quant / 100 * 4 * Math.max (screen.width, 1920) / 1920);
+                if (ps < pr) ps = pr;
+                if (ps * fact < 1) ps = 1/fact;
+                document.getElementById('lftbuta').style.border = Math.floor(ps*fact) + "px dashed rgb(208,208,208)";
+                document.getElementById("lftbuta").onmouseleave = () => {document.getElementById('lftbuta').style.border = Math.floor(ps*fact) + "px dashed rgb(48,48,48)";};
+                document.getElementById("lftbuta").onmouseenter = () => {document.getElementById('lftbuta').style.border = Math.floor(ps*fact) + "px dashed rgb(208,208,208)";};
+                */
             };
 
             window.addEventListener ('resize', function () {
@@ -216,8 +227,8 @@
         <div id="lftbut" style="display: block; opacity: 1; visibility: hidden; position: absolute; /*background-color: rgb(48,48,48);*/ left: 0.5em; bottom: 0.5em; width: 144px; height: 144px; border-radius: 72px;">
             <svg id="lftbutsvg" xmlns="http://www.w3.org/2000/svg" height="144" width="144" style="display: block;"></svg>
 
-            <a class="hvr" id="lftbuta" style="position: absolute; top: 48px; left: 48px;  width: 48px; height: 48px; border-radius: 24px; transform: scale(2.5);">
-                <svg id="home" xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 120 960 960">
+            <a class="hvr" id="lftbuta" style="position: absolute; top: 12px; left: 12px;  width: 120px; height: 120px; border-radius: 60px;">
+                <svg id="home" xmlns="http://www.w3.org/2000/svg" height="48" width="48" viewBox="0 120 960 960" style="transform: translate(36px, 32px) scale(2.5);">
                     <title>home</title>
                     <path id="lb1" fill="rgb(208,208,208)" stroke="rgb(208,208,208)" stroke-width="0px" d="M225.385 870.615h155.77v-245h197.69v245h155.77V488.693L480 296.77 225.385 488.564v382.051Zm-45.384 45.384V466.001L480 240.233l299.999 225.768v449.998H533.462v-245H426.538v245H180.001ZM480 583.385Z"/>
                 </svg>

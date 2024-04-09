@@ -708,6 +708,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
         return polygon;
     }
     //////////////////////
+    var clipIndex = 0;
     function drawCircle (data, angle, parentR, x, y, r, fill, stroke, cursor, renderHint, level, shadow) {
     var diff;
     if (renderHint === "1") diff = 1; else diff = 1;
@@ -921,6 +922,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                 } else {
                     data.ifr.style.left = ~~(cnv.parentNode.clientLeft + l) + "px";
                     data.ifr.style.top = ~~(cnv.parentNode.clientTop + t) + "px";
+                    data.ifr.style.willChange = "transform"; // fixing chrome bug
                     data.ifr.style.transform = tr;
                     
                     if (data.clip1) data.clip1.remove();
@@ -928,13 +930,13 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                     if (data.clip3) data.clip3.remove();
                     
                     // local
-                    var rand1 = (Math.random() + "").substring(2);
+                    var rand1 = clipIndex++;//(Math.random() + "").substring(2);
                     var clipPath1 = document.createElementNS(svgns, 'clipPath');
                     clipPath1.setAttributeNS(null, 'id', "cl1" + rand1);
                     svg.appendChild(clipPath1);
                     var clip1 = round ((xa * squashX - l) / magn, (ya * squashY - t) / magn, (ra * squashX - 2 * magn - lw * squashX) / magn - 1 / magn, (ra * squashY - 2 * magn - lw * squashY) / magn - 1 / magn, n).node;
                     clipPath1.appendChild(clip1);
-
+                    /*
                     // global
                     var rand2 = (Math.random() + "").substring(2);
                     var clipPath2 = document.createElementNS(svgns, 'clipPath');
@@ -954,7 +956,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                     newRect.setAttribute("width", cnv.clientWidth / magn);
                     newRect.setAttribute("height", cnv.clientHeight / magn);
                     clipPath3.appendChild(newRect);
-
+                    */
                     
                     // intersect
                     //clip2.style.clipPath = "url(#cl3" + rand3 + ")"; // commented for webkit
@@ -969,8 +971,8 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
                     */
 
                     data.clip1 = clipPath1;
-                    data.clip2 = clipPath2;
-                    data.clip3 = clipPath3;
+                    //data.clip2 = clipPath2;
+                    //data.clip3 = clipPath3;
                 }
 
                 data.ifr.style.visibility = "visible";

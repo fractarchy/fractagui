@@ -66,4 +66,5 @@
     - compacting designer experience  
     - revised necessary features  
     - updated scaling policy  
-    
+    - bug fixes  
+

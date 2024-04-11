@@ -633,7 +633,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
 
     var minRadius;
     var shadowr = 0;// shadowRadius;
-    var recCount = 3.5;
+    var recCount = 3.75;
 
     var dragPrecision = Math.pow (2, 8);
 

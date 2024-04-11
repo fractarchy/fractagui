@@ -1987,7 +1987,7 @@ function Orbital (divContainer, data, quant, scale, ovalFillColor, ovalBorder, b
         n = fractalOvals (ctx, ratio, xx, yy, ww, hh, rr, squashX, squashY, drawCircle, fill1, stroke1, back1, shadowRadius, shadowColor, circleSize, ngonsides, shiftY, uiscale);
         
         //minRadius = rr * squashX * squashY * Math.pow((1 - ratio), recCount) * ratio * window.devicePixelRatio;
-        minRadius = Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount) * window.devicePixelRatio);
+        minRadius = 20;//Math.floor(rr / ratio * Math.pow ((1 - ratio), recCount));
 
         const dpr = Math.ceil(window.devicePixelRatio);
         cnv.width = Math.ceil (ww * dpr);

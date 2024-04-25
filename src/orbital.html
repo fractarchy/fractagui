@@ -56,18 +56,16 @@
                 return design;
             }
 
-            function setSize () {
-                divContainer.style.width = window.innerWidth + "px";
-                divContainer.style.height = window.innerHeight + "px";
+            function dispatchSize () {
+                divContainer.width = window.innerWidth;
+                divContainer.height = window.innerHeight;
                 
+                divContainer.dispatchEvent(new CustomEvent('resize1', null));
+
                 for (var i = 0; i < loadedOvals.length; i++) {
                     if (loadedOvals[i] && loadedOvals[i].ifr)
                         window.postMessage({msg: "resize", index: i, width: loadedOvals[i].ifr.clientWidth, height: loadedOvals[i].ifr.clientHeight}, "*");
                 }
-            }
-
-            function dispatchSize () {
-                divContainer.dispatchEvent(new CustomEvent('resize1', null));
             }
 
             function dispatchDraw () {
@@ -75,11 +73,10 @@
             }
 
             wonload = function () {
-                setSize ();
+                dispatchSize ();
                 objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorder, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalSpacing / 100, env.orientation === "north" ? Math.PI: 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);
                 
 
-                dispatchSize ();
                 divContainer.style.visibility = "visible";
                 window.addEventListener("message", msg, false);
 
@@ -92,7 +89,12 @@
 
                     clearTimeout(resizeId);
                     resizeId = setTimeout(function () {
-                        setSize ();
+                        var p = objOrbit.getCursor ();
+                        while (p.parent) {
+                            p = p.parent
+                            if (p.data && p.data.ifr)
+                                delete p.data.ifr;
+                        }
                         dispatchSize ();
                         divContainer.style.visibility = "visible";
 
@@ -199,17 +201,17 @@
             var msg = (event) => {
                 if (event.data.msg === "resize") {
                     if (loadedOvals[event.data.index].ifr && loadedOvals[event.data.index].wrappedifr.contentWindow.document.body) {
-                        loadedOvals[event.data.index].ifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
-                        //loadedOvals[event.data.index].ifr.width = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollWidth;
-                        loadedOvals[event.data.index].ifr.height = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollHeight;//.scrollHeight;//event.data.height;
-                        loadedOvals[event.data.index].wrappedifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
                         //loadedOvals[event.data.index].wrappedifr.width = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollWidth;
+                        //loadedOvals[event.data.index].ifr.width = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollWidth;
+                        loadedOvals[event.data.index].ifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
+                        loadedOvals[event.data.index].wrappedifr.width = objOrbit.getOvalWidth ();//window.innerWidth;
+                        loadedOvals[event.data.index].ifr.height = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollHeight;//.scrollHeight;//event.data.height;
                         loadedOvals[event.data.index].wrappedifr.height = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollHeight;//.scrollHeight;//event.data.height;
                     }
-                        
+
                     divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
                     divContainer.dispatchEvent(new CustomEvent('redraw', null));
-                
+
                 } else if (event.data.msg === "relink") {
                     loadedOvals[event.data.index].hyperlinks = event.data.hyperlinks;
 

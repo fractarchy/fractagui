@@ -207,6 +207,7 @@
                         loadedOvals[event.data.index].wrappedifr.height = loadedOvals[event.data.index].wrappedifr.contentWindow.document.body.scrollHeight;//.scrollHeight;//event.data.height;
                     }
                         
+                    divContainer.dispatchEvent(new CustomEvent('resize1', null));
                     divContainer.dispatchEvent(new CustomEvent('updateOvalAlign', {detail: loadedOvals[event.data.index]}));
                     divContainer.dispatchEvent(new CustomEvent('redraw', null));
                 

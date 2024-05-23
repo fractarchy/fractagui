@@ -72,6 +72,11 @@
                 divContainer.dispatchEvent(new CustomEvent('redraw1', null));
             }
 
+            // fixing chromium tab change bug
+            document.addEventListener("visibilitychange", () => {
+                dispatchDraw ();
+            });
+
             wonload = function () {
                 dispatchSize ();
                 objOrbit = Orbital (divContainer, nodeTree, env.quant / 100, env.contentScale / 100, env.ovalBackColor, env.ovalBorder, env.backColor, env.ovalShadowRadius, env.ovalShadowRadius? env.ovalShadowColor: null, env.uiscale / 100, onIdle, onBusy, env.ovalSpacing / 100, env.orientation === "north" ? Math.PI: 0, env.uishift / 100, zoomedInR, zoomedOutR, zoomingOutR);

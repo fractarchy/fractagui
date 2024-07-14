@@ -32,5 +32,5 @@ To get started with site creation using FractaGUI, please refer to the [example 
 
 ## 5. licensing
 
-This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free for students and for limited personal use, but if you use it a lot, or your plans meet commercial use, please refer to the licence file for details about pricing.
+This software is released under [conditional Creative Commons Attribution 4.0 International License](LICENSE). It is free for students and for limited personal use, but if you use it a lot, or your plans meet commercial use, please refer to the license file for details about pricing.
 
